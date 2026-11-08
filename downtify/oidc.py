@@ -35,6 +35,7 @@ class OIDCConfig:
     groups_claim: str = 'groups'
     allowed_groups: tuple[str, ...] = ()
     admin_groups: tuple[str, ...] = ()
+    admin_claim: str = ''
 
     @classmethod
     def from_env(
@@ -77,6 +78,7 @@ class OIDCConfig:
             ).strip(),
             allowed_groups=values_for('DOWNTIFY_OIDC_ALLOWED_GROUPS'),
             admin_groups=values_for('DOWNTIFY_OIDC_ADMIN_GROUPS'),
+            admin_claim=values.get('DOWNTIFY_OIDC_ADMIN_CLAIM', '').strip(),
         )
 
 
@@ -208,6 +210,16 @@ def claim_value(claims: Mapping[str, Any], path: str) -> Any:
     return value
 
 
+def claim_is_true(value: Any) -> bool:
+    """Read a boolean claim: JSON ``true`` or a ``true``/``1``/``yes`` string."""
+
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        return value.strip().lower() in {'true', '1', 'yes'}
+    return False
+
+
 def authorize_claims(
     claims: Mapping[str, Any], config: OIDCConfig
 ) -> tuple[str, str]:
@@ -221,12 +233,18 @@ def authorize_claims(
     else:
         groups = set()
 
-    if config.allowed_groups and not groups.intersection(
+    is_admin = bool(groups.intersection(config.admin_groups)) or (
+        bool(config.admin_claim)
+        and claim_is_true(claim_value(claims, config.admin_claim))
+    )
+    if (
         config.allowed_groups
+        and not is_admin
+        and not groups.intersection(config.allowed_groups)
     ):
         raise OIDCError('Your identity is not in an allowed group')
 
-    role = 'admin' if groups.intersection(config.admin_groups) else 'user'
+    role = 'admin' if is_admin else 'user'
     username = claim_value(claims, config.username_claim)
     if not isinstance(username, str) or not username.strip():
         username = claims.get('email')

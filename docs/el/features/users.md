@@ -122,7 +122,7 @@ icon: lucide/users
 
 ## OpenID Connect
 
-Castify can add an optional **Continue with identity provider** button to the sign-in page and authenticate through an OpenID Connect provider such as Authelia, Authentik, Keycloak or Pocket ID. Local username/password sign-in stays available unless you disable it. The browser flow uses Authorization Code with PKCE; Castify verifies the provider's signed ID token before creating its own session cookie.
+Castify can add an optional **Sign in with SSO** button to the sign-in page (the main button when local sign-in is off, with a line saying the browser goes to the provider and comes back) and authenticate through an OpenID Connect provider such as Authelia, Authentik, Keycloak or Pocket ID. Local username/password sign-in stays available unless you disable it. The browser flow uses Authorization Code with PKCE; Castify verifies the provider's signed ID token before creating its own session cookie.
 
 Set these variables on the server and register the callback URL shown below as an allowed redirect URI in your provider:
 
@@ -137,10 +137,34 @@ Set these variables on the server and register the callback URL shown below as a
 | `DOWNTIFY_OIDC_GROUPS_CLAIM` | No | `groups` | Claim containing a string or list of group names. Dotted paths such as `realm_access.roles` are supported. |
 | `DOWNTIFY_OIDC_ALLOWED_GROUPS` | No | _(empty)_ | Comma-separated groups allowed to sign in. Empty means any authenticated identity. |
 | `DOWNTIFY_OIDC_ADMIN_GROUPS` | No | _(empty)_ | Comma-separated groups whose members receive the Castify admin role. Everyone else is a user. |
+| `DOWNTIFY_OIDC_ADMIN_CLAIM` | No | _(empty)_ | Claim (dotted paths supported) that makes an identity a Castify admin when it is `true` (JSON `true`, or the string `true`, `1` or `yes`). An identity made admin this way, or by `DOWNTIFY_OIDC_ADMIN_GROUPS`, may sign in even outside `DOWNTIFY_OIDC_ALLOWED_GROUPS`. |
 
 For example, the provider's client needs the callback `https://music.example.com/api/auth/oidc/callback` and the scopes `openid profile email`. For a reverse proxy, also configure [`DOWNTIFY_TRUSTED_PROXIES`](../getting-started/environment-variables.md#mobile-apps-and-sign-in) or set the redirect URI explicitly.
 
 The first successful sign-in creates a Castify account. Identity is keyed by the exact `issuer` and OIDC `sub`, not by a mutable username or email. An existing local account is **never** linked automatically by matching username or email; if a claimed username is already taken, Castify adds a stable suffix. Admins can still manage local roles in **Settings → Users**, while a configured admin-group mapping is synchronized on every OIDC sign-in. If the mapped group change would remove the server's last admin, Castify rejects that sign-in until another admin exists.
+
+::: tip Authentik: superusers as admins
+Authentik's superuser status is a user flag, not a group name. Add a scope mapping (**Customization → Property Mappings → Scope Mapping**, scope name `castify`) with
+
+```python
+return {
+    'is_superuser': bool(request.user.is_superuser),
+    'groups': [group.name for group in request.user.ak_groups.all()],
+}
+```
+
+select it on the provider (with the default `openid`, `email` and `profile` mappings), give the provider the `authorization_code` grant type, and set:
+
+```yaml
+environment:
+  - DOWNTIFY_OIDC_ISSUER=https://auth.example.com/application/o/castify/
+  - DOWNTIFY_OIDC_SCOPES=openid profile email castify
+  - DOWNTIFY_OIDC_ALLOWED_GROUPS=streaming
+  - DOWNTIFY_OIDC_ADMIN_CLAIM=is_superuser
+```
+
+Members of `streaming` sign in as users and superusers as admins. Bind the same groups to the Authentik application so everyone else is stopped at the provider already.
+:::
 
 To turn off username/password login for both the web page and the app's password-token endpoint, set `DOWNTIFY_DISABLE_LOCAL_LOGIN=true`. OIDC and code-based app pairing remain available. This does not revoke existing browser sessions or device tokens. It requires a complete OIDC configuration and is separate from `DOWNTIFY_DISABLE_AUTH`, which removes authentication entirely.
 

@@ -172,3 +172,53 @@ def test_group_claim_maps_role_and_enforces_allowlist():
             },
             config,
         )
+
+
+def test_admin_claim_maps_role_and_bypasses_allowlist():
+    config = _config(
+        allowed_groups=('streaming',),
+        admin_claim='is_superuser',
+    )
+
+    assert authorize_claims(
+        {
+            'sub': 'subject-1',
+            'preferred_username': 'boss',
+            'groups': ['admin'],
+            'is_superuser': True,
+        },
+        config,
+    ) == ('boss', 'admin')
+    assert authorize_claims(
+        {
+            'sub': 'subject-2',
+            'preferred_username': 'listener',
+            'groups': ['streaming'],
+            'is_superuser': False,
+        },
+        config,
+    ) == ('listener', 'user')
+
+    for value in (False, None, 'false', 0, 1, ['true']):
+        with pytest.raises(OIDCError, match='not in an allowed group'):
+            authorize_claims(
+                {
+                    'sub': 'subject-3',
+                    'preferred_username': 'nobody',
+                    'groups': ['other'],
+                    'is_superuser': value,
+                },
+                config,
+            )
+
+
+def test_config_reads_admin_claim():
+    config = OIDCConfig.from_env({
+        'DOWNTIFY_OIDC_ISSUER': 'https://idp.example.com/',
+        'DOWNTIFY_OIDC_CLIENT_ID': 'client',
+        'DOWNTIFY_OIDC_CLIENT_SECRET': 'secret',
+        'DOWNTIFY_OIDC_ADMIN_CLAIM': ' is_superuser ',
+    })
+
+    assert config is not None
+    assert config.admin_claim == 'is_superuser'

@@ -45,6 +45,7 @@ environment:
 | `DOWNTIFY_OIDC_GROUPS_CLAIM` | `groups` | Claim containing group names; dotted paths are supported. |
 | `DOWNTIFY_OIDC_ALLOWED_GROUPS` | _(empty)_ | Comma-separated group allowlist; unset means any authenticated provider identity may sign in. |
 | `DOWNTIFY_OIDC_ADMIN_GROUPS` | _(empty)_ | Comma-separated groups mapped to Castify admins. Other OIDC users are normal users. |
+| `DOWNTIFY_OIDC_ADMIN_CLAIM` | _(empty)_ | Claim that makes an identity an admin when `true` (e.g. `is_superuser` from an Authentik scope mapping). Admins may sign in outside `DOWNTIFY_OIDC_ALLOWED_GROUPS`. |
 | `DOWNTIFY_TRUSTED_PROXIES` | _(설정 안 됨)_ | 리버스 프록시의 주소 또는 네트워크를 쉼표로 구분(예: `172.18.0.0/16,10.0.0.5`). 이들에게서 온 요청의 `X-Forwarded-For`, `X-Forwarded-Proto`, `X-Forwarded-Host` 헤더만 신뢰합니다. 로그인과 페어링 시도를 제한하는 기준이 되는 클라이언트 주소, 로그인 쿠키의 secure 플래그, same-site 검사에 쓰입니다. 설정하지 않으면 이 헤더들은 무시됩니다. |
 | `DOWNTIFY_DISCOVERY` | `true` | `false`로 하면 앱이 *이 네트워크에서 찾음*에 서버를 나열하는 데 쓰는 로컬 네트워크 알림(mDNS, `_downtify._tcp`)을 중단합니다. Docker 브리지 네트워크에서는 알림이 어차피 LAN에 닿지 않습니다. [Docker Compose](docker-compose.md#finding-the-server-from-the-apps)를 참고하세요. |
 | `DOWNTIFY_TRANSCODE_CACHE_MB` | `2048` | 트랜스코딩된 사본의 캐시(`/data/transcode_cache`)를 유지하는 최대 크기(MB). 가장 오래 재생되지 않은 사본부터 삭제됩니다. |

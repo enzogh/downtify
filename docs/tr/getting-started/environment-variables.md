@@ -45,6 +45,7 @@ environment:
 | `DOWNTIFY_OIDC_GROUPS_CLAIM` | `groups` | Claim containing group names; dotted paths are supported. |
 | `DOWNTIFY_OIDC_ALLOWED_GROUPS` | _(empty)_ | Comma-separated group allowlist; unset means any authenticated provider identity may sign in. |
 | `DOWNTIFY_OIDC_ADMIN_GROUPS` | _(empty)_ | Comma-separated groups mapped to Castify admins. Other OIDC users are normal users. |
+| `DOWNTIFY_OIDC_ADMIN_CLAIM` | _(empty)_ | Claim that makes an identity an admin when `true` (e.g. `is_superuser` from an Authentik scope mapping). Admins may sign in outside `DOWNTIFY_OIDC_ALLOWED_GROUPS`. |
 | `DOWNTIFY_TRUSTED_PROXIES` | _(ayarlı değil)_ | Ters proxy’nizin virgülle ayrılmış adresleri veya ağları (örn. `172.18.0.0/16,10.0.0.5`). Yalnızca bunlardan gelen isteklerin `X-Forwarded-For`, `X-Forwarded-Proto` ve `X-Forwarded-Host` başlıklarına inanılır — oturum açma ve eşleştirme denemelerinin sınırlandığı istemci adresi, oturum çerezindeki secure bayrağı ve aynı site denetimi için. Ayarlı değilse: bu başlıklar yok sayılır. |
 | `DOWNTIFY_DISCOVERY` | `true` | `false`, uygulamaların *Bu ağda bulundu* altında listelemek için kullandığı sunucu duyurusunu yerel ağda (mDNS, `_downtify._tcp`) durdurur. Docker’ın köprü ağında duyuru zaten LAN’a ulaşmaz — [Docker Compose](docker-compose.md#finding-the-server-from-the-apps) sayfasına bakın. |
 | `DOWNTIFY_TRANSCODE_CACHE_MB` | `2048` | Dönüştürülmüş kopyaların önbelleğinin (`/data/transcode_cache`) altında tutulduğu en büyük boyut, MB cinsinden; en uzun süredir çalınmayan kopyalar önce gider. |

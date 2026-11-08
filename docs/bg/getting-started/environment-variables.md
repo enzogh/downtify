@@ -45,6 +45,7 @@ environment:
 | `DOWNTIFY_OIDC_GROUPS_CLAIM` | `groups` | Claim containing group names; dotted paths are supported. |
 | `DOWNTIFY_OIDC_ALLOWED_GROUPS` | _(empty)_ | Comma-separated group allowlist; unset means any authenticated provider identity may sign in. |
 | `DOWNTIFY_OIDC_ADMIN_GROUPS` | _(empty)_ | Comma-separated groups mapped to Castify admins. Other OIDC users are normal users. |
+| `DOWNTIFY_OIDC_ADMIN_CLAIM` | _(empty)_ | Claim that makes an identity an admin when `true` (e.g. `is_superuser` from an Authentik scope mapping). Admins may sign in outside `DOWNTIFY_OIDC_ALLOWED_GROUPS`. |
 | `DOWNTIFY_TRUSTED_PROXIES` | _(не е зададена)_ | Адреси или мрежи на вашия обратен прокси, разделени със запетая (напр. `172.18.0.0/16,10.0.0.5`). Само на заявките от тях се вярва за хедърите `X-Forwarded-For`, `X-Forwarded-Proto` и `X-Forwarded-Host` — за адреса на клиента, по който се ограничават опитите за вход и сдвояване, за secure флага на бисквитката за вход и за проверката за същия сайт. Незададена: тези хедъри се игнорират. |
 | `DOWNTIFY_DISCOVERY` | `true` | `false` спира обявяването на сървъра в локалната мрежа (mDNS, `_downtify._tcp`), което приложенията ползват, за да го изброят под *Намерени в тази мрежа*. В bridge мрежата на Docker обявяването така или иначе не стига до LAN — вижте [Docker Compose](docker-compose.md#finding-the-server-from-the-apps). |
 | `DOWNTIFY_TRANSCODE_CACHE_MB` | `2048` | Най-големият размер, в MB, под който се държи кешът на прекодираните копия (`/data/transcode_cache`); най-отдавна пускани копия излизат първи. |

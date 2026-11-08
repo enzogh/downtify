@@ -45,6 +45,7 @@ environment:
 | `DOWNTIFY_OIDC_GROUPS_CLAIM` | `groups` | 包含组名的 claim；支持点分隔的路径。 |
 | `DOWNTIFY_OIDC_ALLOWED_GROUPS` | _(empty)_ | 以逗号分隔的允许登录组列表。留空时，任何通过身份验证的提供方用户都可以登录。 |
 | `DOWNTIFY_OIDC_ADMIN_GROUPS` | _(empty)_ | 映射为 Castify 管理员的组名，以逗号分隔。其他 OIDC 用户将作为普通用户。 |
+| `DOWNTIFY_OIDC_ADMIN_CLAIM` | _(empty)_ | Claim that makes an identity an admin when `true` (e.g. `is_superuser` from an Authentik scope mapping). Admins may sign in outside `DOWNTIFY_OIDC_ALLOWED_GROUPS`. |
 | `DOWNTIFY_TRUSTED_PROXIES` | _(unset)_ | 反向代理的地址或网段列表，以逗号分隔（例如 `172.18.0.0/16,10.0.0.5`）。仅信任来自这些地址的请求所携带的 `X-Forwarded-For`、`X-Forwarded-Proto` 和 `X-Forwarded-Host`，用于识别客户端地址、限制登录和配对尝试频率、设置登录 Cookie 的安全标志并执行 same-site 检查。未设置时会忽略这些请求头。 |
 | `DOWNTIFY_DISCOVERY` | `true` | 设为 `false` 后，停止通过本地网络 mDNS（`_downtify._tcp`）广播服务器；应用依靠该广播在 *Found on this network* 列表中显示服务器。在 Docker bridge 网络中，广播本来也无法到达局域网。详见 [Docker Compose](docker-compose.md#finding-the-server-from-the-apps)。 |
 | `DOWNTIFY_TRANSCODE_CACHE_MB` | `2048` | 转码副本缓存（`/data/transcode_cache`）的最大大小，单位为 MB；优先清除最近较少播放的副本。 |
