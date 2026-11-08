@@ -200,6 +200,168 @@ def test_expired_twice_gives_up():
         asyncio.run(streams.open(VID, None))
 
 
+def _fresh_resolver(now: dict):
+    calls: list[str] = []
+
+    def resolve(video_id: str, *, cookies_file: str = '') -> LiveSource:
+        calls.append(video_id)
+        return LiveSource(
+            url=f'https://rr.googlevideo.com/{video_id}/{len(calls)}',
+            ext='m4a',
+            expires_at=10**12,
+            resolved_at=now['t'],
+        )
+
+    resolve.calls = calls
+    return resolve
+
+
+def _recorded_sleeps():
+    waits: list[float] = []
+
+    async def sleep(seconds: float) -> None:
+        waits.append(seconds)
+
+    return waits, sleep
+
+
+def test_a_fresh_url_refused_is_retried_not_resolved_again():
+    now = {'t': 1000.0}
+    resolver = _fresh_resolver(now)
+    waits, sleep = _recorded_sleeps()
+    streams = _streams(
+        FakeUpstream(expired=2),
+        resolver,
+        clock=lambda: now['t'],
+        sleep=sleep,
+    )
+    _relayed, body = _drain(streams, None)
+    assert body == AUDIO
+    assert len(resolver.calls) == 1
+    assert waits == [
+        live_stream.FRESH_REFUSAL_DELAY_SECONDS,
+        live_stream.FRESH_REFUSAL_DELAY_SECONDS * 2,
+    ]
+
+
+def test_a_fresh_url_refused_too_often_is_resolved_again():
+    now = {'t': 1000.0}
+    resolver = _fresh_resolver(now)
+    _waits, sleep = _recorded_sleeps()
+    streams = _streams(
+        FakeUpstream(expired=live_stream.MAX_FRESH_REFUSALS + 1),
+        resolver,
+        clock=lambda: now['t'],
+        sleep=sleep,
+    )
+    _relayed, body = _drain(streams, None)
+    assert body == AUDIO
+    assert len(resolver.calls) == 2
+
+
+def test_an_old_url_refused_is_resolved_again_at_once():
+    now = {'t': 1000.0}
+    resolver = _fresh_resolver(now)
+    waits, sleep = _recorded_sleeps()
+    streams = _streams(
+        FakeUpstream(),
+        resolver,
+        clock=lambda: now['t'],
+        sleep=sleep,
+    )
+    asyncio.run(streams.source(VID))
+    now['t'] += live_stream.FRESH_SOURCE_SECONDS + 1
+    streams._opener = FakeUpstream(expired=1)
+    _drain(streams, None)
+    assert waits == []
+    assert len(resolver.calls) == 2
+
+
+def test_the_relay_waits_until_youtube_serves_the_url():
+    now = {'t': 1000.0}
+
+    def resolve(video_id: str, *, cookies_file: str = '') -> LiveSource:
+        return LiveSource(
+            url='https://rr.googlevideo.com/x',
+            ext='m4a',
+            expires_at=10**12,
+            resolved_at=now['t'],
+            available_at=now['t'] + 1.5,
+        )
+
+    waits, sleep = _recorded_sleeps()
+    streams = _streams(
+        FakeUpstream(), resolve, clock=lambda: now['t'], sleep=sleep
+    )
+    _relayed, body = _drain(streams, None)
+    assert body == AUDIO
+    assert waits == [1.5]
+
+
+def test_available_at_is_read_from_the_chosen_format():
+    info = {
+        'format_id': '140',
+        'formats': [
+            {'format_id': '251', 'available_at': 5},
+            {'format_id': '140', 'available_at': 1234},
+        ],
+    }
+    assert live_stream._available_at(info) == 1234
+    assert live_stream._available_at({'format_id': '140'}) == 0
+
+
+def test_live_resolve_asks_the_quick_clients_first(monkeypatch):
+    monkeypatch.delenv('DOWNTIFY_LIVE_PLAYER_CLIENTS', raising=False)
+    seen: list[list[str]] = []
+    info = {'url': 'https://rr.googlevideo.com/videoplayback', 'ext': 'm4a'}
+
+    class FakeYdl:
+        def __init__(self, opts):
+            seen.append(opts['extractor_args']['youtube']['player_client'])
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *exc):
+            return False
+
+        @staticmethod
+        def extract_info(url, download):
+            return info
+
+    monkeypatch.setattr(live_stream.yt_dlp, 'YoutubeDL', FakeYdl)
+    live_stream.resolve_live_source(VID)
+    assert seen == [list(live_stream.DEFAULT_LIVE_PLAYER_CLIENTS)]
+
+
+def test_live_resolve_falls_back_to_every_client(monkeypatch):
+    monkeypatch.setenv('DOWNTIFY_LIVE_PLAYER_CLIENTS', 'web_embedded')
+    seen: list[list[str]] = []
+    info = {'url': 'https://rr.googlevideo.com/videoplayback', 'ext': 'm4a'}
+
+    class FakeYdl:
+        def __init__(self, opts):
+            self.clients = opts['extractor_args']['youtube']['player_client']
+            seen.append(self.clients)
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *exc):
+            return False
+
+        def extract_info(self, url, download):
+            if self.clients == ['web_embedded']:
+                raise RuntimeError('Requested format is not available')
+            return info
+
+    monkeypatch.setattr(live_stream.yt_dlp, 'YoutubeDL', FakeYdl)
+    source = live_stream.resolve_live_source(VID)
+    assert source.url == info['url']
+    assert seen[0] == ['web_embedded']
+    assert len(seen[1]) > 1
+
+
 def test_relayed_bytes_are_counted():
     counted: list[int] = []
     _drain(_streams(), 'bytes=0-99', on_bytes=counted.append)

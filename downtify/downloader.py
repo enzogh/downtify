@@ -56,9 +56,12 @@ from .download_log import (
 from .download_policy import DownloadPolicyBlocked
 from .file_naming import sanitize_file_name
 from .ip_rotation import (
+    MAX_REFUSAL_RETRIES,
     MAX_ROTATIONS_PER_ATTEMPT,
+    REFUSAL_RETRY_DELAY_SECONDS,
     current_generation,
     is_bot_check_error,
+    is_transient_refusal,
     rotate_exit_ip,
 )
 from .itunes import fetch_genre as _fetch_itunes_genre
@@ -1657,9 +1660,12 @@ class Downloader:
         ``DOWNTIFY_IP_ROTATE_URL`` is set), up to
         :data:`MAX_ROTATIONS_PER_ATTEMPT` times. A ``429`` - or a bot
         check that no new IP fixed - paces requests and retries once.
+        googlevideo's passing ``403`` is retried a little later, up to
+        :data:`MAX_REFUSAL_RETRIES` times.
         """
 
         rotations = 0
+        refusals = 0
         while True:
             seen = current_generation()
             try:
@@ -1669,6 +1675,19 @@ class Downloader:
                 return
             except Exception as exc:
                 message = str(exc)
+                if is_transient_refusal(message):
+                    # googlevideo's passing 403: a fresh URL a little
+                    # later works.
+                    if refusals >= MAX_REFUSAL_RETRIES:
+                        raise
+                    refusals += 1
+                    logger.info(
+                        'YouTube refused the media (403); retry {} of {}',
+                        refusals,
+                        MAX_REFUSAL_RETRIES,
+                    )
+                    time.sleep(REFUSAL_RETRY_DELAY_SECONDS * refusals)
+                    continue
                 if not is_rate_limited_error(message):
                     raise
                 if (

@@ -105,3 +105,30 @@ def test_run_does_not_retry_other_errors(posts):
     with pytest.raises(RuntimeError):
         run_with_ip_rotation(attempt)
     assert posts == []
+
+
+def test_run_retries_a_passing_403_without_a_new_ip(posts):
+    waits: list[float] = []
+    answers = [RuntimeError('HTTP Error 403: Forbidden'), 'ok']
+
+    def attempt():
+        answer = answers.pop(0)
+        if isinstance(answer, Exception):
+            raise answer
+        return answer
+
+    assert run_with_ip_rotation(attempt, sleep=waits.append) == 'ok'
+    assert posts == []
+    assert len(waits) == 1
+
+
+def test_run_gives_up_on_a_lasting_403(posts):
+    calls = []
+
+    def attempt():
+        calls.append(1)
+        raise RuntimeError('HTTP Error 403: Forbidden')
+
+    with pytest.raises(RuntimeError):
+        run_with_ip_rotation(attempt, sleep=lambda _s: None)
+    assert len(calls) == ip_rotation.MAX_REFUSAL_RETRIES + 1

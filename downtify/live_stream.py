@@ -29,7 +29,7 @@ import asyncio
 import os
 import re
 import time
-from collections.abc import Callable, Iterator
+from collections.abc import Awaitable, Callable, Iterator
 from dataclasses import dataclass, field
 from typing import Any, Optional
 from urllib.parse import parse_qs, urlparse
@@ -40,7 +40,7 @@ from yt_dlp.networking import Request as YtRequest
 from yt_dlp.networking.exceptions import HTTPError
 
 from .downloader import is_age_restricted_error
-from .ip_rotation import run_with_ip_rotation
+from .ip_rotation import is_bot_check_error, run_with_ip_rotation
 from .stream import _ydl_options, clean_video_id
 
 #: Size of one upstream request (YouTube throttles bigger ones).
@@ -53,6 +53,16 @@ EXPIRY_MARGIN_SECONDS = 120
 DEFAULT_TTL_SECONDS = 60 * 60
 #: Never trust a resolved URL longer than this.
 MAX_TTL_SECONDS = 5 * 60 * 60
+#: A URL resolved this recently is retried, not resolved again, on 403:
+#: googlevideo sometimes refuses a brand-new URL for a moment.
+FRESH_SOURCE_SECONDS = 30
+#: Tries of a fresh URL after a 403, waiting a little longer each time.
+MAX_FRESH_REFUSALS = 4
+FRESH_REFUSAL_DELAY_SECONDS = 0.5
+#: Player clients asked first when resolving a live stream. Each extra
+#: client costs a round trip (and a PO Token for some), and these two
+#: answer with playable audio; the full download list is the fallback.
+DEFAULT_LIVE_PLAYER_CLIENTS = ('web_embedded', 'android')
 
 _MEDIA_TYPES = {
     'm4a': 'audio/mp4',
@@ -89,6 +99,9 @@ class LiveSource:
     filesize: int = 0
     duration: float = 0.0
     expires_at: float = 0.0
+    resolved_at: float = 0.0
+    #: YouTube refuses the URL until then (epoch seconds; 0: unknown).
+    available_at: float = 0.0
 
     @property
     def media_type(self) -> str:
@@ -159,6 +172,37 @@ def _cookie_options(cookies_file: str) -> dict[str, Any]:
     return opts
 
 
+#: Never wait longer than this for a URL to become usable.
+MAX_AVAILABILITY_WAIT_SECONDS = 8.0
+
+
+def _available_at(info: dict[str, Any]) -> float:
+    """When YouTube starts serving the chosen format (``0``: now).
+
+    yt-dlp reports YouTube's ``available_at`` per format; before it,
+    googlevideo answers ``403``."""
+
+    wanted = info.get('format_id')
+    for fmt in info.get('formats') or []:
+        if isinstance(fmt, dict) and fmt.get('format_id') == wanted:
+            try:
+                return float(fmt.get('available_at') or 0)
+            except (TypeError, ValueError):
+                return 0.0
+    try:
+        return float(info.get('available_at') or 0)
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def live_player_clients() -> list[str]:
+    """``DOWNTIFY_LIVE_PLAYER_CLIENTS``, else the quick default pair."""
+
+    raw = os.getenv('DOWNTIFY_LIVE_PLAYER_CLIENTS', '').strip()
+    clients = [c.strip() for c in raw.split(',') if c.strip()]
+    return clients or list(DEFAULT_LIVE_PLAYER_CLIENTS)
+
+
 def resolve_live_source(
     video_id: str, *, cookies_file: str = ''
 ) -> LiveSource:
@@ -169,16 +213,29 @@ def resolve_live_source(
     """
 
     vid = clean_video_id(video_id)
-    opts = {**_ydl_options(), **_cookie_options(cookies_file)}
 
-    def extract() -> Any:
+    def extract(clients: Optional[list[str]]) -> Any:
+        opts = {**_ydl_options(), **_cookie_options(cookies_file)}
+        if clients:
+            opts['extractor_args']['youtube']['player_client'] = clients
         with yt_dlp.YoutubeDL(opts) as ydl:
             return ydl.extract_info(
                 f'https://www.youtube.com/watch?v={vid}', download=False
             )
 
+    def attempt() -> Any:
+        try:
+            return extract(live_player_clients())
+        except Exception as exc:
+            message = str(exc)
+            if is_bot_check_error(message) or is_age_restricted_error(message):
+                raise
+            # The quick clients had nothing: ask every client.
+            logger.debug('Live stream quick resolve failed: {}', message)
+            return extract(None)
+
     try:
-        info = run_with_ip_rotation(extract)
+        info = run_with_ip_rotation(attempt)
     except Exception as exc:
         if is_age_restricted_error(str(exc)):
             raise ValueError(
@@ -205,6 +262,8 @@ def resolve_live_source(
         filesize=int(info.get('filesize') or 0),
         duration=float(info.get('duration') or 0),
         expires_at=url_expiry(url, time.time()),
+        resolved_at=time.time(),
+        available_at=_available_at(info),
     )
     logger.info(
         'Live stream resolved for videoId={} ext={!r}', vid, source.ext
@@ -293,11 +352,13 @@ class LiveStreams:
         resolver: Callable[..., LiveSource] = resolve_live_source,
         opener: Opener = ytdlp_opener,
         clock: Callable[[], float] = time.time,
+        sleep: Callable[[float], Awaitable[None]] = asyncio.sleep,
         max_entries: int = 256,
     ) -> None:
         self._resolver = resolver
         self._opener = opener
         self._clock = clock
+        self._sleep = sleep
         self._max_entries = max(1, int(max_entries))
         self._sources: dict[str, LiveSource] = {}
         self._pending: dict[str, asyncio.Future[LiveSource]] = {}
@@ -359,18 +420,37 @@ class LiveStreams:
 
         vid = clean_video_id(video_id)
         wanted = parse_range(range_header)
-        for attempt in range(2):
+        resolved_again = False
+        refusals = 0
+        while True:
             source = await self.source(vid, cookies_file=cookies_file)
+            wait = min(
+                source.available_at - self._clock(),
+                MAX_AVAILABILITY_WAIT_SECONDS,
+            )
+            if wait > 0:
+                # Asking earlier only earns a 403.
+                await self._sleep(wait)
             try:
                 return await asyncio.to_thread(
                     self._relay, source, wanted, on_bytes
                 )
             except UpstreamExpired:
+                fresh = (
+                    self._clock() - source.resolved_at < FRESH_SOURCE_SECONDS
+                )
+                if fresh and refusals < MAX_FRESH_REFUSALS:
+                    # A brand-new URL refused: it works a moment later,
+                    # while resolving again would restart from zero.
+                    refusals += 1
+                    await self._sleep(FRESH_REFUSAL_DELAY_SECONDS * refusals)
+                    continue
                 self.forget(vid)
-                if attempt:
+                if resolved_again:
                     raise
+                resolved_again = True
+                refusals = 0
                 logger.debug('Live stream URL expired for videoId={}', vid)
-        raise ValueError('YouTube refused the stream')  # pragma: no cover
 
     def _relay(
         self,

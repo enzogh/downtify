@@ -492,6 +492,7 @@ from .external_sync import (
 )
 from .file_providers import FileProviders, providers_for
 from .fs_suggest import suggest_directories
+from .ip_rotation import is_youtube_hiccup
 from .library_cache_keys import file_content_key_from_name_and_size
 from .library_catalog import (
     LibraryContext,
@@ -4367,19 +4368,44 @@ async def _run_download(
                         sharers,
                     )
                 return job['filename']
-            return await _run_download_locked(
-                song,
-                song_id,
-                job,
-                loop,
-                subdir=subdir,
-                delay_seconds=delay_seconds,
-                playlist_name=playlist_name,
-                spotify_playlist_id=spotify_playlist_id,
-                track_order=track_order,
-                refresh_playlists=refresh_playlists,
-                user_id=user_id,
-            )
+            # YouTube's passing blocks get the song queued again for a
+            # later try instead of an error the user has to retry.
+            later = list(DEFERRED_RETRY_DELAYS_SECONDS)
+            while True:
+                try:
+                    return await _run_download_locked(
+                        song,
+                        song_id,
+                        job,
+                        loop,
+                        subdir=subdir,
+                        delay_seconds=delay_seconds,
+                        playlist_name=playlist_name,
+                        spotify_playlist_id=spotify_playlist_id,
+                        track_order=track_order,
+                        refresh_playlists=refresh_playlists,
+                        user_id=user_id,
+                        retry_later=bool(later),
+                    )
+                except _RetryLater as retry:
+                    wait = later.pop(0)
+                    logger.warning(
+                        'YouTube blocked {} ({}); trying again in {} s',
+                        song_id,
+                        retry.reason,
+                        wait,
+                    )
+                    job.update(status='queued', progress=0, message='')
+                    await state.connections.broadcast_job(
+                        _job_users(job),
+                        {
+                            'song': song,
+                            'progress': 0,
+                            'message': '',
+                            'status': 'queued',
+                        },
+                    )
+                    await _sleep_before_retry(wait)
     except asyncio.CancelledError:
         # Shutting down mid-queue: the saved job stays, so the next
         # start downloads it again.
@@ -4390,6 +4416,22 @@ async def _run_download(
             _download_locks.pop(song_id, None)
         if not keep_pending:
             await _forget_pending([song_id])
+
+
+#: Waits before trying a song YouTube blocked again (one per retry).
+DEFERRED_RETRY_DELAYS_SECONDS = (30, 120, 600)
+
+
+class _RetryLater(Exception):
+    """A download hit a passing YouTube block: queue it again later."""
+
+    def __init__(self, reason: str) -> None:
+        super().__init__(reason)
+        self.reason = reason.splitlines()[0][:160] if reason else ''
+
+
+async def _sleep_before_retry(seconds: float) -> None:
+    await asyncio.sleep(seconds)
 
 
 async def _finish_with_existing(
@@ -4455,8 +4497,13 @@ async def _run_download_locked(
     track_order: int = 0,
     refresh_playlists: bool = True,
     user_id: int = 0,
+    retry_later: bool = False,
 ) -> Optional[str]:
     """Single execution of a download job, for one owner of the lock.
+
+    With *retry_later*, a passing YouTube failure raises
+    :class:`_RetryLater` (nothing broadcast) so the caller can queue the
+    song again instead of showing an error.
 
     Shares the exact semantics the old ``_run_download`` body had: the
     concurrency slot is held across the existing-file check and the
@@ -4555,6 +4602,12 @@ async def _run_download_locked(
             if delay_seconds > 0:
                 await asyncio.sleep(delay_seconds)
     except Exception as exc:
+        if (
+            retry_later
+            and not isinstance(exc, (NoAudioMatchError, TrackTooLongError))
+            and is_youtube_hiccup(str(exc))
+        ):
+            raise _RetryLater(str(exc)) from exc
         if isinstance(exc, (NoAudioMatchError, TrackTooLongError)):
             # An expected outcome, not a crash: no traceback in the log.
             logger.warning('{} ({})', exc, song_id)

@@ -36,6 +36,10 @@ MAX_ROTATIONS_PER_ATTEMPT = 3
 MAX_ROTATIONS_PER_HOUR = 30
 #: The control endpoint waits for the tunnel; give it time.
 ROTATE_TIMEOUT_SECONDS = 45
+#: Extra tries after YouTube's passing 403 on the media.
+MAX_REFUSAL_RETRIES = 2
+#: Wait before a retry after a 403 (times the retry's number).
+REFUSAL_RETRY_DELAY_SECONDS = 1.5
 
 _BOT_CHECK_FRAGMENTS = (
     'confirm you’re not a bot',
@@ -116,18 +120,69 @@ def rotate_exit_ip(seen_generation: int, now: Optional[float] = None) -> bool:
         return True
 
 
-def run_with_ip_rotation(attempt: Callable[[], T]) -> T:
-    """Run *attempt*; on a bot check, get a new IP and run it again."""
+def is_transient_refusal(message: str) -> bool:
+    """Whether yt-dlp hit YouTube's passing ``403`` on the media itself.
+
+    googlevideo sometimes refuses a fresh URL for a few seconds; the
+    same song works on the next try."""
+
+    return 'http error 403' in message.lower()
+
+
+_HICCUP_FRAGMENTS = (
+    'http error 403',
+    'http error 429',
+    'too many requests',
+    'timed out',
+    'connection reset',
+    'connection aborted',
+    'remote end closed',
+    'temporary failure in name resolution',
+    'unable to connect to proxy',
+)
+
+
+def is_youtube_hiccup(message: str) -> bool:
+    """Whether a failed download is worth trying again later.
+
+    YouTube's blocks and the network's hiccups pass; a missing video,
+    an age wall or a too-long track never do."""
+
+    lowered = message.lower()
+    return is_bot_check_error(lowered) or any(
+        fragment in lowered for fragment in _HICCUP_FRAGMENTS
+    )
+
+
+def run_with_ip_rotation(
+    attempt: Callable[[], T],
+    *,
+    sleep: Callable[[float], None] = time.sleep,
+) -> T:
+    """Run *attempt*, riding out YouTube's blocks.
+
+    A bot check gets a new IP and another run (up to
+    :data:`MAX_ROTATIONS_PER_ATTEMPT`); a passing ``403`` gets up to
+    :data:`MAX_REFUSAL_RETRIES` more runs, a little later each time.
+    """
 
     rotations = 0
+    refusals = 0
     while True:
         seen = current_generation()
         try:
             return attempt()
         except Exception as exc:
+            message = str(exc)
+            if is_transient_refusal(message):
+                if refusals >= MAX_REFUSAL_RETRIES:
+                    raise
+                refusals += 1
+                sleep(REFUSAL_RETRY_DELAY_SECONDS * refusals)
+                continue
             if (
                 rotations >= MAX_ROTATIONS_PER_ATTEMPT
-                or not is_bot_check_error(str(exc))
+                or not is_bot_check_error(message)
                 or not rotate_exit_ip(seen)
             ):
                 raise

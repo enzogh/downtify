@@ -210,3 +210,26 @@ def test_downloads_give_up_when_no_new_ip_helps(tmp_path, fake_ydl, rotations):
     with pytest.raises(RuntimeError):
         _fetch(tmp_path)
     assert len(rotations) == MAX_ROTATIONS_PER_ATTEMPT
+
+
+_403 = 'ERROR: unable to download video data: HTTP Error 403: Forbidden'
+
+
+def test_a_passing_403_is_retried_later(tmp_path, fake_ydl, monkeypatch):
+    waits: list[float] = []
+    monkeypatch.setattr(downloader_mod.time, 'sleep', waits.append)
+    fake_ydl.errors = [RuntimeError(_403), RuntimeError(_403)]
+    assert _fetch(tmp_path).name == 'Urus.flac'
+    assert len(fake_ydl.runs) == 3
+    assert waits == [
+        ip_rotation.REFUSAL_RETRY_DELAY_SECONDS,
+        ip_rotation.REFUSAL_RETRY_DELAY_SECONDS * 2,
+    ]
+
+
+def test_a_403_that_lasts_fails(tmp_path, fake_ydl, monkeypatch):
+    monkeypatch.setattr(downloader_mod.time, 'sleep', lambda _s: None)
+    fake_ydl.errors = [RuntimeError(_403)] * 5
+    with pytest.raises(RuntimeError):
+        _fetch(tmp_path)
+    assert len(fake_ydl.runs) == ip_rotation.MAX_REFUSAL_RETRIES + 1
