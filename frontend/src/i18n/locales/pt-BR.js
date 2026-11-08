@@ -1807,11 +1807,13 @@ export default {
   auth: {
     signInTitle: 'Entrar no Castify',
     signInBody: 'Entre com seu usuário e senha.',
-    signInBodyOidcOnly: 'Entre usando seu provedor de identidade.',
+    signInBodyOidcOnly: 'Entre com sua conta SSO para continuar.',
     username: 'Usuário',
     password: 'Senha',
     signIn: 'Entrar',
-    oidcSignIn: 'Continuar com o provedor de identidade',
+    oidcSignIn: 'Entrar com SSO',
+    oidcRedirectHint:
+      'Você irá para a página de login do SSO e depois voltará direto para o Castify.',
     or: 'ou',
     oidcFailed:
       'Não foi possível entrar pelo provedor de identidade. Tente novamente.',

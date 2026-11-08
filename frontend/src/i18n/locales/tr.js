@@ -1788,11 +1788,13 @@ export default {
   auth: {
     signInTitle: 'Castify’a giriş yap',
     signInBody: 'Kullanıcı adınız ve parolanızla giriş yapın.',
-    signInBodyOidcOnly: 'Kimlik sağlayıcınızla giriş yapın.',
+    signInBodyOidcOnly: 'Devam etmek için SSO hesabınızla giriş yapın.',
     username: 'Kullanıcı adı',
     password: 'Parola',
     signIn: 'Giriş yap',
-    oidcSignIn: 'Kimlik sağlayıcısıyla devam et',
+    oidcSignIn: 'SSO ile giriş yap',
+    oidcRedirectHint:
+      'SSO giriş sayfasına yönlendirileceksiniz, ardından doğrudan Castify’a döneceksiniz.',
     or: 'veya',
     oidcFailed:
       'Kimlik sağlayıcısıyla giriş yapılamadı. Lütfen tekrar deneyin.',

@@ -1849,11 +1849,13 @@ export default {
   auth: {
     signInTitle: 'Bei Castify anmelden',
     signInBody: 'Melde dich mit deinem Benutzernamen und Passwort an.',
-    signInBodyOidcOnly: 'Melde dich über deinen Identitätsanbieter an.',
+    signInBodyOidcOnly: 'Melde dich mit deinem SSO-Konto an, um fortzufahren.',
     username: 'Benutzername',
     password: 'Passwort',
     signIn: 'Anmelden',
-    oidcSignIn: 'Mit Identitätsanbieter fortfahren',
+    oidcSignIn: 'Mit SSO anmelden',
+    oidcRedirectHint:
+      'Du wirst zur SSO-Anmeldeseite weitergeleitet und danach direkt zu Castify zurückgebracht.',
     or: 'oder',
     oidcFailed:
       'Die Anmeldung über den Identitätsanbieter ist fehlgeschlagen. Bitte versuche es erneut.',

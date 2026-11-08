@@ -1815,11 +1815,13 @@ export default {
   auth: {
     signInTitle: 'Inicia sesión en Castify',
     signInBody: 'Inicia sesión con tu usuario y contraseña.',
-    signInBodyOidcOnly: 'Inicia sesión con tu proveedor de identidad.',
+    signInBodyOidcOnly: 'Inicia sesión con tu cuenta SSO para continuar.',
     username: 'Usuario',
     password: 'Contraseña',
     signIn: 'Iniciar sesión',
-    oidcSignIn: 'Continuar con el proveedor de identidad',
+    oidcSignIn: 'Iniciar sesión con SSO',
+    oidcRedirectHint:
+      'Irás a la página de inicio de sesión SSO y luego volverás directamente a Castify.',
     or: 'o',
     oidcFailed:
       'No se pudo iniciar sesión con el proveedor de identidad. Inténtalo de nuevo.',

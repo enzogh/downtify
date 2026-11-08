@@ -1790,11 +1790,13 @@ export default {
   auth: {
     signInTitle: 'Вход в Castify',
     signInBody: 'Влезте с потребителското си име и парола.',
-    signInBodyOidcOnly: 'Влезте чрез доставчика си на идентичност.',
+    signInBodyOidcOnly: 'Влезте с акаунта си в SSO, за да продължите.',
     username: 'Потребителско име',
     password: 'Парола',
     signIn: 'Вход',
-    oidcSignIn: 'Продължете с доставчика на идентичност',
+    oidcSignIn: 'Вход чрез SSO',
+    oidcRedirectHint:
+      'Ще отидете на страницата за вход в SSO и след това ще се върнете в Castify.',
     or: 'или',
     oidcFailed:
       'Влизането чрез доставчика на идентичност не бе успешно. Опитайте отново.',

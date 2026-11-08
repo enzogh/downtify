@@ -1763,11 +1763,13 @@ export default {
   auth: {
     signInTitle: 'Sign in to Castify',
     signInBody: 'Sign in with your username and password.',
-    signInBodyOidcOnly: 'Sign in with your identity provider.',
+    signInBodyOidcOnly: 'Sign in with your SSO account to continue.',
     username: 'Username',
     password: 'Password',
     signIn: 'Sign in',
-    oidcSignIn: 'Continue with identity provider',
+    oidcSignIn: 'Sign in with SSO',
+    oidcRedirectHint:
+      'You’ll go to the SSO sign-in page, then come straight back to Castify.',
     or: 'or',
     oidcFailed:
       'Could not sign in with the identity provider. Please try again.',

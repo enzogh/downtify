@@ -1791,11 +1791,13 @@ export default {
   auth: {
     signInTitle: 'Castify 로그인',
     signInBody: '사용자 이름과 비밀번호를 입력하여 로그인하세요.',
-    signInBodyOidcOnly: 'ID 공급자를 통해 로그인하세요.',
+    signInBodyOidcOnly: '계속하려면 SSO 계정으로 로그인하세요.',
     username: '사용자 이름',
     password: '비밀번호',
     signIn: '로그인',
-    oidcSignIn: 'ID 공급자로 계속하기',
+    oidcSignIn: 'SSO로 로그인',
+    oidcRedirectHint:
+      'SSO 로그인 페이지로 이동한 뒤 Castify로 바로 돌아옵니다.',
     or: '또는',
     oidcFailed: 'ID 공급자를 통한 로그인에 실패했습니다. 다시 시도하세요.',
     wrongPassword: '사용자 이름 또는 비밀번호가 올바르지 않습니다',

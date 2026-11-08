@@ -1803,11 +1803,13 @@ export default {
   auth: {
     signInTitle: 'Bejelentkezés a Castify-ba',
     signInBody: 'Jelentkezz be a felhasználóneveddel és a jelszavaddal.',
-    signInBodyOidcOnly: 'Jelentkezz be az identitásszolgáltatóddal.',
+    signInBodyOidcOnly: 'A folytatáshoz jelentkezz be az SSO-fiókoddal.',
     username: 'Felhasználónév',
     password: 'Jelszó',
     signIn: 'Bejelentkezés',
-    oidcSignIn: 'Folytatás az identitásszolgáltatóval',
+    oidcSignIn: 'Bejelentkezés SSO-val',
+    oidcRedirectHint:
+      'Átirányítunk az SSO bejelentkezési oldalára, majd vissza a Castify-ba.',
     or: 'vagy',
     oidcFailed:
       'Nem sikerült bejelentkezni az identitásszolgáltatóval. Próbáld újra.',

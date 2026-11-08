@@ -48,17 +48,23 @@
         <span>{{ t('auth.or') }}</span>
         <span class="h-px flex-1 bg-line-2" />
       </div>
-      <UiButton
-        v-if="oidcEnabled"
-        type="button"
-        variant="secondary"
-        size="lg"
-        icon="log-in"
-        :loading="oidcBusy"
-        @click="startOidc"
-      >
-        {{ t('auth.oidcSignIn') }}
-      </UiButton>
+      <div v-if="oidcEnabled" class="flex flex-col gap-2">
+        <!-- Primary when SSO is the only way in, so it reads as the
+             obvious next step rather than an alternative. -->
+        <UiButton
+          type="button"
+          :variant="localLoginEnabled ? 'secondary' : 'primary'"
+          size="lg"
+          icon="log-in"
+          :loading="oidcBusy"
+          @click="startOidc"
+        >
+          {{ t('auth.oidcSignIn') }}
+        </UiButton>
+        <p class="text-center text-[12px] text-pretty text-faint">
+          {{ t('auth.oidcRedirectHint') }}
+        </p>
+      </div>
       <p v-if="oidcError" class="text-center text-sm text-danger">
         {{ t('auth.oidcFailed') }}
       </p>

@@ -1828,11 +1828,14 @@ export default {
   auth: {
     signInTitle: 'Σύνδεση στο Castify',
     signInBody: 'Συνδεθείτε με το όνομα χρήστη και τον κωδικό σας.',
-    signInBodyOidcOnly: 'Συνδεθείτε μέσω του παρόχου ταυτότητάς σας.',
+    signInBodyOidcOnly:
+      'Συνδεθείτε με τον λογαριασμό SSO σας για να συνεχίσετε.',
     username: 'Όνομα χρήστη',
     password: 'Κωδικός',
     signIn: 'Σύνδεση',
-    oidcSignIn: 'Συνέχεια με τον πάροχο ταυτότητας',
+    oidcSignIn: 'Σύνδεση με SSO',
+    oidcRedirectHint:
+      'Θα μεταφερθείτε στη σελίδα σύνδεσης SSO και μετά θα επιστρέψετε στο Castify.',
     or: 'ή',
     oidcFailed:
       'Η σύνδεση μέσω του παρόχου ταυτότητας απέτυχε. Δοκιμάστε ξανά.',

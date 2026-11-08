@@ -1842,11 +1842,13 @@ export default {
     signInTitle: 'Se connecter à Castify',
     signInBody:
       'Connectez-vous avec votre nom d’utilisateur et votre mot de passe.',
-    signInBodyOidcOnly: 'Connectez-vous avec votre fournisseur d’identité.',
+    signInBodyOidcOnly: 'Connectez-vous avec votre compte SSO pour continuer.',
     username: 'Nom d’utilisateur',
     password: 'Mot de passe',
     signIn: 'Se connecter',
-    oidcSignIn: 'Continuer avec le fournisseur d’identité',
+    oidcSignIn: 'Se connecter avec le SSO',
+    oidcRedirectHint:
+      'Vous allez être redirigé vers la page de connexion SSO, puis ramené automatiquement sur Castify.',
     or: 'ou',
     oidcFailed:
       'Connexion au fournisseur d’identité impossible. Veuillez réessayer.',
