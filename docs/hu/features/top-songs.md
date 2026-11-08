@@ -19,7 +19,7 @@ Egyes előadóknak hatalmas katalógusuk van, amelyből csak néhány szám szá
 
 A Top Songs oldalon és azon az oldalon, amelyet egy beillesztett **album**- vagy **lejátszásilista**-hivatkozás nyit meg, minden dal teljes hosszban szól: vidd az egeret a sora fölé, és a szám lejátszás gombbá változik (telefonon a lejátszás gomb mindig ott van); nyomd meg, és a dal a YouTube-ról közvetlenül a beépített lejátszóba streamelődik. Nyomd meg újra a szüneteltetéshez, vagy egy másik sor gombját a váltáshoz. A könyvtáradban már meglévő dal a könyvtárból szól, a lista többi letöltött dala pedig utána sorba kerül.
 
-A streamet ez a szerver szolgálja ki, soha nem a böngésző közvetlenül a YouTube-ról: a sor a saját YouTube-videójára oldódik fel (egy YouTube Music-dalnál a sajátjára, egyébként a legközelebbi keresési találatra), a szerver pedig egyszer letölti a hangot a stream-gyorsítótárába, majd a gyorsítótárazott fájlt játssza le (lásd: [`GET /api/stream/file`](../api-reference.md#get-apistreamfile)). Csak a szervernek kell elérnie a YouTube-ot, a korhatáros számhoz pedig YouTube-sütik kellenek (lásd: [YouTube sütik](youtube-cookies.md)), akárcsak egy letöltéshez.
+A streamet ez a szerver szolgálja ki, soha nem a böngésző közvetlenül a YouTube-ról: a sor a saját YouTube-videójára oldódik fel (egy YouTube Music-dalnál a sajátjára, egyébként a legközelebbi keresési találatra), a szerver pedig egyszer letölti a hangot a stream-gyorsítótárába, majd a gyorsítótárazott fájlt játssza le (lásd: [`GET /api/stream/live`](../api-reference.md#get-apistreamlive)). Csak a szervernek kell elérnie a YouTube-ot, a korhatáros számhoz pedig YouTube-sütik kellenek (lásd: [YouTube sütik](youtube-cookies.md)), akárcsak egy letöltéshez.
 
 ## Források
 

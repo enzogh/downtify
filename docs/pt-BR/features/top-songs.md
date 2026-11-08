@@ -19,7 +19,7 @@ Alguns artistas têm catálogos enormes em que só um punhado de faixas importa.
 
 Na página Top Songs, e na página que um link de **álbum** ou **playlist** colado abre, toda música toca por inteiro: passe o mouse na linha e o número vira um botão de reproduzir (no celular o botão de reproduzir está sempre lá); pressione-o e a música é transmitida do YouTube direto para o player integrado. Pressione de novo para pausar, ou o botão de outra linha para trocar. Uma música que já está na sua biblioteca toca a partir da biblioteca, com as outras músicas baixadas da lista na fila depois dela.
 
-O streaming sai deste servidor, nunca do navegador direto para o YouTube: a linha é resolvida para o vídeo dela no YouTube (o próprio, para uma música do YouTube Music; senão a correspondência mais próxima da busca) e o servidor baixa o áudio uma vez para o cache de streaming e depois toca o arquivo em cache (veja [`GET /api/stream/file`](../api-reference.md#get-apistreamfile)). Só o servidor precisa alcançar o YouTube, e uma faixa com restrição de idade exige cookies do YouTube (veja [Cookies do YouTube](youtube-cookies.md)) como um download.
+O streaming sai deste servidor, nunca do navegador direto para o YouTube: a linha é resolvida para o vídeo dela no YouTube (o próprio, para uma música do YouTube Music; senão a correspondência mais próxima da busca) e o servidor baixa o áudio uma vez para o cache de streaming e depois toca o arquivo em cache (veja [`GET /api/stream/live`](../api-reference.md#get-apistreamlive)). Só o servidor precisa alcançar o YouTube, e uma faixa com restrição de idade exige cookies do YouTube (veja [Cookies do YouTube](youtube-cookies.md)) como um download.
 
 ## Fontes
 

@@ -3,6 +3,8 @@
     class="group flex h-16 items-center gap-3 rounded-[12px] px-3 transition-colors hover:bg-surface"
     @click="onRowClick"
     @dblclick="ensurePlaying"
+    @pointerenter="warm"
+    @focusin="warm"
   >
     <span
       v-if="index !== null"
@@ -149,7 +151,7 @@ const play = useSongPlay(props)
 const overlayIcon = computed(() =>
   play.isCurrent.value && player.isPlaying.value ? 'pause' : 'play'
 )
-const { toggle, ensurePlaying } = play
+const { toggle, ensurePlaying, warm } = play
 
 // On a touch screen a tap on the row plays it (a double click can't).
 function onRowClick() {

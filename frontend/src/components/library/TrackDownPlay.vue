@@ -7,6 +7,8 @@
     :data-marked="marked || undefined"
     @click="onRowClick"
     @dblclick="ensurePlaying"
+    @pointerenter="warm"
+    @focusin="warm"
   >
     <button
       v-if="selectable"
@@ -244,6 +246,7 @@ const {
   playLabel,
   toggle,
   ensurePlaying,
+  warm,
 } = useSongPlay(props)
 
 const firstArtist = computed(

@@ -188,10 +188,15 @@ function getStreamUrl(videoId) {
   return API.get('/api/stream', { params: { video_id: videoId } })
 }
 
-// Start caching a video's audio on the server without waiting for it -
-// how the player warms the next track up. Never fails the caller.
+// Start caching a video's audio on the server without waiting for it.
 function prefetchStream(videoId) {
   return API.post('/api/stream/prefetch', { video_id: videoId })
+}
+
+// Resolve a video's live audio URL on the server without waiting for it -
+// how the player warms the next track up, so it starts instantly.
+function prefetchLiveStream(videoId) {
+  return API.post('/api/stream/live/prefetch', { video_id: videoId })
 }
 
 // ── Artist photo & banner ───────────────────────────────────────────
@@ -1012,6 +1017,7 @@ export default {
   getSimilarTracks,
   getStreamUrl,
   prefetchStream,
+  prefetchLiveStream,
   getArtistArt,
   getArtistArtBulk,
   searchArtistArt,

@@ -1,6 +1,8 @@
 <template>
   <div
     class="group flex h-16 items-center gap-3 rounded-[12px] px-3 transition-colors hover:bg-surface"
+    @pointerenter="warm"
+    @focusin="warm"
   >
     <span
       v-if="index !== null"
@@ -135,6 +137,7 @@ const firstArtist = computed(
 // goes in whole so a new song object for the row stays reactive;
 // useSongPlay only reads song/queue/context.
 const play = useSongPlay(props)
+const { warm } = play
 const overlayIcon = computed(() =>
   play.isCurrent.value && player.isPlaying.value ? 'pause' : 'play'
 )

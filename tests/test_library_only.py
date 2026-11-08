@@ -49,6 +49,7 @@ def local_client(monkeypatch):
     [
         '/api/stream?video_id=dQw4w9WgXcQ',
         '/api/stream/file?video_id=dQw4w9WgXcQ',
+        '/api/stream/live?video_id=dQw4w9WgXcQ',
         '/api/preview?artist=A&title=T',
         '/api/url?url=https://example.com',
         '/api/finder/album?album_id=1',
@@ -71,6 +72,7 @@ def test_external_gets_are_refused_before_resolution(local_client, path):
         '/api/download/album',
         '/api/download/csv',
         '/api/stream/prefetch',
+        '/api/stream/live/prefetch',
         '/api/monitor/playlists',
         '/api/library/upgrade/start',
         '/api/library/upgrade/resume',

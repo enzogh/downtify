@@ -1,15 +1,18 @@
 import { describe, expect, it, vi } from 'vitest'
 
-const { search, playList, playerState, findTrack } = vi.hoisted(() => ({
-  search: vi.fn(),
-  playList: vi.fn(),
-  playerState: { current: null, playing: false },
-  findTrack: vi.fn(() => null),
-}))
+const { search, prefetchLiveStream, playList, playerState, findTrack } =
+  vi.hoisted(() => ({
+    search: vi.fn(),
+    prefetchLiveStream: vi.fn(),
+    playList: vi.fn(),
+    playerState: { current: null, playing: false },
+    findTrack: vi.fn(() => null),
+  }))
 
 vi.mock('/src/model/api', () => ({
   default: {
     search,
+    prefetchLiveStream,
   },
 }))
 
@@ -34,14 +37,30 @@ vi.mock('/src/model/library', () => ({
 }))
 
 import { isStreamingSong, playStream, streamTrack } from '../model/stream.js'
-import { resolveTrackUrl, videoIdFor } from '../model/streamResolve.js'
+import {
+  resolveTrackUrl,
+  videoIdFor,
+  warmServerCache,
+} from '../model/streamResolve.js'
+
+describe('warmServerCache', () => {
+  it('resolves the live URL ahead instead of downloading the track', async () => {
+    await warmServerCache('dQw4w9WgXcQ')
+    expect(prefetchLiveStream).toHaveBeenCalledWith('dQw4w9WgXcQ')
+  })
+
+  it('never throws when the server refuses', async () => {
+    prefetchLiveStream.mockRejectedValueOnce(new Error('503'))
+    await expect(warmServerCache('dQw4w9WgXcQ')).resolves.toBeUndefined()
+  })
+})
 
 describe('resolveTrackUrl', () => {
-  it('points at the server cache, never at YouTube', async () => {
+  it('points at the live server relay, never at YouTube', async () => {
     await expect(
       resolveTrackUrl({ ...SONG, youtube_id: 'dQw4w9WgXcQ' })
     ).resolves.toEqual({
-      url: '/api/stream/file?video_id=dQw4w9WgXcQ',
+      url: '/api/stream/live?video_id=dQw4w9WgXcQ',
       videoId: 'dQw4w9WgXcQ',
     })
   })
@@ -50,7 +69,7 @@ describe('resolveTrackUrl', () => {
     await expect(
       resolveTrackUrl({ ...SONG, youtube_id: 'dQw4w9WgXcQ', duration: 224 })
     ).resolves.toEqual({
-      url: '/api/stream/file?video_id=dQw4w9WgXcQ&duration=224',
+      url: '/api/stream/live?video_id=dQw4w9WgXcQ&duration=224',
       videoId: 'dQw4w9WgXcQ',
     })
   })
@@ -76,7 +95,7 @@ describe('videoIdFor', () => {
       video_id: 'crAmZkrKODg',
       title: 'Believe',
       artist: 'Cher',
-      url: '/api/stream/file?video_id=crAmZkrKODg',
+      url: '/api/stream/live?video_id=crAmZkrKODg',
     }
 
     await expect(videoIdFor(queuedTrack)).resolves.toBe('crAmZkrKODg')
@@ -156,7 +175,7 @@ describe('videoIdFor', () => {
 })
 
 describe('playStream', () => {
-  it('plays the server file URL as a transient player track', async () => {
+  it('plays the live server URL as a transient player track', async () => {
     const song = {
       ...SONG,
       youtube_id: 'dQw4w9WgXcQ',
@@ -174,7 +193,7 @@ describe('playStream', () => {
       title: 'Believe',
       artist: 'Cher',
       cover: 'https://img/xl',
-      url: '/api/stream/file?video_id=dQw4w9WgXcQ',
+      url: '/api/stream/live?video_id=dQw4w9WgXcQ',
     })
     expect(options).toEqual({ context: null })
   })

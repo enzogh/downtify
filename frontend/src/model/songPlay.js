@@ -19,6 +19,7 @@ import {
   rowKey,
   songArtist,
   songTitle,
+  warmServerCache,
 } from '/src/model/streamResolve'
 import { useTrackActions } from '/src/model/trackActions'
 import { useUi } from '/src/model/ui'
@@ -99,6 +100,28 @@ export function useSongStarter() {
   }
 }
 
+// Video ids already warmed this session: a hover warms the server once.
+const warmed = new Set()
+
+/**
+ * Get a not-downloaded `song` ready to stream before it is clicked: the
+ * server resolves its YouTube audio URL ahead (rows hovered, focused or
+ * touched), so the click starts playback at once. Only songs carrying
+ * their own video id warm - nothing is searched for a mere hover.
+ */
+export function warmSong(song, findTrack) {
+  if (localTrack(song, findTrack)) return
+  const videoId = directVideoId(song)
+  if (!videoId || warmed.has(videoId)) return
+  warmed.add(videoId)
+  warmServerCache(videoId)
+}
+
+/** Forget what was warmed (tests). */
+export function resetWarmed() {
+  warmed.clear()
+}
+
 /**
  * `props`: `{ song, queue, context, songs }` - the song (a search/link
  * result), the library tracks playing it starts a queue from, the
@@ -175,6 +198,10 @@ export function useSongPlay(props) {
     })
   }
 
+  function warm() {
+    warmSong(props.song, library.findTrack)
+  }
+
   return {
     track,
     isCurrent,
@@ -184,5 +211,6 @@ export function useSongPlay(props) {
     playLabel,
     toggle,
     ensurePlaying,
+    warm,
   }
 }

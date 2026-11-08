@@ -7,6 +7,8 @@
   <span
     class="flex w-6 shrink-0 items-center justify-center text-[13px] text-faint"
     :class="playable ? '' : 'max-sm:hidden'"
+    @pointerenter="warm"
+    @focusin="warm"
   >
     <EqBars v-if="isCurrent" :size="12" :playing="player.isPlaying.value" />
     <AppIcon
@@ -53,5 +55,6 @@ const props = defineProps({
 })
 
 const player = usePlayer()
-const { isCurrent, loading, playable, playLabel, toggle } = useSongPlay(props)
+const { isCurrent, loading, playable, playLabel, toggle, warm } =
+  useSongPlay(props)
 </script>

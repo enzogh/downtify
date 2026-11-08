@@ -19,7 +19,7 @@ icon: lucide/star
 
 인기 곡 페이지와, 붙여넣은 **앨범** 또는 **재생목록** 링크가 여는 페이지에서는 모든 곡을 전체 재생할 수 있습니다. 행 위에 마우스를 올리면 번호가 재생 버튼으로 바뀌고(휴대폰에서는 재생 버튼이 항상 보임), 누르면 곡이 YouTube에서 내장 플레이어로 바로 스트리밍됩니다. 다시 누르면 일시정지, 다른 행의 버튼을 누르면 전환됩니다. 이미 라이브러리에 있는 곡은 라이브러리에서 재생되며, 목록의 다른 내려받은 곡이 그 뒤에 대기열로 들어갑니다.
 
-스트림은 브라우저에서 YouTube로 곧장 가는 것이 아니라 이 서버가 제공합니다. 행은 자신의 YouTube 영상(YouTube Music 곡이면 그 영상, 아니면 가장 가까운 검색 일치)으로 확인되고, 서버가 오디오를 한 번 스트림 캐시에 내려받은 뒤 캐시된 파일을 재생합니다([`GET /api/stream/file`](../api-reference.md#get-apistreamfile) 참고). 서버만 YouTube에 접근할 수 있으면 되며, 연령 제한 트랙은 다운로드처럼 YouTube 쿠키가 필요합니다([YouTube 쿠키](youtube-cookies.md) 참고).
+스트림은 브라우저에서 YouTube로 곧장 가는 것이 아니라 이 서버가 제공합니다. 행은 자신의 YouTube 영상(YouTube Music 곡이면 그 영상, 아니면 가장 가까운 검색 일치)으로 확인되고, 서버가 오디오를 한 번 스트림 캐시에 내려받은 뒤 캐시된 파일을 재생합니다([`GET /api/stream/live`](../api-reference.md#get-apistreamlive) 참고). 서버만 YouTube에 접근할 수 있으면 되며, 연령 제한 트랙은 다운로드처럼 YouTube 쿠키가 필요합니다([YouTube 쿠키](youtube-cookies.md) 참고).
 
 ## 출처
 

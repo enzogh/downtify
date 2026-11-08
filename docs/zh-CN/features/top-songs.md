@@ -19,7 +19,7 @@ icon: lucide/star
 
 在 Top Songs 页面，以及粘贴**专辑**或**播放列表**链接后打开的页面，每首歌曲都可以完整试听：将鼠标悬停在歌曲行上，编号会变成播放按钮（手机上始终显示播放按钮）；点击后歌曲会从 YouTube 串流到内置播放器。再次点击可暂停，点击另一行的按钮则切换歌曲。如果歌曲已在媒体库中，则会从媒体库播放，并在其后排入列表中其他已下载歌曲。
 
-串流由服务器提供，浏览器不会直接连接 YouTube：页面会解析对应 YouTube 视频（YouTube Music 歌曲使用其自身视频，否则使用最接近的搜索匹配结果），服务器将音频下载一次并放入串流缓存，然后播放缓存文件（参见 [`GET /api/stream/file`](../api-reference.md#get-apistreamfile)）。只有服务器需要能够访问 YouTube；年龄限制曲目与下载一样需要配置 YouTube cookies（参见 [YouTube Cookies](youtube-cookies.md)）。
+串流由服务器提供，浏览器不会直接连接 YouTube：页面会解析对应 YouTube 视频（YouTube Music 歌曲使用其自身视频，否则使用最接近的搜索匹配结果），服务器将音频下载一次并放入串流缓存，然后播放缓存文件（参见 [`GET /api/stream/live`](../api-reference.md#get-apistreamlive)）。只有服务器需要能够访问 YouTube；年龄限制曲目与下载一样需要配置 YouTube cookies（参见 [YouTube Cookies](youtube-cookies.md)）。
 
 ## 来源
 

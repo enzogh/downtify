@@ -330,14 +330,20 @@ downloads are shared, and files are never stored twice.
  * ``GET  /api/stream`` (a track's full audio as a fresh,
    short-lived direct URL - ``?video_id=`` - for third-party clients;
    the web player behind a song that isn't downloaded yet uses
-   ``/api/stream/file`` below instead - see ``downtify.stream``)
+   ``/api/stream/live`` below instead - see ``downtify.stream``)
  * ``GET  /api/stream/file`` (that same audio downloaded once into
    ``/data/stream_cache`` and served from this server with seeking
-   support - ``?video_id=``; what the web player streams, so playback
-   never depends on the browser reaching YouTube itself)
+   support - ``?video_id=``; playback never depends on the browser
+   reaching YouTube itself, but starts only once the download is done)
  * ``POST /api/stream/prefetch`` (body ``{video_id}``: start caching
-   that audio in the background and answer ``{queued: true}`` at once -
-   how the player warms the next track up)
+   that audio in the background and answer ``{queued: true}`` at once)
+ * ``GET  /api/stream/live`` (that same audio relayed from YouTube as
+   it arrives, nothing stored - ``?video_id=&duration=``; honours
+   ``Range`` for seeking; what the web player streams, so a song starts
+   within a second or two - see ``downtify.live_stream``)
+ * ``POST /api/stream/live/prefetch`` (body ``{video_id}``: resolve
+   that video's audio URL in the background and answer ``{queued:
+   true}`` at once - how the player warms the next track up)
 * ``GET  /api/server/info`` (public: server id, name, version,
   ``api_version``, ``require_sign_in`` (always true), capabilities) and
   ``PATCH /api/server`` (``{name}``) - see ``downtify/auth_routes.py``
@@ -399,7 +405,7 @@ from fastapi import (
     WebSocket,
     WebSocketDisconnect,
 )
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from loguru import logger
 from starlette.requests import HTTPConnection
 
@@ -541,6 +547,7 @@ from .likes import (
     remap_moved,
     sync_liked_playlist,
 )
+from .live_stream import LiveStreams, RangeNotSatisfiable
 from .loudness import LoudnessAnalyzer
 from .lyrics_cache import LyricsLookupCache
 from .manual_playlists import (
@@ -1262,6 +1269,7 @@ class AppState:
     library_trash: Any = None
     transcoder: Optional[Transcoder] = None
     stream_cache: Optional[StreamCache] = None
+    live_streams: LiveStreams = LiveStreams()
     cover_thumbs: Optional[CoverThumbs] = None
     discovery: Any = None
 
@@ -1301,6 +1309,7 @@ def spawn_task(coro: Any, *, name: Optional[str] = None) -> asyncio.Task[Any]:
         'playlist-batch',
         'csv-batch',
         'stream-prefetch-',
+        'stream-live-prefetch-',
         'replace-',
         'monitor-initial-check',
         'monitor-manual-check',
@@ -9521,6 +9530,112 @@ async def stream_prefetch_endpoint(request: Request) -> dict[str, bool]:
             cache, vid, cookies, _max_track_duration_seconds()
         ),
         name=f'stream-prefetch-{vid}',
+    )
+    return {'queued': True}
+
+
+@router.api_route(
+    '/api/stream/live', methods=['GET', 'HEAD'], response_model=None
+)
+async def stream_live_endpoint(
+    request: Request,
+    video_id: str = Query(..., min_length=1, max_length=64),
+    duration: float = Query(0, ge=0),
+) -> Response:
+    """A track's full audio relayed live from YouTube (``?video_id=``).
+
+    What the web player plays for a song that isn't downloaded yet:
+    playback starts as soon as YouTube's first bytes arrive instead of
+    after a whole download (``/api/stream/file``). ``Range`` requests
+    are forwarded, so seeking works; nothing is written to disk (see
+    ``downtify.live_stream``). ``duration`` (seconds, when the caller
+    knows it) refuses long tracks before anything is resolved, and the
+    resolved length is checked either way. ``400`` for a malformed id
+    or a track past the duration limit, ``416`` for a range past the
+    end, ``503`` when YouTube can't provide the audio.
+    """
+
+    try:
+        vid = stream.clean_video_id(video_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    limit = _max_track_duration_seconds()
+    if limit and duration > limit:
+        raise HTTPException(
+            status_code=400, detail=stream.too_long_detail(limit)
+        )
+    live = state.live_streams
+    cookies = stream.resolve_cookies_file(state.cookies_store)
+    try:
+        source = await live.source(vid, cookies_file=cookies)
+    except ValueError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    if limit and source.duration > limit:
+        raise HTTPException(
+            status_code=400, detail=stream.too_long_detail(limit)
+        )
+    user_id = request_user_id(request)
+
+    def count(sent: int) -> None:
+        if user_id and state.traffic is not None:
+            state.traffic.add(user_id, DIRECTION_IN, sent)
+
+    try:
+        relayed = await live.open(
+            vid,
+            request.headers.get('range'),
+            cookies_file=cookies,
+            on_bytes=count,
+        )
+    except RangeNotSatisfiable as exc:
+        return Response(
+            status_code=416,
+            headers={'Content-Range': f'bytes */{exc.total}'},
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    if request.method == 'HEAD':
+        relayed.body.close()
+        return Response(
+            status_code=relayed.status,
+            headers=relayed.headers,
+            media_type=relayed.media_type,
+        )
+    return StreamingResponse(
+        relayed.body,
+        status_code=relayed.status,
+        headers=relayed.headers,
+        media_type=relayed.media_type,
+    )
+
+
+async def _prefetch_live_stream(video_id: str, cookies_file: str) -> None:
+    """Resolve one video's live source in the background (never raises)."""
+
+    try:
+        await state.live_streams.source(video_id, cookies_file=cookies_file)
+    except Exception:
+        logger.debug('Live stream prefetch failed for videoId={}', video_id)
+
+
+@router.post('/api/stream/live/prefetch')
+async def stream_live_prefetch_endpoint(request: Request) -> dict[str, bool]:
+    """Resolve a video's live audio URL without waiting for it.
+
+    Body ``{video_id}``; answers ``{queued: true}`` at once, so the
+    player's next track starts as fast as a cached one. ``400`` for a
+    malformed id.
+    """
+
+    payload = await _json_object(request)
+    try:
+        vid = stream.clean_video_id(payload.get('video_id'))
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    cookies = stream.resolve_cookies_file(state.cookies_store)
+    spawn_task(
+        _prefetch_live_stream(vid, cookies),
+        name=f'stream-live-prefetch-{vid}',
     )
     return {'queued': True}
 

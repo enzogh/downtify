@@ -67,23 +67,24 @@ export const MAX_STREAM_SECONDS = 600
 
 /**
  * The server URL streaming `track` (a player track with no `url` yet):
- * the backend downloads the audio once into its stream cache and serves
- * it from there, so playback never depends on the browser reaching
- * YouTube itself. Throws when there is nothing to play.
+ * the backend relays YouTube's audio live as it arrives (seeking
+ * included), so playback starts within a second or two and never
+ * depends on the browser reaching YouTube itself. Throws when there is
+ * nothing to play.
  */
 export async function resolveTrackUrl(track) {
   const videoId = await videoIdFor(track)
   const seconds = Number(track?.duration) || 0
   const duration = seconds > 0 ? `&duration=${encodeURIComponent(seconds)}` : ''
   return {
-    url: `/api/stream/file?video_id=${encodeURIComponent(videoId)}${duration}`,
+    url: `/api/stream/live?video_id=${encodeURIComponent(videoId)}${duration}`,
     videoId,
   }
 }
 
 /**
- * Warm the server cache for `track` without waiting for it, so skipping
- * to it starts instantly. Silent by design: a failed warm only means
+ * Warm the server for `track` without waiting for it (its live audio
+ * URL gets resolved ahead), so skipping to it starts instantly. Silent by design: a failed warm only means
  * the advance resolves on demand, with an error then.
  */
 export async function prefetchServerCache(track) {
@@ -94,11 +95,11 @@ export async function prefetchServerCache(track) {
   }
 }
 
-/** Warm the server cache for a known video id (never throws). */
+/** Warm the server for a known video id (never throws). */
 export async function warmServerCache(videoId) {
   if (libraryOnly.value) return
   try {
-    await API.prefetchStream(videoId)
+    await API.prefetchLiveStream(videoId)
   } catch {
     // The advance resolves again and reports failures itself.
   }

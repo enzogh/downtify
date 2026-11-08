@@ -2300,9 +2300,28 @@ Where to buy a song, an album or an artist's music, to support them — the **Su
 
 ## Streaming
 
+### `GET /api/stream/live`
+
+A track's full audio relayed live from YouTube — what plays in the built-in player when the song behind a row isn't downloaded yet. The server resolves the video's audio URL (yt-dlp, with the same anti-bot settings and cookies as a download) and passes YouTube's bytes on as they arrive, so playback starts as soon as the first ones do instead of after a whole download. Nothing is written to disk. The browser only ever talks to this server, so playback works where the browser itself can't reach YouTube.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `video_id` | string | yes | The song's YouTube video id (11 characters) |
+| `duration` | number | no | The track's length in seconds, when the caller knows it — refused before anything is resolved when over the duration limit |
+
+`Range` requests are honoured (`206 Partial Content` with `Content-Range`), so seeking works; `HEAD` answers the headers alone. A resolved URL is remembered in memory until shortly before YouTube expires it (at most 5 hours), so replaying a track, or seeking in it, starts at once; when YouTube refuses a remembered URL it is resolved again once. YouTube's reply is read in 10 MB slices, which YouTube doesn't throttle. Bytes relayed count as the requesting account's upstream traffic.
+
+`400` for a malformed id and for tracks over the duration limit (Settings → Downloads → *Longest track taken*; the length YouTube reports is checked either way), `416` for a range past the end, `503` when YouTube can't provide the audio — including age-gated tracks without usable cookies (see [YouTube Cookies](features/youtube-cookies.md)). A stream never lands in the library, the activity log or the saved player session.
+
+The web UI plays the queue through undownloaded rows without stopping and warms ahead: the next track's URL is resolved in the background (see [`POST /api/stream/live/prefetch`](#post-apistreamliveprefetch)) at each track's start and again the moment it has fully loaded, and a row that carries its own YouTube video id is warmed the first time the pointer rests on it or it gets focus, so pressing play starts at once. A run of unresolvable tracks is skipped (an error after three in a row).
+
+### `POST /api/stream/live/prefetch`
+
+Resolve a video's live audio URL without waiting for it. Body `{ "video_id" }`; answers `{ "queued": true }` at once while the resolution continues detached — how the player warms the next track (and a hovered row) up, so it starts instantly. Nothing is downloaded. `400` for a malformed id.
+
 ### `GET /api/stream/file`
 
-A track's full audio, downloaded once into `/data/stream_cache` and served from this server with seeking support — what plays in the built-in player when the song behind a row isn't downloaded yet. This is what keeps playback working where the browser itself can't reach YouTube (or only slowly): the only YouTube traffic is server-side, and the second play of a track never touches YouTube at all.
+A track's full audio, downloaded once into `/data/stream_cache` and served from this server with seeking support. Playback can only start once the download is done, which is why the web player uses [`GET /api/stream/live`](#get-apistreamlive) instead; this endpoint stays for clients that want a cached copy (the second play of a track never touches YouTube at all).
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -2311,11 +2330,9 @@ A track's full audio, downloaded once into `/data/stream_cache` and served from 
 
 The first request for a video downloads it (concurrent requests share one download); the cache is pruned least-recently-used past `DOWNTIFY_STREAM_CACHE_MB` (default 1024) with at most `DOWNTIFY_STREAM_CONCURRENCY` downloads at once (default 2). `400` for a malformed id and for tracks over 10 minutes (the served file's probed length is enforced either way, so long uploads never accumulate), `503` when YouTube can't provide the audio — including age-gated tracks without usable cookies (see [YouTube Cookies](features/youtube-cookies.md)). A stream never lands in the library, the activity log or the saved player session.
 
-The web UI plays the queue through undownloaded rows without stopping and warms one track ahead: at each track's start, and again the moment it has fully loaded, the next track's download starts in the background (see [`POST /api/stream/prefetch`](#post-apistreamprefetch)), so skipping starts instantly. A run of unresolvable tracks is skipped (an error after three in a row).
-
 ### `POST /api/stream/prefetch`
 
-Start caching a video's audio without waiting for it. Body `{ "video_id" }`; answers `{ "queued": true }` at once while the download continues detached — how the player warms the next track up the moment the current one has loaded, so skipping starts instantly. `400` for a malformed id, `503` when streaming isn't ready.
+Start caching a video's audio into the stream cache without waiting for it. Body `{ "video_id" }`; answers `{ "queued": true }` at once while the download continues detached, so a later [`GET /api/stream/file`](#get-apistreamfile) is served from disk. `400` for a malformed id, `503` when streaming isn't ready.
 
 ### `GET /api/stream`
 
@@ -2337,7 +2354,7 @@ Tracks similar to one track, from YouTube Music's own radio mix for it, backing 
 
 **Response:** `{ "artist": "Cher", "track": "Believe", "source": "youtube", "tracks": [{ "song_id": "…", "name": "Strong Enough", "artists": ["Cher"], "cover_url": "https://…", "duration": 224, "url": "https://music.youtube.com/watch?v=…", "match": 0.9 }] }` — full song objects plus `match`, which decays with the row's position since YouTube gives no score.
 
-`502` when YouTube Music can't be used (unknown track, network). Rows stream through [`GET /api/stream/file`](#get-apistreamfile) for playback and download straight away.
+`502` when YouTube Music can't be used (unknown track, network). Rows stream through [`GET /api/stream/live`](#get-apistreamlive) for playback and download straight away.
 
 ---
 

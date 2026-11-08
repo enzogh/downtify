@@ -445,6 +445,8 @@ def test_the_signing_key_is_private_and_kept(tmp_path):
         ('GET', '/api/stream', CLIENT),
         ('GET', '/api/stream/file', CLIENT),
         ('POST', '/api/stream/prefetch', CLIENT),
+        ('GET', '/api/stream/live', CLIENT),
+        ('POST', '/api/stream/live/prefetch', CLIENT),
         ('POST', '/api/finder/search', ADMIN),
         ('PUT', '/api/likes', CLIENT),
         ('PUT', '/api/podcasts/episodes/12/playback', CLIENT),

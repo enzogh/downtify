@@ -19,7 +19,7 @@ Bazı sanatçıların yalnızca bir avuç parçanın önem taşıdığı devasa 
 
 Top Songs sayfasında ve yapıştırılmış bir **albüm** ya da **çalma listesi** bağlantısının açtığı sayfada her şarkı tam olarak çalar: satırının üzerine gelin, numara bir oynat düğmesine dönüşür (telefonda oynat düğmesi her zaman oradadır); basın, şarkı YouTube’dan doğrudan yerleşik oynatıcıya akıtılır. Duraklatmak için yeniden basın ya da geçiş için başka bir satırın düğmesine basın. Kitaplığınızda zaten olan bir şarkı bunun yerine kitaplıktan çalar; listedeki diğer indirilmiş şarkılar ondan sonra sıraya alınır.
 
-Akış bu sunucudan sunulur, asla tarayıcıdan doğrudan YouTube’a gitmez: satır kendi YouTube videosuna çözümlenir (bir YouTube Music şarkısı için kendi videosu, aksi halde en yakın arama eşleşmesi) ve sunucu sesi bir kez akış önbelleğine indirir, sonra önbellekteki dosyayı çalar (bkz. [`GET /api/stream/file`](../api-reference.md#get-apistreamfile)). Yalnızca sunucunun YouTube’a erişebilmesi gerekir ve yaş sınırlı bir parça, bir indirme gibi YouTube çerezleri ister (bkz. [YouTube çerezleri](youtube-cookies.md)).
+Akış bu sunucudan sunulur, asla tarayıcıdan doğrudan YouTube’a gitmez: satır kendi YouTube videosuna çözümlenir (bir YouTube Music şarkısı için kendi videosu, aksi halde en yakın arama eşleşmesi) ve sunucu sesi bir kez akış önbelleğine indirir, sonra önbellekteki dosyayı çalar (bkz. [`GET /api/stream/live`](../api-reference.md#get-apistreamlive)). Yalnızca sunucunun YouTube’a erişebilmesi gerekir ve yaş sınırlı bir parça, bir indirme gibi YouTube çerezleri ister (bkz. [YouTube çerezleri](youtube-cookies.md)).
 
 ## Kaynaklar
 
