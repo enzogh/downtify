@@ -5,7 +5,7 @@ import { useRouter } from 'vue-router'
 
 import API from '/src/model/api'
 import monitorAPI from '/src/model/monitor'
-import { syncQueueFromServer } from '/src/model/download'
+import { syncQueueFromServer, useDownloadManager } from '/src/model/download'
 import { useLibrary } from '/src/model/library'
 import { useLikes } from '/src/model/likes'
 import { useTrackActions } from '/src/model/trackActions'
@@ -22,6 +22,12 @@ const createFiles = ref([])
 const createName = ref('')
 const createDescription = ref('')
 const createSourceUrl = ref('')
+// Songs from a search, the charts or a recommendation (not files): the
+// new playlist gets them once they are downloaded.
+const createSongs = ref([])
+// Bumped whenever a playlist's waiting songs change, so its page reads
+// them again.
+const pendingVersion = ref(0)
 const addOpen = ref(false)
 const addPlaylist = ref(null)
 const renameOpen = ref(false)
@@ -40,6 +46,7 @@ export function usePlaylistActions() {
   const router = useRouter()
   const { t } = useI18n()
   const { playlistSharing: sharingOn } = useAccount()
+  const downloads = useDownloadManager()
 
   function contextFor(playlist) {
     return {
@@ -81,10 +88,17 @@ export function usePlaylistActions() {
     createFiles.value = files.map((item) =>
       typeof item === 'string' ? item : item.file
     )
+    createSongs.value = []
     createName.value = name
     createDescription.value = description
     createSourceUrl.value = sourcePlaylistUrl
     createOpen.value = true
+  }
+
+  // A new playlist made from songs that may not be downloaded yet.
+  function openCreateFromSongs(songs, { name = '' } = {}) {
+    openCreate([], { name })
+    createSongs.value = songs
   }
 
   function openAddSongs(playlist) {
@@ -182,7 +196,7 @@ export function usePlaylistActions() {
   async function createNamed(
     name,
     files = [],
-    { sourcePlaylistUrl = '' } = {}
+    { sourcePlaylistUrl = '', songs = [] } = {}
   ) {
     try {
       const res = await API.createLibraryPlaylist(name)
@@ -191,6 +205,11 @@ export function usePlaylistActions() {
         await API.editLibraryPlaylistTracks(created, {
           add: files,
           sourcePlaylistUrl,
+        })
+      }
+      if (songs.length) {
+        await addSongs({ name: created, title: created }, songs, {
+          quiet: true,
         })
       }
       await library.load({ force: true })
@@ -286,6 +305,93 @@ export function usePlaylistActions() {
         kind: 'error',
       })
     }
+  }
+
+  // Songs from outside the library (a search, the charts, a
+  // recommendation): those already downloaded are added at once, the rest
+  // wait in the playlist while they download (see
+  // downtify/playlist_pending.py) and play streamed meanwhile.
+  async function addSongs(playlist, songs, { quiet = false } = {}) {
+    const list = (songs || []).filter(Boolean)
+    if (!list.length) return { added: 0, pending: 0 }
+    const files = []
+    const missing = []
+    for (const song of list) {
+      if (song.file) {
+        files.push(song.file)
+        continue
+      }
+      const artist = (song.artists || [])[0] || song.artist
+      const track = library.findTrack(artist, song.name || song.title)
+      if (track?.file) files.push(track.file)
+      else missing.push(song)
+    }
+    try {
+      let added = 0
+      if (files.length) {
+        const res = await API.editLibraryPlaylistTracks(playlist.name, {
+          add: files,
+        })
+        added = Number(res.data?.added ?? files.length)
+      }
+      let pending = 0
+      if (missing.length) {
+        const res = await API.addPlaylistPending(playlist.name, missing)
+        pending = (res.data?.added || []).length
+        // Queued as plain downloads: the server writes each into the
+        // playlist when it ends.
+        await downloads.fromSongs(missing, { m3u: false })
+      }
+      pendingVersion.value += 1
+      if (files.length) await library.load({ force: true })
+      if (!quiet) {
+        ui.toast(
+          added + pending
+            ? t('playlists.added', {
+                count: added + pending,
+                name: playlist.title || playlist.name,
+              })
+            : t('playlists.alreadyIn', {
+                name: playlist.title || playlist.name,
+              }),
+          { kind: 'success' }
+        )
+      }
+      return { added, pending }
+    } catch (err) {
+      failed(err)
+      return { added: 0, pending: 0 }
+    }
+  }
+
+  async function removePending(playlist, songIds) {
+    try {
+      await API.removePlaylistPending(playlist.name, songIds)
+      pendingVersion.value += 1
+      ui.toast(t('playlists.removedTrack', { name: playlist.title }), {
+        kind: 'success',
+      })
+    } catch (err) {
+      failed(err)
+    }
+  }
+
+  // "Add to playlist" for songs that may not be downloaded yet.
+  function songMenuItems(songs) {
+    const list = Array.isArray(songs) ? songs : [songs]
+    return [
+      { heading: t('playlists.addTo') },
+      ...manuals().map((playlist) => ({
+        label: playlist.title,
+        icon: 'playlist',
+        action: () => addSongs(playlist, list),
+      })),
+      {
+        label: t('playlists.new'),
+        icon: 'plus',
+        action: () => openCreateFromSongs(list),
+      },
+    ]
   }
 
   // A path takes every copy of the song; a playlist row (a track, see
@@ -698,6 +804,12 @@ export function usePlaylistActions() {
     hideFiles,
     showHidden,
     addMenuItems,
+    addSongs,
+    removePending,
+    songMenuItems,
+    openCreateFromSongs,
+    pendingVersion,
+    createSongs,
     createOpen,
     createFiles,
     createName,

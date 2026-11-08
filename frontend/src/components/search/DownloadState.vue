@@ -1,7 +1,15 @@
 <template>
-  <UiBadge v-if="state === 'library'" tone="accent" icon="check">
-    {{ t('search.inLibrary') }}
-  </UiBadge>
+  <!-- A small green mark, like Spotify's "downloaded" one: the song is
+       simply there, nothing to do. -->
+  <span
+    v-if="state === 'library'"
+    class="flex size-9 shrink-0 items-center justify-center text-accent"
+    :title="t('search.inLibrary')"
+    role="img"
+    :aria-label="t('search.inLibrary')"
+  >
+    <AppIcon name="check-circle" :size="18" />
+  </span>
   <UiBadge v-else-if="state === 'done'" tone="accent" icon="check">
     {{ t('queue.statusDone') }}
   </UiBadge>

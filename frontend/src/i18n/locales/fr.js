@@ -191,6 +191,13 @@ export default {
     add: 'Mettre la playlist en favoris',
     remove: 'Retirer la playlist des favoris',
   },
+  fade: {
+    title: 'Fondu entre les titres',
+    hint: 'Baisse le son sur les dernières secondes d’un titre et monte celui du suivant. Enregistré sur cet appareil.',
+    length: 'Durée du fondu',
+    seconds: { one: '{count} seconde', other: '{count} secondes' },
+    off: 'Désactivé',
+  },
   normalization: {
     level: 'Niveau sonore',
     levelNormal: 'Normal',
@@ -327,6 +334,13 @@ export default {
     delete: 'Supprimer de la bibliothèque',
   },
   home: {
+    madeForYou: 'Conçu pour toi',
+    madeForYouHint:
+      'Des mix de ta bibliothèque, faits à partir de ce que tu écoutes sur cet appareil. Nouveaux chaque jour.',
+    dailyMix: 'Mix du jour {n}',
+    mixWith: '{artists} et plus',
+    onRepeat: 'En boucle',
+    onRepeatHint: 'Les titres que tu écoutes le plus en ce moment',
     greetingMorning: 'Bonjour',
     greetingAfternoon: 'Bon après-midi',
     greetingEvening: 'Bonsoir',
@@ -370,6 +384,9 @@ export default {
       'Écoutez ici, synchronisez des playlists avec la surveillance, ou pointez Jellyfin, Plex ou Navidrome vers votre bibliothèque.',
   },
   search: {
+    topResult: 'Meilleur résultat',
+    inYourLibrary: 'Dans ta bibliothèque',
+    typeSong: 'Titre',
     title: 'Recherche',
     subtitle: 'Trouvez titres, albums et artistes sur YouTube Music.',
     placeholder: 'Cherchez, ou collez un lien Spotify ou YouTube Music',
@@ -975,6 +992,19 @@ export default {
     fetchFailed: 'Impossible de récupérer une biographie pour cet artiste',
   },
   playlists: {
+    addFromCatalog: 'Pas encore dans la bibliothèque',
+    toDownload: 'Sera téléchargé',
+    addSearchPlaceholder: 'Chercher dans la bibliothèque ou de nouveaux titres',
+    pendingTitle: {
+      one: '{count} titre en téléchargement',
+      other: '{count} titres en téléchargement',
+    },
+    recommendedTitle: 'Titres recommandés',
+    recommendedHint:
+      'D’après les titres de cette playlist. En ajouter un le télécharge si besoin.',
+    recommendedRefresh: 'Actualiser',
+    recommendedAdd: 'Ajouter',
+    recommendedEmpty: 'Aucune recommandation pour le moment.',
     kicker: 'Playlist',
     diagnostics: {
       title: 'Diagnostic de la playlist',

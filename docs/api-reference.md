@@ -1362,6 +1362,36 @@ New songs go at the end. A playlist can hold a song more than once (see [Playlis
 
 ---
 
+### `GET /api/library/playlists/pending`
+
+The songs a **manual** playlist is waiting on: added from a search, the charts or a recommendation before they were downloaded (see [Building playlists](features/building-playlists.md#adding-songs-that-arent-downloaded-yet)). Anyone who can open the playlist may read them; `404` otherwise. An imported playlist answers an empty list.
+
+**Query parameters:** `name` — the playlist's name.
+
+**Response:** `{ "name": "Road trip", "songs": [{ "song_id": "4uLU6hMCjMI75M1A2tKUQC", "name": "Halo", "artists": ["Beyoncé"], "cover_url": "https://…", "duration": 261, "url": "https://open.spotify.com/track/…", "added_at": "2026-11-08T18:00:00+00:00" }] }`, first added first. Only the song fields the page and the download need are kept (`song_id`, `name`, `artist`, `artists`, `album_name`, `album_artist`, `cover_url`, `duration`, `url`, `explicit`, `youtube_id`, `isrc`).
+
+---
+
+### `POST /api/library/playlists/pending`
+
+Add songs that aren't downloaded yet to a **manual** playlist. The same people as [`POST /api/library/playlists/tracks`](#post-apilibraryplayliststracks) may: its owner (an admin may change any) and its [editors](features/collaborative-playlists.md). `400` for an imported playlist, `403` for anyone else who can open it. Each song is keyed by its `song_id` (or `url`), the key its download job has. When that download completes, or the queue finds the song already in the library, the server writes its file at the end of every playlist waiting on it and sends `playlists_changed` on the WebSocket. This endpoint doesn't queue anything: queue the songs with [`POST /api/download/batch`](#post-apidownloadbatch) (the web app sends `generate_m3u: false`).
+
+**Request body:** `{ "name": "Road trip", "songs": [ { …song as returned by search… } ] }` — at most 500 songs.
+
+**Response:** `{ "name": "Road trip", "added": [ …the songs new to its waiting list… ] }`. A song already waiting there is left where it is.
+
+---
+
+### `DELETE /api/library/playlists/pending`
+
+Take waiting songs back out of a **manual** playlist (same rights as adding). Their downloads, if queued, carry on; the songs just don't go into the playlist.
+
+**Request body:** `{ "name": "Road trip", "song_ids": ["4uLU6hMCjMI75M1A2tKUQC"] }`
+
+**Response:** `{ "name": "Road trip", "removed": 1 }`
+
+---
+
 ### `PUT /api/library/playlists/order`
 
 Put a **manual** playlist's songs in a new order. The same people as [`POST /api/library/playlists/tracks`](#post-apilibraryplayliststracks) may: its owner (an admin may change any) and its [editors](features/collaborative-playlists.md); `403` for anyone else who can open it, and for an imported playlist. `files` is every song the caller sees in the playlist, each copy of a repeated song included, in its new place. When that isn't the playlist's songs — someone added or removed one in the meantime — it answers `409` and changes nothing: reload the playlist and try again. Songs [hidden from](features/users.md#hiding-from-users) the caller keep their places. `400` without `files`. When the playlist is shared, `playlists_changed` goes out on the WebSocket.

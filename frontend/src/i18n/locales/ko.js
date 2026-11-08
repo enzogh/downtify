@@ -178,6 +178,13 @@ export default {
     add: '재생목록을 즐겨찾기에 추가',
     remove: '재생목록을 즐겨찾기에서 제거',
   },
+  fade: {
+    title: '곡 사이 페이드',
+    hint: '곡의 마지막 몇 초 동안 소리를 줄이고 다음 곡을 키웁니다. 이 기기에 저장됩니다.',
+    length: '페이드 길이',
+    seconds: { one: '{count}초', other: '{count}초' },
+    off: '끔',
+  },
   normalization: {
     level: '재생 음량',
     levelNormal: '보통',
@@ -312,6 +319,13 @@ export default {
     delete: '라이브러리에서 삭제',
   },
   home: {
+    madeForYou: '회원님을 위한 추천',
+    madeForYouHint:
+      '이 기기에서 듣는 음악을 바탕으로 보관함에서 만든 믹스입니다. 매일 새로워집니다.',
+    dailyMix: '데일리 믹스 {n}',
+    mixWith: '{artists} 외',
+    onRepeat: '반복 재생 중',
+    onRepeatHint: '최근 가장 많이 들은 곡',
     greetingMorning: '좋은 아침입니다',
     greetingAfternoon: '좋은 오후입니다',
     greetingEvening: '좋은 저녁입니다',
@@ -351,6 +365,9 @@ export default {
       '여기서 직접 재생하거나, 재생목록 모니터링으로 동기화 상태를 유지하고, Jellyfin, Plex, Navidrome에 라이브러리를 연결하세요.',
   },
   search: {
+    topResult: '최상위 결과',
+    inYourLibrary: '내 보관함',
+    typeSong: '곡',
     title: '검색',
     subtitle: 'YouTube Music에서 곡, 앨범, 아티스트를 찾아보세요.',
     placeholder: '검색하거나 Spotify 또는 YouTube Music 링크를 붙여넣으세요',
@@ -943,6 +960,19 @@ export default {
     fetchFailed: '이 아티스트의 소개를 가져오지 못했습니다',
   },
   playlists: {
+    addFromCatalog: '아직 보관함에 없음',
+    toDownload: '다운로드 예정',
+    addSearchPlaceholder: '보관함 또는 새 곡 검색',
+    pendingTitle: {
+      one: '{count}곡 다운로드 중',
+      other: '{count}곡 다운로드 중',
+    },
+    recommendedTitle: '추천 곡',
+    recommendedHint:
+      '이 플레이리스트의 곡을 바탕으로 합니다. 추가하면 필요할 때 다운로드됩니다.',
+    recommendedRefresh: '새로고침',
+    recommendedAdd: '추가',
+    recommendedEmpty: '지금은 추천이 없습니다.',
     kicker: '재생목록',
     diagnostics: {
       title: '재생목록 진단',

@@ -189,6 +189,13 @@ export default {
     add: 'Playlist zu Favoriten hinzufügen',
     remove: 'Playlist aus Favoriten entfernen',
   },
+  fade: {
+    title: 'Überblenden zwischen Songs',
+    hint: 'Blendet einen Song in den letzten Sekunden aus und den nächsten ein. Auf diesem Gerät gespeichert.',
+    length: 'Überblenddauer',
+    seconds: { one: '{count} Sekunde', other: '{count} Sekunden' },
+    off: 'Aus',
+  },
   normalization: {
     level: 'Lautstärke',
     levelNormal: 'Normal',
@@ -325,6 +332,13 @@ export default {
     delete: 'Aus Bibliothek löschen',
   },
   home: {
+    madeForYou: 'Für dich gemacht',
+    madeForYouHint:
+      'Mixe aus deiner Bibliothek, nach dem, was du auf diesem Gerät hörst. Jeden Tag neu.',
+    dailyMix: 'Daily Mix {n}',
+    mixWith: '{artists} und mehr',
+    onRepeat: 'Dauerschleife',
+    onRepeatHint: 'Die Songs, die du zuletzt am meisten hörst',
     greetingMorning: 'Guten Morgen',
     greetingAfternoon: 'Guten Tag',
     greetingEvening: 'Guten Abend',
@@ -368,6 +382,9 @@ export default {
       'Höre hier Musik, halte Playlists mit der Playlist-Überwachung synchron oder verbinde Jellyfin, Plex oder Navidrome mit deiner Bibliothek.',
   },
   search: {
+    topResult: 'Top-Ergebnis',
+    inYourLibrary: 'In deiner Bibliothek',
+    typeSong: 'Song',
     title: 'Suche',
     subtitle: 'Finde Titel, Alben und Künstler auf YouTube Music.',
     placeholder: 'Suche oder füge einen Spotify- oder YouTube-Music-Link ein',
@@ -973,6 +990,19 @@ export default {
     fetchFailed: 'Biografie für diesen Künstler konnte nicht geladen werden',
   },
   playlists: {
+    addFromCatalog: 'Noch nicht in der Bibliothek',
+    toDownload: 'Wird geladen',
+    addSearchPlaceholder: 'In der Bibliothek oder nach neuen Songs suchen',
+    pendingTitle: {
+      one: '{count} Song wird geladen',
+      other: '{count} Songs werden geladen',
+    },
+    recommendedTitle: 'Empfohlene Songs',
+    recommendedHint:
+      'Basierend auf den Songs dieser Playlist. Beim Hinzufügen wird er bei Bedarf heruntergeladen.',
+    recommendedRefresh: 'Aktualisieren',
+    recommendedAdd: 'Hinzufügen',
+    recommendedEmpty: 'Gerade keine Empfehlungen.',
     kicker: 'Playlist',
     diagnostics: {
       title: 'Playlist-Diagnose',

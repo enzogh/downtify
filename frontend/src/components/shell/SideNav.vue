@@ -70,6 +70,14 @@
         :key="playlist.key"
         :to="{ name: 'Playlist', query: { name: playlist.name } }"
         class="flex h-11 items-center gap-2.5 rounded-control px-3 transition-colors hover:bg-surface-2/60"
+        :class="
+          dropTarget === playlist.key
+            ? 'bg-accent/15 ring-2 ring-accent ring-inset'
+            : ''
+        "
+        @dragover="onDragOver($event, playlist)"
+        @dragleave="onDragLeave(playlist)"
+        @drop="onDrop($event, playlist)"
       >
         <CoverArt
           :thumb="150"
@@ -207,7 +215,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useLocalStorage } from '@vueuse/core'
 import AppIcon from '../ui/AppIcon.vue'
@@ -220,8 +228,11 @@ import { useLibrary } from '/src/model/library'
 import { useQueuePause } from '/src/model/queuePause'
 import { useUpdateCheck } from '/src/model/updateCheck'
 import { usePendingCount } from './navState'
+import { usePlaylistActions } from '/src/model/playlistActions'
+import { isSongDrag, readDragSongs } from '/src/lib/dragSongs'
 
 const { t } = useI18n()
+const playlistActions = usePlaylistActions()
 const route = useRoute()
 const library = useLibrary()
 const auth = useAuth()
@@ -279,9 +290,39 @@ const labelClass = computed(() =>
   collapsed.value ? 'hidden' : 'hidden xl:inline xl:flex-1 xl:truncate'
 )
 
+// Songs dragged from a list are dropped on a playlist here, as on
+// Spotify: library files go in at once, the rest download first.
+const dropTarget = ref('')
+
+function onDragOver(event, playlist) {
+  if (!playlist.canEditTracks || !isSongDrag(event)) return
+  event.preventDefault()
+  event.dataTransfer.dropEffect = 'copy'
+  dropTarget.value = playlist.key
+}
+
+function onDragLeave(playlist) {
+  if (dropTarget.value === playlist.key) dropTarget.value = ''
+}
+
+async function onDrop(event, playlist) {
+  dropTarget.value = ''
+  if (!playlist.canEditTracks) return
+  const dropped = readDragSongs(event)
+  if (!dropped) return
+  event.preventDefault()
+  if (dropped.files.length) {
+    await playlistActions.addFiles(playlist, dropped.files)
+  }
+  if (dropped.songs.length) {
+    await playlistActions.addSongs(playlist, dropped.songs)
+  }
+}
+
 const recentPlaylists = computed(() =>
   [...library.ownPlaylists.value]
-    .filter((playlist) => itemTrackCount(playlist))
+    // An empty Library playlist stays listed: songs can be dropped on it.
+    .filter((playlist) => itemTrackCount(playlist) || playlist.manual)
     // The liked songs stay at the top; the rest are the newest.
     .sort((a, b) => Number(b.liked) - Number(a.liked) || b.added - a.added)
     .slice(0, 6)

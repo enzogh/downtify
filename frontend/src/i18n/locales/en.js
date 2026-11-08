@@ -177,6 +177,13 @@ export default {
     add: 'Add playlist to favorites',
     remove: 'Remove playlist from favorites',
   },
+  fade: {
+    title: 'Fade between songs',
+    hint: 'Fades a song out over its last seconds and the next one in. Saved on this device.',
+    length: 'Fade length',
+    seconds: { one: '{count} second', other: '{count} seconds' },
+    off: 'Off',
+  },
   normalization: {
     level: 'Playback level',
     levelNormal: 'Normal',
@@ -311,6 +318,13 @@ export default {
     delete: 'Delete from library',
   },
   home: {
+    madeForYou: 'Made for you',
+    madeForYouHint:
+      'Mixes from your library, built from what you play on this device. New every day.',
+    dailyMix: 'Daily Mix {n}',
+    mixWith: '{artists} and more',
+    onRepeat: 'On repeat',
+    onRepeatHint: 'The songs you play most lately',
     greetingMorning: 'Good morning',
     greetingAfternoon: 'Good afternoon',
     greetingEvening: 'Good evening',
@@ -351,6 +365,9 @@ export default {
       'Play it here, keep playlists in sync with Playlist Monitor, or point Jellyfin, Plex or Navidrome at your library.',
   },
   search: {
+    topResult: 'Top result',
+    inYourLibrary: 'In your library',
+    typeSong: 'Song',
     title: 'Search',
     subtitle: 'Find songs, albums and artists on YouTube Music.',
     placeholder: 'Search, or paste a Spotify or YouTube Music link',
@@ -935,6 +952,19 @@ export default {
     fetchFailed: 'Could not fetch a bio for this artist',
   },
   playlists: {
+    addFromCatalog: 'Not in your library yet',
+    toDownload: 'Will download',
+    addSearchPlaceholder: 'Search your library or for new songs',
+    pendingTitle: {
+      one: '{count} song downloading',
+      other: '{count} songs downloading',
+    },
+    recommendedTitle: 'Recommended songs',
+    recommendedHint:
+      'Based on the songs in this playlist. Adding one downloads it if needed.',
+    recommendedRefresh: 'Refresh',
+    recommendedAdd: 'Add',
+    recommendedEmpty: 'No recommendations right now.',
     kicker: 'Playlist',
     diagnostics: {
       title: 'Playlist diagnostics',

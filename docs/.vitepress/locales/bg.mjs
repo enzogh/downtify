@@ -82,6 +82,7 @@ export default {
       'features/discover.md': 'Откриване',
       'features/collaborative-playlists.md': 'Съвместни плейлисти',
       'features/playlist-order.md': 'Ред и повтаряне на песни',
+      'features/building-playlists.md': 'Създаване на плейлисти',
       'features/users.md': 'Потребители и вход',
       'features/mobile-apps.md': 'Мобилни приложения',
       'features/library-only.md': 'Library-only mode',

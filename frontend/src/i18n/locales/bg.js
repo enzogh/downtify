@@ -180,6 +180,13 @@ export default {
     add: 'Добавяне на плейлиста в любими',
     remove: 'Премахване на плейлиста от любими',
   },
+  fade: {
+    title: 'Преливане между песните',
+    hint: 'Заглушава песента в последните ѝ секунди и усилва следващата. Запазва се на това устройство.',
+    length: 'Продължителност',
+    seconds: { one: '{count} секунда', other: '{count} секунди' },
+    off: 'Изключено',
+  },
   normalization: {
     level: 'Ниво на звука',
     levelNormal: 'Нормално',
@@ -314,6 +321,13 @@ export default {
     delete: 'Изтрий от библиотеката',
   },
   home: {
+    madeForYou: 'Създадено за вас',
+    madeForYouHint:
+      'Миксове от библиотеката ви според това, което слушате на това устройство. Нови всеки ден.',
+    dailyMix: 'Дневен микс {n}',
+    mixWith: '{artists} и още',
+    onRepeat: 'На повторение',
+    onRepeatHint: 'Песните, които слушате най-много напоследък',
     greetingMorning: 'Добро утро',
     greetingAfternoon: 'Добър ден',
     greetingEvening: 'Добър вечер',
@@ -354,6 +368,9 @@ export default {
       'Пусни я тук, синхронизирай плейлисти с Наблюдение или насочи Jellyfin, Plex или Navidrome към библиотеката си.',
   },
   search: {
+    topResult: 'Най-добър резултат',
+    inYourLibrary: 'Във вашата библиотека',
+    typeSong: 'Песен',
     title: 'Търсене',
     subtitle: 'Намери песни, албуми и изпълнители в YouTube Music.',
     placeholder: 'Търси или постави линк от Spotify или YouTube Music',
@@ -941,6 +958,19 @@ export default {
     fetchFailed: 'Не можа да се извлече биография за този изпълнител',
   },
   playlists: {
+    addFromCatalog: 'Още не е в библиотеката',
+    toDownload: 'Ще се изтегли',
+    addSearchPlaceholder: 'Търсете в библиотеката или нови песни',
+    pendingTitle: {
+      one: '{count} песен се изтегля',
+      other: '{count} песни се изтеглят',
+    },
+    recommendedTitle: 'Препоръчани песни',
+    recommendedHint:
+      'Според песните в този плейлист. Добавянето я изтегля при нужда.',
+    recommendedRefresh: 'Обнови',
+    recommendedAdd: 'Добави',
+    recommendedEmpty: 'Няма препоръки в момента.',
     kicker: 'Плейлист',
     diagnostics: {
       title: 'Диагностика на плейлиста',

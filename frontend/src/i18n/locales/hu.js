@@ -185,6 +185,13 @@ export default {
     add: 'Lista hozzáadása a kedvencekhez',
     remove: 'Lista eltávolítása a kedvencekből',
   },
+  fade: {
+    title: 'Áttűnés a dalok között',
+    hint: 'Az utolsó másodpercekben elhalkítja a dalt, a következőt felhangosítja. Ezen az eszközön mentve.',
+    length: 'Áttűnés hossza',
+    seconds: { one: '{count} másodperc', other: '{count} másodperc' },
+    off: 'Ki',
+  },
   normalization: {
     level: 'Hangerőszint',
     levelNormal: 'Normál',
@@ -319,6 +326,13 @@ export default {
     delete: 'Törlés a könyvtárból',
   },
   home: {
+    madeForYou: 'Neked készült',
+    madeForYouHint:
+      'Mixek a könyvtáradból, aszerint, amit ezen az eszközön hallgatsz. Minden nap újak.',
+    dailyMix: 'Napi mix {n}',
+    mixWith: '{artists} és mások',
+    onRepeat: 'Ismétlésen',
+    onRepeatHint: 'A mostanában legtöbbet hallgatott dalok',
     greetingMorning: 'Jó reggelt',
     greetingAfternoon: 'Jó napot',
     greetingEvening: 'Jó estét',
@@ -359,6 +373,9 @@ export default {
       'Játszd le itt, tartsd szinkronban a listákat a Figyelővel, vagy irányítsd a Jellyfint, Plexet vagy Navidrome-ot a könyvtáradra.',
   },
   search: {
+    topResult: 'Legjobb találat',
+    inYourLibrary: 'A könyvtáradban',
+    typeSong: 'Dal',
     title: 'Keresés',
     subtitle: 'Dalok, albumok és előadók keresése a YouTube Musicban.',
     placeholder: 'Keress, vagy illessz be Spotify vagy YouTube Music linket',
@@ -950,6 +967,19 @@ export default {
     fetchFailed: 'Nem sikerült életrajzot lekérni ehhez az előadóhoz',
   },
   playlists: {
+    addFromCatalog: 'Még nincs a könyvtárban',
+    toDownload: 'Letöltésre kerül',
+    addSearchPlaceholder: 'Keresés a könyvtárban vagy új dalok',
+    pendingTitle: {
+      one: '{count} dal töltődik le',
+      other: '{count} dal töltődik le',
+    },
+    recommendedTitle: 'Ajánlott dalok',
+    recommendedHint:
+      'A lejátszási lista dalai alapján. Hozzáadáskor szükség esetén letöltődik.',
+    recommendedRefresh: 'Frissítés',
+    recommendedAdd: 'Hozzáadás',
+    recommendedEmpty: 'Most nincs ajánlás.',
     kicker: 'Lejátszási lista',
     diagnostics: {
       title: 'Lejátszási lista diagnosztika',

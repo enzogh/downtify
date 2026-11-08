@@ -6,7 +6,12 @@
     @close="close"
   >
     <form class="flex flex-col gap-4" @submit.prevent="submit">
-      <ul v-if="files.length && manuals.length" class="flex flex-col gap-1">
+      <ul
+        v-if="
+          (files.length || actions.createSongs.value.length) && manuals.length
+        "
+        class="flex flex-col gap-1"
+      >
         <li v-for="playlist in manuals" :key="playlist.name">
           <button
             type="button"
@@ -72,7 +77,11 @@ async function addTo(playlist) {
   if (saving.value) return
   saving.value = true
   try {
-    await actions.addFiles(playlist, files.value)
+    if (actions.createSongs.value.length) {
+      await actions.addSongs(playlist, actions.createSongs.value)
+    } else {
+      await actions.addFiles(playlist, files.value)
+    }
     close()
   } finally {
     saving.value = false
@@ -86,6 +95,7 @@ async function submit() {
   try {
     await actions.createNamed(title, actions.createFiles.value, {
       sourcePlaylistUrl: actions.createSourceUrl.value,
+      songs: actions.createSongs.value,
     })
     close()
   } catch {

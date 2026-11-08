@@ -190,6 +190,13 @@ export default {
     add: 'Προσθήκη λίστας στα αγαπημένα',
     remove: 'Αφαίρεση λίστας από τα αγαπημένα',
   },
+  fade: {
+    title: 'Σβήσιμο μεταξύ τραγουδιών',
+    hint: 'Χαμηλώνει ένα τραγούδι στα τελευταία δευτερόλεπτα και δυναμώνει το επόμενο. Αποθηκεύεται σε αυτή τη συσκευή.',
+    length: 'Διάρκεια',
+    seconds: { one: '{count} δευτερόλεπτο', other: '{count} δευτερόλεπτα' },
+    off: 'Ανενεργό',
+  },
   normalization: {
     level: 'Επίπεδο έντασης',
     levelNormal: 'Κανονικό',
@@ -326,6 +333,13 @@ export default {
     delete: 'Διαγραφή από τη βιβλιοθήκη',
   },
   home: {
+    madeForYou: 'Φτιαγμένο για εσάς',
+    madeForYouHint:
+      'Μίξεις από τη βιβλιοθήκη σας, με βάση ό,τι ακούτε σε αυτή τη συσκευή. Νέες κάθε μέρα.',
+    dailyMix: 'Ημερήσιο μιξ {n}',
+    mixWith: '{artists} και άλλοι',
+    onRepeat: 'Σε επανάληψη',
+    onRepeatHint: 'Τα τραγούδια που ακούτε περισσότερο τελευταία',
     greetingMorning: 'Καλημέρα',
     greetingAfternoon: 'Καλό απόγευμα',
     greetingEvening: 'Καλησπέρα',
@@ -369,6 +383,9 @@ export default {
       'Άκου εδώ, κράτα λίστες συγχρονισμένες με την Παρακολούθηση ή σύνδεσε Jellyfin, Plex ή Navidrome στη βιβλιοθήκη σου.',
   },
   search: {
+    topResult: 'Κορυφαίο αποτέλεσμα',
+    inYourLibrary: 'Στη βιβλιοθήκη σας',
+    typeSong: 'Τραγούδι',
     title: 'Αναζήτηση',
     subtitle: 'Βρες τραγούδια, άλμπουμ και καλλιτέχνες στο YouTube Music.',
     placeholder: 'Αναζήτησε ή επικόλλησε σύνδεσμο Spotify ή YouTube Music',
@@ -964,6 +981,19 @@ export default {
     fetchFailed: 'Δεν ήταν δυνατή η λήψη βιογραφικού για αυτόν τον καλλιτέχνη',
   },
   playlists: {
+    addFromCatalog: 'Δεν είναι ακόμα στη βιβλιοθήκη',
+    toDownload: 'Θα κατέβει',
+    addSearchPlaceholder: 'Αναζήτηση στη βιβλιοθήκη ή για νέα τραγούδια',
+    pendingTitle: {
+      one: '{count} τραγούδι κατεβαίνει',
+      other: '{count} τραγούδια κατεβαίνουν',
+    },
+    recommendedTitle: 'Προτεινόμενα τραγούδια',
+    recommendedHint:
+      'Με βάση τα τραγούδια αυτής της λίστας. Η προσθήκη το κατεβάζει αν χρειάζεται.',
+    recommendedRefresh: 'Ανανέωση',
+    recommendedAdd: 'Προσθήκη',
+    recommendedEmpty: 'Καμία πρόταση αυτή τη στιγμή.',
     kicker: 'Λίστα',
     diagnostics: {
       title: 'Διαγνωστικά λίστας',

@@ -5,6 +5,7 @@ import { ref, computed, watch } from 'vue'
 import { libraryOnly } from '/src/model/musicPolicy'
 
 import { normalizeTrack } from '/src/lib/library'
+import { clampFade, fadeGain } from '/src/lib/fade'
 import { attachEqualizer, resumeEqualizer } from '/src/model/equalizer'
 import { resolveTrackUrl, warmServerCache } from '/src/model/streamResolve'
 import {
@@ -18,6 +19,7 @@ import {
 const VOLUME_KEY = 'downtify-player-volume'
 const RATE_KEY = 'downtify-player-rate'
 const SESSION_KEY = 'downtify-player-session'
+const FADE_KEY = 'downtify-player-fade'
 // Queues past this size aren't persisted across reloads (localStorage
 // quota); the player still works, it just starts empty next time.
 const MAX_PERSISTED_TRACKS = 2000
@@ -57,6 +59,9 @@ const isMuted = ref(false)
 // Podcast episodes only, for now — music always plays at 1x. Per device,
 // like volume, so a listener doesn't have to reset it every episode.
 const playbackRate = ref(parseFloat(storage()?.getItem(RATE_KEY) || '1'))
+// "Fade between songs" (Settings > Playback), per device like volume:
+// seconds of fade out at a song's end and fade in at the next one's start.
+const fadeSeconds = ref(clampFade(storage()?.getItem(FADE_KEY)))
 const repeatMode = ref('off') // 'off' | 'all' | 'one'
 const shuffle = ref(false)
 // Where the queue came from: { type: 'album'|'playlist'|'artist'|
@@ -78,6 +83,12 @@ let shuffleOrder = []
 let shufflePos = 0
 let sleepTimer = null
 let restoreTime = 0
+// Whether the current track began by the queue moving on by itself (it
+// fades in then; a track the user picks starts at full volume).
+let autoAdvanced = false
+let fadeFrame = 0
+// The track restoreTime belongs to: any other one starts at 0.
+let restoreIndex = -1
 let playbackAttempt = 0
 
 function ensureAudio() {
@@ -86,7 +97,7 @@ function ensureAudio() {
   // Buffer aggressively: a stream starts while it is still arriving, and
   // the next one is already resolved one track ahead (see prefetchNext).
   audio.preload = 'auto'
-  audio.volume = volume.value
+  applyVolume()
   audio.playbackRate = playbackRate.value
   audio.addEventListener('timeupdate', () => {
     currentTime.value = audio.currentTime
@@ -109,6 +120,7 @@ function ensureAudio() {
   audio.addEventListener('ended', onEnded)
   audio.addEventListener('play', () => {
     isPlaying.value = true
+    scheduleFade()
   })
   audio.addEventListener('pause', () => {
     isPlaying.value = false
@@ -339,10 +351,14 @@ function stop() {
 }
 
 // ── Transport ────────────────────────────────────────────────────────
-function playAt(index) {
+function playAt(index, { auto = false } = {}) {
   if (libraryOnly.value && playlist.value[index]?.stream) return
   if (index < 0 || index >= playlist.value.length) return
   const a = ensureAudio()
+  autoAdvanced = auto
+  applyVolume()
+  if (index !== restoreIndex) restoreTime = 0
+  restoreIndex = -1
   currentIndex.value = index
   prefetchedFor = -1
   if (shuffle.value) {
@@ -556,7 +572,7 @@ function seekBy(delta) {
 function setVolume(v) {
   const clamped = Math.max(0, Math.min(1, v))
   volume.value = clamped
-  if (audio) audio.volume = clamped
+  applyVolume()
   try {
     storage()?.setItem(VOLUME_KEY, String(clamped))
   } catch {
@@ -566,6 +582,48 @@ function setVolume(v) {
     isMuted.value = false
     if (audio) audio.muted = false
   }
+}
+
+// ── Fade between songs ───────────────────────────────────────────────
+function currentFadeGain() {
+  const track = playlist.value[currentIndex.value]
+  if (!audio || !fadeSeconds.value || track?.isPodcast) return 1
+  // Fading out only makes sense when something follows.
+  const fadeOut =
+    repeatMode.value !== 'one' && sleepAt.value !== 'track' && nextIndex() >= 0
+  return fadeGain(audio.currentTime, duration.value, fadeSeconds.value, {
+    fadeIn: autoAdvanced,
+    fadeOut,
+  })
+}
+
+function applyVolume() {
+  if (audio) audio.volume = volume.value * currentFadeGain()
+}
+
+// While playing with a fade set, the volume follows the playhead every
+// frame (timeupdate alone ticks too coarsely for a smooth ramp).
+function scheduleFade() {
+  if (fadeFrame || typeof requestAnimationFrame === 'undefined') return
+  const tick = () => {
+    fadeFrame = 0
+    applyVolume()
+    if (isPlaying.value && fadeSeconds.value) {
+      fadeFrame = requestAnimationFrame(tick)
+    }
+  }
+  fadeFrame = requestAnimationFrame(tick)
+}
+
+function setFadeSeconds(value) {
+  fadeSeconds.value = clampFade(value)
+  try {
+    storage()?.setItem(FADE_KEY, String(fadeSeconds.value))
+  } catch {
+    // ignore
+  }
+  applyVolume()
+  if (isPlaying.value) scheduleFade()
 }
 
 function toggleMute() {
@@ -615,13 +673,13 @@ function prevIndex() {
   return i
 }
 
-function next() {
+function next({ auto = false } = {}) {
   const i = nextIndex()
   if (i < 0) {
     pause()
     return
   }
-  playAt(i)
+  playAt(i, { auto })
 }
 
 function prev() {
@@ -646,7 +704,7 @@ function onEnded() {
     if (audio) startPlayback(audio)
     return
   }
-  next()
+  next({ auto: true })
 }
 
 function setRepeat(mode) {
@@ -807,16 +865,17 @@ watch(isPlaying, (playing) => {
 })
 
 // ── Persist the session across reloads ───────────────────────────────
+// A stream's URL expires within hours, so a streamed track is saved
+// without it: after a reload it resolves again when it plays (see
+// needsStreamUrl), and a mixed queue picks up where it was.
+export function persistedTrack(track) {
+  return track?.stream && track.url ? { ...track, url: '' } : track
+}
+
 function saveSession() {
   const store = storage()
   if (!store) return
-  // A stream's URL expires within hours: persisting it would restore a
-  // dead track, so a queue holding one is never saved at all.
-  if (
-    !playlist.value.length ||
-    playlist.value.length > MAX_PERSISTED_TRACKS ||
-    playlist.value.some((track) => track?.stream)
-  ) {
+  if (!playlist.value.length || playlist.value.length > MAX_PERSISTED_TRACKS) {
     store.removeItem(SESSION_KEY)
     return
   }
@@ -824,7 +883,7 @@ function saveSession() {
     store.setItem(
       SESSION_KEY,
       JSON.stringify({
-        tracks: playlist.value,
+        tracks: playlist.value.map(persistedTrack),
         index: currentIndex.value,
         time: Math.floor(currentTime.value),
         context: context.value,
@@ -853,8 +912,10 @@ function restoreSession() {
     if (track) {
       const a = ensureAudio()
       restoreTime = saved.time || 0
+      restoreIndex = currentIndex.value
       currentTime.value = restoreTime
-      a.src = track.url
+      // A streamed track resolves when play() reaches it.
+      if (!needsStreamUrl(track)) a.src = track.url
     }
   } catch {
     storage()?.removeItem(SESSION_KEY)
@@ -899,6 +960,8 @@ export function usePlayer() {
     volume,
     isMuted,
     playbackRate,
+    fadeSeconds,
+    setFadeSeconds,
     repeatMode,
     shuffle,
     sleepAt,

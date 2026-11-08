@@ -39,6 +39,7 @@
 </template>
 
 <script setup>
+import { startListeningLog } from '/src/model/listening'
 import { ref, watch, onMounted, onUnmounted } from 'vue'
 import {
   libraryOnly,
@@ -80,6 +81,7 @@ const { t } = useI18n()
 const player = usePlayer()
 const { showLyrics } = usePlayerPrefs()
 const route = useRoute()
+startListeningLog()
 const router = useRouter()
 const ui = useUi()
 const nowPlaying = useNowPlaying()

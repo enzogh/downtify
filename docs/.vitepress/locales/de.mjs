@@ -82,6 +82,7 @@ export default {
       'features/discover.md': 'Entdecken',
       'features/collaborative-playlists.md': 'Gemeinsam bearbeitete Playlists',
       'features/playlist-order.md': 'Reihenfolge und wiederholte Titel',
+      'features/building-playlists.md': 'Playlists zusammenstellen',
       'features/users.md': 'Benutzer und Anmeldung',
       'features/mobile-apps.md': 'Mobile Apps',
       'features/library-only.md': 'Library-only mode',

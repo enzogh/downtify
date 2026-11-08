@@ -82,6 +82,7 @@ export default {
       'features/discover.md': 'Keşfet',
       'features/collaborative-playlists.md': 'Birlikte düzenlenen listeler',
       'features/playlist-order.md': 'Sıralama ve tekrarlanan şarkılar',
+      'features/building-playlists.md': 'Çalma listesi oluşturma',
       'features/users.md': 'Kullanıcılar ve oturum açma',
       'features/mobile-apps.md': 'Mobil uygulamalar',
       'features/library-only.md': 'Library-only mode',

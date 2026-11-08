@@ -74,7 +74,7 @@ iOS may pause Web Audio when the screen locks or you switch apps, which stops pl
 
 ## Building the queue
 
-Playing an album, artist, playlist or the track list queues those tracks in order, starting from the one you picked. **Shuffle** on a collection starts it in a random order. Tracks you haven't downloaded play in full right in the queue, streamed live: the server relays YouTube's audio as it arrives, so a song starts within a second or two instead of after a download, and seeking works at once. While one plays, the next one is already being prepared one track ahead, so playback runs through undownloaded rows without stopping — even where the browser itself can't reach YouTube. When matching an undownloaded track, the player skips search results more than 10 seconds away from its known duration. A streamed track is never saved, liked or remembered across reloads.
+Playing an album, artist, playlist or the track list queues those tracks in order, starting from the one you picked. **Shuffle** on a collection starts it in a random order. Tracks you haven't downloaded play in full right in the queue, streamed live: the server relays YouTube's audio as it arrives, so a song starts within a second or two instead of after a download, and seeking works at once. While one plays, the next one is already being prepared one track ahead, so playback runs through undownloaded rows without stopping — even where the browser itself can't reach YouTube. When matching an undownloaded track, the player skips search results more than 10 seconds away from its known duration. A streamed track is never saved or liked, but it stays in the remembered queue: after a reload it is matched again when it plays. To keep one, add it to a playlist: it downloads and moves in.
 
 Every track's menu (the **⋯** button, or right-click on desktop) has:
 
@@ -87,6 +87,8 @@ Every track's menu (the **⋯** button, or right-click on desktop) has:
 The same actions apply to a multi-track selection in the Library.
 
 The queue, the current track, its position, shuffle and repeat are remembered, so reopening Downtify resumes where you left off (queues of more than 2000 tracks aren't remembered). Deleted files drop out of the queue automatically.
+
+**Fade between songs** (Settings → General) fades a song out over its last seconds and the next one in, from off up to 12 seconds. It applies when the queue moves on by itself. A song you pick yourself starts at full volume, and nothing fades when no song follows (the end of the queue, repeat one, or a sleep timer set to stop after the track). Podcast episodes never fade. The setting is saved per device, like the volume.
 
 ## Keyboard and media keys
 

@@ -91,6 +91,8 @@
         @click="onRowClick($event, row)"
         @dblclick="playRow(row)"
         @contextmenu="openMenu($event, row)"
+        draggable="true"
+        @dragstart="onDragStart($event, row)"
       >
         <span v-if="selectable" class="max-md:hidden" @click.stop>
           <Checkbox
@@ -240,6 +242,7 @@ import CoverArt from '../ui/CoverArt.vue'
 import EqBars from '../ui/EqBars.vue'
 import ExplicitBadge from '../ui/ExplicitBadge.vue'
 import UiMenu from '../ui/UiMenu.vue'
+import { setDragSongs } from '/src/lib/dragSongs'
 import LikeButton from '../player/LikeButton.vue'
 import TrackArtistLinks from './TrackArtistLinks.vue'
 import { useAuth } from '/src/model/auth'
@@ -402,6 +405,16 @@ function onRowClick(event, row) {
     return
   }
   if (window.matchMedia('(pointer: coarse)').matches) playRow(row)
+}
+
+// Dragging a row (or the selection it belongs to) onto a sidebar
+// playlist adds it there.
+function onDragStart(event, row) {
+  const files =
+    isSelected(row.track) && props.selected?.size
+      ? [...props.selected]
+      : [row.track.file]
+  setDragSongs(event, { files }, row.track.title)
 }
 
 function openMenu(event, row) {

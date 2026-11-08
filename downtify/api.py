@@ -177,6 +177,9 @@ downloads are shared, and files are never stored twice.
   manual playlist - its owner's, or one shared with you as an editor;
   ``allow_duplicates`` adds a song it already has again,
   ``remove_entries`` takes out one copy of a repeated song)
+* ``GET|POST|DELETE /api/library/playlists/pending`` (songs added to a
+  manual playlist before they are downloaded: ``{name, songs}``; each is
+  written into the playlist when its download ends)
 * ``PUT  /api/library/playlists/order`` (put a manual playlist's songs in
   a new order: ``{name, files}``, every song in its new place)
 * ``POST /api/library/playlists/rename`` (rename a manual playlist)
@@ -610,6 +613,11 @@ from .playlist_hidden import (
 )
 from .playlist_listing import list_library_playlists
 from .playlist_mosaic import MAX_PLAYLIST_COVER_BYTES, keep_explicit_cover
+from .playlist_pending import (
+    MAX_PENDING_PER_EDIT,
+    PlaylistPendingSongs,
+    song_key,
+)
 from .playlist_shares import (
     PRIVATE,
     SHARED,
@@ -1240,6 +1248,9 @@ class AppState:
     manual_playlist_owners: Optional[ManualPlaylistOwners] = None
     playlist_shares: Optional[PlaylistShares] = None
     playlist_hidden: Optional[PlaylistHiddenSongs] = None
+    # Songs added to a Library playlist before their download ends
+    # (downtify/playlist_pending.py).
+    playlist_pending: Optional[PlaylistPendingSongs] = None
     # Which audio provider fetched each file (downtify/file_providers.py).
     file_providers: Optional[FileProviders] = None
     # How each download ended and the library's size day by day, for the
@@ -3475,6 +3486,41 @@ def enrich_artist_after_download(song: dict[str, Any], filename: str) -> None:
         )
 
 
+def claim_pending_playlist_songs(song: dict[str, Any], filename: str) -> None:
+    """A song some Library playlists were waiting on is now *filename*:
+    write it at the end of each (see :mod:`downtify.playlist_pending`).
+    Runs on the download's own thread; never raises."""
+
+    store = state.playlist_pending
+    if store is None:
+        return
+    try:
+        names = store.claim(song_key(song))
+        if not names:
+            return
+        ctx = library_context()
+        for name in names:
+            try:
+                edit_manual_playlist(ctx, name, add=[filename])
+            except ManualPlaylistError as exc:
+                logger.debug(
+                    'Pending song {} not added to {!r}: {}',
+                    filename,
+                    name,
+                    exc,
+                )
+        invalidate_library_paths_cache()
+        loop = state.loop
+        if loop is not None:
+            asyncio.run_coroutine_threadsafe(
+                announce_playlists_changed(), loop
+            )
+    except Exception:
+        logger.opt(exception=True).debug(
+            'Could not add {} to the playlists waiting on it', filename
+        )
+
+
 def record_download_outcome(
     song: dict[str, Any], outcome: str, filename: str = ''
 ) -> None:
@@ -3483,6 +3529,8 @@ def record_download_outcome(
     file's size and provider (see :mod:`downtify.download_log`). Runs on
     the download's own thread; never raises."""
 
+    if filename and outcome in {OUTCOME_COMPLETED, OUTCOME_SKIPPED}:
+        claim_pending_playlist_songs(song, filename)
     log = state.download_log
     if log is None:
         return
@@ -7348,6 +7396,96 @@ async def edit_library_playlist_tracks_endpoint(
     return result
 
 
+def _pending_store() -> PlaylistPendingSongs:
+    if state.playlist_pending is None:
+        raise HTTPException(status_code=503, detail='Starting up')
+    return state.playlist_pending
+
+
+def _require_manual_editable(name: str, request: Request) -> dict[str, Any]:
+    """A Library-created playlist *request* may add songs to: its own,
+    or one shared with it as an editor."""
+
+    entry = require_playlist_visible(name, request)
+    if not entry.get('manual'):
+        raise HTTPException(
+            status_code=400,
+            detail='Only Library playlists can hold songs to download',
+        )
+    if not entry.get('mine', True) and not entry.get('can_edit_tracks'):
+        raise HTTPException(
+            status_code=403,
+            detail='Only the owner can change this playlist',
+        )
+    return entry
+
+
+@router.get('/api/library/playlists/pending')
+async def list_playlist_pending_endpoint(
+    request: Request, name: str = ''
+) -> dict[str, Any]:
+    """The songs a Library playlist waits on: added from a search, the
+    charts or a recommendation before they were downloaded."""
+
+    entry = require_playlist_visible(name.strip(), request)
+    if not entry.get('manual'):
+        return {'name': entry.get('name') or name, 'songs': []}
+    songs = await asyncio.to_thread(
+        _pending_store().songs, str(entry.get('name') or name)
+    )
+    return {'name': entry.get('name') or name, 'songs': songs}
+
+
+@router.post('/api/library/playlists/pending')
+async def add_playlist_pending_endpoint(request: Request) -> dict[str, Any]:
+    """Add songs that aren't downloaded yet to a Library playlist. Body:
+    ``{name, songs: [song]}``. Each is written into the playlist once its
+    download ends; the caller queues the downloads itself."""
+
+    payload = await _json_object(request)
+    name = str(payload.get('name') or '').strip()
+    entry = _require_manual_editable(name, request)
+    songs = payload.get('songs')
+    if not isinstance(songs, list) or not songs:
+        raise HTTPException(
+            status_code=400, detail='songs must be a non-empty list'
+        )
+    if len(songs) > MAX_PENDING_PER_EDIT:
+        raise HTTPException(
+            status_code=400,
+            detail=f'At most {MAX_PENDING_PER_EDIT} songs at a time',
+        )
+    added = await asyncio.to_thread(
+        _pending_store().add,
+        str(entry.get('name') or name),
+        [song for song in songs if isinstance(song, dict)],
+        user_id=request_user_id(request),
+    )
+    if entry.get('visibility', PRIVATE) != PRIVATE:
+        await announce_playlists_changed()
+    return {'name': entry.get('name') or name, 'added': added}
+
+
+@router.delete('/api/library/playlists/pending')
+async def remove_playlist_pending_endpoint(
+    request: Request,
+) -> dict[str, Any]:
+    """Take waiting songs back out of a Library playlist. Body:
+    ``{name, song_ids: [...]}``. Their downloads, if queued, carry on."""
+
+    payload = await _json_object(request)
+    name = str(payload.get('name') or '').strip()
+    entry = _require_manual_editable(name, request)
+    raw = payload.get('song_ids')
+    ids = [str(item) for item in raw] if isinstance(raw, list) else []
+    removed = await asyncio.to_thread(
+        _pending_store().remove, str(entry.get('name') or name), ids
+    )
+    if entry.get('visibility', PRIVATE) != PRIVATE:
+        await announce_playlists_changed()
+    return {'name': entry.get('name') or name, 'removed': removed}
+
+
 def _playlist_entry_refs(raw: object) -> list[tuple[str, int]]:
     """``[{file, occurrence}]`` from a request as ``(file, occurrence)``:
     one copy of a song a playlist may hold more than once."""
@@ -7468,6 +7606,12 @@ async def rename_library_playlist_endpoint(request: Request) -> dict[str, Any]:
     if state.external_playlist_imports is not None:
         await asyncio.to_thread(
             state.external_playlist_imports.rename,
+            name,
+            str(result.get('name') or new_name),
+        )
+    if state.playlist_pending is not None:
+        await asyncio.to_thread(
+            state.playlist_pending.rename,
             name,
             str(result.get('name') or new_name),
         )
@@ -8105,6 +8249,8 @@ async def _delete_playlist_by_name(
         await asyncio.to_thread(state.playlist_shares.forget, playlist_name)
     if state.playlist_hidden is not None:
         await asyncio.to_thread(state.playlist_hidden.forget, playlist_name)
+    if state.playlist_pending is not None:
+        await asyncio.to_thread(state.playlist_pending.drop, playlist_name)
     if state.external_playlist_imports is not None:
         await asyncio.to_thread(
             state.external_playlist_imports.forget, playlist_name

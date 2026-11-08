@@ -339,6 +339,9 @@
           "
         />
 
+        <PlaylistPendingSongs :playlist="playlist" />
+        <PlaylistRecommendations :playlist="playlist" />
+
         <UiPanel
           v-if="canHide && playlist.hiddenCount"
           :title="t('playlists.hiddenTitle', { count: playlist.hiddenCount })"
@@ -392,6 +395,8 @@
 </template>
 
 <script setup>
+import PlaylistPendingSongs from '/src/components/library/PlaylistPendingSongs.vue'
+import PlaylistRecommendations from '/src/components/library/PlaylistRecommendations.vue'
 import { computed, ref, watch } from 'vue'
 import { useEventListener, useLocalStorage } from '@vueuse/core'
 import { useRoute, useRouter } from 'vue-router'

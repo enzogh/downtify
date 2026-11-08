@@ -196,6 +196,37 @@
       />
     </div>
 
+    <!-- Made for you: daily mixes from the library and what this device
+         listens to (lib/mixes.js), and the songs on repeat. -->
+    <section
+      v-if="mixes.length"
+      class="flex flex-col gap-4 animate-rise [animation-delay:120ms]"
+    >
+      <div class="flex flex-col gap-0.5">
+        <h2 class="text-display text-xl font-semibold">
+          {{ t('home.madeForYou') }}
+        </h2>
+        <p class="text-[13px] text-muted">{{ t('home.madeForYouHint') }}</p>
+      </div>
+      <div
+        class="grid grid-cols-2 gap-x-5 gap-y-7 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-6"
+      >
+        <MediaTile
+          v-for="mix in mixes"
+          :key="mix.id"
+          :to="mix.to"
+          :title="mix.title"
+          :subtitle="mix.subtitle"
+          :covers="mix.covers"
+          :cover="mix.covers[0] || ''"
+          :name="mix.title"
+          icon="sparkle"
+          :playing="isMixPlaying(mix)"
+          @play="playMix(mix)"
+        />
+      </div>
+    </section>
+
     <!-- Recently added -->
     <section
       v-if="recentAlbums.length"
@@ -285,7 +316,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import AppIcon from '/src/components/ui/AppIcon.vue'
 import CoverArt from '/src/components/ui/CoverArt.vue'
@@ -296,6 +327,9 @@ import UiProgress from '/src/components/ui/UiProgress.vue'
 import MediaTile from '/src/components/library/MediaTile.vue'
 import { useDownloadManager, useProgressTracker } from '/src/model/download'
 import { useHistory } from '/src/model/history'
+import { useListening } from '/src/model/listening'
+import { useLikes } from '/src/model/likes'
+import { buildMixes, onRepeat } from '/src/lib/mixes'
 import { useLibrary } from '/src/model/library'
 import { usePlayer } from '/src/model/player'
 import { usePlaylistActions } from '/src/model/playlistActions'
@@ -326,6 +360,8 @@ const favoriteEntries = computed(() =>
   }))
 )
 const history = useHistory()
+const listening = useListening()
+const likes = useLikes()
 const player = usePlayer()
 const tracker = useProgressTracker()
 const dm = useDownloadManager()
@@ -412,6 +448,65 @@ const recentPlaylists = computed(() =>
     .sort((a, b) => b.added - a.added)
     .slice(0, 6)
 )
+
+// The mixes need every song, which the Home summary alone doesn't load:
+// fetched once the page is idle.
+onMounted(() => {
+  if (library.tracksComplete.value) return
+  const later = window.requestIdleCallback || ((fn) => setTimeout(fn, 1200))
+  later(() => library.ensureTracks().catch(() => {}))
+})
+
+const mixes = computed(() => {
+  if (!library.tracksComplete.value) return []
+  const now = Date.now()
+  const made = buildMixes(library.tracks.value, {
+    plays: listening.plays.value,
+    liked: likes.liked.value,
+    now,
+  }).map((mix) => ({
+    ...mix,
+    title: t('home.dailyMix', { n: mix.number }),
+    subtitle: t('home.mixWith', { artists: mix.artists.join(', ') }),
+    to: { name: 'Artist', query: { name: mix.artist } },
+  }))
+  const repeat = onRepeat(library.tracks.value, listening.plays.value, { now })
+  if (repeat.length >= 5) {
+    made.unshift({
+      id: 'on-repeat',
+      title: t('home.onRepeat'),
+      subtitle: t('home.onRepeatHint'),
+      tracks: repeat,
+      covers: repeat
+        .filter((track) => track.hasCover && track.cover)
+        .map((track) => track.cover)
+        .filter((cover, i, all) => all.indexOf(cover) === i)
+        .slice(0, 4),
+      to: { name: 'Library', params: { tab: 'tracks' } },
+    })
+  }
+  return made.slice(0, 6)
+})
+
+function mixContext(mix) {
+  return { type: 'mix', title: mix.title, route: mix.to }
+}
+
+function isMixPlaying(mix) {
+  const ctx = player.context.value
+  return (
+    player.isPlaying.value && ctx?.type === 'mix' && ctx.title === mix.title
+  )
+}
+
+function playMix(mix) {
+  if (isMixPlaying(mix)) {
+    player.pause()
+    return
+  }
+  // Not remembered in "Jump back in": a mix changes every day.
+  player.setPlaylist(mix.tracks, { startIndex: 0, context: mixContext(mix) })
+}
 
 const jumpBackIn = computed(() =>
   history.recent.value

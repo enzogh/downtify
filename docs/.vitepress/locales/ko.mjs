@@ -81,6 +81,7 @@ export default {
       'features/discover.md': '둘러보기',
       'features/collaborative-playlists.md': '함께 편집하는 재생목록',
       'features/playlist-order.md': '재생목록 순서와 반복 곡',
+      'features/building-playlists.md': '플레이리스트 만들기',
       'features/users.md': '사용자와 로그인',
       'features/mobile-apps.md': '모바일 앱',
       'features/library-only.md': 'Library-only mode',

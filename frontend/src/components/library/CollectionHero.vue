@@ -90,6 +90,7 @@
 </template>
 
 <script setup>
+import { useCoverPalette } from '/src/model/coverPalette'
 import { computed } from 'vue'
 import AppIcon from '../ui/AppIcon.vue'
 import CoverArt from '../ui/CoverArt.vue'
@@ -122,7 +123,19 @@ defineEmits(['edit-photo', 'edit-banner'])
 
 const { t } = useI18n()
 
-const tint = computed(
-  () => `oklch(0.45 0.08 ${hueFor(props.name || props.title)} / 0.55)`
+// The page takes its colour from the artwork, as on Spotify; until the
+// cover is read (or when it can't be), a hue from the name.
+const artwork = computed(() => {
+  const url =
+    props.cover ||
+    (props.covers || []).find((item) => typeof item === 'string' && item) ||
+    ''
+  return { hasCover: Boolean(url), cover: url }
+})
+const palette = useCoverPalette(artwork)
+const tint = computed(() =>
+  palette.value?.primary
+    ? `color-mix(in srgb, ${palette.value.primary} 55%, transparent)`
+    : `oklch(0.45 0.08 ${hueFor(props.name || props.title)} / 0.55)`
 )
 </script>

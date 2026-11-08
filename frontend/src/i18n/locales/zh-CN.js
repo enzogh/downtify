@@ -160,6 +160,13 @@ export default {
     add: '收藏播放列表',
     remove: '取消收藏播放列表',
   },
+  fade: {
+    title: '歌曲间淡入淡出',
+    hint: '在歌曲最后几秒降低音量并淡入下一首。保存在此设备上。',
+    length: '淡化时长',
+    seconds: { one: '{count} 秒', other: '{count} 秒' },
+    off: '关闭',
+  },
   normalization: {
     level: '播放音量等级',
     levelNormal: '标准',
@@ -290,6 +297,13 @@ export default {
     delete: '从音乐库删除',
   },
   home: {
+    madeForYou: '为你打造',
+    madeForYouHint:
+      '根据你在此设备上的收听，从音乐库生成的混合歌单。每天更新。',
+    dailyMix: '每日推荐 {n}',
+    mixWith: '{artists} 等',
+    onRepeat: '循环播放',
+    onRepeatHint: '你最近最常听的歌曲',
     greetingMorning: '早上好',
     greetingAfternoon: '下午好',
     greetingEvening: '晚上好',
@@ -329,6 +343,9 @@ export default {
       '在此播放，使用播放列表监控保持同步，或让 Jellyfin、Plex、Navidrome 访问你的音乐库。',
   },
   search: {
+    topResult: '最佳结果',
+    inYourLibrary: '在你的音乐库中',
+    typeSong: '歌曲',
     title: '搜索',
     subtitle: '在 YouTube Music 中查找歌曲、专辑和艺人。',
     placeholder: '搜索，或粘贴 Spotify 或 YouTube Music 链接',
@@ -873,6 +890,18 @@ export default {
     fetchFailed: '无法获取此艺人的简介',
   },
   playlists: {
+    addFromCatalog: '尚未在音乐库中',
+    toDownload: '将下载',
+    addSearchPlaceholder: '搜索音乐库或新歌曲',
+    pendingTitle: {
+      one: '{count} 首歌曲正在下载',
+      other: '{count} 首歌曲正在下载',
+    },
+    recommendedTitle: '推荐歌曲',
+    recommendedHint: '根据此歌单中的歌曲推荐。添加时会按需下载。',
+    recommendedRefresh: '刷新',
+    recommendedAdd: '添加',
+    recommendedEmpty: '暂时没有推荐。',
     kicker: '播放列表',
     diagnostics: {
       title: '播放列表诊断',

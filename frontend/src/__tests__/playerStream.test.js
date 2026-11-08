@@ -170,7 +170,7 @@ describe('streaming in the player queue', () => {
     })
   })
 
-  it('never persists a queue holding a stream', async () => {
+  it('persists a queue holding a stream without its expiring URL', async () => {
     const setItem = vi.fn()
     globalThis.localStorage = {
       getItem: () => null,
@@ -182,8 +182,14 @@ describe('streaming in the player queue', () => {
       expect(player.playlist.value[1].url).toBe('https://stream.example/B')
     })
     await new Promise((resolve) => setTimeout(resolve, 50))
-    expect(
-      setItem.mock.calls.some(([key]) => key === 'downtify-player-session')
-    ).toBe(false)
+    const saved = setItem.mock.calls
+      .filter(([key]) => key === 'downtify-player-session')
+      .map(([, value]) => JSON.parse(value))
+      .pop()
+    expect(saved.tracks).toHaveLength(2)
+    expect(saved.tracks[0].url).toBe('/downloads/A.mp3')
+    // Resolved again when it plays after a reload.
+    expect(saved.tracks[1].url).toBe('')
+    expect(saved.tracks[1].stream).toBeTruthy()
   })
 })

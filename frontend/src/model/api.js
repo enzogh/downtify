@@ -536,6 +536,22 @@ function editLibraryPlaylistTracks(
   })
 }
 
+// Songs a Library playlist waits on: added before they were downloaded,
+// each written into the playlist once its download ends.
+function getPlaylistPending(name) {
+  return API.get('/api/library/playlists/pending', { params: { name } })
+}
+
+function addPlaylistPending(name, songs) {
+  return API.post('/api/library/playlists/pending', { name, songs })
+}
+
+function removePlaylistPending(name, songIds) {
+  return API.delete('/api/library/playlists/pending', {
+    data: { name, song_ids: songIds },
+  })
+}
+
 // Every song of the playlist, repeats included, in its new place.
 function reorderLibraryPlaylist(name, files) {
   return API.put('/api/library/playlists/order', { name, files })
@@ -1037,6 +1053,9 @@ export default {
   artistTopSongsSaved,
   download,
   downloadBatch,
+  getPlaylistPending,
+  addPlaylistPending,
+  removePlaylistPending,
   downloadAlbum,
   downloadCsv,
   getIncompletePlaylists,

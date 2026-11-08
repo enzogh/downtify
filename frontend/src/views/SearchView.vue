@@ -84,12 +84,59 @@
       />
 
       <template v-else>
+        <!-- As on Spotify: the best hit next to the first songs. -->
+        <div
+          v-if="filter === 'all' && topResult"
+          class="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]"
+        >
+          <section class="flex flex-col gap-3">
+            <h2 class="text-display text-xl font-semibold">
+              {{ t('search.topResult') }}
+            </h2>
+            <TopResult
+              :key="topResultKey"
+              :result="topResult"
+              :songs="search.songs.value"
+            />
+          </section>
+          <section
+            v-if="search.songs.value.length"
+            class="flex min-w-0 flex-col gap-3"
+          >
+            <h2 class="text-display text-xl font-semibold">
+              {{ t('search.songs') }}
+            </h2>
+            <div class="-mx-3 flex flex-col">
+              <SongRow
+                v-for="song in topSongs"
+                :key="song.song_id || song.url"
+                compact
+                :song="song"
+                :songs="search.songs.value"
+              />
+            </div>
+          </section>
+        </div>
+
         <section
-          v-if="show('songs') && search.songs.value.length"
+          v-if="filter === 'all' && libraryHits.length"
+          class="flex flex-col gap-3"
+        >
+          <h2 class="text-display text-xl font-semibold">
+            {{ t('search.inYourLibrary') }}
+          </h2>
+          <TrackList :tracks="libraryHits" />
+        </section>
+
+        <section
+          v-if="
+            show('songs') &&
+            search.songs.value.length > (filter === 'all' ? topSongs.length : 0)
+          "
           class="flex flex-col gap-3"
         >
           <h2
-            v-if="filter === 'all'"
+            v-if="filter === 'all' && !topResult"
             class="text-display text-xl font-semibold"
           >
             {{ t('search.songs') }}
@@ -99,8 +146,8 @@
               v-for="(song, i) in visibleSongs"
               :key="song.song_id || song.url"
               :song="song"
-              :index="i"
-              :songs="visibleSongs"
+              :index="i + songOffset"
+              :songs="search.songs.value"
             />
           </div>
           <button
@@ -176,6 +223,9 @@ import UiSkeleton from '/src/components/ui/UiSkeleton.vue'
 import PageHeader from '/src/components/library/PageHeader.vue'
 import ReleaseCard from '/src/components/search/ReleaseCard.vue'
 import SongRow from '/src/components/search/SongRow.vue'
+import TopResult from '/src/components/search/TopResult.vue'
+import TrackList from '/src/components/library/TrackList.vue'
+import { pickTopResult } from '/src/lib/topResult'
 import { useSearch } from '/src/model/search'
 import { useLibrary } from '/src/model/library'
 import { knownArtistPhoto } from '/src/lib/artistPhotoProxy'
@@ -234,11 +284,51 @@ const hasResults = computed(
   () =>
     search.songs.value.length ||
     search.albums.value.length ||
-    search.artists.value.length
+    search.artists.value.length ||
+    libraryHits.value.length
 )
 
+// The first songs sit next to the top result; the list carries on below.
+const TOP_SONGS = 4
+const topResult = computed(() =>
+  pickTopResult(query.value, {
+    songs: search.songs.value,
+    albums: search.albums.value,
+    artists: search.artists.value,
+  })
+)
+const topResultKey = computed(() => {
+  const item = topResult.value?.item || {}
+  return `${topResult.value?.kind}:${item.song_id || item.url || item.name}`
+})
+const topSongs = computed(() => search.songs.value.slice(0, TOP_SONGS))
+const songOffset = computed(() =>
+  filter.value === 'all' && topResult.value ? TOP_SONGS : 0
+)
 const visibleSongs = computed(() =>
-  filter.value === 'all' ? search.songs.value.slice(0, 8) : search.songs.value
+  filter.value === 'all'
+    ? search.songs.value.slice(songOffset.value, songOffset.value + 8)
+    : search.songs.value
+)
+
+// Songs already in the library that match, wherever they came from (an
+// extra folder, an old download): played straight from disk.
+const libraryHits = ref([])
+let librarySerial = 0
+watch(
+  query,
+  async (value) => {
+    const mine = ++librarySerial
+    libraryHits.value = []
+    if (!value) return
+    try {
+      const rows = await library.searchTracks(value, { limit: 5 })
+      if (mine === librarySerial) libraryHits.value = rows
+    } catch {
+      // The online results stand on their own.
+    }
+  },
+  { immediate: true }
 )
 const visibleAlbums = computed(() =>
   filter.value === 'all' ? search.albums.value.slice(0, 6) : search.albums.value

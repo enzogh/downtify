@@ -180,6 +180,13 @@ export default {
     add: 'Çalma listesini favorilere ekle',
     remove: 'Çalma listesini favorilerden kaldır',
   },
+  fade: {
+    title: 'Şarkılar arası geçiş',
+    hint: 'Şarkının son saniyelerinde sesi kısar, sonrakini açar. Bu cihazda kaydedilir.',
+    length: 'Geçiş süresi',
+    seconds: { one: '{count} saniye', other: '{count} saniye' },
+    off: 'Kapalı',
+  },
   normalization: {
     level: 'Ses seviyesi',
     levelNormal: 'Normal',
@@ -314,6 +321,13 @@ export default {
     delete: 'Kitaplıktan sil',
   },
   home: {
+    madeForYou: 'Senin için',
+    madeForYouHint:
+      'Bu cihazda dinlediklerine göre kitaplığından hazırlanan mixler. Her gün yeni.',
+    dailyMix: 'Günlük Mix {n}',
+    mixWith: '{artists} ve diğerleri',
+    onRepeat: 'Tekrarda',
+    onRepeatHint: 'Son zamanlarda en çok dinlediğin şarkılar',
     greetingMorning: 'Günaydın',
     greetingAfternoon: 'Tünaydın',
     greetingEvening: 'İyi akşamlar',
@@ -358,6 +372,9 @@ export default {
       'Burada çal, çalma listelerini İzleyici ile senkronize tut ya da Jellyfin, Plex veya Navidrome’u kitaplığına yönlendir.',
   },
   search: {
+    topResult: 'En iyi sonuç',
+    inYourLibrary: 'Kitaplığında',
+    typeSong: 'Şarkı',
     title: 'Ara',
     subtitle: 'YouTube Music’te şarkı, albüm ve sanatçı bul.',
     placeholder: 'Ara ya da Spotify veya YouTube Music bağlantısı yapıştır',
@@ -948,6 +965,19 @@ export default {
     fetchFailed: 'Bu sanatçı için biyografi alınamadı',
   },
   playlists: {
+    addFromCatalog: 'Henüz kitaplıkta değil',
+    toDownload: 'İndirilecek',
+    addSearchPlaceholder: 'Kitaplıkta veya yeni şarkılarda ara',
+    pendingTitle: {
+      one: '{count} şarkı indiriliyor',
+      other: '{count} şarkı indiriliyor',
+    },
+    recommendedTitle: 'Önerilen şarkılar',
+    recommendedHint:
+      'Bu çalma listesindeki şarkılara göre. Eklemek gerekirse indirir.',
+    recommendedRefresh: 'Yenile',
+    recommendedAdd: 'Ekle',
+    recommendedEmpty: 'Şu anda öneri yok.',
     kicker: 'Çalma listesi',
     diagnostics: {
       title: 'Çalma listesi tanılaması',
