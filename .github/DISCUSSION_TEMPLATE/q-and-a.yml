@@ -4,7 +4,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Have a question about setting up or using Downtify? Ask here and the community or maintainers will help. For confirmed bugs, please open an [issue](https://github.com/henriquesebastiao/downtify/issues/new/choose) instead.
+        Have a question about setting up or using Castify? Ask here and the community or maintainers will help. For confirmed bugs, please open an [issue](https://github.com/henriquesebastiao/downtify/issues/new/choose) instead.
 
         Before posting, check the [README](https://github.com/henriquesebastiao/downtify#readme) and search existing discussions — your answer may already be there.
 
@@ -27,7 +27,7 @@ body:
   - type: input
     id: version
     attributes:
-      label: Downtify Version
+      label: Castify Version
       description: |
         Which version are you running? Run:
         `docker inspect henriquesebastiao/downtify --format '{{index .Config.Labels "org.opencontainers.image.version"}}'`

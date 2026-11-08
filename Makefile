@@ -43,7 +43,7 @@ test:
 
 version:
 	@VERSION=$(word 2,$(MAKECMDGOALS)); \
-	echo "Downtify version: $$VERSION"; \
+	echo "Castify version: $$VERSION"; \
 	./version.sh $$VERSION
 	npm install --prefix frontend
 	uv run ruff format .; ruff check . --fix

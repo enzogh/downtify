@@ -4,7 +4,7 @@ icon: lucide/download
 
 # Installation
 
-Le moyen le plus rapide de lancer Downtify est une simple commande `docker run`. Aucun Python, Node.js ni autre dépendance système n’est nécessaire sur l’hôte — tout est inclus dans l’image.
+Le moyen le plus rapide de lancer Castify est une simple commande `docker run`. Aucun Python, Node.js ni autre dépendance système n’est nécessaire sur l’hôte — tout est inclus dans l’image.
 
 ## Prérequis
 
@@ -37,7 +37,7 @@ Les deux volumes persistent d’un redémarrage et d’une mise à jour du conte
 
 ## Port personnalisé
 
-Pour exposer Downtify sur un autre port de l’hôte, changez la partie gauche de `-p` :
+Pour exposer Castify sur un autre port de l’hôte, changez la partie gauche de `-p` :
 
 ```bash
 docker run -d \

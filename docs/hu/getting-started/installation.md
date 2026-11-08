@@ -4,7 +4,7 @@ icon: lucide/download
 
 # Telepítés
 
-A Downtify futtatásának leggyorsabb módja egyetlen `docker run` parancs. A gazdagépen nincs szükség Pythonra, Node.js-re vagy más rendszerfüggőségre — minden a képfájlban van.
+A Castify futtatásának leggyorsabb módja egyetlen `docker run` parancs. A gazdagépen nincs szükség Pythonra, Node.js-re vagy más rendszerfüggőségre — minden a képfájlban van.
 
 ## Előfeltételek
 
@@ -37,7 +37,7 @@ Mindkét kötet megmarad a konténer újraindításai és frissítései során. 
 
 ## Egyéni port
 
-Ha a Downtifyt másik gazdagépporton akarod elérhetővé tenni, módosítsd a `-p` bal oldalát:
+Ha a Castifyt másik gazdagépporton akarod elérhetővé tenni, módosítsd a `-p` bal oldalát:
 
 ```bash
 docker run -d \

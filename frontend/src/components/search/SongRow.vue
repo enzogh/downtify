@@ -133,7 +133,6 @@
       class="flex shrink-0 items-center justify-end gap-2"
       :class="compact ? '' : 'w-40'"
     >
-      <SimilarButton :artist="firstArtist" :title="song.name" filled />
       <DownloadState :song="song" />
     </div>
   </div>
@@ -151,7 +150,6 @@ import AppIcon from '../ui/AppIcon.vue'
 import CoverArt from '../ui/CoverArt.vue'
 import ExplicitBadge from '../ui/ExplicitBadge.vue'
 import DownloadState from './DownloadState.vue'
-import SimilarButton from '../similar/SimilarButton.vue'
 import UiMenu from '../ui/UiMenu.vue'
 import { usePlaylistActions } from '/src/model/playlistActions'
 import { libraryOnly as libraryOnlyMode } from '/src/model/musicPolicy'

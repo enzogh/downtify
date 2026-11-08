@@ -4,7 +4,7 @@ icon: lucide/headphones
 
 # Reproductor integrado
 
-Downtify incluye un reproductor web para que escuches tu música descargada sin una app aparte. Pulsa reproducir en cualquier canción, álbum, artista o playlist de la Biblioteca — o en una descarga terminada de la Cola — y el reproductor arranca.
+Castify incluye un reproductor web para que escuches tu música descargada sin una app aparte. Pulsa reproducir en cualquier canción, álbum, artista o playlist de la Biblioteca — o en una descarga terminada de la Cola — y el reproductor arranca.
 
 ## Barra del reproductor
 
@@ -45,10 +45,10 @@ Reproduciendo forma parte de la dirección de la página (`?np=1`, más `&panel=
 Reproduciendo se abre entonces en **A continuación**. Un enlace a `&panel=lyrics` de antes de desactivarlo también aterriza ahí, en lugar de en una pestaña vacía. El reproductor ni siquiera pide la letra de una canción mientras está oculta.
 
 ::: info Ocultar no es borrar
-Esto solo cambia lo que muestra el reproductor. Tus archivos conservan la letra que Downtify incrustó en ellos, y los archivos `.lrc` junto a ellos se quedan en su sitio, así que los servidores multimedia y otros reproductores los siguen viendo. Las descargas también siguen obteniendo letras — eso es el ajuste aparte **Descargar letras** en **Etiquetas y letras** (consulta [Letras](lyrics.md)).
+Esto solo cambia lo que muestra el reproductor. Tus archivos conservan la letra que Castify incrustó en ellos, y los archivos `.lrc` junto a ellos se quedan en su sitio, así que los servidores multimedia y otros reproductores los siguen viendo. Las descargas también siguen obteniendo letras — eso es el ajuste aparte **Descargar letras** en **Etiquetas y letras** (consulta [Letras](lyrics.md)).
 :::
 
-Igual que el tema y el ecualizador, la elección se guarda en el navegador (`localStorage`), así que es por dispositivo y por navegador, no por servidor Downtify — puedes ocultar la letra en el móvil y mantenerla en el ordenador.
+Igual que el tema y el ecualizador, la elección se guarda en el navegador (`localStorage`), así que es por dispositivo y por navegador, no por servidor Castify — puedes ocultar la letra en el móvil y mantenerla en el ordenador.
 
 ## Ecualizador
 
@@ -60,9 +60,9 @@ Un ecualizador gráfico de diez bandas, en el panel **Ecualizador** de Reproduci
 - **Interruptor de encendido** y **Restablecer** (vuelve a Plano, preamplificador 0, apagado). Mover una banda o elegir un preajuste también enciende el ecualizador.
 - La curva detrás de los deslizadores es la respuesta combinada de todas las bandas.
 
-Reforzar bandas empujaría la música fuerte más allá del fondo de escala y la distorsionaría, así que Downtify baja automáticamente el volumen en el mayor refuerzo de la curva — el panel dice cuánto. Eso mantiene el pico en 0 dB, de modo que un preajuste reforzado remodela el sonido en lugar de solo subirlo. Subir el preamplificador por encima de 0 dB quita ese margen de seguridad, y el panel avisa de que los pasajes fuertes pueden distorsionar.
+Reforzar bandas empujaría la música fuerte más allá del fondo de escala y la distorsionaría, así que Castify baja automáticamente el volumen en el mayor refuerzo de la curva — el panel dice cuánto. Eso mantiene el pico en 0 dB, de modo que un preajuste reforzado remodela el sonido en lugar de solo subirlo. Subir el preamplificador por encima de 0 dB quita ese margen de seguridad, y el panel avisa de que los pasajes fuertes pueden distorsionar.
 
-Los ajustes se guardan en el navegador (`localStorage`) y se aplican a todo lo que reproduces, en todas las pestañas, hasta que los cambies. Son por navegador, no por servidor Downtify.
+Los ajustes se guardan en el navegador (`localStorage`) y se aplican a todo lo que reproduces, en todas las pestañas, hasta que los cambies. Son por navegador, no por servidor Castify.
 
 ### Compatibilidad de navegadores
 
@@ -86,7 +86,7 @@ El menú de cada canción (el botón **⋯**, o clic derecho en el ordenador) ti
 
 Las mismas acciones valen para una selección de varias canciones en la Biblioteca.
 
-La cola, la canción actual, su posición, el aleatorio y la repetición se recuerdan, así que al reabrir Downtify se retoma donde lo dejaste (las colas de más de 2000 canciones no se recuerdan). Los archivos eliminados salen de la cola automáticamente.
+La cola, la canción actual, su posición, el aleatorio y la repetición se recuerdan, así que al reabrir Castify se retoma donde lo dejaste (las colas de más de 2000 canciones no se recuerdan). Los archivos eliminados salen de la cola automáticamente.
 
 ## Teclado y teclas multimedia
 

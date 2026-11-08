@@ -22,7 +22,7 @@ Paste one of these into the **Add a podcast** box, or type a name to search:
 | A show's name (free text) | Searched in the iTunes podcast directory |
 
 ::: info Spotify-exclusive shows can't be downloaded
-A show that only exists on Spotify (no public feed) is reported as such — Downtify does not guess or fall back to something else. Search for the show by name to double-check before assuming it's exclusive.
+A show that only exists on Spotify (no public feed) is reported as such — Castify does not guess or fall back to something else. Search for the show by name to double-check before assuming it's exclusive.
 :::
 
 Before confirming, you choose:
@@ -62,7 +62,7 @@ Episodes play through the same built-in player as music, with a few differences 
 
 - **Skip 15s back / 30s forward** in place of shuffle and repeat, which don't apply to a single episode.
 - **Playback speed** (0.75× to 2×), next to the sleep timer.
-- **Resume position** is saved to the server every ~10 seconds of playback and once more when you pause, so closing the tab — or opening Downtify on another device — picks the episode back up close to where you left it. A show's episode list shows a "Resume at …" hint for anything partway through.
+- **Resume position** is saved to the server every ~10 seconds of playback and once more when you pause, so closing the tab — or opening Castify on another device — picks the episode back up close to where you left it. A show's episode list shows a "Resume at …" hint for anything partway through.
 
 The heart (liked songs) and "go to album/artist" don't apply to episodes and don't show up on one.
 
@@ -74,12 +74,12 @@ Episode files still sit under the same downloads volume, in `Podcasts/<Show>/<da
 
 ## Tags
 
-Downtify writes what podcast apps and media servers already read for an episode: title, the show as album, the show's author as artist, the publish year, episode/season numbers, the show's own artwork (the larger of the feed's own image and iTunes', same idea as [cover art for music](download-settings.md#cover-art-resolution)), and the episode description as a comment. Show notes are stored as plain text — Downtify strips HTML from them rather than rendering it.
+Castify writes what podcast apps and media servers already read for an episode: title, the show as album, the show's author as artist, the publish year, episode/season numbers, the show's own artwork (the larger of the feed's own image and iTunes', same idea as [cover art for music](download-settings.md#cover-art-resolution)), and the episode description as a comment. Show notes are stored as plain text — Castify strips HTML from them rather than rendering it.
 
 ## Good to know
 
 - **No video podcasts.** An episode whose only enclosure is a video file is skipped entirely; only audio is supported.
-- **No chapters.** Feeds that include chapter markers don't get them in Downtify yet.
+- **No chapters.** Feeds that include chapter markers don't get them in Castify yet.
 - **Not mirrored into Navidrome.** Unlike playlists, podcast subscriptions aren't pushed into a Navidrome library — episodes are plain files your media server already sees on its own.
 - Unsubscribing (**⋯ → Unsubscribe**) removes downloaded episodes by default; choose **Unsubscribe, keep downloaded episodes** to leave the files in place.
 

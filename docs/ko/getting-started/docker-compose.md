@@ -4,7 +4,7 @@ icon: lucide/file-code
 
 # Docker Compose
 
-Docker Compose는 오래 운영하는 홈 서버 환경에서 Downtify를 실행하는 데 권장되는 방법입니다. 업데이트, 백업, 설정 변경이 쉬워집니다.
+Docker Compose는 오래 운영하는 홈 서버 환경에서 Castify를 실행하는 데 권장되는 방법입니다. 업데이트, 백업, 설정 변경이 쉬워집니다.
 
 ## 최소 구성
 
@@ -36,7 +36,7 @@ docker compose up -d
 
 ## slskd(Soulseek)와 함께
 
-[slskd를 음원 출처로](../features/slskd-navidrome.md) 쓰려면 slskd의 다운로드 폴더도 Downtify에 마운트하세요. slskd 컨테이너가 기록하는 **같은 호스트 폴더**여야 합니다.
+[slskd를 음원 출처로](../features/slskd-navidrome.md) 쓰려면 slskd의 다운로드 폴더도 Castify에 마운트하세요. slskd 컨테이너가 기록하는 **같은 호스트 폴더**여야 합니다.
 
 ```yaml
 services:
@@ -63,7 +63,7 @@ services:
 
 ## 앱에서 서버 찾기
 
-[모바일 앱](../features/mobile-apps.md#finding-the-server-on-your-network)은 mDNS로 네트워크의 Downtify 서버를 나열합니다. Docker의 기본 브리지 네트워크에서는 그 알림이 Docker 밖으로 나가지 않아 휴대폰에서 보이지 않습니다. 목록에 나타나게 하려면 컨테이너를 호스트 네트워크에서 실행하세요. 그러면 `ports:` 매핑이 더 이상 적용되지 않고 Downtify가 `DOWNTIFY_PORT`에서 직접 수신합니다.
+[모바일 앱](../features/mobile-apps.md#finding-the-server-on-your-network)은 mDNS로 네트워크의 Castify 서버를 나열합니다. Docker의 기본 브리지 네트워크에서는 그 알림이 Docker 밖으로 나가지 않아 휴대폰에서 보이지 않습니다. 목록에 나타나게 하려면 컨테이너를 호스트 네트워크에서 실행하세요. 그러면 `ports:` 매핑이 더 이상 적용되지 않고 Castify가 `DOWNTIFY_PORT`에서 직접 수신합니다.
 
 ```yaml
 services:

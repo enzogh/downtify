@@ -1,5 +1,5 @@
 name: Question
-description: Ask a question about Downtify setup, usage, or configuration
+description: Ask a question about Castify setup, usage, or configuration
 labels: ["question"]
 projects: ["henriquesebastiao/24"]
 body:
@@ -27,9 +27,9 @@ body:
   - type: input
     id: version
     attributes:
-      label: Downtify Version
+      label: Castify Version
       description: |
-        Which version of Downtify are you running? Run:
+        Which version of Castify are you running? Run:
         `docker inspect henriquesebastiao/downtify --format '{{index .Config.Labels "org.opencontainers.image.version"}}'`
       placeholder: "e.g. 2.5.0"
     validations:
@@ -39,7 +39,7 @@ body:
     id: deployment
     attributes:
       label: Deployment Method
-      description: How are you running Downtify?
+      description: How are you running Castify?
       options:
         - Docker CLI (docker run)
         - Docker Compose

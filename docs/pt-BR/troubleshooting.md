@@ -15,7 +15,7 @@ Error: ERROR: [youtube] <id>: Sign in to confirm your age.
 This video may be inappropriate for some users.
 ```
 
-**Causa** — o YouTube só entrega faixas com restrição de idade (explícitas) a uma conta de adulto conectada. O Downtify baixa de forma anônima por padrão, então o YouTube recusa.
+**Causa** — o YouTube só entrega faixas com restrição de idade (explícitas) a uma conta de adulto conectada. O Castify baixa de forma anônima por padrão, então o YouTube recusa.
 
 **Solução** — forneça cookies do YouTube: **Configurações** (⚙️) → **Cookies do YouTube** → **Enviar cookies.txt**. Veja [Cookies do YouTube](features/youtube-cookies.md) para saber como exportar o arquivo.
 
@@ -36,7 +36,7 @@ Se ainda falhar com cookies configurados, os cookies estão velhos ou a própria
 
 ## Um cookies.txt no Windows / Docker Desktop não é reconhecido
 
-**Sintoma** — `DOWNTIFY_COOKIES_FILE` está definido, mas o Downtify se comporta como se não houvesse cookies.
+**Sintoma** — `DOWNTIFY_COOKIES_FILE` está definido, mas o Castify se comporta como se não houvesse cookies.
 
 **Causa** — o caminho é um caminho *do contêiner*. Um caminho do Windows como `C:\Users\me\cookies.txt` não significa nada dentro do contêiner, e o arquivo precisa ser montado antes que a variável possa apontar para ele.
 
@@ -57,7 +57,7 @@ environment:
 
 ## Os cookies enviados sumiram depois de atualizar o contêiner
 
-O arquivo enviado fica no diretório de dados do Downtify (`/data`). Se esse diretório não for um volume nomeado ou um bind mount, tudo o que há nele — configurações e o banco de dados do Monitor de playlists incluídos — se perde quando o contêiner é recriado:
+O arquivo enviado fica no diretório de dados do Castify (`/data`). Se esse diretório não for um volume nomeado ou um bind mount, tudo o que há nele — configurações e o banco de dados do Monitor de playlists incluídos — se perde quando o contêiner é recriado:
 
 ```yaml
 volumes:
@@ -67,13 +67,13 @@ volumes:
 
 ## "cookies.txt is invalid" ao enviar
 
-O Downtify valida o arquivo no envio. Ele precisa ser um cookie jar **Netscape**: um cookie por linha, campos separados por tabulações, opcionalmente com comentários `#`. Uma exportação em JSON, uma planilha ou um cabeçalho `Cookie:` copiado são recusados.
+O Castify valida o arquivo no envio. Ele precisa ser um cookie jar **Netscape**: um cookie por linha, campos separados por tabulações, opcionalmente com comentários `#`. Uma exportação em JSON, uma planilha ou um cabeçalho `Cookie:` copiado são recusados.
 
 Use uma extensão de navegador que exporte no formato Netscape (veja [Cookies do YouTube](features/youtube-cookies.md)) e exporte com a aba em `youtube.com`.
 
 ## Uma playlist baixa de novo faixas que eu já tenho
 
-O Downtify registra todas as faixas baixadas automaticamente em seu banco de dados, então mover arquivos para outro lugar do disco não dispara um novo download. Uma faixa só é baixada de novo depois que uma verificação de hora em hora encontra o arquivo realmente ausente do diretório de downloads. Veja [Monitor de playlists](features/playlist-monitor.md#how-it-works).
+O Castify registra todas as faixas baixadas automaticamente em seu banco de dados, então mover arquivos para outro lugar do disco não dispara um novo download. Uma faixa só é baixada de novo depois que uma verificação de hora em hora encontra o arquivo realmente ausente do diretório de downloads. Veja [Monitor de playlists](features/playlist-monitor.md#how-it-works).
 
 Se os arquivos somem a cada reinício, o volume `/downloads` não está persistido — mesma solução acima.
 
@@ -85,12 +85,12 @@ Isso geralmente significa que a música realmente não está no YouTube, ou só 
 
 ## O áudio baixado tem metadados ou capa errados
 
-O Downtify obtém os metadados do Spotify e casa o áudio no YouTube Music. Uma divergência geralmente significa que a correspondência caiu em um cover, remix ou versão ao vivo. Baixar pelo link do **álbum** do Spotify, em vez de um resultado de busca, dá muito mais informação ao comparador (número da faixa, álbum, tipo de lançamento).
+O Castify obtém os metadados do Spotify e casa o áudio no YouTube Music. Uma divergência geralmente significa que a correspondência caiu em um cover, remix ou versão ao vivo. Baixar pelo link do **álbum** do Spotify, em vez de um resultado de busca, dá muito mais informação ao comparador (número da faixa, álbum, tipo de lançamento).
 
 ## Ainda com problemas?
 
 Abra uma issue em [github.com/henriquesebastiao/downtify/issues](https://github.com/henriquesebastiao/downtify/issues) com:
 
-- a versão do Downtify (mostrada no fim da barra lateral e em **Configurações → Sobre**),
+- a versão do Castify (mostrada no fim da barra lateral e em **Configurações → Sobre**),
 - os logs do contêiner em torno da falha (`docker compose logs downtify`),
 - e se há cookies configurados.

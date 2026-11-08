@@ -12,7 +12,7 @@ Nyisd meg a **Felfedezés** oldalt az oldalsávról (telefonon: **Továbbiak →
 
 A **Dalok keresése** egy, a Felfedezés által javasolt előadó **⋯** menüjében az adott előadó dalait mutatja itt keresésként: a Deezeren az előadó nevére keres, és csak pontosan annak az előadónak a dalait listázza — a Deezer-azonosítójuk alapján egyeztetve, így egy névrokon vagy egy csak így nevezett dal kimarad — legfeljebb az első néhány százat.
 
-- A **dalok** teljes hosszban streamelődnek, és mint bármely keresési találat, letölthetők. A Downtify a címük, előadójuk és hosszuk alapján találja meg a dalt a YouTube Musicon (tartaléknak a YouTube-on). A dal címére kattintva megnyílik az albuma az oszlopnézetben, a dal kiemelve.
+- A **dalok** teljes hosszban streamelődnek, és mint bármely keresési találat, letölthetők. A Castify a címük, előadójuk és hosszuk alapján találja meg a dalt a YouTube Musicon (tartaléknak a YouTube-on). A dal címére kattintva megnyílik az albuma az oszlopnézetben, a dal kiemelve.
 - Az **albumok** az előadójukon nyílnak meg, az adott album kijelölve. A borítón lévő letöltés gomb az egész albumot sorba állítja.
 - Az **előadók** az oszlopnézetet az adott előadón nyitják meg.
 
@@ -31,7 +31,7 @@ Széles képernyőn húzd az oszlopok közti szélt, hogy egyiket szélesebbé v
 Telefonon az oszlopok egymás mellett vannak, és közöttük húzással lépsz. Egy album kiválasztása a számaihoz csúsztat.
 
 ::: info Miért jelenik meg a számok száma egy pillanattal később
-A Deezer diszkográfialistája nem tartalmazza a számok számát, ezért a Downtify minden album számát külön kéri le, egyszerre néhány albumét, a Deezer 5 másodpercenkénti 50 kérésének korlátja alatt maradva. A számok nézelődés közben jelennek meg, és a Downtify újraindulásáig megmaradnak. Az az album, amelynek számát nem sikerült lekérni, `…`-t mutat.
+A Deezer diszkográfialistája nem tartalmazza a számok számát, ezért a Castify minden album számát külön kéri le, egyszerre néhány albumét, a Deezer 5 másodpercenkénti 50 kérésének korlátja alatt maradva. A számok nézelődés közben jelennek meg, és a Castify újraindulásáig megmaradnak. Az az album, amelynek számát nem sikerült lekérni, `…`-t mutat.
 :::
 
 ## API

@@ -10,7 +10,7 @@ icon: lucide/trending-up
 
 Kenar çubuğundan (telefonda **Daha fazla** sayfasından) **Müzik listeleri**’ni açın. Dört sekme aynı listeyi okur: **Parçalar**, **Albümler**, **Sanatçılar** ve **Çalma listeleri**.
 
-- **Parçalar** — sıralı bir liste. İndirmeden önce YouTube’dan tam olarak, doğrudan yerleşik oynatıcıda dinlemek için birine basın (ya da satırına dokunun). Bir satırı indirmek, bir arama sonucuyla aynı şekilde çalışır: Downtify parçanın başlığı, sanatçısı ve süresi için YouTube Music’te (olmazsa standart YouTube’da) en yakın eşleşmeyi arar; diğer tüm indirmelerin kullandığı aynı [eşleştirme hattını](../how-it-works.md) kullanır. Bir parça indirildikten sonra satırı onu akıtmak yerine kitaplığınızdan çalar.
+- **Parçalar** — sıralı bir liste. İndirmeden önce YouTube’dan tam olarak, doğrudan yerleşik oynatıcıda dinlemek için birine basın (ya da satırına dokunun). Bir satırı indirmek, bir arama sonucuyla aynı şekilde çalışır: Castify parçanın başlığı, sanatçısı ve süresi için YouTube Music’te (olmazsa standart YouTube’da) en yakın eşleşmeyi arar; diğer tüm indirmelerin kullandığı aynı [eşleştirme hattını](../how-it-works.md) kullanır. Bir parça indirildikten sonra satırı onu akıtmak yerine kitaplığınızdan çalar.
 - **Albümler**, **Sanatçılar** ve **Çalma listeleri** — kapak ızgaraları. Birine tıklamak onu çözümler ([`GET /api/url/resolve`](../api-reference.md#get-apiurlresolve)); sanki o Deezer bağlantısını arama kutusuna kendiniz yapıştırmışsınız gibi: parça listesi yüklenir, seçmeye ve indirmeye hazır.
 
 ## Parçalar neden doğrudan buradan indirilir (ve tam çalınır), ama albümler, sanatçılar ve çalma listeleri önce bir sayfa açar

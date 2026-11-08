@@ -148,7 +148,6 @@
       @click.stop
       @dblclick.stop
     >
-      <SimilarButton :artist="firstArtist" :title="song.name" filled />
       <DownloadState :song="song" />
     </div>
   </div>
@@ -177,7 +176,6 @@ import CoverArt from '../ui/CoverArt.vue'
 import EqBars from '../ui/EqBars.vue'
 import ExplicitBadge from '../ui/ExplicitBadge.vue'
 import DownloadState from '../search/DownloadState.vue'
-import SimilarButton from '../similar/SimilarButton.vue'
 import TrackArtistLinks from './TrackArtistLinks.vue'
 import { useLibrary } from '/src/model/library'
 import { usePlayer } from '/src/model/player'
@@ -249,9 +247,6 @@ const {
   warm,
 } = useSongPlay(props)
 
-const firstArtist = computed(
-  () => (props.song.artists || [])[0] || props.song.artist || ''
-)
 // A Deezer cover at its medium size, for the 44px thumbnail - display only:
 // the song's own `cover_url` is what its download embeds.
 const cover = computed(() => deezerImage(props.song.cover_url))

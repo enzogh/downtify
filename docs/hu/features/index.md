@@ -4,14 +4,13 @@ icon: lucide/sparkles
 
 # Funkciók
 
-A Downtify mindent lefed, amire szükséged van egy helyi zenekönyvtár felépítéséhez és karbantartásához a Spotifyból.
+A Castify mindent lefed, amire szükséged van egy helyi zenekönyvtár felépítéséhez és karbantartásához a Spotifyból.
 
 ## Áttekintés
 
 | Funkció | Mit csinál |
 |---------|-------------|
 | [Toplisták](charts.md) | Böngészd a Deezer globális listáját, és tölts le bármit, ami éppen felkapott |
-| [Hasonlók](similar.md) | Adj meg egy előadót vagy számot; a YouTube Music hasonló számokkal válaszol, amelyek teljes hosszban lejátszhatók és letölthetők, kulcs nélkül |
 | [Kereső](finder.md) | Keress a Deezeren, majd böngéssz oszlopokban egy előadót, albumait és bármely album számait |
 | [Letöltési beállítások](download-settings.md) | Válaszd ki a formátumot (MP3/FLAC/M4A/OGG/OPUS), a bitrátát, a párhuzamos letöltéseket és a szünetet a letöltések között |
 | [Letöltési sor](download-queue.md) | Szüneteltesd a letöltéseket, mielőtt beállításokat módosítasz vagy frissítesz: a futók befejeződnek, új nem indul, a várakozó dalok pedig megmaradnak újraindítás után is |
@@ -28,12 +27,12 @@ A Downtify mindent lefed, amire szükséged van egy helyi zenekönyvtár felép�
 | [Felhasználók és bejelentkezés](users.md) | Bejelentkezés felhasználónévvel és jelszóval (`admin` / `downtify` új szerveren), adminisztrátori és normál felhasználói fiókok, felhasználónkénti beállítások és tevékenységnapló a bejelentkezésekről és arról, ki mit hallgat |
 | [Explicit jelölés](explicit-marker.md) | Az „E” az explicit szövegű dalok mellett — a keresésben, a Könyvtárban és a lejátszóban — és a fájl címkéiben |
 | [Hang cseréje](replace-audio.md) | Rossz dal vagy verzió? Válaszd ki a helyeset a YouTube Musicon vagy a YouTube-on; a fájl megtartja nevét, címkéit és lejátszási listáit |
-| [Szerverbeállítások](server.md) | A port, amelyen a Downtify figyel, a Beállításokból módosítható (adminisztrátorok), kívánság szerint azonnali újraindítással |
+| [Szerverbeállítások](server.md) | A port, amelyen a Castify figyel, a Beállításokból módosítható (adminisztrátorok), kívánság szerint azonnali újraindítással |
 | [Mobilalkalmazások](mobile-apps.md) | Párosíts telefonos alkalmazásokat QR-kóddal, és streameld nekik a könyvtárat (eredeti vagy átkódolt) |
 | [Felfedezés](discover.md) | Előadók, albumok és lejátszási listák, amelyek még nincsenek meg, a könyvtárad, kedvelésid és hallgatásod alapján ajánlva; rejtsd el, amit nem akarsz |
 | [slskd és Navidrome](slskd-navidrome.md) | Tölts le a Soulseekről a slskd-n át, tükrözd a lejátszási listákat a Navidrome-ba, és kövesd a lejátszási listák letöltéseit |
-| [Könyvtárkatalógus és útvonal-szinkronizálás](library-catalog.md) | Hogyan követi a Downtify a könyvtár fájljait és lejátszási listáit, a Könyvtárban létrehozott lejátszási listák, és az útvonalak javítása fájlok áthelyezése után |
-| [Meglévő zenemappák](external-library.md) | Irányítsd a Downtifyt a már meglévő hangfájlmappákra; a szinkronizálás beolvassa a címkéket, párosítja az előadókat, és kihagyja a könyvtárban már meglévő dalokat |
+| [Könyvtárkatalógus és útvonal-szinkronizálás](library-catalog.md) | Hogyan követi a Castify a könyvtár fájljait és lejátszási listáit, a Könyvtárban létrehozott lejátszási listák, és az útvonalak javítása fájlok áthelyezése után |
+| [Meglévő zenemappák](external-library.md) | Irányítsd a Castifyt a már meglévő hangfájlmappákra; a szinkronizálás beolvassa a címkéket, párosítja az előadókat, és kihagyja a könyvtárban már meglévő dalokat |
 | [Könyvtár javítása](library-upgrade.md) | Szkenneld a már letöltött zenét, és javítsd a kis borítókat, a hiányzó dalszövegeket és a hiányos címkéket |
 | [Tárhely és használat](storage-usage.md) | Nézd meg, mekkora a könyvtár és milyen gyorsan nő, melyik része melyik forrásból jött, hogyan végződtek a letöltések, és mennyi helyet foglalnak az ismétlődések, az slskd-másolatok és a maradékok |
 | [M3U-exportálás](m3u-export.md) | Automatikusan előállított lejátszásilista-fájlok a Jellyfinhez, Navidrome-hoz, Plexhez és bármely médiaalkalmazáshoz |
@@ -48,7 +47,7 @@ A Downtify mindent lefed, amire szükséged van egy helyi zenekönyvtár felép�
 
 ## Bemenetek típusai
 
-A Downtify a keresősávban többféle bemenetet fogad el:
+A Castify a keresősávban többféle bemenetet fogad el:
 
 | Bemenet | Példa |
 |-------|---------|

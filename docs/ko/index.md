@@ -1,6 +1,6 @@
 ---
 layout: home
-title: Downtify
+title: Castify
 titleTemplate: 직접 호스팅하는 음악 다운로더
 description: 직접 호스팅하는 음악 다운로더. Spotify 링크를 붙여넣으면 태그가 완벽하게 입력된 오디오 파일을 받을 수 있습니다 — API 키도, 계정도, 번거로움도 없습니다.
 icon: lucide/house
@@ -72,7 +72,7 @@ quickStart:
 
 ## 실제로 작동하는 방식
 
-Spotify 공식 API는 다운로드를 Premium 구독 뒤에 묶어 둡니다. Downtify는 옆문을 이용합니다. Spotify가 이미 공개 임베드 페이지에 노출하는 메타데이터를 읽고, YouTube Music에 가장 비슷한 오디오를 요청하고, 파일을 `yt-dlp`와 `ffmpeg`에 넘기고, `mutagen`으로 올바른 태그를 기록합니다. 전체 파이프라인이 하나의 Docker 컨테이너 안에서 돌아갑니다.
+Spotify 공식 API는 다운로드를 Premium 구독 뒤에 묶어 둡니다. Castify는 옆문을 이용합니다. Spotify가 이미 공개 임베드 페이지에 노출하는 메타데이터를 읽고, YouTube Music에 가장 비슷한 오디오를 요청하고, 파일을 `yt-dlp`와 `ffmpeg`에 넘기고, `mutagen`으로 올바른 태그를 기록합니다. 전체 파이프라인이 하나의 Docker 컨테이너 안에서 돌아갑니다.
 
 <HomePipeline :steps="$frontmatter.pipeline" />
 

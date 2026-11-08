@@ -11,7 +11,7 @@ Aucun compte ni clé d’API n’est nécessaire : les suggestions viennent de l
 ## Comment les suggestions sont choisies
 
 1. **Vos artistes sont pondérés.** Chaque artiste de votre bibliothèque compte un peu, et compte davantage pour chacun de ces critères, du plus au moins important :
-    - combien de fois vous l’**écoutez** dans le lecteur de Downtify (les écoutes récentes comptent plus que celles d’il y a des mois),
+    - combien de fois vous l’**écoutez** dans le lecteur de Castify (les écoutes récentes comptent plus que celles d’il y a des mois),
     - combien de ses morceaux vous avez **aimés**,
     - combien de ses morceaux sont **dans votre bibliothèque**.
 

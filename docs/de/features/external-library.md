@@ -4,7 +4,7 @@ icon: lucide/folder-plus
 
 # Vorhandene Musikordner
 
-Die Bibliothek von Downtify besteht aus den Dateien, die es heruntergeladen hat — plus allen **zusätzlichen Ordnern**, auf die du es verweist. Diese Ordner werden nicht nach `/downloads` kopiert. Downtify liest die Tags jeder Datei (Titel, Künstler, Album, Titelnummer, Jahr), überspringt Songs, die du schon hast, und ordnet den Rest in der Bibliothek und im Player unter dem passenden Künstler ein.
+Die Bibliothek von Castify besteht aus den Dateien, die es heruntergeladen hat — plus allen **zusätzlichen Ordnern**, auf die du es verweist. Diese Ordner werden nicht nach `/downloads` kopiert. Castify liest die Tags jeder Datei (Titel, Künstler, Album, Titelnummer, Jahr), überspringt Songs, die du schon hast, und ordnet den Rest in der Bibliothek und im Player unter dem passenden Künstler ein.
 
 ## Ordner hinzufügen
 
@@ -29,14 +29,14 @@ Die Synchronisierung kopiert keine Dateien nach `/downloads`. Ist der Ordner bes
 :::
 
 ::: tip Schreibgeschützte Mounts
-Binde die Sammlung mit `:ro` ein, wenn Downtify die MP3s nicht neu schreiben soll. Die Synchronisierung indiziert sie trotzdem. Lege `.lrc`-Dateien im [Songtext-Ordner](lyrics.md#sidecar-lrc-file) ab (schalte **.lrc-Datei neben Audiodatei speichern** aus). Fehlende Cover werden unter `/data/cover_cache` (dem Cover-Endpunkt der Bibliothek) gespeichert, nicht in der MP3. Das iTunes-Genre wird in der Metadatendatenbank der Downtify-Bibliothek gespeichert, nicht in der Datei. Eine `.lrc`, die schon neben einer schreibgeschützten Datei liegt, wird in den Songtext-Ordner **kopiert** und an Ort und Stelle belassen.
+Binde die Sammlung mit `:ro` ein, wenn Castify die MP3s nicht neu schreiben soll. Die Synchronisierung indiziert sie trotzdem. Lege `.lrc`-Dateien im [Songtext-Ordner](lyrics.md#sidecar-lrc-file) ab (schalte **.lrc-Datei neben Audiodatei speichern** aus). Fehlende Cover werden unter `/data/cover_cache` (dem Cover-Endpunkt der Bibliothek) gespeichert, nicht in der MP3. Das iTunes-Genre wird in der Metadatendatenbank der Castify-Bibliothek gespeichert, nicht in der Datei. Eine `.lrc`, die schon neben einer schreibgeschützten Datei liegt, wird in den Songtext-Ordner **kopiert** und an Ort und Stelle belassen.
 :::
 
 ## Was die Synchronisierung tut
 
 1. Durchsucht jeden konfigurierten Ordner nach abspielbarem Audio (dieselben Formate wie in der übrigen Bibliothek: MP3, M4A, FLAC, OGG, WAV, AAC, OPUS).
 2. Liest eingebettete Tags. Eine Datei ohne Titel/Künstler fällt auf `Künstler - Titel` im Dateinamen zurück, wie andere Bibliothekszeilen.
-3. **Überspringt** eine Datei, wenn die Bibliothek diesen Song schon hat (gleicher Künstler + Titel und Länge auf wenige Sekunden genau, wenn beide bekannt sind) — egal ob von Downtify heruntergeladen oder aus einem anderen zusätzlichen Ordner.
+3. **Überspringt** eine Datei, wenn die Bibliothek diesen Song schon hat (gleicher Künstler + Titel und Länge auf wenige Sekunden genau, wenn beide bekannt sind) — egal ob von Castify heruntergeladen oder aus einem anderen zusätzlichen Ordner.
 4. **Ordnet Künstler zu** bereits vorhandenen Namen in der Bibliothek zu (`The Beatles` und `Beatles` werden ein Künstler). Namen, die zu keinem bekannten Künstler passen, erscheinen als neuer Künstler. Neue Künstler werden für dieselbe Profilbefüllung (Foto/Bio, wenn diese Einstellungen aktiv sind) wie nach einem abgeschlossenen Download eingeplant.
 5. **Taggt wie ein Download**, wenn der Ordner beschreibbar ist. Für jeden importierten Titel nutzt es dieselben Songtext-Anbieter, dieselbe Cover-Suche (nur wenn die Datei kein Artwork hat) und dieselbe iTunes-Genre-Suche wie ein Download. Songtexte kommen in die Datei; eine `.lrc`-Begleitdatei wird neben das Audio oder in den in den Einstellungen gewählten [Songtext-Ordner](lyrics.md#sidecar-lrc-file) geschrieben. Cover und Genre folgen den [Download-Einstellungen](download-settings.md) (`download_cover_art`, `download_lyrics`). Bei einem **schreibgeschützten** Mount wird die MP3 nicht neu geschrieben: Ein fehlendes Cover wird unter `/data/cover_cache` abgelegt, das Genre im Bibliothekskatalog gespeichert, und `.lrc`-Dateien gehen in den Songtext-Ordner, falls du einen gewählt hast. Die Abfragen laufen in Stapeln der Größe **Parallele Downloads**; eine **Pause zwischen Synchronisierungsabfragen** unter Einstellungen → Downloads und Dateien wartet zwischen diesen Stapeln, damit große Ordner nicht an Ratenlimits der Anbieter stoßen.
 6. Verwirft den Pfad-Cache der Bibliothek, damit Bibliotheksseite und Player das Ergebnis sehen, ohne die übliche kurze Scan-TTL abzuwarten.
@@ -45,7 +45,7 @@ Die Synchronisierung läuft **im Hintergrund**. Du kannst die Einstellungen verl
 
 Führe **Ordner synchronisieren** erneut aus, nachdem du weitere Dateien in diese Ordner gelegt hast. Das Speichern der Ordnerliste ohne Synchronisierung bezieht sie beim nächsten Bibliotheksscan ebenfalls ein (etwa eine Minute, oder beim nächsten Download/Löschen).
 
-Das Entfernen eines Ordners aus der Liste **hebt seine Zuordnung auf**: Diese Titel verschwinden aus der Bibliothek und dem Player, und von Downtify erzeugte Extras (`.lrc`-Begleitdateien, zwischengespeicherte Cover) werden gelöscht. Die Audiodateien auf der Platte bleiben, wo sie sind.
+Das Entfernen eines Ordners aus der Liste **hebt seine Zuordnung auf**: Diese Titel verschwinden aus der Bibliothek und dem Player, und von Castify erzeugte Extras (`.lrc`-Begleitdateien, zwischengespeicherte Cover) werden gelöscht. Die Audiodateien auf der Platte bleiben, wo sie sind.
 
 Ordner, die nicht existieren oder nicht lesbar sind, werden nach der Synchronisierung gemeldet; die anderen werden trotzdem gescannt.
 

@@ -11,7 +11,7 @@ Nem kell hozzá fiók vagy API-kulcs: a javaslatok a [Deezer](https://www.deezer
 ## Hogyan választódnak ki a javaslatok
 
 1. **Az előadóid súlyozva vannak.** A könyvtárad minden előadója számít valamennyit, és az alábbiak mindegyikéért többet, a legfontosabbtól a legkevésbé fontosig:
-    - milyen gyakran **hallgatod** őket a Downtify lejátszójában (a közelmúltbeli hallgatás többet számít, mint a hónapokkal ezelőtti),
+    - milyen gyakran **hallgatod** őket a Castify lejátszójában (a közelmúltbeli hallgatás többet számít, mint a hónapokkal ezelőtti),
     - hány dalukat **kedvelted meg**,
     - hány daluk van **a könyvtáradban**.
 

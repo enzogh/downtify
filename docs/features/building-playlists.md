@@ -8,7 +8,7 @@ Playlists you create in the Library work like a streaming service's. Any song ca
 
 ## Adding songs that aren't downloaded yet
 
-Songs from a search, the charts, the Similar page or the recommendations below a playlist can go straight into a playlist you created (or one shared with you as an [editor](collaborative-playlists.md)):
+Songs from a search, the charts or the recommendations below a playlist can go straight into a playlist you created (or one shared with you as an [editor](collaborative-playlists.md)):
 
 - the **+** button on a search result, or a right click on it, then **Add to playlist** → the playlist (or **New playlist**);
 - **Add songs** on the playlist page: the search box looks in the library *and* for new songs, listed under **Not in your library yet**;
@@ -17,7 +17,7 @@ Songs from a search, the charts, the Similar page or the recommendations below a
 A song that is already in the library goes into the playlist at once. Any other song is queued for download and shows on the playlist page under **songs downloading**. You can play it there straight away (it streams), and it moves into the playlist, at the end, as soon as its download finishes: an open playlist page shows it there without a reload, on every device and for every editor. The same happens when the queue finds the song already in the library. If a download fails, the song stays in that list until you retry it from the [queue](download-queue.md) or take it out with the **×** next to it.
 
 ::: info Where the waiting songs live
-A playlist's M3U file only ever lists files that exist, so media servers reading it never see a missing song. The songs still waiting are kept in Downtify's database (`/data/downtify_library.db`). Renaming the playlist keeps them, and deleting it forgets them.
+A playlist's M3U file only ever lists files that exist, so media servers reading it never see a missing song. The songs still waiting are kept in Castify's database (`/data/downtify_library.db`). Renaming the playlist keeps them, and deleting it forgets them.
 :::
 
 In [library-only mode](library-only.md) nothing can be downloaded, so the **+** button and the **Not in your library yet** list are hidden.

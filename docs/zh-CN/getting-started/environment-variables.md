@@ -4,7 +4,7 @@ icon: lucide/settings
 
 # 环境变量
 
-所有环境变量均为可选项。即使不设置任何变量，Downtify 也能直接运行。
+所有环境变量均为可选项。即使不设置任何变量，Castify 也能直接运行。
 
 ## 核心设置
 
@@ -44,7 +44,7 @@ environment:
 | `DOWNTIFY_OIDC_USERNAME_CLAIM` | `preferred_username` | 用于新账号名称的 claim；若不存在，则依次回退到 `email` 和 `sub`。 |
 | `DOWNTIFY_OIDC_GROUPS_CLAIM` | `groups` | 包含组名的 claim；支持点分隔的路径。 |
 | `DOWNTIFY_OIDC_ALLOWED_GROUPS` | _(empty)_ | 以逗号分隔的允许登录组列表。留空时，任何通过身份验证的提供方用户都可以登录。 |
-| `DOWNTIFY_OIDC_ADMIN_GROUPS` | _(empty)_ | 映射为 Downtify 管理员的组名，以逗号分隔。其他 OIDC 用户将作为普通用户。 |
+| `DOWNTIFY_OIDC_ADMIN_GROUPS` | _(empty)_ | 映射为 Castify 管理员的组名，以逗号分隔。其他 OIDC 用户将作为普通用户。 |
 | `DOWNTIFY_TRUSTED_PROXIES` | _(unset)_ | 反向代理的地址或网段列表，以逗号分隔（例如 `172.18.0.0/16,10.0.0.5`）。仅信任来自这些地址的请求所携带的 `X-Forwarded-For`、`X-Forwarded-Proto` 和 `X-Forwarded-Host`，用于识别客户端地址、限制登录和配对尝试频率、设置登录 Cookie 的安全标志并执行 same-site 检查。未设置时会忽略这些请求头。 |
 | `DOWNTIFY_DISCOVERY` | `true` | 设为 `false` 后，停止通过本地网络 mDNS（`_downtify._tcp`）广播服务器；应用依靠该广播在 *Found on this network* 列表中显示服务器。在 Docker bridge 网络中，广播本来也无法到达局域网。详见 [Docker Compose](docker-compose.md#finding-the-server-from-the-apps)。 |
 | `DOWNTIFY_TRANSCODE_CACHE_MB` | `2048` | 转码副本缓存（`/data/transcode_cache`）的最大大小，单位为 MB；优先清除最近较少播放的副本。 |
@@ -60,7 +60,7 @@ OIDC 为可选功能。请同时配置 issuer、客户端 ID 和密钥；只配�
 
 | 变量 | 默认值 | 说明 |
 |----------|---------|-------------|
-| `DOWNTIFY_TRASH` | `false` | 设为 `true` 后为下载目录启用音乐回收站：删除歌曲时由 Downtify 将文件移入回收站，并保留 30 天。启用期间只有管理员可以删除歌曲。 |
+| `DOWNTIFY_TRASH` | `false` | 设为 `true` 后为下载目录启用音乐回收站：删除歌曲时由 Castify 将文件移入回收站，并保留 30 天。启用期间只有管理员可以删除歌曲。 |
 | `DOWNTIFY_TRASH_CONFIG` | _(unset)_ | 容器内 JSON 配置文件的路径。文件列出回收站覆盖的目录以及工作进程运行方式（`embedded` 或 `external`）。优先级高于 `DOWNTIFY_TRASH`。文件无法读取时，服务器会在启动时退出。详见[配置文件](../features/music-trash.md#the-configuration-file)。 |
 
 ## 健康检查
@@ -84,7 +84,7 @@ YouTube 会定期对自动下载工具发起验证。默认配置失效时，可
 |----------|---------|-------------|
 | `DOWNTIFY_FORCE_IPV4` | _(unset)_ | 设为 `1` 可强制 yt-dlp 仅使用 IPv4。当主机的 IPv6 不可用或受到限流时，此选项会很有帮助。 |
 | `DOWNTIFY_YT_SLEEP_REQUESTS` | _(unset)_ | Seconds yt-dlp waits between its requests to YouTube during a download. Unset, downloads aren't paced — until YouTube answers `429 Too Many Requests`: that song is retried once with a 1 s pause, and every download stays paced for the next 15 minutes. Set a number to force a pause always (`1` is the old behaviour, about 7 s slower per song), or `0` to never pause. To space out whole downloads instead, use **Settings → Downloads → Delay between downloads**. |
-| `DOWNTIFY_YT_PLAYER_CLIENTS` | `ios,android,web_embedded,mweb,web,tv` | 按顺序尝试的 yt-dlp 播放器客户端列表，以逗号分隔。Downtify 默认优先使用无需 JavaScript 运行时的客户端。只有确认特定客户端遭到屏蔽时才建议覆盖此设置。 |
+| `DOWNTIFY_YT_PLAYER_CLIENTS` | `ios,android,web_embedded,mweb,web,tv` | 按顺序尝试的 yt-dlp 播放器客户端列表，以逗号分隔。Castify 默认优先使用无需 JavaScript 运行时的客户端。只有确认特定客户端遭到屏蔽时才建议覆盖此设置。 |
 | `DOWNTIFY_YT_PO_TOKEN` | _(unset)_ | 提供给 yt-dlp 的 Proof-of-Origin token 列表，以逗号分隔，每项格式为 `<client>.<context>+<token>`（例如 `mweb.gvs+ABC123`）。仅当 YouTube 开始要求当前客户端提供 PO Token 时才需要设置。 |
 | `DOWNTIFY_COOKIES_FILE` | _(unset)_ | 容器**内部** Netscape 格式 `cookies.txt` 的路径。让 yt-dlp 使用真实浏览器会话进行身份验证；下载显式内容/年龄限制歌曲或 YouTube 强制登录时需要此项。其优先级高于 Web 界面上传的文件，并会使界面中的 Cookie 区域变为只读。详见 [YouTube Cookie](../features/youtube-cookies.md)。 |
 | `DOWNTIFY_COOKIES_FROM_BROWSER` | _(unset)_ | 用于提取 Cookie 的浏览器名称（例如 `chrome`、`firefox`）。容器必须能够访问浏览器 Cookie 存储，因此通常不适用于 Docker。 |

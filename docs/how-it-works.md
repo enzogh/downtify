@@ -4,7 +4,7 @@ icon: lucide/cog
 
 # How It Works
 
-Downtify's download pipeline has three stages:
+Castify's download pipeline has three stages:
 
 ```
 Spotify embed  →  YouTube Music search  →  yt-dlp + ffmpeg + mutagen
@@ -13,19 +13,19 @@ Spotify embed  →  YouTube Music search  →  yt-dlp + ffmpeg + mutagen
 
 ## 1. Metadata — Spotify embed scraping
 
-When you paste a Spotify URL, Downtify fetches the public `open.spotify.com/embed` page for that track, album or playlist. No Spotify account, API key or Premium subscription is needed — the embed page is publicly accessible.
+When you paste a Spotify URL, Castify fetches the public `open.spotify.com/embed` page for that track, album or playlist. No Spotify account, API key or Premium subscription is needed — the embed page is publicly accessible.
 
 For **tracks**, the embed returns: title, artist(s), album name, release year, duration and the cover image URL.
 
-For **albums and playlists**, the embed returns the track list. Playlist embeds are capped at roughly 50–100 entries, so Downtify also requests the full list from Spotify's anonymous `api.spotify.com` endpoint with pagination to handle playlists with hundreds of songs.
+For **albums and playlists**, the embed returns the track list. Playlist embeds are capped at roughly 50–100 entries, so Castify also requests the full list from Spotify's anonymous `api.spotify.com` endpoint with pagination to handle playlists with hundreds of songs.
 
 ::: info Per-track metadata enrichment
-Playlist embed entries are missing the release year and use the playlist cover instead of each track's own album cover. For the [Playlist Monitor](features/playlist-monitor.md), Downtify re-fetches every new track individually to get the correct cover and year before downloading.
+Playlist embed entries are missing the release year and use the playlist cover instead of each track's own album cover. For the [Playlist Monitor](features/playlist-monitor.md), Castify re-fetches every new track individually to get the correct cover and year before downloading.
 :::
 
 ## 2. Audio match — YouTube Music, then YouTube
 
-Downtify uses [`ytmusicapi`](https://ytmusicapi.readthedocs.io/) to search YouTube Music for the best audio match. The search query is built from the track title and artist name.
+Castify uses [`ytmusicapi`](https://ytmusicapi.readthedocs.io/) to search YouTube Music for the best audio match. The search query is built from the track title and artist name.
 
 A result is only accepted if its title resembles the source title and it shares at least one artist. Spotify's dash-style version suffix and YouTube Music's parenthesised one are treated as the same (`Tubarões - Ao Vivo` matches `Tubarões (Ao Vivo)`), and an artist credit YouTube Music packs into one entry (`A, B, and C`) is split before comparing. A leading "The" in artist names is ignored (`Eden Project` matches `The Eden Project`), and a title may match one ` - `-separated part of an upload's title (`くちづけDiamond - Kuchizuke Diamond`, `Game OST - Song Title - Artist`) as long as the other parts don't name a different version. Karaoke, cover, instrumental, sped-up/slowed, live (incl. `Ao Vivo`/`En Vivo`), acoustic, remix and other-language versions (e.g. `(Spanish Version)`) are rejected unless the source track is itself that version. Among the remaining results, the one whose duration is closest to Spotify's wins, with a bonus for a matching album name. If no result qualifies, the search is repeated with the words in the other order (`<title> <artist>` instead of `<artist> <title>`) — YouTube Music ranks results differently depending on word order, and some songs only show up near the top one way. If that also finds nothing and the album is known, the album's tracklist is scanned directly.
 
@@ -40,19 +40,19 @@ Standard-YouTube results go through the same title, artist and version checks, a
 
 If neither site has an acceptable match, the track fails with `Could not find a YouTube match for '<title>'` rather than downloading the wrong song.
 
-For YouTube URLs entered directly, this step is skipped — Downtify downloads that specific video.
+For YouTube URLs entered directly, this step is skipped — Castify downloads that specific video.
 
 **SoundCloud** is an optional audio source too (Settings → Audio sources, off by default): at its place in the source order it searches SoundCloud with its own title, artist and length checks, and for a pasted SoundCloud track link — whose title, artist and cover come from SoundCloud itself — it downloads that exact track. The SoundCloud page under Features has the details.
 
 ::: info Deezer links
-A pasted Deezer track/album/playlist/artist link (`deezer.com/track/…`) works the same way a Spotify one does: Deezer's public REST API supplies the title, artist(s), album and cover, every track streams in full from YouTube before you download it, and this same step then matches it on YouTube Music/YouTube. Downtify has no Deezer discography resolver of its own beyond what Deezer's API already returns, so a Deezer link downloads and (for a playlist) gets its own M3U and cover art, but can't be watched by the [Playlist Monitor](features/playlist-monitor.md).
+A pasted Deezer track/album/playlist/artist link (`deezer.com/track/…`) works the same way a Spotify one does: Deezer's public REST API supplies the title, artist(s), album and cover, every track streams in full from YouTube before you download it, and this same step then matches it on YouTube Music/YouTube. Castify has no Deezer discography resolver of its own beyond what Deezer's API already returns, so a Deezer link downloads and (for a playlist) gets its own M3U and cover art, but can't be watched by the [Playlist Monitor](features/playlist-monitor.md).
 :::
 
 ## 3. Download & tag — yt-dlp + ffmpeg + mutagen
 
 ### Download
 
-[yt-dlp](https://github.com/yt-dlp/yt-dlp) downloads the audio from YouTube (or SoundCloud, for a SoundCloud track). For YouTube, Downtify configures it to try several player clients in order (`ios`, `android`, `web_embedded`, `mweb`, `web`, `tv`) to work around YouTube's bot-detection challenges. See [Environment Variables](getting-started/environment-variables.md) for advanced anti-bot options.
+[yt-dlp](https://github.com/yt-dlp/yt-dlp) downloads the audio from YouTube (or SoundCloud, for a SoundCloud track). For YouTube, Castify configures it to try several player clients in order (`ios`, `android`, `web_embedded`, `mweb`, `web`, `tv`) to work around YouTube's bot-detection challenges. See [Environment Variables](getting-started/environment-variables.md) for advanced anti-bot options.
 
 ### Conversion
 
@@ -78,7 +78,7 @@ The exact ID3/Vorbis/MP4 tags used depend on the output format. See [Lyrics](fea
 
 ## Real-time progress
 
-Downtify streams download progress to the browser over a **WebSocket** connection (`/api/ws`). As yt-dlp reports progress, the server broadcasts percentage and status updates to all connected clients. This means you see the progress bar move in real time — no polling, no page reload needed.
+Castify streams download progress to the browser over a **WebSocket** connection (`/api/ws`). As yt-dlp reports progress, the server broadcasts percentage and status updates to all connected clients. This means you see the progress bar move in real time — no polling, no page reload needed.
 
 ## File naming and organisation
 

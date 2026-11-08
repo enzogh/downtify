@@ -4,7 +4,7 @@ icon: lucide/heart
 
 # Beğenilen şarkılar
 
-Bir şarkıyı beğenmek için kalbine dokunun. Bir şarkı beğenilir beğenilmez Downtify, beğendiğiniz tüm şarkıları içeren bir **Beğenilen şarkılar** çalma listesi tutar; böylece favorileriniz bir tık uzağınızda olur — Downtify’da ve kitaplığınıza bakan her medya sunucusunda.
+Bir şarkıyı beğenmek için kalbine dokunun. Bir şarkı beğenilir beğenilmez Castify, beğendiğiniz tüm şarkıları içeren bir **Beğenilen şarkılar** çalma listesi tutar; böylece favorileriniz bir tık uzağınızda olur — Castify’da ve kitaplığınıza bakan her medya sunucusunda.
 
 Açılacak bir şey yok.
 
@@ -51,16 +51,16 @@ Bir beğeni, verildiği dosyayı izler:
 
 | Dosyaya olan | Beğeniye olan |
 |--------------------------|--------------------------|
-| Şarkıyı Downtify’da silersiniz | Beğeni onunla gider ve çalma listesi yeniden yazılır |
+| Şarkıyı Castify’da silersiniz | Beğeni onunla gider ve çalma listesi yeniden yazılır |
 | Onu taşıyıp [Kitaplık yollarını düzelt](library-catalog.md#fix-library-paths)’i çalıştırırsınız | Beğeni dosyayı yeni yerine kadar izler |
-| Downtify dışında kaybolur (çıkarılmış bir sürücü, elle silme) | Beğeni korunur, ama şarkı geri gelene kadar çalma listesinin dışında kalır |
+| Castify dışında kaybolur (çıkarılmış bir sürücü, elle silme) | Beğeni korunur, ama şarkı geri gelene kadar çalma listesinin dışında kalır |
 
 Eksik bir dosyanın beğenisini korumak, çıkarılmış bir sürücünün kalplerinize mal olmaması demektir. Dosyaları elle sildiyseniz ve beğenilerin de gitmesini istiyorsanız **Tüm beğenileri kaldır**’ı kullanın ya da şarkıları silmeden önce beğenilerini geri alın.
 
 ## Bilmekte fayda var
 
 - Beğeniler ses dosyalarında değil, kitaplık veritabanında (`downtify_library.db`, `/data` biriminizde) saklanır. Şarkının etiketlerine hiçbir şey yazılmaz.
-- Çalma listesi Downtify tarafından [Navidrome](slskd-navidrome.md)’da oluşturulmaz. Sade bir M3U dosyasıdır; bir medya sunucusunun onunla ne yapacağı, o sunucunun M3U dosyalarını nasıl okuduğuna bağlıdır.
+- Çalma listesi Castify tarafından [Navidrome](slskd-navidrome.md)’da oluşturulmaz. Sade bir M3U dosyasıdır; bir medya sunucusunun onunla ne yapacağı, o sunucunun M3U dosyalarını nasıl okuduğuna bağlıdır.
 - [Çalma listesi dosyası](m3u-export.md), indirme ayarlarında *M3U çalma listeleri yaz* kapalıyken bile yazılır: özelliğin amacı çalma listesidir.
 
 ## API

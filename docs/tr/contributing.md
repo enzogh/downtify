@@ -12,7 +12,7 @@ Katkılar memnuniyetle karşılanır — hata raporları, özellik istekleri, ko
 
 Hata raporlarına şunları ekleyin:
 
-- Downtify sürümü
+- Castify sürümü
 - Nasıl kurduğunuz (Docker run, Docker Compose, Umbrel, …)
 - Yeniden üretme adımları
 - Ne beklediğiniz ve ne olduğu
@@ -106,7 +106,7 @@ downtify/
 
 ## Çeviri
 
-Downtify’ın çevrilecek iki şeyi vardır ve birini — ya da ikisini birden — alabilirsiniz:
+Castify’ın çevrilecek iki şeyi vardır ve birini — ya da ikisini birden — alabilirsiniz:
 
 | Çevirdiğiniz | Nerede | Kılavuz |
 |---------------|-------|-------|
@@ -133,4 +133,4 @@ Ayrıntılar için [Uluslararasılaştırma](features/internationalization.md) s
 - Göndermeden önce `uv run pytest` çalıştırın
 - PR’yi `main`’e açın
 
-Downtify işinize yaradıysa GitHub’da bir yıldız bırakmayı düşünün — projenin büyümesine yardımcı olur.
+Castify işinize yaradıysa GitHub’da bir yıldız bırakmayı düşünün — projenin büyümesine yardımcı olur.

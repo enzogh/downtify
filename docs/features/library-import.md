@@ -14,7 +14,7 @@ Already exported your library from another service? Import the CSV and queue eve
 | [TuneMyMusic](https://www.tunemymusic.com/) | |
 | [Exportify](https://github.com/watsonbox/exportify) | |
 
-Downtify doesn't hard-code any one tool's exact column schema. Instead, it matches the CSV's header row case-insensitively against a set of known aliases (`Title` / `Track` / `Track Title` / `Track Name` / `Song` / …, `Artist` / `Artists` / `Artist Name` / `Artist Name(s)` / …, and `Album` / `Album Name` / `Album Title` / …), so exports from any of the three — or a hand-made CSV using the same column names — work without renaming anything.
+Castify doesn't hard-code any one tool's exact column schema. Instead, it matches the CSV's header row case-insensitively against a set of known aliases (`Title` / `Track` / `Track Title` / `Track Name` / `Song` / …, `Artist` / `Artists` / `Artist Name` / `Artist Name(s)` / …, and `Album` / `Album Name` / `Album Title` / …), so exports from any of the three — or a hand-made CSV using the same column names — work without renaming anything.
 
 Title and artist are required. Album is read when present and stored as the track's album name (Queue, matching, and file tags). Other columns some exporters include (ISRC, a Spotify track URI, duration) are ignored. Each row is resolved the same way a free-text search is, via YouTube Music.
 
@@ -23,7 +23,7 @@ Title and artist are required. Album is read when present and stored as the trac
 1. On the home page, click **Import a library CSV** below the search box.
 2. Pick your exported `.csv` file.
 
-The file is read entirely in your browser and sent to the server as plain text — it is never uploaded anywhere else. Downtify parses it, queues every recognized row, and you'll land on the Download Queue where progress streams in over WebSocket exactly like any other batch download.
+The file is read entirely in your browser and sent to the server as plain text — it is never uploaded anywhere else. Castify parses it, queues every recognized row, and you'll land on the Download Queue where progress streams in over WebSocket exactly like any other batch download.
 
 The imported batch is named after the file (its name minus `.csv`) and, like any other playlist download, gets an [M3U file](m3u-export.md) if that setting is enabled.
 

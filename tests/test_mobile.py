@@ -710,7 +710,7 @@ def test_listen_by_track_id(client, app_dirs):
 
 def test_instance_name_is_a_safe_dns_sd_label():
     assert instance_name('nas.local') == 'nas local'
-    assert instance_name('  ') == 'Downtify'
+    assert instance_name('  ') == 'Castify'
     assert len(instance_name('é' * 100).encode()) <= 63
 
 

@@ -4,7 +4,7 @@ icon: lucide/heart
 
 # Titres likés
 
-Touchez le cœur d’un titre pour le liker. Dès qu’un titre est liké, Downtify tient à jour une playlist **Titres likés** avec tous ceux que vous avez likés, de sorte que vos favoris sont à un clic — dans Downtify comme dans tout serveur multimédia pointé sur votre bibliothèque.
+Touchez le cœur d’un titre pour le liker. Dès qu’un titre est liké, Castify tient à jour une playlist **Titres likés** avec tous ceux que vous avez likés, de sorte que vos favoris sont à un clic — dans Castify comme dans tout serveur multimédia pointé sur votre bibliothèque.
 
 Il n’y a rien à activer.
 
@@ -51,16 +51,16 @@ Un like suit le fichier auquel il a été donné :
 
 | Ce qui arrive au fichier | Ce qui arrive au like |
 |--------------------------|--------------------------|
-| Vous supprimez le titre dans Downtify | Le like part avec lui, et la playlist est réécrite |
+| Vous supprimez le titre dans Castify | Le like part avec lui, et la playlist est réécrite |
 | Vous le déplacez et lancez [Corriger les chemins de la bibliothèque](library-catalog.md#fix-library-paths) | Le like suit le fichier vers son nouvel emplacement |
-| Il disparaît hors de Downtify (disque démonté, suppression manuelle) | Le like est conservé, mais le titre est écarté de la playlist jusqu’à son retour |
+| Il disparaît hors de Castify (disque démonté, suppression manuelle) | Le like est conservé, mais le titre est écarté de la playlist jusqu’à son retour |
 
 Conserver le like d’un fichier manquant signifie qu’un disque débranché ne vous coûte pas vos cœurs. Si vous avez supprimé des fichiers à la main et voulez aussi effacer les likes, utilisez **Retirer tous les likes**, ou retirez le like des titres avant de les supprimer.
 
 ## Bon à savoir
 
 - Les likes sont stockés dans la base de données de la bibliothèque (`downtify_library.db`, dans votre volume `/data`), pas dans les fichiers audio. Rien n’est écrit dans les tags d’un titre.
-- La playlist n’est pas créée dans [Navidrome](slskd-navidrome.md) par Downtify. C’est un simple fichier M3U : ce qu’un serveur multimédia en fait dépend de la façon dont il lit les fichiers M3U.
+- La playlist n’est pas créée dans [Navidrome](slskd-navidrome.md) par Castify. C’est un simple fichier M3U : ce qu’un serveur multimédia en fait dépend de la façon dont il lit les fichiers M3U.
 - Le [fichier de playlist](m3u-export.md) est écrit même quand *Écrire des playlists M3U* est désactivé dans les réglages de téléchargement : la playlist est l’objet de la fonctionnalité.
 
 ## API

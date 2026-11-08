@@ -21,14 +21,14 @@ Beobachtungen gehören dem, der sie angelegt hat: Jedes Konto folgt seinen eigen
 
 ## So funktioniert es
 
-Downtify lässt eine Hintergrundaufgabe laufen, die alle 60 Sekunden ausgeführt wird. Bei jedem Durchlauf prüft sie bei jeder aktivierten Beobachtung, ob sie (gemäß ihrem eingestellten Intervall) zur Prüfung ansteht. Steht eine *Playlist* an, tut Downtify Folgendes:
+Castify lässt eine Hintergrundaufgabe laufen, die alle 60 Sekunden ausgeführt wird. Bei jedem Durchlauf prüft sie bei jeder aktivierten Beobachtung, ob sie (gemäß ihrem eingestellten Intervall) zur Prüfung ansteht. Steht eine *Playlist* an, tut Castify Folgendes:
 
 1. Ruft die vollständige Titelliste von Spotify, Deezer oder YouTube Music ab
 2. Vergleicht sie mit der Menge der bereits heruntergeladenen Titel
 3. Lädt neue Titel mit derselben Pipeline wie ein manueller Download herunter
 4. Aktualisiert die M3U-Datei der Playlist (wenn die M3U-Erzeugung aktiviert ist)
 
-Die erste Prüfung, die startet, sobald du die Beobachtung hinzufügst, lädt alles herunter, was schon in der Playlist ist; spätere Prüfungen laden nur herunter, was seitdem hinzukam. „Schon heruntergeladen“ wird in einer kleinen SQLite-Datenbank (`downtify_monitor.db` unter `/data`) festgehalten, nicht durch Prüfen des Download-Ordners — das Verschieben einer heruntergeladenen Datei an eine andere Stelle auf der Festplatte (in deine eigene Bibliotheksstruktur, auf ein anderes Laufwerk, wohin auch immer) lässt Downtify also **nicht** glauben, sie fehle, und lädt sie bei der nächsten Prüfung nicht erneut herunter.
+Die erste Prüfung, die startet, sobald du die Beobachtung hinzufügst, lädt alles herunter, was schon in der Playlist ist; spätere Prüfungen laden nur herunter, was seitdem hinzukam. „Schon heruntergeladen“ wird in einer kleinen SQLite-Datenbank (`downtify_monitor.db` unter `/data`) festgehalten, nicht durch Prüfen des Download-Ordners — das Verschieben einer heruntergeladenen Datei an eine andere Stelle auf der Festplatte (in deine eigene Bibliotheksstruktur, auf ein anderes Laufwerk, wohin auch immer) lässt Castify also **nicht** glauben, sie fehle, und lädt sie bei der nächsten Prüfung nicht erneut herunter.
 
 Ein separater Durchlauf läuft jede Stunde und prüft, ob die Datei jedes heruntergeladenen Titels noch da ist. Wirklich gelöschte Dateien (im Gegensatz zu verschobenen) werden dann vergessen, sodass der Titel wieder zum Download infrage kommt — bei der nächsten Prüfung der Beobachtung nach diesem stündlichen Durchlauf, nicht sofort.
 
@@ -54,16 +54,16 @@ Du kannst auch von der Seite einer Playlist aus mit dem Beobachten beginnen: Fü
 
 ## YouTube-Music-Playlists
 
-Nutze eine YouTube-Music-Playlist für Songs, die nicht auf Spotify sind: Remixe, Live-Sets, Coverversionen, Uploads von Promo-Kanälen. Jeder Titel wird von **genau dem Video in der Playlist** heruntergeladen. Downtify sucht nicht erneut danach, du bekommst also, was du in die Playlist gelegt hast.
+Nutze eine YouTube-Music-Playlist für Songs, die nicht auf Spotify sind: Remixe, Live-Sets, Coverversionen, Uploads von Promo-Kanälen. Jeder Titel wird von **genau dem Video in der Playlist** heruntergeladen. Castify sucht nicht erneut danach, du bekommst also, was du in die Playlist gelegt hast.
 
 - **Alle Titel werden abgerufen**, egal wie lang die Playlist ist. Gelöschte oder private Videos werden übersprungen.
-- **Songs, die YouTube Music ausgraut, werden trotzdem heruntergeladen.** Playlists von Konvertern und Importern (Soundiiz, TuneMyMusic und Ähnliche) listen Songs oft als einfache YouTube-Uploads, die YouTube Music als nicht verfügbar zeigt und ohne Song-ID führt. Downtify findet das Video anhand des Vorschaubilds des Eintrags und lädt es wie jedes andere herunter, sodass eine solche Playlist nicht leer herauskommt. Ein wirklich gelöschtes oder privat gestelltes Video kann nicht heruntergeladen werden: Kennzeichnet YouTube Music es so, wird es übersprungen, und liefert es nur ein Vorschaubild, erscheint der Titel in der Warteschlange als fehlgeschlagen.
-- **Künstler und Titel stammen aus dem Videotitel.** Viele Playlist-Einträge sind Uploads, die dem Kanal zugeschrieben sind, der sie gepostet hat (z. B. `MrSuicideSheep`), und der echte Credit steht im Titel, wie `Bronze Whale - Patterns`. Bei allem, was keine Katalogveröffentlichung ist, teilt Downtify `Künstler - Titel` in Dateinamen und Tags auf. Es entfernt auch Suffixe wie `(Official Video)` oder `[Lyrics]`. Ein Teil nach dem Bindestrich, der eine Version benennt (`Yellow - Live at Glastonbury`), bleibt im Titel. Katalogtitel (offizielles Audio oder alles, was unter einem Album abgelegt ist) behalten Künstler und Titel von YouTube Music.
+- **Songs, die YouTube Music ausgraut, werden trotzdem heruntergeladen.** Playlists von Konvertern und Importern (Soundiiz, TuneMyMusic und Ähnliche) listen Songs oft als einfache YouTube-Uploads, die YouTube Music als nicht verfügbar zeigt und ohne Song-ID führt. Castify findet das Video anhand des Vorschaubilds des Eintrags und lädt es wie jedes andere herunter, sodass eine solche Playlist nicht leer herauskommt. Ein wirklich gelöschtes oder privat gestelltes Video kann nicht heruntergeladen werden: Kennzeichnet YouTube Music es so, wird es übersprungen, und liefert es nur ein Vorschaubild, erscheint der Titel in der Warteschlange als fehlgeschlagen.
+- **Künstler und Titel stammen aus dem Videotitel.** Viele Playlist-Einträge sind Uploads, die dem Kanal zugeschrieben sind, der sie gepostet hat (z. B. `MrSuicideSheep`), und der echte Credit steht im Titel, wie `Bronze Whale - Patterns`. Bei allem, was keine Katalogveröffentlichung ist, teilt Castify `Künstler - Titel` in Dateinamen und Tags auf. Es entfernt auch Suffixe wie `(Official Video)` oder `[Lyrics]`. Ein Teil nach dem Bindestrich, der eine Version benennt (`Yellow - Live at Glastonbury`), bleibt im Titel. Katalogtitel (offizielles Audio oder alles, was unter einem Album abgelegt ist) behalten Künstler und Titel von YouTube Music.
 - **Nicht jeder `list=`-Link ist eine Playlist.** Der `OLAK5uy_…`-Link eines Albums wird weiterhin als Album heruntergeladen. Ein Link `watch?v=…&list=…` ist der eine Song, der gerade lief. Ein Radio-Mix (`list=RD…`) hat keine feste Titelliste und kann nicht beobachtet werden.
 
 ## Künstlerbeobachtung
 
-Statt pro Künstler eine Playlist anzulegen, füge einen Künstlerlink ein, und Downtify folgt seinem ganzen Katalog. Füge einen über den Tab **Künstler** der Überwachungsseite hinzu — URL einfügen, Intervall wählen, auf **Künstler überwachen** klicken. Künstlerbeobachtungen zeigen eine Anzahl von Veröffentlichungen statt einer Titelanzahl.
+Statt pro Künstler eine Playlist anzulegen, füge einen Künstlerlink ein, und Castify folgt seinem ganzen Katalog. Füge einen über den Tab **Künstler** der Überwachungsseite hinzu — URL einfügen, Intervall wählen, auf **Künstler überwachen** klicken. Künstlerbeobachtungen zeigen eine Anzahl von Veröffentlichungen statt einer Titelanzahl.
 
 Akzeptierte URLs:
 
@@ -72,10 +72,10 @@ Akzeptierte URLs:
 
 Ein Handle wird beim Hinzufügen der Beobachtung zum Kanal des Künstlers aufgelöst, sodass derselbe Künstler, per Handle und per Kanal-URL eingefügt, als eine Beobachtung erkannt wird. Ein Handle, das nicht zu einem YouTube-Music-Künstler gehört, wird abgelehnt.
 
-Bei jedem Durchlauf listet Downtify die Diskografie des Künstlers auf, vergleicht sie mit den bereits verarbeiteten Veröffentlichungen und lädt jeden Titel von allem Neuen herunter. Ein Durchlauf im Normalbetrieb kostet eine einzige Anfrage — Titellisten werden nur für Veröffentlichungen abgerufen, die es noch nicht gesehen hat.
+Bei jedem Durchlauf listet Castify die Diskografie des Künstlers auf, vergleicht sie mit den bereits verarbeiteten Veröffentlichungen und lädt jeden Titel von allem Neuen herunter. Ein Durchlauf im Normalbetrieb kostet eine einzige Anfrage — Titellisten werden nur für Veröffentlichungen abgerufen, die es noch nicht gesehen hat.
 
 ::: info Warum die Diskografie von YouTube Music kommt
-Spotifys öffentliches Embed zeigt den Namen eines Künstlers und eine Vorschau der Top-Titel, aber **nicht** seine Diskografie — sie zu lesen würde Spotify-API-Zugangsdaten erfordern, die Downtify bewusst nicht nutzt. Ein Spotify-Künstlerlink wird also zu seinem Namen aufgelöst und demselben Künstler auf YouTube Music zugeordnet, von wo auch das Audio geholt wird. Der Vorteil: Jede Veröffentlichung, die Downtify sehen kann, kann es auch tatsächlich herunterladen. Der Kompromiss: Der Link folgt dem Künstler auf YouTube Music mit genau diesem Namen (Groß-/Kleinschreibung und Satzzeichen egal), bei mehreren gleichnamigen dem besten Treffer von YouTube Music. Prüfe bei einem häufigen Namen, dass die Beobachtung der gemeinte Künstler ist, und füge sonst die YouTube-Music-Künstler-URL direkt ein. Einen Spotify-Künstler, dessen genauen Namen kein Künstler auf YouTube Music trägt, kannst du nur so hinzufügen: Downtify rät nicht.
+Spotifys öffentliches Embed zeigt den Namen eines Künstlers und eine Vorschau der Top-Titel, aber **nicht** seine Diskografie — sie zu lesen würde Spotify-API-Zugangsdaten erfordern, die Castify bewusst nicht nutzt. Ein Spotify-Künstlerlink wird also zu seinem Namen aufgelöst und demselben Künstler auf YouTube Music zugeordnet, von wo auch das Audio geholt wird. Der Vorteil: Jede Veröffentlichung, die Castify sehen kann, kann es auch tatsächlich herunterladen. Der Kompromiss: Der Link folgt dem Künstler auf YouTube Music mit genau diesem Namen (Groß-/Kleinschreibung und Satzzeichen egal), bei mehreren gleichnamigen dem besten Treffer von YouTube Music. Prüfe bei einem häufigen Namen, dass die Beobachtung der gemeinte Künstler ist, und füge sonst die YouTube-Music-Künstler-URL direkt ein. Einen Spotify-Künstler, dessen genauen Namen kein Künstler auf YouTube Music trägt, kannst du nur so hinzufügen: Castify rät nicht.
 :::
 
 ::: warning Der erste Durchlauf lädt den gesamten Back-Katalog herunter
@@ -211,7 +211,7 @@ Standardmäßig synchronisiert eine täglich (oder wöchentlich / alle 2 Wochen 
 
 ## Anreicherung der Metadaten pro Titel
 
-Den Einträgen im Spotify-Playlist-Embed fehlt das Erscheinungsjahr, und sie verwenden das Playlist-Cover statt des Albumcovers des einzelnen Titels. Downtify ruft jeden neuen Titel einzeln erneut ab, um vor dem Herunterladen das richtige Cover und Jahr zu erhalten — und fällt auf die Daten der Playlist-Ebene zurück, wenn der Abruf pro Titel scheitert. Einträge von YouTube-Music-Playlists überspringen diesen Schritt: Jeder trägt bereits die Metadaten seines eigenen Videos.
+Den Einträgen im Spotify-Playlist-Embed fehlt das Erscheinungsjahr, und sie verwenden das Playlist-Cover statt des Albumcovers des einzelnen Titels. Castify ruft jeden neuen Titel einzeln erneut ab, um vor dem Herunterladen das richtige Cover und Jahr zu erhalten — und fällt auf die Daten der Playlist-Ebene zurück, wenn der Abruf pro Titel scheitert. Einträge von YouTube-Music-Playlists überspringen diesen Schritt: Jeder trägt bereits die Metadaten seines eigenen Videos.
 
 ## M3U-Integration
 
@@ -223,7 +223,7 @@ Ist [Playlist-Cover speichern](playlist-cover-art.md) an, wird das Cover einmal 
 
 ## Was mit Songs passiert, die eine Playlist verlassen
 
-Live-Playlists (Spotifys *Top 50*, *Discover Weekly*, redaktionelle Charts) ändern sich jede Woche. Downtify behandelt eine Beobachtung als **Quelle neuer Musik**, nie als etwas, das bestimmt, was du behältst:
+Live-Playlists (Spotifys *Top 50*, *Discover Weekly*, redaktionelle Charts) ändern sich jede Woche. Castify behandelt eine Beobachtung als **Quelle neuer Musik**, nie als etwas, das bestimmt, was du behältst:
 
 - **Heruntergeladene Audiodateien werden von einer Beobachtung nie gelöscht.** Nicht, wenn ein Titel die Playlist verlässt, nicht, wenn er jede von dir beobachtete Playlist verlässt, nicht, wenn die Playlist selbst schrumpft, und nicht, wenn du **Überwachung beenden** drückst.
 - **Nur die Playlist folgt der Playlist.** Bei jedem Durchlauf wird die [M3U-Datei](m3u-export.md) aus den aktuellen Titeln der Playlist in ihrer aktuellen Reihenfolge neu geschrieben, sodass ein herausgefallener Titel aus der M3U verschwindet. Seine Datei bleibt im Ordner und in deiner Bibliothek, durchsuchbar und abspielbar — auch über Navidrome, Jellyfin oder alles, was auf denselben Ordner zeigt.
@@ -232,7 +232,7 @@ Live-Playlists (Spotifys *Top 50*, *Discover Weekly*, redaktionelle Charts) änd
 So wird eine Chart-Playlist zu einem nutzbaren Entdeckungs-Feed: Neue Songs kommen automatisch, und was sie hinterlassen, sammelt sich als deine Bibliothek.
 
 ```
-Top 50 - USA        →  new song appears   →  Downtify downloads it
+Top 50 - USA        →  new song appears   →  Castify downloads it
                     →  song drops out     →  M3U updated, file kept
 ```
 
@@ -244,7 +244,7 @@ Um einen ungewollten Titel aus der Playlist zu nehmen und ihn bei jeder Prüfung
 **Überwachung beenden** (im ⋯-Menü der Beobachtung) vergisst nur die Beobachtung: Auf der Festplatte ändert sich nichts. **Löschen** bei einer Playlist auf der **Bibliothek**-Seite ist die zerstörerische Aktion — es entfernt die Titel dieser Playlist, ihre M3U und ihren Katalogeintrag.
 :::
 
-Verschwindet eine Datei tatsächlich — du hast sie aus dem Download-Ordner genommen oder von Hand gelöscht —, bemerkt das ein stündlicher Durchlauf und vergisst Downtifys Eintrag dazu, sodass die nächste Prüfung einer Beobachtung, die den Titel noch listet, ihn erneut herunterlädt. Eine Datei, die nur innerhalb des Download-Ordners *verschoben* wurde, wird weiterhin gefunden und nicht erneut heruntergeladen.
+Verschwindet eine Datei tatsächlich — du hast sie aus dem Download-Ordner genommen oder von Hand gelöscht —, bemerkt das ein stündlicher Durchlauf und vergisst Castifys Eintrag dazu, sodass die nächste Prüfung einer Beobachtung, die den Titel noch listet, ihn erneut herunterlädt. Eine Datei, die nur innerhalb des Download-Ordners *verschoben* wurde, wird weiterhin gefunden und nicht erneut heruntergeladen.
 
 ## Speicherung
 
@@ -256,13 +256,13 @@ Der Zustand der Überwachung wird in einer SQLite-Datenbank unter `/data/downtif
 - Jeder Titel, den eine Beobachtung hinzugefügt hat (`watch_events`): wann, die Datei, welcher Audio-Anbieter ihn geholt hat, ob die Beobachtung ihn heruntergeladen oder schon in der Bibliothek gefunden hat und ob er mit ihrer ersten Prüfung kam. Diese Zeilen behalten Id, Namen und Besitzer der Beobachtung, wie sie damals waren, und überdauern sie: Beim Beenden oder Umstellen einer Beobachtung bleiben sie erhalten, ihre Titel sagen also weiter, woher sie kamen
 - Die Titel, die eine Beobachtung immer wieder nicht herunterladen kann (`watch_failures`), bis einer klappt, die Playlist verlässt oder die Beobachtung umgestellt wird
 
-Vor der Künstlerbeobachtung angelegte Datenbanken werden beim Start automatisch migriert; bestehende Zeilen funktionieren weiter als Playlist-Beobachtungen. Titel, die erfasst wurden, bevor Downtify den obigen Verlauf führte, werden ihm einmalig beim ersten Start mit unbekanntem Ergebnis hinzugefügt (**Vor der Erfassung**) — die vom ersten Tag einer Beobachtung zählen als ihre erste Prüfung.
+Vor der Künstlerbeobachtung angelegte Datenbanken werden beim Start automatisch migriert; bestehende Zeilen funktionieren weiter als Playlist-Beobachtungen. Titel, die erfasst wurden, bevor Castify den obigen Verlauf führte, werden ihm einmalig beim ersten Start mit unbekanntem Ergebnis hinzugefügt (**Vor der Erfassung**) — die vom ersten Tag einer Beobachtung zählen als ihre erste Prüfung.
 
 ## Aktivität und Speicher je Beobachtung
 
 Die Überwachungsseite und die eigene Seite jeder Beobachtung (**Aktivität und Titel** im **⋯**-Menü einer Beobachtung, oder ein Klick auf ihre **Aktivität**) zeigen, welche Beobachtungen deine Bibliothek wachsen lassen — praktisch bei vielen Beobachtungen, oder um herauszufinden, warum ein generierter Mix unerwartete Titel gebracht hat.
 
-**Was als Aktivität zählt.** Es zählen nur Titel, die eine Beobachtung tatsächlich hinzugefügt hat: die, die sie heruntergeladen hat. Titel, die sie schon in deiner Bibliothek fand (eine andere Beobachtung oder ein eigener Download hatte sie), zählen gesondert als **Schon in der Bibliothek**, ebenso das, was ihre erste Prüfung bringt, wenn sie alles herunterlädt, was die Playlist schon enthielt. So wirkt eine statische Playlist ruhig, auch wenn ihre erste Prüfung 300 Titel geladen hat, und ein Mix, der 15 Titel pro Woche hinzufügt, zeigt 15 pro Woche. Titel, die erfasst wurden, bevor Downtify diesen Verlauf führte, zählen als hinzugefügt, und die Seite sagt, wie viele es sind.
+**Was als Aktivität zählt.** Es zählen nur Titel, die eine Beobachtung tatsächlich hinzugefügt hat: die, die sie heruntergeladen hat. Titel, die sie schon in deiner Bibliothek fand (eine andere Beobachtung oder ein eigener Download hatte sie), zählen gesondert als **Schon in der Bibliothek**, ebenso das, was ihre erste Prüfung bringt, wenn sie alles herunterlädt, was die Playlist schon enthielt. So wirkt eine statische Playlist ruhig, auch wenn ihre erste Prüfung 300 Titel geladen hat, und ein Mix, der 15 Titel pro Woche hinzufügt, zeigt 15 pro Woche. Titel, die erfasst wurden, bevor Castify diesen Verlauf führte, zählen als hinzugefügt, und die Seite sagt, wie viele es sind.
 
 Im gewählten Zeitraum (7, 30 oder 90 Tage, im Browser gespeichert) zeigt eine Beobachtung:
 

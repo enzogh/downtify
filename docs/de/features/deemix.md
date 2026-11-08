@@ -15,7 +15,7 @@ auf die gewünschte Qualität voraus. Sie bietet kein Abonnement und umgeht auch
 Behalte den normalen sitzungsbasierten Anmeldemodus von Deemix bei. Aktiviere den
 Einzelnutzermodus nicht auf einem ungeschützten Server: Sein Verbindungs-Endpunkt gibt den gemeinsamen ARL zurück.
 
-Binde eine private Datei mit deinem Deezer-ARL in Downtify ein, nur lesbar
+Binde eine private Datei mit deinem Deezer-ARL in Castify ein, nur lesbar
 für sein Dienstkonto, und setze `DOWNTIFY_DEEMIX_ARL_FILE` auf diesen Pfad.
 Der ARL wird nur beim Öffnen einer Cookie-Sitzung gelesen. Er wird nie in den
 Einstellungen gespeichert, an den Browser zurückgegeben oder protokolliert. Behandle ihn wie ein Passwort;
@@ -27,11 +27,11 @@ Der Verbindungstest stellt keine Downloads in die Warteschlange.
 | ----------------------------- | ------------------------------------------------------------------ |
 | Server-URL                    | Interne Adresse von Deemix, z. B. `http://deemix:6595`             |
 | Download-Ordner in Deemix     | Meist `/downloads`                                                 |
-| Derselbe Ordner in Downtify   | Gemeinsamer Bind-Mount, z. B. `/deemix`; schreibgeschützt wird unterstützt |
+| Derselbe Ordner in Castify   | Gemeinsamer Bind-Mount, z. B. `/deemix`; schreibgeschützt wird unterstützt |
 | Qualität                      | MP3 128, MP3 320 oder FLAC; nicht unterstützte Berechtigungen schlagen ausdrücklich fehl |
 
 Der gemeinsame Ordner wird beim Speichern als externer Bibliotheksordner registriert.
-Die Dateien bleiben dort in der Künstler-/Album-Organisation von Deemix. Downtify bewahrt
+Die Dateien bleiben dort in der Künstler-/Album-Organisation von Deemix. Castify bewahrt
 ihr Format, ihre Tags, ihr Artwork und ihre `.lrc`-Begleitdateien, ohne sie neu zu schreiben.
 Vorhandene eingebettete Songtexte und gleichnamige `.lrc`-Dateien liest der Player.
 Diese Integration löscht, verschiebt oder erzeugt weder Audio noch Songtexte.

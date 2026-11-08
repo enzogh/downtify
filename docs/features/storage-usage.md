@@ -23,16 +23,16 @@ The period buttons at the top (7, 30, 90 or 365 days) set what "in the period" m
 | **Where it is stored** | The library by folder (downloads folder, slskd folder, extra music folders) and by format (MP3, FLAC, M4A…) |
 | **Downloads** | Completed, skipped and failed downloads per day or week, and how much each source downloaded |
 | **Could be cleaned up** | Duplicate songs, slskd working copies, leftover temporary files and orphaned sidecars, each with the files involved |
-| **Folders** | Everything in the folders Downtify writes to, by kind: songs, podcasts, lyrics, images, playlists, artist photos and profiles, temporary files |
+| **Folders** | Everything in the folders Castify writes to, by kind: songs, podcasts, lyrics, images, playlists, artist photos and profiles, temporary files |
 
 Nothing on this page deletes or changes a file: it only tells you where the room goes, so you can decide what to clean up — with the Library's delete, [Replace Audio](replace-audio.md), or by hand.
 
 ## The library, not its working copies
 
-Every number above counts the **library**: the songs the Library page lists, minus the **slskd working copies**. With **Leave files in the slskd folder** off, Downtify copies, tags and verifies each finished Soulseek transfer before removing its source; a source left behind after an older import or a failed cleanup is counted apart as a working copy, so it never looks like library content of its own (see [slskd & Navidrome](slskd-navidrome.md)). A working copy is:
+Every number above counts the **library**: the songs the Library page lists, minus the **slskd working copies**. With **Leave files in the slskd folder** off, Castify copies, tags and verifies each finished Soulseek transfer before removing its source; a source left behind after an older import or a failed cleanup is counted apart as a working copy, so it never looks like library content of its own (see [slskd & Navidrome](slskd-navidrome.md)). A working copy is:
 
 - a source copy left behind by an older import or a failed cleanup;
-- while files aren't left in place, any other audio file in slskd's folder that Downtify doesn't know as a library song.
+- while files aren't left in place, any other audio file in slskd's folder that Castify doesn't know as a library song.
 
 With **Leave files in the slskd folder** on, slskd's folder *is* where those songs live, so it is part of the library.
 
@@ -40,9 +40,9 @@ With **Leave files in the slskd folder** on, slskd's folder *is* where those son
 
 ### Growth over time
 
-Downtify notes the library's size every hour, and keeps the last reading of each day. The chart draws those readings as a solid line.
+Castify notes the library's size every hour, and keeps the last reading of each day. The chart draws those readings as a solid line.
 
-Days before the first reading — every past day, on the first visit — are **estimated** from the songs still in the library: when each was downloaded (known for the downloads made since Downtify started recording which source fetched each file), else the file's modification date. The estimate is drawn dashed: it can only show songs that are still there, so a song deleted since is missing from it. The longer Downtify runs, the more of the chart is measured.
+Days before the first reading — every past day, on the first visit — are **estimated** from the songs still in the library: when each was downloaded (known for the downloads made since Castify started recording which source fetched each file), else the file's modification date. The estimate is drawn dashed: it can only show songs that are still there, so a song deleted since is missing from it. The longer Castify runs, the more of the chart is measured.
 
 ### Downloads
 
@@ -71,7 +71,7 @@ Open a category to see its files, biggest first (the 50 biggest are listed).
 
 ### Folders
 
-The **Folders** section walks the downloads folder, slskd's folder and the lyrics folder (when lyrics are saved in a folder of their own, see [Lyrics](lyrics.md)) and sorts every file by kind. A folder inside another is walked once, as itself. The walk takes a while on a big library, so its result is kept for 10 minutes; **Scan again** walks the folders right away, and **Refresh** at the top reloads everything. Extra music folders aren't walked: they are yours, not Downtify's.
+The **Folders** section walks the downloads folder, slskd's folder and the lyrics folder (when lyrics are saved in a folder of their own, see [Lyrics](lyrics.md)) and sorts every file by kind. A folder inside another is walked once, as itself. The walk takes a while on a big library, so its result is kept for 10 minutes; **Scan again** walks the folders right away, and **Refresh** at the top reloads everything. Extra music folders aren't walked: they are yours, not Castify's.
 
 ## API
 

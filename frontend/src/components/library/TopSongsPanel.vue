@@ -101,10 +101,6 @@
             {{ formatPlayCount(row.song.play_count, locale) }}
           </UiBadge>
         </div>
-        <SimilarButton
-          :artist="(row.song.artists || [])[0] || row.song.artist || ''"
-          :title="row.song.name"
-        />
         <div class="flex w-28 shrink-0 justify-end">
           <DownloadState :song="row.song" />
         </div>
@@ -125,7 +121,6 @@ import UiButton from '../ui/UiButton.vue'
 import UiChips from '../ui/UiChips.vue'
 import UiSwitch from '../ui/UiSwitch.vue'
 import DownloadState from '../search/DownloadState.vue'
-import SimilarButton from '../similar/SimilarButton.vue'
 import SongPlayCell from './SongPlayCell.vue'
 import { computed } from 'vue'
 import { useLibrary } from '/src/model/library'

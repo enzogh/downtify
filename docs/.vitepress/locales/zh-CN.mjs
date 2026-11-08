@@ -4,7 +4,7 @@ export default {
   lang: 'zh-CN',
   description:
     '自托管音乐下载器。粘贴 Spotify 链接，即可获取标签完整的音频文件，无需 API 密钥、账号或 Premium 订阅。',
-  titleSuffix: 'Downtify 文档',
+  titleSuffix: 'Castify 文档',
   containers: {
     info: '说明',
     tip: '提示',
@@ -19,7 +19,7 @@ export default {
     navigation: '导航',
     sidebar: '侧边栏',
     documentation: '文档',
-    docsHome: 'Downtify 文档首页',
+    docsHome: 'Castify 文档首页',
     docsBadge: '文档',
     searchDocs: '搜索文档',
     search: '搜索',
@@ -65,7 +65,6 @@ export default {
       'getting-started/environment-variables.md': '环境变量',
       'features/index.md': '概览',
       'features/charts.md': '排行榜',
-      'features/similar.md': '相似歌曲',
       'features/finder.md': '查找',
       'features/download-settings.md': '下载设置',
       'features/download-queue.md': '下载队列',

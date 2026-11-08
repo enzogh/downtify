@@ -15,7 +15,7 @@ Error: ERROR: [youtube] <id>: Sign in to confirm your age.
 This video may be inappropriate for some users.
 ```
 
-**Cause** — YouTube only serves age-restricted (explicit) tracks to a signed-in adult account. Downtify downloads anonymously by default, so YouTube refuses.
+**Cause** — YouTube only serves age-restricted (explicit) tracks to a signed-in adult account. Castify downloads anonymously by default, so YouTube refuses.
 
 **Fix** — supply YouTube cookies: **Settings** (⚙️) → **YouTube cookies** → **Upload cookies.txt**. See [YouTube Cookies](features/youtube-cookies.md) for how to export the file.
 
@@ -36,7 +36,7 @@ If it still fails with cookies configured, the cookies are stale or the account 
 
 ## A cookies.txt on Windows / Docker Desktop isn't picked up
 
-**Symptom** — `DOWNTIFY_COOKIES_FILE` is set but Downtify behaves as if there were no cookies.
+**Symptom** — `DOWNTIFY_COOKIES_FILE` is set but Castify behaves as if there were no cookies.
 
 **Cause** — the path is a *container* path. A Windows path like `C:\Users\me\cookies.txt` means nothing inside the container, and the file must be bind-mounted before the variable can point at it.
 
@@ -57,7 +57,7 @@ environment:
 
 ## Uploaded cookies disappeared after updating the container
 
-The uploaded file lives in Downtify's data directory (`/data`). If that directory isn't a named volume or bind mount, everything in it — settings and the Playlist Monitor database included — is lost when the container is recreated:
+The uploaded file lives in Castify's data directory (`/data`). If that directory isn't a named volume or bind mount, everything in it — settings and the Playlist Monitor database included — is lost when the container is recreated:
 
 ```yaml
 volumes:
@@ -67,13 +67,13 @@ volumes:
 
 ## "cookies.txt is invalid" when uploading
 
-Downtify validates the file on upload. It must be a **Netscape** cookie jar: one cookie per line, fields separated by tabs, optionally with `#` comments. A JSON export, a spreadsheet, or a copied `Cookie:` header is rejected.
+Castify validates the file on upload. It must be a **Netscape** cookie jar: one cookie per line, fields separated by tabs, optionally with `#` comments. A JSON export, a spreadsheet, or a copied `Cookie:` header is rejected.
 
 Use a browser extension that exports the Netscape format (see [YouTube Cookies](features/youtube-cookies.md)) and export while the tab is on `youtube.com`.
 
 ## A playlist re-downloads tracks I already have
 
-Downtify records every auto-downloaded track in its database, so moving files elsewhere on disk does not trigger a re-download. A track is only re-downloaded after an hourly check finds its file genuinely missing from the downloads directory. See [Playlist Monitor](features/playlist-monitor.md#how-it-works).
+Castify records every auto-downloaded track in its database, so moving files elsewhere on disk does not trigger a re-download. A track is only re-downloaded after an hourly check finds its file genuinely missing from the downloads directory. See [Playlist Monitor](features/playlist-monitor.md#how-it-works).
 
 If files vanish on every restart, the `/downloads` volume isn't persisted — same fix as above.
 
@@ -85,12 +85,12 @@ This usually means the song genuinely isn't on YouTube, or is only uploaded unde
 
 ## Downloaded audio has the wrong metadata or cover
 
-Downtify resolves metadata from Spotify and matches the audio on YouTube Music. A mismatch usually means the match landed on a cover, remix or live version. Downloading from the Spotify **album** link rather than a search result gives the matcher much more to work with (track number, album, release type).
+Castify resolves metadata from Spotify and matches the audio on YouTube Music. A mismatch usually means the match landed on a cover, remix or live version. Downloading from the Spotify **album** link rather than a search result gives the matcher much more to work with (track number, album, release type).
 
 ## Still stuck?
 
 Open an issue at [github.com/henriquesebastiao/downtify/issues](https://github.com/henriquesebastiao/downtify/issues) with:
 
-- the Downtify version (shown at the bottom of the sidebar, and in **Settings → About**),
+- the Castify version (shown at the bottom of the sidebar, and in **Settings → About**),
 - the container logs around the failure (`docker compose logs downtify`),
 - and whether cookies are configured.

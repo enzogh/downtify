@@ -22,7 +22,7 @@ Illessz be egyet ezek közül a **Podcast hozzáadása** mezőbe, vagy írj be e
 | Egy műsor neve (szabad szöveg) | Az iTunes podcastkönyvtárában keres |
 
 ::: info A Spotify-exkluzív műsorok nem tölthetők le
-Egy csak a Spotifyon létező műsort (nyilvános feed nélkül) így jelez a program — a Downtify nem találgat, és nem esik vissza másra. Keresd meg a műsort név szerint, mielőtt feltételeznéd, hogy exkluzív.
+Egy csak a Spotifyon létező műsort (nyilvános feed nélkül) így jelez a program — a Castify nem találgat, és nem esik vissza másra. Keresd meg a műsort név szerint, mielőtt feltételeznéd, hogy exkluzív.
 :::
 
 A megerősítés előtt választasz:
@@ -62,7 +62,7 @@ Az epizódok ugyanabban a beépített lejátszóban szólnak, mint a zene, néh�
 
 - **15 mp vissza / 30 mp előre** a véletlen sorrend és az ismétlés helyett, amelyek egyetlen epizódra nem vonatkoznak.
 - **Lejátszási sebesség** (0,75×–2×), az elalvási időzítő mellett.
-- A **folytatási pozíció** ~10 másodpercenként és szüneteltetéskor még egyszer mentődik a szerverre, így a lap bezárása — vagy a Downtify megnyitása egy másik eszközön — ott folytatja az epizódot, ahol abbahagytad. Egy műsor epizódlistája „Folytatás itt: …” tippet mutat minden félig meghallgatott epizódnál.
+- A **folytatási pozíció** ~10 másodpercenként és szüneteltetéskor még egyszer mentődik a szerverre, így a lap bezárása — vagy a Castify megnyitása egy másik eszközön — ott folytatja az epizódot, ahol abbahagytad. Egy műsor epizódlistája „Folytatás itt: …” tippet mutat minden félig meghallgatott epizódnál.
 
 A szív (kedvelt dalok) és az „ugrás az albumra/előadóra” nem vonatkozik az epizódokra, és nem is jelenik meg náluk.
 
@@ -74,12 +74,12 @@ Az epizódfájlok ugyanazon a letöltési köteten maradnak, `Podcasts/<Műsor>/
 
 ## Címkék
 
-A Downtify azt írja ki, amit a podcast-alkalmazások és médiaszerverek egy epizódnál már olvasnak: a címet, a műsort albumként, a műsor szerzőjét előadóként, a megjelenés évét, az epizód-/évadszámokat, a műsor saját borítóját (a feed saját képének és az iTunes-énak a nagyobbika, ugyanaz az elv, mint a [zenei borítóknál](download-settings.md#cover-art-resolution)) és az epizód leírását megjegyzésként. A műsorjegyzetek egyszerű szövegként tárolódnak — a Downtify eltávolítja belőlük a HTML-t, nem jeleníti meg.
+A Castify azt írja ki, amit a podcast-alkalmazások és médiaszerverek egy epizódnál már olvasnak: a címet, a műsort albumként, a műsor szerzőjét előadóként, a megjelenés évét, az epizód-/évadszámokat, a műsor saját borítóját (a feed saját képének és az iTunes-énak a nagyobbika, ugyanaz az elv, mint a [zenei borítóknál](download-settings.md#cover-art-resolution)) és az epizód leírását megjegyzésként. A műsorjegyzetek egyszerű szövegként tárolódnak — a Castify eltávolítja belőlük a HTML-t, nem jeleníti meg.
 
 ## Jó tudni
 
 - **Nincsenek videó-podcastok.** Az az epizód, amelynek egyetlen melléklete videófájl, teljesen kimarad; csak a hang támogatott.
-- **Nincsenek fejezetek.** A fejezetjelölőket tartalmazó feedek ezeket a Downtifyban még nem kapják meg.
+- **Nincsenek fejezetek.** A fejezetjelölőket tartalmazó feedek ezeket a Castifyban még nem kapják meg.
 - **Nem tükröződik a Navidrome-ban.** A lejátszási listákkal ellentétben a podcast-előfizetések nem kerülnek be egy Navidrome-könyvtárba — az epizódok egyszerű fájlok, amelyeket a médiaszervered már magától lát.
 - A leiratkozás (**⋯ → Leiratkozás**) alapértelmezetten eltávolítja a letöltött epizódokat; válaszd a **Leiratkozás, letöltött epizódok megtartása** lehetőséget, hogy a fájlok a helyükön maradjanak.
 

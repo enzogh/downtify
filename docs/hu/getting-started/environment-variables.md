@@ -4,7 +4,7 @@ icon: lucide/settings
 
 # Környezeti változók
 
-Minden környezeti változó opcionális. A Downtify egyik nélkül is azonnal működik.
+Minden környezeti változó opcionális. A Castify egyik nélkül is azonnal működik.
 
 ## Alapvető
 
@@ -44,7 +44,7 @@ Lásd: [Mobilalkalmazások](../features/mobile-apps.md) és [Felhasználók és 
 | `DOWNTIFY_OIDC_USERNAME_CLAIM` | `preferred_username` | Claim used for new account names, falling back to `email` and then `sub`. |
 | `DOWNTIFY_OIDC_GROUPS_CLAIM` | `groups` | Claim containing group names; dotted paths are supported. |
 | `DOWNTIFY_OIDC_ALLOWED_GROUPS` | _(empty)_ | Comma-separated group allowlist; unset means any authenticated provider identity may sign in. |
-| `DOWNTIFY_OIDC_ADMIN_GROUPS` | _(empty)_ | Comma-separated groups mapped to Downtify admins. Other OIDC users are normal users. |
+| `DOWNTIFY_OIDC_ADMIN_GROUPS` | _(empty)_ | Comma-separated groups mapped to Castify admins. Other OIDC users are normal users. |
 | `DOWNTIFY_TRUSTED_PROXIES` | _(nincs beállítva)_ | A fordított proxyd vesszővel elválasztott címei vagy hálózatai (pl. `172.18.0.0/16,10.0.0.5`). Csak az ezektől érkező kéréseknél hisz az `X-Forwarded-For`, `X-Forwarded-Proto` és `X-Forwarded-Host` fejléceknek — a kliens címénél, amely alapján a bejelentkezési és párosítási kísérleteket korlátozza, a bejelentkezési süti secure jelzőjénél és az azonos webhelyre vonatkozó ellenőrzésnél. Ha nincs beállítva: ezeket a fejléceket figyelmen kívül hagyja. |
 | `DOWNTIFY_DISCOVERY` | `true` | A `false` leállítja a szerver hirdetését a helyi hálózaton (mDNS, `_downtify._tcp`), amelyet az alkalmazások arra használnak, hogy a *Ezen a hálózaton található* alatt felsorolják. A Docker bridge hálózatában a hirdetés amúgy sem jut el a LAN-ra — lásd: [Docker Compose](docker-compose.md#finding-the-server-from-the-apps). |
 | `DOWNTIFY_TRANSCODE_CACHE_MB` | `2048` | A legnagyobb méret MB-ban, amely alatt az átkódolt másolatok gyorsítótárát (`/data/transcode_cache`) tartja; a legrégebben lejátszott másolatok mennek előbb. |
@@ -60,7 +60,7 @@ Lásd: [Zenekuka](../features/music-trash.md). Ki van kapcsolva, hacsak valamely
 
 | Változó | Alapértelmezés | Leírás |
 |----------|---------|-------------|
-| `DOWNTIFY_TRASH` | `false` | A `true` bekapcsolja a zenekukát a letöltési mappára: az eltávolított számok 30 napig megőrzött kukába kerülnek, és a Downtify maga helyezi át a fájlokat. Amíg be van kapcsolva, csak adminisztrátorok távolíthatnak el számokat. |
+| `DOWNTIFY_TRASH` | `false` | A `true` bekapcsolja a zenekukát a letöltési mappára: az eltávolított számok 30 napig megőrzött kukába kerülnek, és a Castify maga helyezi át a fájlokat. Amíg be van kapcsolva, csak adminisztrátorok távolíthatnak el számokat. |
 | `DOWNTIFY_TRASH_CONFIG` | _(nincs beállítva)_ | Egy JSON-fájl útvonala a konténeren belül, amely felsorolja a kuka által lefedett mappákat és hogy hol fut a workere (`embedded` vagy `external`). Elsőbbséget élvez a `DOWNTIFY_TRASH`-sel szemben. Ha a fájl nem olvasható, a szerver nem indul el. Lásd: [A konfigurációs fájl](../features/music-trash.md#the-configuration-file). |
 
 ## Állapotellenőrzés
@@ -84,7 +84,7 @@ A YouTube időnként kihívás elé állítja az automatizált letöltőket. Eze
 |----------|---------|-------------|
 | `DOWNTIFY_FORCE_IPV4` | _(nincs beállítva)_ | Állítsd `1`-re, hogy a yt-dlp csak IPv4-et használjon. Hasznos, ha a gazdagépednek hibás vagy sebességkorlátozott IPv6-címe van. |
 | `DOWNTIFY_YT_SLEEP_REQUESTS` | _(unset)_ | Seconds yt-dlp waits between its requests to YouTube during a download. Unset, downloads aren't paced — until YouTube answers `429 Too Many Requests`: that song is retried once with a 1 s pause, and every download stays paced for the next 15 minutes. Set a number to force a pause always (`1` is the old behaviour, about 7 s slower per song), or `0` to never pause. To space out whole downloads instead, use **Settings → Downloads → Delay between downloads**. |
-| `DOWNTIFY_YT_PLAYER_CLIENTS` | `ios,android,web_embedded,mweb,web,tv` | A kipróbálandó yt-dlp lejátszókliensek vesszővel elválasztott, sorrendezett listája. A Downtify alapértelmezett listája már előnyben részesíti a JavaScript-futtatókörnyezet nélkül működő klienseket. Csak akkor módosítsd, ha tudod, hogy egy adott klienst blokkolnak. |
+| `DOWNTIFY_YT_PLAYER_CLIENTS` | `ios,android,web_embedded,mweb,web,tv` | A kipróbálandó yt-dlp lejátszókliensek vesszővel elválasztott, sorrendezett listája. A Castify alapértelmezett listája már előnyben részesíti a JavaScript-futtatókörnyezet nélkül működő klienseket. Csak akkor módosítsd, ha tudod, hogy egy adott klienst blokkolnak. |
 | `DOWNTIFY_YT_PO_TOKEN` | _(nincs beállítva)_ | A yt-dlp-hez vesszővel elválasztott Proof-of-Origin tokenek, mindegyik `<client>.<context>+<token>` alakban (pl. `mweb.gvs+ABC123`). Csak akkor kellenek, ha a YouTube PO Tokeneket kezd követelni a használt kliensekhez. |
 | `DOWNTIFY_COOKIES_FILE` | _(nincs beállítva)_ | Egy Netscape formátumú `cookies.txt` útvonala **a konténeren belül**. Lehetővé teszi, hogy a yt-dlp valódi böngészőmunkamenetként hitelesítsen — explicit/korhatáros számokhoz és mindig szükséges, amikor a YouTube bejelentkezési falat kényszerít. Elsőbbséget élvez a webes felületen feltöltött fájllal szemben, és a felület ezen részét csak olvashatóvá teszi. Lásd: [YouTube sütik](../features/youtube-cookies.md). |
 | `DOWNTIFY_COOKIES_FROM_BROWSER` | _(nincs beállítva)_ | A böngésző neve, amelyből a sütiket kinyeri (pl. `chrome`, `firefox`). Megköveteli, hogy a böngésző sütitára a konténeren belülről elérhető legyen, ezért Dockerben ritkán használható. |

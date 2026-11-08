@@ -1,6 +1,6 @@
 ---
 layout: home
-title: Downtify
+title: Castify
 titleTemplate: 自托管音乐下载器
 description: 自托管音乐下载器。粘贴 Spotify 链接，即可获取标签完整的音频文件，无需 API 密钥、账号或 Premium 订阅。
 icon: lucide/house
@@ -72,7 +72,7 @@ quickStart:
 
 ## 工作原理
 
-Spotify 官方 API 要求用户订阅 Premium 才能下载。Downtify 使用另一种方式：读取 Spotify 公开 embed 页面提供的元数据，在 YouTube Music 上查找最匹配的音频，再交由 `yt-dlp` 和 `ffmpeg` 处理，并使用 `mutagen` 写入规范标签。整个流程都运行在一个 Docker 容器中。
+Spotify 官方 API 要求用户订阅 Premium 才能下载。Castify 使用另一种方式：读取 Spotify 公开 embed 页面提供的元数据，在 YouTube Music 上查找最匹配的音频，再交由 `yt-dlp` 和 `ffmpeg` 处理，并使用 `mutagen` 写入规范标签。整个流程都运行在一个 Docker 容器中。
 
 <HomePipeline :steps="$frontmatter.pipeline" />
 

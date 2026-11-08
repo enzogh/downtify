@@ -4,7 +4,7 @@
 import { useLocalStorage } from '@vueuse/core'
 import { computed } from 'vue'
 
-// Only hides the lyrics; the files keep the ones Downtify embedded, and
+// Only hides the lyrics; the files keep the ones Castify embedded, and
 // "Download lyrics" (a server setting) is untouched.
 const showLyrics = useLocalStorage('downtify-show-lyrics', true)
 const normalizeVolume = useLocalStorage('downtify-normalize-volume', false)

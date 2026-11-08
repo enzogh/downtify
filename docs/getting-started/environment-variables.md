@@ -4,7 +4,7 @@ icon: lucide/settings
 
 # Environment Variables
 
-All environment variables are optional. Downtify works out of the box without any of them.
+All environment variables are optional. Castify works out of the box without any of them.
 
 ## Core
 
@@ -44,7 +44,7 @@ See [Mobile Apps](../features/mobile-apps.md) and [Users & Sign-in](../features/
 | `DOWNTIFY_OIDC_USERNAME_CLAIM` | `preferred_username` | Claim used for new account names, falling back to `email` and then `sub`. |
 | `DOWNTIFY_OIDC_GROUPS_CLAIM` | `groups` | Claim containing group names; dotted paths are supported. |
 | `DOWNTIFY_OIDC_ALLOWED_GROUPS` | _(empty)_ | Comma-separated group allowlist; unset means any authenticated provider identity may sign in. |
-| `DOWNTIFY_OIDC_ADMIN_GROUPS` | _(empty)_ | Comma-separated groups mapped to Downtify admins. Other OIDC users are normal users. |
+| `DOWNTIFY_OIDC_ADMIN_GROUPS` | _(empty)_ | Comma-separated groups mapped to Castify admins. Other OIDC users are normal users. |
 | `DOWNTIFY_TRUSTED_PROXIES` | _(unset)_ | Comma-separated addresses or networks of your reverse proxy (e.g. `172.18.0.0/16,10.0.0.5`). Only requests from these have their `X-Forwarded-For`, `X-Forwarded-Proto` and `X-Forwarded-Host` headers believed — for the client address that sign-in and pairing attempts are rate-limited by, the secure flag on the sign-in cookie, and the same-site check. Unset: those headers are ignored. |
 | `DOWNTIFY_DISCOVERY` | `true` | `false` stops announcing the server on the local network (mDNS, `_downtify._tcp`), which the apps use to list it under *Found on this network*. In Docker's bridge network the announcement doesn't reach the LAN anyway — see [Docker Compose](docker-compose.md#finding-the-server-from-the-apps). |
 | `DOWNTIFY_TRANSCODE_CACHE_MB` | `2048` | Largest size, in MB, the cache of transcoded copies (`/data/transcode_cache`) is kept under; least recently played copies go first. |
@@ -60,7 +60,7 @@ See [Music Trash](../features/music-trash.md). Off unless one of these is set.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `DOWNTIFY_TRASH` | `false` | `true` turns the music trash on for the downloads folder: removing songs moves them to a trash kept for 30 days, and Downtify itself moves the files. While it's on, only admins remove songs. |
+| `DOWNTIFY_TRASH` | `false` | `true` turns the music trash on for the downloads folder: removing songs moves them to a trash kept for 30 days, and Castify itself moves the files. While it's on, only admins remove songs. |
 | `DOWNTIFY_TRASH_CONFIG` | _(unset)_ | Path, inside the container, of a JSON file listing the folders the trash covers and where its worker runs (`embedded` or `external`). Wins over `DOWNTIFY_TRASH`. A file that can't be read stops the server at start. See [The configuration file](../features/music-trash.md#the-configuration-file). |
 
 ## Health check
@@ -84,11 +84,11 @@ YouTube periodically challenges automated downloaders. These variables give you 
 |----------|---------|-------------|
 | `DOWNTIFY_FORCE_IPV4` | _(unset)_ | Set to `1` to force yt-dlp to use IPv4 only. Useful when your host has a broken or rate-limited IPv6 address. |
 | `DOWNTIFY_YT_SLEEP_REQUESTS` | _(unset)_ | Seconds yt-dlp waits between its requests to YouTube during a download. Unset, downloads aren't paced — until YouTube answers `429 Too Many Requests` or "Sign in to confirm you're not a bot": that song is retried once with a 1 s pause, and every download stays paced for the next 15 minutes. Set a number to force a pause always (`1` is the old behaviour, about 7 s slower per song), or `0` to never pause. To space out whole downloads instead, use **Settings → Downloads → Delay between downloads**. |
-| `DOWNTIFY_YT_PLAYER_CLIENTS` | `ios,android,web_embedded,mweb,web,tv` | Comma-separated list of yt-dlp player clients to try, in order. Downtify's default list already favours clients that work without a JavaScript runtime. Override this only if you know a specific client is being blocked. |
+| `DOWNTIFY_YT_PLAYER_CLIENTS` | `ios,android,web_embedded,mweb,web,tv` | Comma-separated list of yt-dlp player clients to try, in order. Castify's default list already favours clients that work without a JavaScript runtime. Override this only if you know a specific client is being blocked. |
 | `DOWNTIFY_LIVE_PLAYER_CLIENTS` | `web_embedded,android` | YouTube player clients asked first when a song that isn't downloaded starts playing (comma-separated). Fewer clients answer faster; when they have no audio, every client of `DOWNTIFY_YT_PLAYER_CLIENTS` is asked instead. |
 | `DOWNTIFY_YT_PO_TOKEN` | _(unset)_ | Comma-separated Proof-of-Origin tokens for yt-dlp, each in the form `<client>.<context>+<token>` (e.g. `mweb.gvs+ABC123`). Required only if YouTube starts demanding PO Tokens for the clients you're using. |
 | `DOWNTIFY_POT_PROVIDER_URL` | _(unset)_ | URL of a [bgutil PO Token server](https://github.com/Brainicism/bgutil-ytdlp-pot-provider) (e.g. `http://bgutil:4416`, the `brainicism/bgutil-ytdlp-pot-provider` image). yt-dlp then fetches fresh PO Tokens for every download and stream, which keeps "Sign in to confirm you're not a bot" away on datacenter and VPN IPs without cookies. The plugin ships in the Docker image. |
-| `DOWNTIFY_IP_ROTATE_URL` | _(unset)_ | Endpoint Downtify `POST`s to for a new exit IP when YouTube blocks the current one with "Sign in to confirm you're not a bot" — e.g. `http://warp:8081/rotate`, served by `contrib/warp-control` inside a Cloudflare WARP container. The blocked download or stream is retried on the new IP (up to 3 new IPs each, 30 per hour), so the user never sees the error. Parallel downloads blocked together share one rotation. |
+| `DOWNTIFY_IP_ROTATE_URL` | _(unset)_ | Endpoint Castify `POST`s to for a new exit IP when YouTube blocks the current one with "Sign in to confirm you're not a bot" — e.g. `http://warp:8081/rotate`, served by `contrib/warp-control` inside a Cloudflare WARP container. The blocked download or stream is retried on the new IP (up to 3 new IPs each, 30 per hour), so the user never sees the error. Parallel downloads blocked together share one rotation. |
 | `DOWNTIFY_IP_ROTATE_TOKEN` | _(unset)_ | Sent as `Authorization: Bearer <token>` to `DOWNTIFY_IP_ROTATE_URL` (the `WARP_CONTROL_TOKEN` of `contrib/warp-control`). |
 | `DOWNTIFY_COOKIES_FILE` | _(unset)_ | Path to a Netscape-format `cookies.txt` **inside the container**. Lets yt-dlp authenticate as a real browser session — needed for explicit/age-restricted tracks and whenever YouTube enforces a login wall. Takes precedence over a file uploaded in the web UI, and makes that UI section read-only. See [YouTube Cookies](../features/youtube-cookies.md). |
 | `DOWNTIFY_COOKIES_FROM_BROWSER` | _(unset)_ | Browser name to extract cookies from (e.g. `chrome`, `firefox`). Requires the browser's cookie store to be accessible inside the container, so it's rarely usable in Docker. |

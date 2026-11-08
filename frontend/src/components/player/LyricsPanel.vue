@@ -1,77 +1,80 @@
 <template>
-  <div class="flex h-full min-h-0 flex-col">
-    <div
-      v-if="loading"
-      class="flex flex-1 flex-col justify-center gap-5 px-2"
-      aria-hidden="true"
-    >
+  <!-- One keyed view per song: the old lyrics fade out, the next fade in. -->
+  <Transition name="np-swap" mode="out-in" @after-enter="centerActive">
+    <div :key="shownFor" class="flex h-full min-h-0 flex-col">
       <div
-        v-for="n in 6"
-        :key="n"
-        class="h-7 animate-pulse rounded-lg bg-white/10"
-        :style="{ width: `${50 + ((n * 37) % 45)}%` }"
-      />
-    </div>
-
-    <div
-      v-else-if="lines.length"
-      ref="scroller"
-      class="relative flex-1 overflow-y-auto overscroll-contain px-2 py-[min(30vh,9rem)] [mask-image:linear-gradient(transparent,#000_18%,#000_82%,transparent)] [scrollbar-width:none]"
-      @wheel.passive="userScrolled"
-      @touchmove.passive="userScrolled"
-    >
-      <button
-        v-for="(line, i) in lines"
-        :key="i"
-        :ref="(el) => (lineEls[i] = el)"
-        type="button"
-        class="text-display block w-full origin-left py-2 text-left leading-tight font-semibold transition-all duration-300"
-        :class="[
-          compact ? 'now-playing-lyric-compact' : 'now-playing-lyric',
-          i === active
-            ? 'scale-100 text-white'
-            : i < active
-              ? 'scale-[0.97] text-white/35 hover:text-white/60'
-              : 'scale-[0.97] text-white/55 hover:text-white/75',
-        ]"
-        @click="player.seek(line.time)"
+        v-if="loading"
+        class="flex flex-1 flex-col justify-center gap-5 px-2"
+        aria-hidden="true"
       >
-        {{ line.text || '♪' }}
-      </button>
-    </div>
+        <div
+          v-for="n in 6"
+          :key="n"
+          class="h-7 animate-pulse rounded-lg bg-white/10"
+          :style="{ width: `${50 + ((n * 37) % 45)}%` }"
+        />
+      </div>
 
-    <div
-      v-else-if="plain"
-      class="flex-1 overflow-y-auto px-2 py-6 [scrollbar-width:thin]"
-    >
-      <p
-        class="now-playing-lyric text-display leading-relaxed font-medium whitespace-pre-line text-white/80"
+      <div
+        v-else-if="lines.length"
+        ref="scroller"
+        class="relative flex-1 overflow-y-auto overscroll-contain px-2 py-[min(30vh,9rem)] [mask-image:linear-gradient(transparent,#000_18%,#000_82%,transparent)] [scrollbar-width:none]"
+        @wheel.passive="userScrolled"
+        @touchmove.passive="userScrolled"
       >
-        {{ plain }}
-      </p>
-      <p class="mt-6 text-xs text-white/45">
-        {{ t('player.lyricsNotSynced') }}
-      </p>
-    </div>
+        <button
+          v-for="(line, i) in lines"
+          :key="i"
+          :ref="(el) => (lineEls[i] = el)"
+          type="button"
+          class="text-display block w-full origin-left py-2 text-left leading-tight font-semibold transition-all duration-300"
+          :class="[
+            compact ? 'now-playing-lyric-compact' : 'now-playing-lyric',
+            i === active
+              ? 'scale-100 text-white'
+              : i < active
+                ? 'scale-[0.97] text-white/35 hover:text-white/60'
+                : 'scale-[0.97] text-white/55 hover:text-white/75',
+          ]"
+          @click="player.seek(line.time)"
+        >
+          {{ line.text || '♪' }}
+        </button>
+      </div>
 
-    <div
-      v-else
-      class="flex flex-1 flex-col items-center justify-center gap-3 text-center"
-    >
-      <AppIcon name="lyrics" :size="32" class="text-white/35" />
-      <p class="text-sm text-white/60">{{ t('player.noLyrics') }}</p>
-      <p class="max-w-xs text-xs text-white/40">
-        {{ t('player.noLyricsHint') }}
-      </p>
+      <div
+        v-else-if="plain"
+        class="flex-1 overflow-y-auto px-2 py-6 [scrollbar-width:thin]"
+      >
+        <p
+          class="now-playing-lyric text-display leading-relaxed font-medium whitespace-pre-line text-white/80"
+        >
+          {{ plain }}
+        </p>
+        <p class="mt-6 text-xs text-white/45">
+          {{ t('player.lyricsNotSynced') }}
+        </p>
+      </div>
+
+      <div
+        v-else
+        class="flex flex-1 flex-col items-center justify-center gap-3 text-center"
+      >
+        <AppIcon name="lyrics" :size="32" class="text-white/35" />
+        <p class="text-sm text-white/60">{{ t('player.noLyrics') }}</p>
+        <p class="max-w-xs text-xs text-white/40">
+          {{ t('player.noLyricsHint') }}
+        </p>
+      </div>
     </div>
-  </div>
+  </Transition>
 </template>
 
 <script setup>
 import { computed, nextTick, ref, watch } from 'vue'
 import AppIcon from '../ui/AppIcon.vue'
 import { usePlayer } from '/src/model/player'
-import { loadLyrics } from '/src/model/lyrics'
+import { cachedLyrics, loadLyrics } from '/src/model/lyrics'
 import { activeLineIndex } from '/src/lib/lrc'
 import { centerWithin } from '/src/lib/lyricsScroll'
 import { useI18n } from '/src/i18n'
@@ -89,14 +92,21 @@ const scroller = ref(null)
 const lineEls = ref([])
 let manualUntil = 0
 
+// The file whose lyrics are on screen: keys the fade between songs.
+const shownFor = ref('')
+
 watch(
   () => player.currentTrack.value?.file,
   async (file) => {
-    lines.value = []
-    plain.value = ''
     lineEls.value = []
-    if (!file) return
-    loading.value = true
+    manualUntil = 0
+    // Prefetched (the next songs of the queue are): no skeleton at all.
+    const known = cachedLyrics(file)
+    shownFor.value = file || ''
+    lines.value = known?.lines || []
+    plain.value = known?.plain || ''
+    loading.value = !!file && !known
+    if (!file || known) return
     const result = await loadLyrics(file)
     if (player.currentTrack.value?.file !== file) return
     lines.value = result.lines
@@ -115,9 +125,14 @@ function userScrolled() {
   manualUntil = Date.now() + 4000
 }
 
-watch(active, async (index) => {
+function centerActive() {
+  const index = active.value
   if (index < 0 || Date.now() < manualUntil) return
-  await nextTick()
   centerWithin(scroller.value, lineEls.value[index])
+}
+
+watch(active, async () => {
+  await nextTick()
+  centerActive()
 })
 </script>

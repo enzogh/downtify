@@ -15,7 +15,7 @@ Error: ERROR: [youtube] <id>: Sign in to confirm your age.
 This video may be inappropriate for some users.
 ```
 
-**Ok** — a YouTube a korhatáros (explicit) számokat csak bejelentkezett felnőtt fióknak szolgáltatja ki. A Downtify alapértelmezetten névtelenül tölt le, ezért a YouTube elutasítja.
+**Ok** — a YouTube a korhatáros (explicit) számokat csak bejelentkezett felnőtt fióknak szolgáltatja ki. A Castify alapértelmezetten névtelenül tölt le, ezért a YouTube elutasítja.
 
 **Megoldás** — adj meg YouTube-sütiket: **Beállítások** (⚙️) → **YouTube sütik** → **cookies.txt feltöltése**. A fájl exportálásáról lásd: [YouTube sütik](features/youtube-cookies.md).
 
@@ -36,7 +36,7 @@ Ha sütikkel is meghiúsul, a sütik elavultak, vagy maga a fiók nem végezte e
 
 ## A Windowson / Docker Desktopon lévő cookies.txt nem érvényesül
 
-**Tünet** — a `DOWNTIFY_COOKIES_FILE` be van állítva, de a Downtify úgy viselkedik, mintha nem lennének sütik.
+**Tünet** — a `DOWNTIFY_COOKIES_FILE` be van állítva, de a Castify úgy viselkedik, mintha nem lennének sütik.
 
 **Ok** — az útvonal *konténerbeli* útvonal. Egy Windows-útvonal, például `C:\Users\me\cookies.txt`, nem jelent semmit a konténeren belül, és a fájlt csatolni kell, mielőtt a változó rámutathatna.
 
@@ -57,7 +57,7 @@ A `DOWNTIFY_COOKIES_FILE` be van állítva, így az adott telepítés maga kezel
 
 ## A feltöltött sütik eltűntek a konténer frissítése után
 
-A feltöltött fájl a Downtify adatkönyvtárában (`/data`) van. Ha ez a könyvtár nem névvel ellátott kötet vagy bind mount, minden, ami benne van — a beállításokat és a Lejátszási lista figyelő adatbázisát is beleértve — elvész, amikor a konténert újra létrehozod:
+A feltöltött fájl a Castify adatkönyvtárában (`/data`) van. Ha ez a könyvtár nem névvel ellátott kötet vagy bind mount, minden, ami benne van — a beállításokat és a Lejátszási lista figyelő adatbázisát is beleértve — elvész, amikor a konténert újra létrehozod:
 
 ```yaml
 volumes:
@@ -67,13 +67,13 @@ volumes:
 
 ## „cookies.txt is invalid” feltöltéskor
 
-A Downtify feltöltéskor ellenőrzi a fájlt. Netscape sütifájlnak kell lennie: soronként egy süti, a mezők tabulátorral elválasztva, opcionálisan `#` megjegyzésekkel. A JSON-exportot, a táblázatot vagy a bemásolt `Cookie:` fejlécet elutasítja.
+A Castify feltöltéskor ellenőrzi a fájlt. Netscape sütifájlnak kell lennie: soronként egy süti, a mezők tabulátorral elválasztva, opcionálisan `#` megjegyzésekkel. A JSON-exportot, a táblázatot vagy a bemásolt `Cookie:` fejlécet elutasítja.
 
 Használj olyan böngészőbővítményt, amely Netscape formátumban exportál (lásd: [YouTube sütik](features/youtube-cookies.md)), és akkor exportálj, amikor a lap a `youtube.com` oldalon van.
 
 ## Egy lejátszási lista újra letölti a számokat, amelyek már megvannak
 
-A Downtify az adatbázisában rögzíti minden automatikusan letöltött számot, ezért a fájlok lemezen belüli máshová helyezése nem vált ki újraletöltést. Egy számot csak akkor tölt le újra, ha egy óránkénti ellenőrzés megállapítja, hogy a fájlja ténylegesen hiányzik a letöltési könyvtárból. Lásd: [Lejátszási lista figyelő](features/playlist-monitor.md#how-it-works).
+A Castify az adatbázisában rögzíti minden automatikusan letöltött számot, ezért a fájlok lemezen belüli máshová helyezése nem vált ki újraletöltést. Egy számot csak akkor tölt le újra, ha egy óránkénti ellenőrzés megállapítja, hogy a fájlja ténylegesen hiányzik a letöltési könyvtárból. Lásd: [Lejátszási lista figyelő](features/playlist-monitor.md#how-it-works).
 
 Ha a fájlok minden újraindításkor eltűnnek, a `/downloads` kötet nem tartós — ugyanaz a javítás, mint fent.
 
@@ -85,12 +85,12 @@ Ez általában azt jelenti, hogy a dal valóban nincs a YouTube-on, vagy csak eg
 
 ## A letöltött hang metaadatai vagy borítója rossz
 
-A Downtify a metaadatokat a Spotifyból oldja fel, és a hangot a YouTube Musicon illeszti. Eltérés általában azt jelenti, hogy az illesztés feldolgozásra, remixre vagy élő verzióra esett. A Spotify **album** hivatkozásából letöltve a keresési találat helyett az illesztő sokkal több támpontot kap (sorszám, album, kiadás típusa).
+A Castify a metaadatokat a Spotifyból oldja fel, és a hangot a YouTube Musicon illeszti. Eltérés általában azt jelenti, hogy az illesztés feldolgozásra, remixre vagy élő verzióra esett. A Spotify **album** hivatkozásából letöltve a keresési találat helyett az illesztő sokkal több támpontot kap (sorszám, album, kiadás típusa).
 
 ## Még mindig elakadtál?
 
 Nyiss egy issue-t a [github.com/henriquesebastiao/downtify/issues](https://github.com/henriquesebastiao/downtify/issues) oldalon, és add meg:
 
-- a Downtify verzióját (az oldalsáv alján és a **Beállítások → Névjegy** oldalon látható),
+- a Castify verzióját (az oldalsáv alján és a **Beállítások → Névjegy** oldalon látható),
 - a konténernaplókat a hiba környékén (`docker compose logs downtify`),
 - és hogy be vannak-e állítva sütik.

@@ -17,7 +17,7 @@ describe('Simplified Chinese locale', () => {
     setLocale('zh-CN')
     expect(currentLocale.value).toBe('zh-CN')
     expect(t('nav.library')).toBe('音乐库')
-    expect(t('auth.signInTitle')).toBe('登录 Downtify')
+    expect(t('auth.signInTitle')).toBe('登录 Castify')
     expect(t('settings.language')).toBe('语言')
     expect(t('playlists.uploadCover')).toBe('上传封面')
   })

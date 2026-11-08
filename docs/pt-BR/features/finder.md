@@ -12,7 +12,7 @@ Abra **Descobrir** na barra lateral (no celular: **Mais → Descobrir**): a caix
 
 **Encontrar músicas**, no menu **⋯** de um artista sugerido pelo Descobrir, mostra aqui as músicas dele como uma pesquisa: o Deezer é consultado pelo nome do artista, e só as músicas desse artista mesmo — identificadas pelo id dele no Deezer, então um homônimo ou uma música que apenas tenha esse nome ficam de fora — são listadas, até as primeiras centenas.
 
-- **Músicas** tocam por inteiro em streaming e são baixadas como qualquer resultado de pesquisa. O Downtify encontra a música no YouTube Music (com o YouTube como alternativa) pelo título, artista e duração. Clicar no título de uma música abre o álbum dela na visualização em colunas, com a música em destaque.
+- **Músicas** tocam por inteiro em streaming e são baixadas como qualquer resultado de pesquisa. O Castify encontra a música no YouTube Music (com o YouTube como alternativa) pelo título, artista e duração. Clicar no título de uma música abre o álbum dela na visualização em colunas, com a música em destaque.
 - **Álbuns** abrem no artista, com aquele álbum selecionado. O botão de download na capa coloca o álbum inteiro na fila.
 - **Artistas** abrem a visualização em colunas naquele artista.
 
@@ -31,7 +31,7 @@ Em telas largas, arraste a borda entre duas colunas para deixar uma mais larga o
 No celular, as colunas ficam lado a lado e você desliza entre elas. Escolher um álbum leva direto às faixas dele.
 
 ::: info Por que o número de faixas aparece um instante depois
-A listagem da discografia do Deezer não traz o número de faixas, então o Downtify consulta a quantidade de cada álbum separadamente, alguns álbuns por vez, ficando abaixo do limite do Deezer de 50 requisições a cada 5 segundos. Os números aparecem enquanto você olha e são lembrados até o Downtify reiniciar. Um álbum cuja quantidade não pôde ser obtida mostra `…`.
+A listagem da discografia do Deezer não traz o número de faixas, então o Castify consulta a quantidade de cada álbum separadamente, alguns álbuns por vez, ficando abaixo do limite do Deezer de 50 requisições a cada 5 segundos. Os números aparecem enquanto você olha e são lembrados até o Castify reiniciar. Um álbum cuja quantidade não pôde ser obtida mostra `…`.
 :::
 
 ## API

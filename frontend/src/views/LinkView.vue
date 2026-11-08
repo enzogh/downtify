@@ -225,10 +225,6 @@
               >
                 {{ row.song.duration ? formatDuration(row.song.duration) : '' }}
               </span>
-              <SimilarButton
-                :artist="(row.song.artists || [])[0] || row.song.artist || ''"
-                :title="row.song.name"
-              />
               <div class="flex w-28 shrink-0 justify-end">
                 <DownloadState :song="row.song" />
               </div>
@@ -273,7 +269,6 @@ import UiSkeleton from '/src/components/ui/UiSkeleton.vue'
 import CollectionHero from '/src/components/library/CollectionHero.vue'
 import { knownArtistPhoto } from '/src/lib/artistPhotoProxy'
 import DownloadState from '/src/components/search/DownloadState.vue'
-import SimilarButton from '/src/components/similar/SimilarButton.vue'
 import ReleaseCard from '/src/components/search/ReleaseCard.vue'
 import SongPlayCell from '/src/components/library/SongPlayCell.vue'
 import API from '/src/model/api'

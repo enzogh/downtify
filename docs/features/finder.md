@@ -12,7 +12,7 @@ Open **Discover** from the sidebar (on phones: **More → Discover**): the Finde
 
 **Find songs** on an artist Discover suggests (its **⋯** menu) shows that artist's songs here, as a search: Deezer is searched for the artist's name, and only the songs by that very artist — matched by their Deezer id, so a namesake or a song merely called that is left out — are listed, up to the first few hundred.
 
-- **Songs** stream in full and download like any search result. Downtify matches the song on YouTube Music (falling back to YouTube) by title, artist and length. Clicking a song's title opens its album in the column view, with the song highlighted.
+- **Songs** stream in full and download like any search result. Castify matches the song on YouTube Music (falling back to YouTube) by title, artist and length. Clicking a song's title opens its album in the column view, with the song highlighted.
 - **Albums** open on their artist, with that album selected. The download button on the cover queues the whole album.
 - **Artists** open the column view on that artist.
 
@@ -31,7 +31,7 @@ On a wide screen, drag the edge between two columns to make one wider or narrowe
 On a phone, the columns sit side by side and you swipe between them. Picking an album slides over to its tracks.
 
 ::: info Why track counts appear a moment later
-Deezer's discography listing has no track count, so Downtify asks for each album's count separately, a few albums at a time, staying under Deezer's limit of 50 requests every 5 seconds. Counts appear while you look, and are remembered until Downtify restarts. An album whose count couldn't be fetched shows `…`.
+Deezer's discography listing has no track count, so Castify asks for each album's count separately, a few albums at a time, staying under Deezer's limit of 50 requests every 5 seconds. Counts appear while you look, and are remembered until Castify restarts. An album whose count couldn't be fetched shows `…`.
 :::
 
 ## API

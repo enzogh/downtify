@@ -4,7 +4,7 @@ icon: lucide/file-code
 
 # Docker Compose
 
-A Docker Compose a Downtify futtatásának ajánlott módja tartós otthoni szerverbeállításokhoz. Megkönnyíti a frissítéseket, a biztonsági mentéseket és a konfigurációváltoztatásokat.
+A Docker Compose a Castify futtatásának ajánlott módja tartós otthoni szerverbeállításokhoz. Megkönnyíti a frissítéseket, a biztonsági mentéseket és a konfigurációváltoztatásokat.
 
 ## Minimális beállítás
 
@@ -36,7 +36,7 @@ Nyisd meg a **[http://localhost:8000](http://localhost:8000)** címet.
 
 ## slskd-vel (Soulseek)
 
-Ha a [slskd-t hangforrásként](../features/slskd-navidrome.md) használnád, csatold a Downtifyba a slskd letöltési mappáját is — **ugyanazt a gazdagépmappát**, amelybe a slskd-konténered ír:
+Ha a [slskd-t hangforrásként](../features/slskd-navidrome.md) használnád, csatold a Castifyba a slskd letöltési mappáját is — **ugyanazt a gazdagépmappát**, amelybe a slskd-konténered ír:
 
 ```yaml
 services:
@@ -63,7 +63,7 @@ Hogy a Könyvtár felvegyen egy, a gazdagépen már meglévő gyűjteményt, [cs
 
 ## A szerver megtalálása az alkalmazásokból
 
-A [mobilalkalmazások](../features/mobile-apps.md#finding-the-server-on-your-network) mDNS-en keresztül sorolják fel a hálózatodon lévő Downtify-szervereket. A Docker alapértelmezett bridge hálózatában ez a hirdetés sosem hagyja el a Dockert, így a telefonok nem látják. Hogy megjelenjen, futtasd a konténert a gazdagép hálózatán — a `ports:` leképezés ekkor már nem érvényes, és a Downtify közvetlenül a `DOWNTIFY_PORT` porton figyel:
+A [mobilalkalmazások](../features/mobile-apps.md#finding-the-server-on-your-network) mDNS-en keresztül sorolják fel a hálózatodon lévő Castify-szervereket. A Docker alapértelmezett bridge hálózatában ez a hirdetés sosem hagyja el a Dockert, így a telefonok nem látják. Hogy megjelenjen, futtasd a konténert a gazdagép hálózatán — a `ports:` leképezés ekkor már nem érvényes, és a Castify közvetlenül a `DOWNTIFY_PORT` porton figyel:
 
 ```yaml
 services:

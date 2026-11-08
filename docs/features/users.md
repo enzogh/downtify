@@ -4,7 +4,7 @@ icon: lucide/users
 
 # Users & Sign-in
 
-Everyone who uses Downtify signs in with a **username and password**, and each person can have an account of their own. An admin manages the accounts in **Settings → Users** and sees what everyone does in **Settings → Activity**.
+Everyone who uses Castify signs in with a **username and password**, and each person can have an account of their own. An admin manages the accounts in **Settings → Users** and sees what everyone does in **Settings → Activity**.
 
 ## Signing in for the first time
 
@@ -14,10 +14,10 @@ A new server has one account:
 |----------|----------|
 | `admin` | `downtify` |
 
-Sign in with it and **change the password** in **Settings → General → Account**: anyone who knows Downtify knows the default one. Until you do, Downtify reminds you after signing in and shows a warning in Settings.
+Sign in with it and **change the password** in **Settings → General → Account**: anyone who knows Castify knows the default one. Until you do, Castify reminds you after signing in and shows a warning in Settings.
 
 ::: warning Change the default password before exposing the server
-The default password protects nothing. Change it before you make Downtify reachable from outside your home network — and use HTTPS there (see [Behind a reverse proxy](mobile-apps.md#behind-a-reverse-proxy)).
+The default password protects nothing. Change it before you make Castify reachable from outside your home network — and use HTTPS there (see [Behind a reverse proxy](mobile-apps.md#behind-a-reverse-proxy)).
 :::
 
 ### Upgrading from an older version
@@ -122,7 +122,7 @@ There's always at least one admin: the last one can't be deleted or made a user,
 
 ## OpenID Connect
 
-Downtify can add an optional **Continue with identity provider** button to the sign-in page and authenticate through an OpenID Connect provider such as Authelia, Authentik, Keycloak or Pocket ID. Local username/password sign-in stays available unless you disable it. The browser flow uses Authorization Code with PKCE; Downtify verifies the provider's signed ID token before creating its own session cookie.
+Castify can add an optional **Continue with identity provider** button to the sign-in page and authenticate through an OpenID Connect provider such as Authelia, Authentik, Keycloak or Pocket ID. Local username/password sign-in stays available unless you disable it. The browser flow uses Authorization Code with PKCE; Castify verifies the provider's signed ID token before creating its own session cookie.
 
 Set these variables on the server and register the callback URL shown below as an allowed redirect URI in your provider:
 
@@ -131,16 +131,16 @@ Set these variables on the server and register the callback URL shown below as a
 | `DOWNTIFY_OIDC_ISSUER` | Yes | | The exact issuer URL from the provider's discovery document. |
 | `DOWNTIFY_OIDC_CLIENT_ID` | Yes | | The registered client ID. |
 | `DOWNTIFY_OIDC_CLIENT_SECRET` | Yes | | The confidential client's secret. |
-| `DOWNTIFY_OIDC_REDIRECT_URI` | No | Derived from the request | Public callback URL, normally `https://music.example.com/api/auth/oidc/callback`. Set it explicitly when Downtify is behind a reverse proxy. |
+| `DOWNTIFY_OIDC_REDIRECT_URI` | No | Derived from the request | Public callback URL, normally `https://music.example.com/api/auth/oidc/callback`. Set it explicitly when Castify is behind a reverse proxy. |
 | `DOWNTIFY_OIDC_SCOPES` | No | `openid profile email` | Space-separated OIDC scopes. |
-| `DOWNTIFY_OIDC_USERNAME_CLAIM` | No | `preferred_username` | Claim used as the new Downtify username; falls back to `email`, then `sub`. |
+| `DOWNTIFY_OIDC_USERNAME_CLAIM` | No | `preferred_username` | Claim used as the new Castify username; falls back to `email`, then `sub`. |
 | `DOWNTIFY_OIDC_GROUPS_CLAIM` | No | `groups` | Claim containing a string or list of group names. Dotted paths such as `realm_access.roles` are supported. |
 | `DOWNTIFY_OIDC_ALLOWED_GROUPS` | No | _(empty)_ | Comma-separated groups allowed to sign in. Empty means any authenticated identity. |
-| `DOWNTIFY_OIDC_ADMIN_GROUPS` | No | _(empty)_ | Comma-separated groups whose members receive the Downtify admin role. Everyone else is a user. |
+| `DOWNTIFY_OIDC_ADMIN_GROUPS` | No | _(empty)_ | Comma-separated groups whose members receive the Castify admin role. Everyone else is a user. |
 
 For example, the provider's client needs the callback `https://music.example.com/api/auth/oidc/callback` and the scopes `openid profile email`. For a reverse proxy, also configure [`DOWNTIFY_TRUSTED_PROXIES`](../getting-started/environment-variables.md#mobile-apps-and-sign-in) or set the redirect URI explicitly.
 
-The first successful sign-in creates a Downtify account. Identity is keyed by the exact `issuer` and OIDC `sub`, not by a mutable username or email. An existing local account is **never** linked automatically by matching username or email; if a claimed username is already taken, Downtify adds a stable suffix. Admins can still manage local roles in **Settings → Users**, while a configured admin-group mapping is synchronized on every OIDC sign-in. If the mapped group change would remove the server's last admin, Downtify rejects that sign-in until another admin exists.
+The first successful sign-in creates a Castify account. Identity is keyed by the exact `issuer` and OIDC `sub`, not by a mutable username or email. An existing local account is **never** linked automatically by matching username or email; if a claimed username is already taken, Castify adds a stable suffix. Admins can still manage local roles in **Settings → Users**, while a configured admin-group mapping is synchronized on every OIDC sign-in. If the mapped group change would remove the server's last admin, Castify rejects that sign-in until another admin exists.
 
 To turn off username/password login for both the web page and the app's password-token endpoint, set `DOWNTIFY_DISABLE_LOCAL_LOGIN=true`. OIDC and code-based app pairing remain available. This does not revoke existing browser sessions or device tokens. It requires a complete OIDC configuration and is separate from `DOWNTIFY_DISABLE_AUTH`, which removes authentication entirely.
 
@@ -164,7 +164,7 @@ environment:
 
 Then:
 
-- There's no sign-in page: whoever opens Downtify uses it as the first admin (`admin` on a new server).
+- There's no sign-in page: whoever opens Castify uses it as the first admin (`admin` on a new server).
 - The sign-out buttons, **Settings → Users**, the **Account** part of **Settings → General** and **Sign out everywhere** in **Settings → Apps** are gone.
 - Phones can still be paired (to that admin), and **Settings → Activity** still shows what plays where.
 - Theme, language and the other **General** preferences are kept as that admin's.
@@ -183,7 +183,7 @@ Run this on the server — `admin` gets the password `downtify` back (and is rec
 docker exec downtify python main.py auth-reset
 ```
 
-Outside Docker, run `python main.py auth-reset` (or `uv run python main.py auth-reset`) in Downtify's folder. Then sign in and change the password.
+Outside Docker, run `python main.py auth-reset` (or `uv run python main.py auth-reset`) in Castify's folder. Then sign in and change the password.
 
 ## Scripts and the API
 

@@ -4,10 +4,10 @@ icon: lucide/smartphone
 
 # Mobilalkalmazások
 
-A Downtify képes alkalmazásokat kiszolgálni a telefonodon: azok böngészik és streamelik a könyvtárat közvetlenül a szerveredről, és a telefonon tartanak dalokat offline hallgatáshoz. Minden, amire egy alkalmazásnak szüksége van, a **Beállítások → Alkalmazások** alatt állítható be: a telefonok párosítása és a szerver neve. Hogy egyáltalán ki használhatja a szervert, azt a [Felhasználók és bejelentkezés](users.md) fiókjai határozzák meg.
+A Castify képes alkalmazásokat kiszolgálni a telefonodon: azok böngészik és streamelik a könyvtárat közvetlenül a szerveredről, és a telefonon tartanak dalokat offline hallgatáshoz. Minden, amire egy alkalmazásnak szüksége van, a **Beállítások → Alkalmazások** alatt állítható be: a telefonok párosítása és a szerver neve. Hogy egyáltalán ki használhatja a szervert, azt a [Felhasználók és bejelentkezés](users.md) fiókjai határozzák meg.
 
 ::: warning Az alkalmazás még fejlesztés alatt áll
-A **Beállítások → Alkalmazások** *Kísérleti*nek van jelölve. Az ezen az oldalon leírt szerveroldal kész és működik, de **az Android-alkalmazásnak még nem jelent meg egyetlen verziója sem**, így egyelőre nincs mit telepíteni, és a párosítás és a streamelés részletei még változhatnak a Downtify-verziók között.
+A **Beállítások → Alkalmazások** *Kísérleti*nek van jelölve. Az ezen az oldalon leírt szerveroldal kész és működik, de **az Android-alkalmazásnak még nem jelent meg egyetlen verziója sem**, így egyelőre nincs mit telepíteni, és a párosítás és a streamelés részletei még változhatnak a Castify-verziók között.
 
 Az alkalmazás nyíltan készül a [henriquesebastiao/downtify-android](https://github.com/henriquesebastiao/downtify-android) adattárban. Bármi más is építhető ugyanerre az API-ra — lásd a [mobilkliens-szerződést](../mobile-client-contract.md).
 :::
@@ -66,11 +66,11 @@ Az alkalmazások egy dalt Chromecastnak vagy más lejátszónak küldhetnek, ame
 
 ## Fordított proxy mögött
 
-Ha a Downtify nginx, Caddy, Traefik vagy hasonló mögött áll (HTTPS-hez, vagy hogy kívülről elérd):
+Ha a Castify nginx, Caddy, Traefik vagy hasonló mögött áll (HTTPS-hez, vagy hogy kívülről elérd):
 
 - **Engedd át a WebSocketet.** A `/api/ws` megköveteli az `Upgrade`/`Connection` fejlécek továbbítását (a Caddy és a Traefik alapból megteszi; az nginxhez `proxy_set_header Upgrade $http_upgrade; proxy_set_header Connection "upgrade";` kell).
 - **Engedd át a Range-kéréseket** változatlanul, és ne pufferelj hangválaszokat (nginx: `proxy_buffering off;` a `/api/v1/` és a `/downloads/` útvonalra), különben a tekerés és a nagy fájlok szenvednek.
-- **Mondd meg a Downtifynak, melyik proxynak higgyen.** Állítsd a `DOWNTIFY_TRUSTED_PROXIES` értékét a proxy címére (pl. `172.18.0.0/16`). Csak ekkor használja a Downtify az `X-Forwarded-For` fejlécet a kliens címéhez (sebességkorlátok, „utoljára látva” a Párosított alkalmazásoknál), és az `X-Forwarded-Proto`/`X-Forwarded-Host` fejlécet a bejelentkezési süti biztonságossá jelöléséhez és annak ellenőrzéséhez, honnan jönnek a kérések. Nélküle e fejléceket figyelmen kívül hagyja — bárki küldhetné őket.
+- **Mondd meg a Castifynak, melyik proxynak higgyen.** Állítsd a `DOWNTIFY_TRUSTED_PROXIES` értékét a proxy címére (pl. `172.18.0.0/16`). Csak ekkor használja a Castify az `X-Forwarded-For` fejlécet a kliens címéhez (sebességkorlátok, „utoljára látva” a Párosított alkalmazásoknál), és az `X-Forwarded-Proto`/`X-Forwarded-Host` fejlécet a bejelentkezési süti biztonságossá jelöléséhez és annak ellenőrzéséhez, honnan jönnek a kérések. Nélküle e fejléceket figyelmen kívül hagyja — bárki küldhetné őket.
 - **Használj HTTPS-t**, ha a szerver kívülről elérhető: a jelszó és az alkalmazások kulcsai minden kéréssel utaznak.
 
 ## Alkalmazásfejlesztőknek

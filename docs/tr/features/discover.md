@@ -11,7 +11,7 @@ Hesap ya da API anahtarı gerekmez: öneriler, [Deezer](https://www.deezer.com/)
 ## Öneriler nasıl seçilir
 
 1. **Sanatçılarınız tartılır.** Kitaplığınızdaki her sanatçı biraz sayılır ve aşağıdakilerin her biri için, en önemliden en aza doğru, daha çok sayılır:
-    - Downtify oynatıcısında onları ne kadar **dinlediğiniz** (yakın zamandaki dinleme, aylar öncesindekinden daha çok sayılır),
+    - Castify oynatıcısında onları ne kadar **dinlediğiniz** (yakın zamandaki dinleme, aylar öncesindekinden daha çok sayılır),
     - şarkılarından kaçını **beğendiğiniz**,
     - şarkılarından kaçının **kitaplığınızda** olduğu.
 

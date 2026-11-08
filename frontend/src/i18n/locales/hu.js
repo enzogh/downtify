@@ -177,8 +177,6 @@ export default {
     serverHint:
       'Applies to all accounts, browsers and Android clients. Wait for external work to finish before enabling it. The phone still needs access to the server unless tracks are downloaded.',
     empty: 'No matching tracks in the accessible library.',
-    similar:
-      'Similar tracks from saved library tags. No external provider is contacted.',
   },
   playlistFavorites: {
     title: 'Kedvenc lejátszási listák',
@@ -267,7 +265,7 @@ export default {
     search: 'Keresés: „{query}”',
     website: 'Hivatalos weboldal',
     failed: 'Nem sikerült lekérdezni a boltokat.',
-    note: 'A Bandcamp minden eladás nagy részét az előadónak adja. Ezek egyszerű linkek: a Downtify nem árul semmit, és nem keres rajtuk.',
+    note: 'A Bandcamp minden eladás nagy részét az előadónak adja. Ezek egyszerű linkek: a Castify nem árul semmit, és nem keres rajtuk.',
   },
   playlistSearch: {
     placeholder: 'Keresés ebben a listában',
@@ -311,7 +309,6 @@ export default {
     discover: 'Felfedezés',
     podcasts: 'Podcastok',
     charts: 'Toplisták',
-    similar: 'Hasonlók',
     settings: 'Beállítások',
     more: 'Továbbiak',
     playlists: 'Lejátszási listák',
@@ -389,7 +386,7 @@ export default {
       'Keress a YouTube Musicban, vagy illessz be egy Spotify vagy YouTube Music linket egy dalhoz, albumhoz vagy listához.',
     step2Title: 'Töltsd le',
     step2Body:
-      'A Downtify letölti a hangot, és minden fájlt ellát címmel, előadóval, albummal, borítóval és dalszöveggel.',
+      'A Castify letölti a hangot, és minden fájlt ellát címmel, előadóval, albummal, borítóval és dalszöveggel.',
     step3Title: 'Hallgasd bárhol',
     step3Body:
       'Játszd le itt, tartsd szinkronban a listákat a Figyelővel, vagy irányítsd a Jellyfint, Plexet vagy Navidrome-ot a könyvtáradra.',
@@ -423,7 +420,7 @@ export default {
     typeSingle: 'Kislemez',
     typeEp: 'EP',
     unsupportedLink:
-      'A Downtify nem tudja letölteni ezt a linket. Illessz be Spotify számot, albumot vagy listát, YouTube Music linket vagy SoundCloud számot.',
+      'A Castify nem tudja letölteni ezt a linket. Illessz be Spotify számot, albumot vagy listát, YouTube Music linket vagy SoundCloud számot.',
     tipSearchTitle: 'Keresés név szerint',
     tipSearchBody:
       'Írj be előadót, albumot vagy dalt — a találatok a YouTube Musicból jönnek.',
@@ -440,30 +437,6 @@ export default {
     failed: 'Nem sikerült betölteni a listát',
     empty: 'Jelenleg nincs semmi a listán',
     playlist: 'Lejátszási lista',
-  },
-  similar: {
-    title: 'Hasonlók',
-    subtitle: 'A megnevetthez hasonló zeneszámok, a YouTube Music alapján.',
-    artist: 'Előadó',
-    artistPlaceholder: 'Cher',
-    track: 'Szám',
-    trackPlaceholder: 'Believe',
-    searchButton: 'Hasonlók keresése',
-    resultsFor: 'Hasonlók ehhez: “{track}” – {artist}',
-    resultsForArtist: 'Hasonlók: {artist}',
-    resultsForTrack: 'Hasonlók ehhez: “{track}”',
-    failed: 'Nem találhatók hasonló zeneszámok',
-    noResults: 'Nem található hasonló',
-    noResultsHint: 'Ellenőrizze az előadó és a cím helyesírását.',
-    findSimilar: 'Hasonló számok keresése',
-    noDownloadMatch: 'Nincs letölthető találat ehhez: “{name}”',
-    resolveFailed: 'A szám nem készíthető elő letöltésre',
-    tipSimilarTitle: 'Induljon egy számból',
-    tipSimilarBody:
-      'Írja be az előadót vagy a számot — a YouTube a mixével válaszol.',
-    tipDownloadTitle: 'Hallgassa végig',
-    tipDownloadBody:
-      'Minden sor végig szól a lejátszóban; töltse le a kedvenceit.',
   },
   stream: {
     failed: 'Nem játszható le: „{name}”.',
@@ -578,7 +551,7 @@ export default {
     pausedTitle: 'Letöltések szüneteltetve',
     pausedBody: 'A folytatásig nem indul új letöltés.',
     pausedKept:
-      'A várakozó dalok a sorban maradnak, akkor is, ha a Downtify újraindul vagy frissül.',
+      'A várakozó dalok a sorban maradnak, akkor is, ha a Castify újraindul vagy frissül.',
     emptyTitle: 'A sor üres',
     emptyBody:
       'Keress zenét vagy illessz be egy linket — a letöltések itt jelennek meg.',
@@ -655,7 +628,7 @@ export default {
     noMatchesHint: 'Próbálj másik szűrőt.',
     clearFilters: 'Szűrők törlése',
     loadFailed: 'Nem sikerült betölteni a könyvtárat',
-    loadFailedHint: 'Ellenőrizd, hogy fut-e a Downtify, majd próbáld újra.',
+    loadFailedHint: 'Ellenőrizd, hogy fut-e a Castify, majd próbáld újra.',
     maybeDeleted: 'Lehet, hogy törölték vagy átnevezték.',
     backToLibrary: 'Vissza a könyvtárhoz',
     selectAll: 'Összes kijelölése',
@@ -698,7 +671,7 @@ export default {
     replaceAudio: 'Use verified Deemix recordings',
     replaceAudioHint:
       'Match the exact artist, title and album. Keep music in the Deemix folder. Ambiguous matches leave originals untouched. This scan replaces audio instead of retagging it.',
-    deleteOriginals: 'Remove old Downtify audio after import',
+    deleteOriginals: 'Remove old Castify audio after import',
     deleteOriginalsHint:
       'Only remove each verified original after playlists, likes and playback references are updated. External files and sidecars are never removed.',
     replacementProgress:
@@ -710,7 +683,7 @@ export default {
     subtitle:
       'Javítsd fel a már letöltött zenéket, ahelyett hogy újra letöltenéd őket.',
     intro:
-      'A Downtify végigmegy a könyvtár minden számán, és megjavítja azokat, amiket egy régebbi verzió hátrahagyott: kis borítók, hiányzó dalszövegek, hiányos címkék.',
+      'A Castify végigmegy a könyvtár minden számán, és megjavítja azokat, amiket egy régebbi verzió hátrahagyott: kis borítók, hiányzó dalszövegek, hiányos címkék.',
     audioNote:
       'A hangfájlokat soha nem cseréli le: csak a borító, a dalszöveg és a címkék frissülnek. A rossz forrásból letöltött szám úgy marad — töröld, és töltsd le újra.',
     safeNote:
@@ -742,7 +715,7 @@ export default {
       'Megkeresi a dalszöveget azokhoz a számokhoz, amelyeknek nincs, a szolgáltatólistád alapján, és beágyazza, amit talál.',
     metadata: 'Címkék frissítése',
     metadataHint:
-      'Kitölti az albumot, az albumelőadót, a megjelenés dátumát és a sorszámot a Spotifyról. Csak azoknál a számoknál, amelyek Spotify-felvételét a Downtify még ismeri.',
+      'Kitölti az albumot, az albumelőadót, a megjelenés dátumát és a sorszámot a Spotifyról. Csak azoknál a számoknál, amelyek Spotify-felvételét a Castify még ismeri.',
     tracksAffected: { one: '{count} szám', other: '{count} szám' },
     options: 'Beállítások',
     artworkMin: 'Borítók feljavítása ez alatt',
@@ -755,7 +728,7 @@ export default {
     preferYoutube: 'A YouTube Music előnyben',
     recheck: 'Egy szám ne kerüljön újra sorra',
     recheckHint:
-      'A nemrég ellenőrzött szám kimarad a következő átvizsgálásból. Egy újabb Downtify mindig mindent újra megnéz.',
+      'A nemrég ellenőrzött szám kimarad a következő átvizsgálásból. Egy újabb Castify mindig mindent újra megnéz.',
     recheckDays: { one: '{count} napig', other: '{count} napig' },
     recheckNever: 'Mindig minden számot ellenőrizzen',
     start: 'Indítás',
@@ -826,7 +799,7 @@ export default {
     estimatedNote:
       '{date} előtt a méret a könyvtárban még meglévő dalok dátumából becsült, így az azóta törölt dalok kimaradnak belőle.',
     allEstimatedNote:
-      'A Downtify mostantól óránként feljegyzi a könyvtár méretét. A korábbi napok a könyvtárban még meglévő dalok dátumából becsültek.',
+      'A Castify mostantól óránként feljegyzi a könyvtár méretét. A korábbi napok a könyvtárban még meglévő dalok dátumából becsültek.',
     addedPerDay: 'Naponta hozzáadva',
     addedPerWeek: 'Hetente hozzáadva',
     sourcesTitle: 'Forrás szerint',
@@ -865,11 +838,11 @@ export default {
     downloadedBySource: 'Letöltve forrás szerint · {size}',
     noDownloads: 'Ebben az időszakban semmi sem lett letöltve.',
     logEmptyNote:
-      'Még nincs számolt letöltés: a Downtify ettől a verziótól számolja őket.',
+      'Még nincs számolt letöltés: a Castify ettől a verziótól számolja őket.',
     logSinceNote: 'A letöltések számolása {date} óta tart.',
     cleanupTitle: 'Takarítható',
     cleanupHint:
-      'Tárhely, amelyről a Downtify felismeri, hogy felesleges vagy ottmaradt. Innen semmi sem törlődik.',
+      'Tárhely, amelyről a Castify felismeri, hogy felesleges vagy ottmaradt. Innen semmi sem törlődik.',
     duplicatesTitle: 'Ismétlődő dalok',
     duplicatesHint:
       '{exact} kétszer tárolva ugyanazzal a fájllal, {likely} valószínűleg ugyanaz a dal egy másik forrásból. A méret azt mutatja, mennyi szabadulna fel, ha csak a legnagyobb példány maradna.',
@@ -879,7 +852,7 @@ export default {
     },
     workingTitle: 'slskd munkapéldányok',
     workingHint:
-      'Soulseek-átvitelek, amelyek az slskd mappában maradtak, miután a Downtify a könyvtárba másolta őket.',
+      'Soulseek-átvitelek, amelyek az slskd mappában maradtak, miután a Castify a könyvtárba másolta őket.',
     workingInPlace:
       'Az slskd fájlok a helyükön maradnak, így az slskd mappa a könyvtár része.',
     leftoversTitle: 'Ottmaradt ideiglenes fájlok',
@@ -889,7 +862,7 @@ export default {
       'Dalszövegfájlok és albumborítók, amelyek dalai már nincsenek meg.',
     foldersTitle: 'Mappák',
     foldersHint:
-      'Minden, ami a Downtify által írt mappákban van, típus szerint.',
+      'Minden, ami a Castify által írt mappákban van, típus szerint.',
     rescan: 'Újbóli átvizsgálás',
     scanFailed: 'Nem sikerült átvizsgálni a mappákat.',
     scanning: 'Mappák átvizsgálása…',
@@ -1010,7 +983,7 @@ export default {
       unavailable: 'A diagnosztika nem érhető el ehhez a lejátszási listához.',
       items: {
         spotify_tracks: 'Spotify-számok',
-        downloaded: 'Downtify által letöltve',
+        downloaded: 'Castify által letöltve',
         physical_files: 'Megtalált fájlok',
         track_index: 'TrackIndex-hozzárendelések',
         monitor_history: 'Monitor-előzmények',
@@ -1338,9 +1311,9 @@ export default {
     tileSharedHint: '{size}, más figyelésekben is, egyszer tárolva',
     tileFailing: 'Sikertelen',
     unknownNote: {
-      one: '{count} szám még azelőtt került be, hogy a Downtify rögzítette volna, hogyan kerülnek számok egy figyelésbe.',
+      one: '{count} szám még azelőtt került be, hogy a Castify rögzítette volna, hogyan kerülnek számok egy figyelésbe.',
       other:
-        '{count} szám még azelőtt került be, hogy a Downtify rögzítette volna, hogyan kerülnek számok egy figyelésbe.',
+        '{count} szám még azelőtt került be, hogy a Castify rögzítette volna, hogyan kerülnek számok egy figyelésbe.',
     },
     missingNote: {
       one: '{count} szám, amelyet ez a figyelés rögzített, már nincs a lemezen.',
@@ -1372,9 +1345,9 @@ export default {
       other: '{count} az első ellenőrzéssel jött',
     },
     periodUnknown: {
-      one: 'ebből {count} még azelőtt lett rögzítve, hogy a Downtify rögzítette volna, hogyan',
+      one: 'ebből {count} még azelőtt lett rögzítve, hogy a Castify rögzítette volna, hogyan',
       other:
-        'ebből {count} még azelőtt lett rögzítve, hogy a Downtify rögzítette volna, hogyan',
+        'ebből {count} még azelőtt lett rögzítve, hogy a Castify rögzítette volna, hogyan',
     },
     barsPerDay: 'Új számok naponta',
     barsPerWeek: 'Új számok hetente',
@@ -1405,7 +1378,7 @@ export default {
     body: 'A lejátszásilista-figyelések, amelyek a könyvtáradba hozták.',
     failed: 'Nem sikerült betölteni, honnan jött ez a szám.',
     firstTitle: 'Először letöltötte',
-    none: 'Egyik figyelés sem töltötte le: kézzel töltötték le, vagy mielőtt a Downtify ezt rögzítette volna.',
+    none: 'Egyik figyelés sem töltötte le: kézzel töltötték le, vagy mielőtt a Castify ezt rögzítette volna.',
     otherAccount: 'Egy másik fiók figyelése',
     backfill: 'Első ellenőrzés',
     estimated: 'Valószínűleg',
@@ -1456,7 +1429,7 @@ export default {
     detach: 'Leválasztás a forrásról',
     detachTitle: 'Leválasztod a(z) „{name}” listát a forrásáról?',
     detachBody:
-      'Ezután számokat adhatsz hozzá és vehetsz el. A számok maradnak, de a Downtify már nem tartja szinkronban a listát a Spotify-jal vagy a YouTube Musickal, és törli a figyelését, ha volt.',
+      'Ezután számokat adhatsz hozzá és vehetsz el. A számok maradnak, de a Castify már nem tartja szinkronban a listát a Spotify-jal vagy a YouTube Musickal, és törli a figyelését, ha volt.',
     detached: 'A(z) „{name}” mostantól szerkeszthető',
     by: '{owner} listája',
     sharedWithCount: {
@@ -1475,7 +1448,7 @@ export default {
   settings: {
     apps: 'Alkalmazások',
     title: 'Beállítások',
-    subtitle: 'Hogyan keresi, tölti le és címkézi a Downtify a zenéidet.',
+    subtitle: 'Hogyan keresi, tölti le és címkézi a Castify a zenéidet.',
     sections: 'Szakaszok',
     general: 'Általános',
     sources: 'Hangforrások',
@@ -1540,7 +1513,7 @@ export default {
       'Keep audio, artwork and lyrics in the shared Deemix folder, without rewriting its tags. Configure a private ARL file on the server; do not paste it here.',
     deemixUrl: 'Deemix server URL',
     deemixRemote: 'Download folder inside Deemix',
-    deemixLocal: 'Same folder inside Downtify (read-only is supported)',
+    deemixLocal: 'Same folder inside Castify (read-only is supported)',
     deemixQuality: 'Audio quality',
     slskdTitle: 'slskd',
     slskdFormats: 'Formátumok prioritása',
@@ -1565,8 +1538,7 @@ export default {
     slskdUrl: 'Szerver URL',
     slskdKey: 'API-kulcs',
     slskdFolder: 'slskd letöltési mappa',
-    slskdFolderHint:
-      'Az útvonal a Downtify konténeren belül, nem a gazdagépen.',
+    slskdFolderHint: 'Az útvonal a Castify konténeren belül, nem a gazdagépen.',
     slskdTimeout: 'Teljes időkorlát',
     slskdQueuedTimeout: 'Sorban állási időkorlát',
     slskdInPlace: 'Fájlok hagyása az slskd mappában',
@@ -1659,7 +1631,7 @@ export default {
     lyricsNeteaseHint: 'Nagy katalógus, általában időzített',
     navidromeTitle: 'Navidrome',
     navidromeHint:
-      'Tükrözi a letöltött listákat a Navidrome-ba. A zenemappájának tartalmaznia kell a Downtify letöltéseit.',
+      'Tükrözi a letöltött listákat a Navidrome-ba. A zenemappájának tartalmaznia kell a Castify letöltéseit.',
     navidromeEnabled: 'Navidrome használata',
     navidromeEnabledHint: 'Szükséges a szerver URL, felhasználónév és jelszó.',
     navidromeUrl: 'Szerver URL',
@@ -1668,7 +1640,7 @@ export default {
     navidromeAdminUser: 'Adminisztrátor felhasználónév',
     navidromeAdminPassword: 'Adminisztrátor jelszó',
     navidromeAdminHint:
-      'Nem kötelező — a Downtify könyvtárvizsgálatot indíthat, hogy az új dalok hamarabb megjelenjenek.',
+      'Nem kötelező — a Castify könyvtárvizsgálatot indíthat, hogy az új dalok hamarabb megjelenjenek.',
     test: {
       connection_not_deemix: 'The server is not a compatible Deemix instance.',
       quality_unavailable:
@@ -1677,12 +1649,12 @@ export default {
       button: 'Kapcsolat tesztelése',
       testing: 'Tesztelés…',
       needFields: 'Előbb töltsd ki a fenti mezőket.',
-      requestFailed: 'A teszt nem futhatott le. Elérhető még a Downtify?',
+      requestFailed: 'A teszt nem futhatott le. Elérhető még a Castify?',
       connected: 'Kapcsolódva ehhez: {server}.',
       unknown: 'Váratlan válasz a teszttől ({code}).',
       config_missing: 'Előbb töltsd ki a kötelező mezőket.',
       connection_unreachable:
-        'A(z) {url} nem érhető el. Ellenőrizd a címet, és hogy a szerver fut és elérhető a Downtify felől.',
+        'A(z) {url} nem érhető el. Ellenőrizd a címet, és hogy a szerver fut és elérhető a Castify felől.',
       connection_timeout: 'A(z) {url} nem válaszolt időben.',
       connection_bad_url:
         'Ez a cím érvénytelen. http://-vel vagy https://-sel kezdődjön.',
@@ -1700,9 +1672,9 @@ export default {
       soulseek_ok: 'A slskd be van jelentkezve a Soulseekbe.',
       soulseek_offline:
         'A slskd nincs bejelentkezve a Soulseekbe. Addig nem talál semmit.',
-      folder_ok: 'A Downtify olvasni tudja ezt: {detail}.',
+      folder_ok: 'A Castify olvasni tudja ezt: {detail}.',
       folder_missing:
-        'A Downtify nem tudja olvasni ezt: {detail}. Ennek kell lennie annak a mappának, ahová a slskd letölt, és be kell csatolni ebbe a konténerbe.',
+        'A Castify nem tudja olvasni ezt: {detail}. Ennek kell lennie annak a mappának, ahová a slskd letölt, és be kell csatolni ebbe a konténerbe.',
       scan_ok: 'Ez a fiók indíthat könyvtárvizsgálatot.',
       scan_not_admin:
         'Ez a fiók nem indíthat könyvtárvizsgálatot — a Navidrome ezt csak adminisztrátoroknak engedi. Add meg az admin felhasználónevet és jelszót, hogy az új számok előbb megjelenjenek.',
@@ -1724,7 +1696,7 @@ export default {
       'A kinyert borítókat lemezen tartja a gyorsabb betöltésért. Extra helyet foglal.',
     reconcile: 'Könyvtárútvonalak javítása',
     reconcileHint:
-      'Áthelyeztél vagy átneveztél fájlokat a Downtifyon kívül? Ez frissíti a tárolt útvonalakat, és újraírja az M3U és Navidrome listákat, ha be vannak kapcsolva.',
+      'Áthelyeztél vagy átneveztél fájlokat a Castifyon kívül? Ez frissíti a tárolt útvonalakat, és újraírja az M3U és Navidrome listákat, ha be vannak kapcsolva.',
     reconcileButton: 'Útvonalak javítása',
     reconcilePaths: {
       one: '{count} útvonal frissítve.',
@@ -1743,10 +1715,10 @@ export default {
     reconcileError: 'Nem sikerült javítani a könyvtárútvonalakat.',
     externalLibraryTitle: 'Meglévő zenei mappák',
     externalLibraryHint:
-      'Mappák a már megvan zenéiddel. A fájlok a helyükön maradnak; a Downtify olvassa a címkéiket, és a megfelelő előadókhoz sorolja őket. Dockerben a konténeren belüli útvonalat add meg, és csatold a gazdagép mappáját.',
+      'Mappák a már megvan zenéiddel. A fájlok a helyükön maradnak; a Castify olvassa a címkéiket, és a megfelelő előadókhoz sorolja őket. Dockerben a konténeren belüli útvonalat add meg, és csatold a gazdagép mappáját.',
     externalLibraryFolder: 'Mappa',
     externalLibraryFolderHint:
-      'A Downtify konténeren belüli útvonal, nem a gazdagépen.',
+      'A Castify konténeren belüli útvonal, nem a gazdagépen.',
     externalLibraryPlaceholder: '/music/collection',
     externalLibraryAdd: 'Mappa hozzáadása',
     externalLibraryRemove: 'Mappa eltávolítása',
@@ -1793,7 +1765,7 @@ export default {
     version: 'Verzió: {version}',
     upToDate: 'Naprakész',
     source: 'Forráskód',
-    sourceHint: 'A Downtify nyílt forráskódú.',
+    sourceHint: 'A Castify nyílt forráskódú.',
     docs: 'Dokumentáció',
     docsHint: 'Telepítés, beállítások és API-referencia.',
     openDocs: 'Dokumentáció megnyitása',
@@ -1806,7 +1778,7 @@ export default {
     networkHint: 'Hogyan érhető el ez a szerver. Ezt csak az adminok látják.',
     experimental: 'Kísérleti',
     experimentalHint:
-      'A mobilalkalmazások még készülnek. Az Android-alkalmazásnak még nincs kiadott verziója, és a párosítás és a lejátszás módja még változhat a Downtify verziói között.',
+      'A mobilalkalmazások még készülnek. Az Android-alkalmazásnak még nincs kiadott verziója, és a párosítás és a lejátszás módja még változhat a Castify verziói között.',
   },
   shortcuts: {
     title: 'Billentyűparancsok',
@@ -1829,7 +1801,7 @@ export default {
     help: 'Billentyűparancsok',
   },
   auth: {
-    signInTitle: 'Bejelentkezés a Downtify-ba',
+    signInTitle: 'Bejelentkezés a Castify-ba',
     signInBody: 'Jelentkezz be a felhasználóneveddel és a jelszavaddal.',
     signInBodyOidcOnly: 'Jelentkezz be az identitásszolgáltatóddal.',
     username: 'Felhasználónév',
@@ -1843,7 +1815,7 @@ export default {
     tooMany: 'Túl sok próbálkozás. Várj néhány percet, és próbáld újra.',
     forgotHint:
       'Elfelejtetted az admin jelszavát? Futtasd a „python main.py auth-reset” parancsot a szerveren.',
-    noticeTitle: 'A Downtify-ban mostantól felhasználói fiókok vannak',
+    noticeTitle: 'A Castify-ban mostantól felhasználói fiókok vannak',
     noticeBody:
       'Mostantól mindenki felhasználónévvel és jelszóval jelentkezik be, és egy admin a Beállítások → Felhasználók alatt fiókot hozhat létre másoknak. Jelentkezz be ezzel:',
     noticeKeptPassword: 'a korábban beállított jelszó',
@@ -1853,7 +1825,7 @@ export default {
   },
   apps: {
     serverGroup: 'Ez a szerver',
-    serverGroupHint: 'Hogyan látják ezt a szervert a Downtify alkalmazások.',
+    serverGroupHint: 'Hogyan látják ezt a szervert a Castify alkalmazások.',
     serverName: 'Szerver neve',
     serverNameHint:
       'Megjelenik az alkalmazásokban és amikor szervereket keresnek a hálózaton.',
@@ -1877,7 +1849,7 @@ export default {
     signOutEverywhereTitle: 'Kijelentkezés mindenhol?',
     pairTitle: 'Telefon párosítása',
     pairBody:
-      'A Downtify alkalmazásban válassza a „Kód beolvasása” lehetőséget, és irányítsa ide a kamerát.',
+      'A Castify alkalmazásban válassza a „Kód beolvasása” lehetőséget, és irányítsa ide a kamerát.',
     qrLabel: 'QR-kód a párosításhoz',
     orTypeCode: 'vagy írja be ezt a kódot',
     expiresIn: 'Lejár: {time}',
@@ -1892,7 +1864,7 @@ export default {
       'Megszünteti az összes alkalmazásod párosítását, és minden böngészőből kijelentkeztet, ebből is.',
     signOutEverywhereBody:
       'Az alkalmazásaidat újra párosítanod kell, és minden böngészőben újra be kell jelentkezned.',
-    androidGroup: 'Downtify Androidra',
+    androidGroup: 'Castify Androidra',
     androidHint:
       'Alkalmazás, amely közvetlenül erről a szerverről böngészi és játssza a könyvtáradat.',
     androidBody:
@@ -1925,7 +1897,7 @@ export default {
   },
   port: {
     label: 'Port',
-    hint: 'A port, amelyen a Downtify figyel. A szerver indulásakor lép életbe, vagy azonnal a „Mentés és újraindítás” gombbal.',
+    hint: 'A port, amelyen a Castify figyel. A szerver indulásakor lép életbe, vagy azonnal a „Mentés és újraindítás” gombbal.',
     locked:
       'A szerveren a(z) {source} állítja be. Távolítsd el, hogy itt választhass portot.',
     save: 'Mentés',
@@ -1935,18 +1907,18 @@ export default {
     saved: 'A(z) {port} port mentve a következő indításhoz',
     invalid: '{min} és {max} közötti portot adj meg',
     dockerWarning:
-      'A Downtify Dockerben fut: állítsd a porttovábbítást ugyanarra a portra (ports: ÚJ:ÚJ), és hozd létre újra a konténert, vagy használd a network_mode: host beállítást - különben a Downtify elérhetetlen lesz. A DOWNTIFY_PORT beállítása visszaállítja a régi portot.',
+      'A Castify Dockerben fut: állítsd a porttovábbítást ugyanarra a portra (ports: ÚJ:ÚJ), és hozd létre újra a konténert, vagy használd a network_mode: host beállítást - különben a Castify elérhetetlen lesz. A DOWNTIFY_PORT beállítása visszaállítja a régi portot.',
     proxyWarning:
-      'A Downtify-t más címen éred el (fordított proxy vagy porttovábbítás): azt is irányítsd az új portra.',
+      'A Castify-t más címen éred el (fordított proxy vagy porttovábbítás): azt is irányítsd az új portra.',
     confirmTitle: 'Újraindítod a(z) {port} porton?',
     confirmBody:
       'A folyamatban lévő letöltések leállnak, és minden oldal és alkalmazás újracsatlakozik az új porton.',
     restartingTitle: 'Újraindítás a(z) {port} porton',
     restartingBody:
-      'Várakozás a Downtify-ra… Ez az oldal magától megnyitja az új címet.',
+      'Várakozás a Castify-ra… Ez az oldal magától megnyitja az új címet.',
     unreachable:
-      'A Downtify még nem válaszol az új porton. Próbáld az új címet, vagy nézd meg a szerver naplóit.',
-    openNew: 'A Downtify újraindul. Nyisd meg az új címén:',
+      'A Castify még nem válaszol az új porton. Próbáld az új címet, vagy nézd meg a szerver naplóit.',
+    openNew: 'A Castify újraindul. Nyisd meg az új címén:',
   },
   account: {
     title: 'Fiók',
@@ -1970,7 +1942,7 @@ export default {
     needsAdmin: 'Ezt csak admin teheti meg',
     defaultPasswordTitle: 'Változtasd meg az alapértelmezett jelszót',
     defaultPasswordBody:
-      '{name} az alapértelmezett jelszóval jelentkezett be, amelyet bárki ismer, aki ismeri a Downtify-t. Változtasd meg a Beállítások → Általános alatt.',
+      '{name} az alapértelmezett jelszóval jelentkezett be, amelyet bárki ismer, aki ismeri a Castify-t. Változtasd meg a Beállítások → Általános alatt.',
     later: 'Később',
     changePassword: 'Jelszó módosítása',
   },
@@ -2187,7 +2159,7 @@ export default {
     notFound: 'Már nem vagy feliratkozva erre a műsorra',
     noEpisodesTitle: 'Még nincs epizód',
     noEpisodesBody:
-      'A Downtify a saját ütemezése szerint ellenőrzi ezt a hírcsatornát.',
+      'A Castify a saját ütemezése szerint ellenőrzi ezt a hírcsatornát.',
     download: 'Epizód letöltése',
     downloadFailed: 'Az epizódot nem sikerült letölteni',
     played: 'Meghallgatva',

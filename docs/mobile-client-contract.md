@@ -6,7 +6,7 @@ icon: lucide/file-code
 
 Global server pause uses `GET /api/queue/state` and web-administrator-only `POST /api/queue/pause` / `POST /api/queue/resume`. GET adds `global_pause_supported`, `monitors_paused` and request-specific `can_control` to the existing `paused`, `state`, `active` fields. A paired device token remains client-scoped even when its account is an administrator, so it must not be offered this server administration action. Phone offline copies have their own controls. See the [queue API](api-reference.md#get-apiqueuestate).
 
-How an app (the official Android client, or any other) talks to a Downtify server: **discover → check → sign in (or pair) → sync → stream → report**. Everything here is `api_version` **1**; the full request/response shapes of each endpoint are in the [API reference](api-reference.md#server-and-sign-in). User-facing behaviour (signing in, pairing, accounts, transcoding limits) is described in [Mobile Apps](features/mobile-apps.md) and [Users & Sign-in](features/users.md).
+How an app (the official Android client, or any other) talks to a Castify server: **discover → check → sign in (or pair) → sync → stream → report**. Everything here is `api_version` **1**; the full request/response shapes of each endpoint are in the [API reference](api-reference.md#server-and-sign-in). User-facing behaviour (signing in, pairing, accounts, transcoding limits) is described in [Mobile Apps](features/mobile-apps.md) and [Users & Sign-in](features/users.md).
 
 ## 1. Discover
 
@@ -16,7 +16,7 @@ Browse mDNS/DNS-SD for **`_downtify._tcp`** (Android: `NsdManager`). Each servic
 |-----|---------|---------|
 | `id` | `cf12b3c4…` | Server id (stable; same as `server_id` below) |
 | `name` | `nas` | Server name, editable in Settings → Apps |
-| `version` | `3.2.0` | Downtify version |
+| `version` | `3.2.0` | Castify version |
 | `api` | `1` | API version |
 | `port` | `8000` | Port |
 | `scheme` | `http` | `http` (a reverse proxy in front may offer `https` — the user types that address) |
@@ -44,6 +44,7 @@ Build the address from the resolved host + `port`. Discovery is a convenience: a
 ```
 
 - Refuse to continue when `product` isn't `Downtify` or `api_version` is higher than the app knows.
+- `product` stays `Downtify` even though the server is now branded Castify: it identifies the API, not the brand, and installed apps compare it as is.
 - Remember `server_id`: it identifies the server across address changes. When the address later answers with a different id, it's a different server.
 - Use `capabilities` to enable features (e.g. hide mobile-data quality when `transcoding.available` is false).
 - `capabilities.password_sign_in` decides how the app asks for credentials next: a username and password when it is `true`, a pairing code otherwise (accounts turned off, local password login disabled, or a server older than `POST /api/auth/token`).

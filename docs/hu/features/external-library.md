@@ -4,7 +4,7 @@ icon: lucide/folder-plus
 
 # Meglévő zenemappák
 
-A Downtify Könyvtára a letöltött fájlokból épül fel — plusz azokból a **további mappákból**, amelyekre rámutatsz. Ezek a mappák nem másolódnak a `/downloads` könyvtárba. A Downtify beolvassa minden fájl címkéit (cím, előadó, album, sorszám, év), kihagyja a már meglévő dalokat, a többit pedig a megfelelő előadó alá sorolja a Könyvtárban és a lejátszóban.
+A Castify Könyvtára a letöltött fájlokból épül fel — plusz azokból a **további mappákból**, amelyekre rámutatsz. Ezek a mappák nem másolódnak a `/downloads` könyvtárba. A Castify beolvassa minden fájl címkéit (cím, előadó, album, sorszám, év), kihagyja a már meglévő dalokat, a többit pedig a megfelelő előadó alá sorolja a Könyvtárban és a lejátszóban.
 
 ## Mappák hozzáadása
 
@@ -29,14 +29,14 @@ A szinkronizálás nem másol fájlokat a `/downloads` könyvtárba. Ha a mappa 
 :::
 
 ::: tip Csak olvasható csatolások
-Csatold a gyűjteményt `:ro` móddal, ha nem akarod, hogy a Downtify újraírja az MP3-akat. A szinkronizálás ettől még indexeli őket. Tedd a `.lrc` fájlokat a [dalszövegmappába](lyrics.md#sidecar-lrc-file) (kapcsold ki a **.lrc a hangfájl mellett** beállítást). A hiányzó borítók a `/data/cover_cache` alá kerülnek (a Könyvtár borítóvégpontja), nem az MP3-ba. Az iTunes-műfaj a Downtify könyvtári metaadat-adatbázisában tárolódik, nem a fájlban. Egy csak olvasható fájl mellett már meglévő `.lrc` a dalszövegmappába **másolódik**, és a helyén marad.
+Csatold a gyűjteményt `:ro` móddal, ha nem akarod, hogy a Castify újraírja az MP3-akat. A szinkronizálás ettől még indexeli őket. Tedd a `.lrc` fájlokat a [dalszövegmappába](lyrics.md#sidecar-lrc-file) (kapcsold ki a **.lrc a hangfájl mellett** beállítást). A hiányzó borítók a `/data/cover_cache` alá kerülnek (a Könyvtár borítóvégpontja), nem az MP3-ba. Az iTunes-műfaj a Castify könyvtári metaadat-adatbázisában tárolódik, nem a fájlban. Egy csak olvasható fájl mellett már meglévő `.lrc` a dalszövegmappába **másolódik**, és a helyén marad.
 :::
 
 ## Mit csinál a szinkronizálás
 
 1. Végigjárja az összes beállított mappát lejátszható hang után (ugyanazok a formátumok, mint a könyvtár többi részénél: MP3, M4A, FLAC, OGG, WAV, AAC, OPUS).
 2. Beolvassa a beágyazott címkéket. A cím/előadó nélküli fájl a fájlnévben lévő `Előadó - Cím` mintára támaszkodik, mint a könyvtár többi sora.
-3. **Kihagy** egy fájlt, ha a könyvtárban már megvan az a dal (azonos előadó + cím, és néhány másodpercen belüli hossz, ha mindkettő ismert) — akár a Downtify töltötte le, akár másik további mappából származik.
+3. **Kihagy** egy fájlt, ha a könyvtárban már megvan az a dal (azonos előadó + cím, és néhány másodpercen belüli hossz, ha mindkettő ismert) — akár a Castify töltötte le, akár másik további mappából származik.
 4. **Párosítja az előadókat** a könyvtárban már meglévő nevekkel (a `The Beatles` és a `Beatles` egy előadó lesz). Az ismert előadóval nem egyező nevek új előadóként jelennek meg. Az új előadók sorba kerülnek ugyanarra a profilkitöltésre (fotó/bemutatkozás, ha ezek a beállítások be vannak kapcsolva), mint egy befejezett letöltés.
 5. **Úgy címkéz, mint egy letöltés**, ha a mappa írható. Minden importált számhoz ugyanazokat a dalszövegszolgáltatókat, ugyanazt a borítókeresést (csak ha a fájlnak nincs képe) és ugyanazt az iTunes-műfajkeresést használja, mint egy letöltés. A dalszöveg a fájlba kerül; egy `.lrc` kísérőfájl a hang mellé vagy a Beállításokban választott [dalszövegmappába](lyrics.md#sidecar-lrc-file) íródik. A borító és a műfaj a [Letöltési beállításokat](download-settings.md) követi (`download_cover_art`, `download_lyrics`). **Csak olvasható** csatolásnál az MP3 nem íródik újra: a hiányzó borító a `/data/cover_cache` alá kerül, a műfaj a könyvtári katalógusban tárolódik, a `.lrc` fájlok pedig a dalszövegmappába mennek, ha választottál egyet. A keresések **Párhuzamos letöltések** méretű kötegekben futnak; a Beállítások → Letöltések és fájlok alatti **Szünet a szinkronizálás között** vár a kötegek között, hogy a nagy mappák ne ütközzenek a szolgáltatók kéréskorlátaiba.
 6. Érvényteleníti a könyvtár útvonal-gyorsítótárát, hogy a Könyvtár oldal és a lejátszó a szokásos rövid szkennelési TTL megvárása nélkül lássa az eredményt.
@@ -45,7 +45,7 @@ A szinkronizálás **a háttérben** fut. Elhagyhatod a Beállításokat; ha vis
 
 Futtasd újra a **Mappák szinkronizálása** funkciót, miután további fájlokat tettél ezekbe a mappákba. A mappalista szinkronizálás nélküli mentése is beveszi őket a következő könyvtárszkennelésbe (körülbelül egy perc, vagy a következő letöltés/törlés).
 
-Egy mappa törlése a listáról **leválasztja**: ezek a számok eltűnnek a Könyvtárból és a lejátszóból, a Downtify által készített kiegészítők (`.lrc` kísérőfájlok, gyorsítótárazott borítók) pedig törlődnek. A lemezen lévő hangfájlok a helyükön maradnak.
+Egy mappa törlése a listáról **leválasztja**: ezek a számok eltűnnek a Könyvtárból és a lejátszóból, a Castify által készített kiegészítők (`.lrc` kísérőfájlok, gyorsítótárazott borítók) pedig törlődnek. A lemezen lévő hangfájlok a helyükön maradnak.
 
 A nem létező vagy nem olvasható mappákat a szinkronizálás után jelzi; a többit ettől még szkenneli.
 

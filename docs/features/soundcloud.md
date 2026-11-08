@@ -5,7 +5,7 @@ icon: lucide/cloud
 
 # SoundCloud
 
-SoundCloud works in Downtify two ways: you can paste a **SoundCloud track link** to download that track, and you can turn **SoundCloud** on as an audio source, so songs from Spotify, YouTube Music or Deezer links that can't be found elsewhere are looked for there too. Both use [yt-dlp](https://github.com/yt-dlp/yt-dlp)'s SoundCloud support; no SoundCloud account is needed.
+SoundCloud works in Castify two ways: you can paste a **SoundCloud track link** to download that track, and you can turn **SoundCloud** on as an audio source, so songs from Spotify, YouTube Music or Deezer links that can't be found elsewhere are looked for there too. Both use [yt-dlp](https://github.com/yt-dlp/yt-dlp)'s SoundCloud support; no SoundCloud account is needed.
 
 ## Turning it on
 
@@ -55,6 +55,6 @@ In the **Queue**, **Force audio source** under a failed song also takes a SoundC
 ## Limits
 
 - **Sound quality.** SoundCloud streams lossy audio (usually 128–160 kbps). Choosing FLAC or a higher bitrate in [Download settings](download-settings.md) converts it, but can't add back what the stream doesn't have.
-- **SoundCloud Go+ tracks.** Without a Go+ subscription, SoundCloud only plays a 30-second preview of these. Downtify refuses the preview instead of saving it as the song: the download fails with *only streams a 30-second preview on SoundCloud*.
+- **SoundCloud Go+ tracks.** Without a Go+ subscription, SoundCloud only plays a 30-second preview of these. Castify refuses the preview instead of saving it as the song: the download fails with *only streams a 30-second preview on SoundCloud*.
 - **Region blocks.** A track the uploader blocked in your server's country fails like an unavailable video.
 - **No watching.** A SoundCloud link is one track, so there's nothing for the [Playlist Monitor](playlist-monitor.md) to watch.

@@ -6,7 +6,7 @@ icon: lucide/file-code
 
 全局服务器暂停功能使用 `GET /api/queue/state`，以及仅限 Web 管理员调用的 `POST /api/queue/pause` / `POST /api/queue/resume`。GET 响应会在现有 `paused`、`state`、`active` 字段基础上增加 `global_pause_supported`、`monitors_paused` 和针对当前请求的 `can_control`。配对设备令牌始终仅限客户端使用，即使所属账户是管理员，也不得向该客户端提供服务器管理操作。手机上的离线副本有独立控制。参见[队列 API](api-reference.md#get-apiqueuestate)。
 
-本协议说明应用（官方 Android 客户端或其他客户端）如何与 Downtify 服务器通信：**发现 → 检查 → 登录（或配对）→ 同步 → 串流 → 上报**。以下内容中的 `api_version` 均为 **1**；各端点完整的请求/响应结构见 [API 参考](api-reference.md#server-and-sign-in)。面向用户的行为（登录、配对、账户、转码限制）见[移动应用](features/mobile-apps.md)和[用户与登录](features/users.md)。
+本协议说明应用（官方 Android 客户端或其他客户端）如何与 Castify 服务器通信：**发现 → 检查 → 登录（或配对）→ 同步 → 串流 → 上报**。以下内容中的 `api_version` 均为 **1**；各端点完整的请求/响应结构见 [API 参考](api-reference.md#server-and-sign-in)。面向用户的行为（登录、配对、账户、转码限制）见[移动应用](features/mobile-apps.md)和[用户与登录](features/users.md)。
 
 ## 1. 发现服务器
 
@@ -16,7 +16,7 @@ icon: lucide/file-code
 |-----|---------|---------|
 | `id` | `cf12b3c4…` | 服务器 ID（稳定不变；与下文 `server_id` 相同） |
 | `name` | `nas` | 服务器名称，可在 Settings → Apps 中编辑 |
-| `version` | `3.2.0` | Downtify 版本 |
+| `version` | `3.2.0` | Castify 版本 |
 | `api` | `1` | API 版本 |
 | `port` | `8000` | 端口 |
 | `scheme` | `http` | `http`（前置反向代理可能提供 `https`，由用户输入该地址） |
@@ -43,7 +43,7 @@ icon: lucide/file-code
 }
 ```
 
-- 如果 `product` 不是 `Downtify`，或 `api_version` 高于客户端支持版本，则拒绝继续。
+- 如果 `product` 不是 `Castify`，或 `api_version` 高于客户端支持版本，则拒绝继续。
 - 保存 `server_id`：即使地址发生变化，它仍可用于识别服务器。若之后该地址返回了不同 ID，则说明连接的是另一台服务器。
 - 根据 `capabilities` 启用相应功能（例如，若 `transcoding.available` 为 `false`，则隐藏移动网络音质选项）。
 - `capabilities.password_sign_in` 决定下一步如何向用户索取凭据：值为 `true` 时询问用户名和密码，否则请求配对码（账户功能已关闭、本地密码登录被禁用，或服务器早于 `POST /api/auth/token`）。

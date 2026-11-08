@@ -4,7 +4,7 @@ icon: lucide/file-code
 
 # Docker Compose
 
-Docker Compose est la méthode recommandée pour exécuter Downtify sur un serveur domestique permanent. Il facilite les mises à jour, les sauvegardes et les changements de configuration.
+Docker Compose est la méthode recommandée pour exécuter Castify sur un serveur domestique permanent. Il facilite les mises à jour, les sauvegardes et les changements de configuration.
 
 ## Configuration minimale
 
@@ -36,7 +36,7 @@ Ouvrez **[http://localhost:8000](http://localhost:8000)**.
 
 ## Avec slskd (Soulseek)
 
-Pour utiliser [slskd comme source audio](../features/slskd-navidrome.md), montez aussi le dossier de téléchargements de slskd dans Downtify — le **même dossier de l’hôte** que celui où écrit votre conteneur slskd :
+Pour utiliser [slskd comme source audio](../features/slskd-navidrome.md), montez aussi le dossier de téléchargements de slskd dans Castify — le **même dossier de l’hôte** que celui où écrit votre conteneur slskd :
 
 ```yaml
 services:
@@ -63,7 +63,7 @@ Pour que la Bibliothèque prenne en compte une collection que vous gardez déjà
 
 ## Trouver le serveur depuis les applications
 
-Les [applications mobiles](../features/mobile-apps.md#finding-the-server-on-your-network) listent les serveurs Downtify de votre réseau via mDNS. Dans le réseau bridge par défaut de Docker, cette annonce ne quitte jamais Docker, donc les téléphones ne la voient pas. Pour qu’elle apparaisse, exécutez le conteneur sur le réseau de l’hôte — l’association `ports:` ne s’applique alors plus, et Downtify écoute directement sur `DOWNTIFY_PORT` :
+Les [applications mobiles](../features/mobile-apps.md#finding-the-server-on-your-network) listent les serveurs Castify de votre réseau via mDNS. Dans le réseau bridge par défaut de Docker, cette annonce ne quitte jamais Docker, donc les téléphones ne la voient pas. Pour qu’elle apparaisse, exécutez le conteneur sur le réseau de l’hôte — l’association `ports:` ne s’applique alors plus, et Castify écoute directement sur `DOWNTIFY_PORT` :
 
 ```yaml
 services:

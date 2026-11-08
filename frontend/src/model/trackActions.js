@@ -205,16 +205,6 @@ export function useTrackActions() {
           }),
       },
       {
-        label: t('similar.findSimilar'),
-        icon: 'wand',
-        hidden: !track.artist || !track.title,
-        action: () =>
-          router.push({
-            name: 'Similar',
-            query: { artist: track.artist, track: track.title },
-          }),
-      },
-      {
         // Where to buy it, to support the artist.
         label: t('buy.menu'),
         icon: 'tag',

@@ -10,7 +10,7 @@ icon: lucide/trending-up
 
 Open **Charts** from the sidebar (or the **More** sheet on phones). Four tabs read from the same chart: **Tracks**, **Albums**, **Artists** and **Playlists**.
 
-- **Tracks** — a ranked list. Press one (or tap its row) to stream it in full from YouTube, straight into the built-in player, before it's downloaded. Downloading a row works the same way a search result does: Downtify searches YouTube Music (falling back to standard YouTube) for the closest match to the track's title, artist and length, the same [matching pipeline](../how-it-works.md) every other download uses. Once a track is downloaded, its row plays it from your library instead of streaming it.
+- **Tracks** — a ranked list. Press one (or tap its row) to stream it in full from YouTube, straight into the built-in player, before it's downloaded. Downloading a row works the same way a search result does: Castify searches YouTube Music (falling back to standard YouTube) for the closest match to the track's title, artist and length, the same [matching pipeline](../how-it-works.md) every other download uses. Once a track is downloaded, its row plays it from your library instead of streaming it.
 - **Albums**, **Artists** and **Playlists** — cover-art grids. Clicking one resolves it ([`GET /api/url/resolve`](../api-reference.md#get-apiurlresolve)) exactly as if you'd pasted that Deezer link into the search box yourself: its tracklist loads, ready to pick from and download.
 
 ## Why tracks download (and play in full) directly from here, but albums, artists and playlists open a page first

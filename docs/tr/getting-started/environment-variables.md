@@ -4,7 +4,7 @@ icon: lucide/settings
 
 # Ortam değişkenleri
 
-Tüm ortam değişkenleri isteğe bağlıdır. Downtify hiçbiri olmadan kutudan çıktığı gibi çalışır.
+Tüm ortam değişkenleri isteğe bağlıdır. Castify hiçbiri olmadan kutudan çıktığı gibi çalışır.
 
 ## Temel
 
@@ -44,7 +44,7 @@ environment:
 | `DOWNTIFY_OIDC_USERNAME_CLAIM` | `preferred_username` | Claim used for new account names, falling back to `email` and then `sub`. |
 | `DOWNTIFY_OIDC_GROUPS_CLAIM` | `groups` | Claim containing group names; dotted paths are supported. |
 | `DOWNTIFY_OIDC_ALLOWED_GROUPS` | _(empty)_ | Comma-separated group allowlist; unset means any authenticated provider identity may sign in. |
-| `DOWNTIFY_OIDC_ADMIN_GROUPS` | _(empty)_ | Comma-separated groups mapped to Downtify admins. Other OIDC users are normal users. |
+| `DOWNTIFY_OIDC_ADMIN_GROUPS` | _(empty)_ | Comma-separated groups mapped to Castify admins. Other OIDC users are normal users. |
 | `DOWNTIFY_TRUSTED_PROXIES` | _(ayarlı değil)_ | Ters proxy’nizin virgülle ayrılmış adresleri veya ağları (örn. `172.18.0.0/16,10.0.0.5`). Yalnızca bunlardan gelen isteklerin `X-Forwarded-For`, `X-Forwarded-Proto` ve `X-Forwarded-Host` başlıklarına inanılır — oturum açma ve eşleştirme denemelerinin sınırlandığı istemci adresi, oturum çerezindeki secure bayrağı ve aynı site denetimi için. Ayarlı değilse: bu başlıklar yok sayılır. |
 | `DOWNTIFY_DISCOVERY` | `true` | `false`, uygulamaların *Bu ağda bulundu* altında listelemek için kullandığı sunucu duyurusunu yerel ağda (mDNS, `_downtify._tcp`) durdurur. Docker’ın köprü ağında duyuru zaten LAN’a ulaşmaz — [Docker Compose](docker-compose.md#finding-the-server-from-the-apps) sayfasına bakın. |
 | `DOWNTIFY_TRANSCODE_CACHE_MB` | `2048` | Dönüştürülmüş kopyaların önbelleğinin (`/data/transcode_cache`) altında tutulduğu en büyük boyut, MB cinsinden; en uzun süredir çalınmayan kopyalar önce gider. |
@@ -60,7 +60,7 @@ Bkz. [Müzik çöp kutusu](../features/music-trash.md). Bunlardan biri ayarlanma
 
 | Değişken | Varsayılan | Açıklama |
 |----------|---------|-------------|
-| `DOWNTIFY_TRASH` | `false` | `true`, indirme klasörü için müzik çöp kutusunu açar: kaldırılan parçalar 30 gün saklanan bir çöp kutusuna taşınır ve dosyaları Downtify kendisi taşır. Açıkken parçaları yalnızca yöneticiler kaldırabilir. |
+| `DOWNTIFY_TRASH` | `false` | `true`, indirme klasörü için müzik çöp kutusunu açar: kaldırılan parçalar 30 gün saklanan bir çöp kutusuna taşınır ve dosyaları Castify kendisi taşır. Açıkken parçaları yalnızca yöneticiler kaldırabilir. |
 | `DOWNTIFY_TRASH_CONFIG` | _(ayarlı değil)_ | Çöp kutusunun kapsadığı klasörleri ve çalışanının nerede çalıştığını (`embedded` veya `external`) listeleyen JSON dosyasının konteyner içindeki yolu. `DOWNTIFY_TRASH` ayarının önüne geçer. Okunamayan bir dosya sunucunun başlamasını engeller. Bkz. [Yapılandırma dosyası](../features/music-trash.md#the-configuration-file). |
 
 ## Sağlık denetimi
@@ -84,7 +84,7 @@ YouTube otomatik indiricileri düzenli olarak zorlar. Bu değişkenler, varsayı
 |----------|---------|-------------|
 | `DOWNTIFY_FORCE_IPV4` | _(ayarlı değil)_ | yt-dlp’yi yalnızca IPv4 kullanmaya zorlamak için `1` yapın. Ana makinenizin IPv6 adresi bozuk veya hız sınırlıysa işe yarar. |
 | `DOWNTIFY_YT_SLEEP_REQUESTS` | _(unset)_ | Seconds yt-dlp waits between its requests to YouTube during a download. Unset, downloads aren't paced — until YouTube answers `429 Too Many Requests`: that song is retried once with a 1 s pause, and every download stays paced for the next 15 minutes. Set a number to force a pause always (`1` is the old behaviour, about 7 s slower per song), or `0` to never pause. To space out whole downloads instead, use **Settings → Downloads → Delay between downloads**. |
-| `DOWNTIFY_YT_PLAYER_CLIENTS` | `ios,android,web_embedded,mweb,web,tv` | Denenecek yt-dlp oynatıcı istemcilerinin virgülle ayrılmış, sıralı listesi. Downtify’ın varsayılan listesi zaten JavaScript çalışma zamanı olmadan çalışan istemcileri tercih eder. Yalnızca belirli bir istemcinin engellendiğini biliyorsanız değiştirin. |
+| `DOWNTIFY_YT_PLAYER_CLIENTS` | `ios,android,web_embedded,mweb,web,tv` | Denenecek yt-dlp oynatıcı istemcilerinin virgülle ayrılmış, sıralı listesi. Castify’ın varsayılan listesi zaten JavaScript çalışma zamanı olmadan çalışan istemcileri tercih eder. Yalnızca belirli bir istemcinin engellendiğini biliyorsanız değiştirin. |
 | `DOWNTIFY_YT_PO_TOKEN` | _(ayarlı değil)_ | yt-dlp için virgülle ayrılmış Proof-of-Origin belirteçleri; her biri `<client>.<context>+<token>` biçiminde (örn. `mweb.gvs+ABC123`). Yalnızca YouTube kullandığınız istemciler için PO Token talep etmeye başlarsa gerekir. |
 | `DOWNTIFY_COOKIES_FILE` | _(ayarlı değil)_ | **Kapsayıcının içindeki** Netscape biçimli bir `cookies.txt` yolu. yt-dlp’nin gerçek bir tarayıcı oturumu olarak kimlik doğrulamasını sağlar — açık içerikli/yaş sınırlı parçalar ve YouTube’un oturum açma duvarı uyguladığı her durum için gerekli. Web arayüzünde yüklenen bir dosyaya üstündür ve arayüzün o bölümünü salt okunur yapar. [YouTube çerezleri](../features/youtube-cookies.md) sayfasına bakın. |
 | `DOWNTIFY_COOKIES_FROM_BROWSER` | _(ayarlı değil)_ | Çerezlerin alınacağı tarayıcının adı (örn. `chrome`, `firefox`). Tarayıcının çerez deposunun kapsayıcı içinden erişilebilir olmasını gerektirir; bu yüzden Docker’da nadiren kullanılabilir. |

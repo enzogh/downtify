@@ -4,7 +4,7 @@ icon: lucide/download
 
 # 설치
 
-Downtify를 실행하는 가장 빠른 방법은 `docker run` 명령 하나입니다. 호스트에 Python, Node.js 등 다른 시스템 의존성이 필요 없고, 모든 것이 이미지 안에 들어 있습니다.
+Castify를 실행하는 가장 빠른 방법은 `docker run` 명령 하나입니다. 호스트에 Python, Node.js 등 다른 시스템 의존성이 필요 없고, 모든 것이 이미지 안에 들어 있습니다.
 
 ## 사전 준비
 
@@ -37,7 +37,7 @@ docker run -d \
 
 ## 사용자 지정 포트
 
-Downtify를 다른 호스트 포트로 노출하려면 `-p`의 왼쪽을 바꾸세요.
+Castify를 다른 호스트 포트로 노출하려면 `-p`의 왼쪽을 바꾸세요.
 
 ```bash
 docker run -d \

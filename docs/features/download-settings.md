@@ -31,7 +31,7 @@ Available for lossy formats (MP3, M4A, OGG, OPUS). FLAC and Original ignore this
 The downloaded audio is encoded at the bitrate you pick, for every lossy format. If the audio YouTube serves already has the target codec at roughly that bitrate (e.g. its ~128 kbps AAC stream for **M4A @ 128**), it's kept as-is instead of being re-encoded, since a re-encode would only lose quality.
 
 ::: info A higher bitrate doesn't add quality
-YouTube's audio tops out at roughly **128–160 kbps** (AAC or Opus), and Downtify always downloads the best stream available. Encoding it at 256 or 320 kbps gives larger files that preserve that source faithfully, but can't restore detail the source never had. Pick a lower bitrate if file size matters more to you.
+YouTube's audio tops out at roughly **128–160 kbps** (AAC or Opus), and Castify always downloads the best stream available. Encoding it at 256 or 320 kbps gives larger files that preserve that source faithfully, but can't restore detail the source never had. Pick a lower bitrate if file size matters more to you.
 :::
 
 ## Output filename template
@@ -86,7 +86,7 @@ The limit applies to every batch download — playlist/album downloads, the batc
 
 ## Delay between downloads
 
-Makes Downtify wait a configurable number of seconds after finishing one song before starting the next one, instead of firing requests back-to-back.
+Makes Castify wait a configurable number of seconds after finishing one song before starting the next one, instead of firing requests back-to-back.
 
 | Value | Behaviour |
 |-------|-----------|
@@ -103,7 +103,7 @@ The same idea, for **[Existing music folders](external-library.md)** rather than
 
 ## Download cover art
 
-Controls whether Downtify embeds album art at all. On by default. Turn it off to skip fetching cover art entirely — every other tag (title, artist, album, year, lyrics) still embeds normally, but files end up smaller and download slightly faster since the cover image is never requested or written.
+Controls whether Castify embeds album art at all. On by default. Turn it off to skip fetching cover art entirely — every other tag (title, artist, album, year, lyrics) still embeds normally, but files end up smaller and download slightly faster since the cover image is never requested or written.
 
 Turning this off also skips writing the standalone `cover.jpg` that the *Organize by album* option (see [File Organization](file-organization.md)) produces, and the [player](player.md)/library will show no artwork for tracks downloaded this way (the fallback music-note icon instead).
 
@@ -111,33 +111,33 @@ That `cover.jpg` is shared by every track in the album folder. Deleting a track 
 
 ## Cover art resolution
 
-Only relevant when **Download cover art** (above) is on. Sets the target size (width and height, in pixels) Downtify requests for embedded cover art sourced from **YouTube Music** or **Deezer**. Pick a preset (300, 600, 800, 1000, 1200) or drag the slider anywhere from **300 to 1200**; the current value in pixels is shown next to it. Default is 600.
+Only relevant when **Download cover art** (above) is on. Sets the target size (width and height, in pixels) Castify requests for embedded cover art sourced from **YouTube Music** or **Deezer**. Pick a preset (300, 600, 800, 1000, 1200) or drag the slider anywhere from **300 to 1200**; the current value in pixels is shown next to it. Default is 600.
 
-This is useful when feeding your library into a media server like Plex that displays cover art at higher resolution than Downtify embedded by default.
+This is useful when feeding your library into a media server like Plex that displays cover art at higher resolution than Castify embedded by default.
 
 The two sources apply the setting differently, since only one of them can actually be resized on demand:
 
 - **YouTube Music** thumbnails can be resized by editing their URL — verified against the live CDN, the higher presets return genuinely more detail (not just upscaling) for most album art, up to the source image's own resolution.
-- **Deezer** only ever offers four fixed sizes for any track, album, artist or playlist cover (56, 250, 500 and 1000px) — there's no in-between size to request. Downtify picks the smallest of those four that's still at least as big as the configured value (asking for 300px gets the 500px one, since there's no exact 300px size); asking for more than 1000px still gets the 1000px one, Deezer's largest.
+- **Deezer** only ever offers four fixed sizes for any track, album, artist or playlist cover (56, 250, 500 and 1000px) — there's no in-between size to request. Castify picks the smallest of those four that's still at least as big as the configured value (asking for 300px gets the 500px one, since there's no exact 300px size); asking for more than 1000px still gets the 1000px one, Deezer's largest.
 
 ::: info Spotify-sourced covers aren't affected
-Downtify already embeds the **largest** cover Spotify's public embed API offers for Spotify-resolved tracks/albums/playlists — there's no larger size to request. This setting only raises the ceiling for tracks resolved through YouTube Music (free-text search, YouTube URLs, and any Spotify track re-matched to YouTube Music for the actual audio) or Deezer (a pasted Deezer link, or a track from [Charts](charts.md)).
+Castify already embeds the **largest** cover Spotify's public embed API offers for Spotify-resolved tracks/albums/playlists — there's no larger size to request. This setting only raises the ceiling for tracks resolved through YouTube Music (free-text search, YouTube URLs, and any Spotify track re-matched to YouTube Music for the actual audio) or Deezer (a pasted Deezer link, or a track from [Charts](charts.md)).
 :::
 
 Changing this value in Settings takes effect immediately, including for the currently-open search page — it does not require re-downloading anything already on disk.
 
 ## Overwrite existing files
 
-On by default, matching Downtify's historical behavior: every download runs through the pipeline (audio fetch, tagging, cover art, lyrics) and overwrites whatever file already sits at the computed output path.
+On by default, matching Castify's historical behavior: every download runs through the pipeline (audio fetch, tagging, cover art, lyrics) and overwrites whatever file already sits at the computed output path.
 
 ### What "again" actually means
 
-With it on, a re-download is a **completely fresh run**, not a repair of the existing file. Downtify does not look at what you already have: it searches your [audio sources](#audio-provider) in their configured order — so if slskd is first, slskd is tried first, not only as a fallback — fetches the audio from whichever source answers, and writes today's tags, cover art and lyrics onto it.
+With it on, a re-download is a **completely fresh run**, not a repair of the existing file. Castify does not look at what you already have: it searches your [audio sources](#audio-provider) in their configured order — so if slskd is first, slskd is tried first, not only as a fallback — fetches the audio from whichever source answers, and writes today's tags, cover art and lyrics onto it.
 
 That has one consequence worth knowing before re-downloading a large library:
 
 ::: warning A different format leaves the old file behind
-The new file is written at the path the [filename template](#output-filename-template) produces, with the **new** audio's extension. Downtify overwrites the old file only when both end up with the same extension.
+The new file is written at the path the [filename template](#output-filename-template) produces, with the **new** audio's extension. Castify overwrites the old file only when both end up with the same extension.
 
 So re-downloading `Artist - Song.mp3` when slskd answers with a FLAC gives you **both** `Artist - Song.mp3` (the old one, untouched) and `Artist - Song.flac`. With [Leave slskd files in place](slskd-navidrome.md#leave-files-in-place) on — the default — the slskd file isn't even copied into your downloads folder, so the old file stays exactly where it was and the new one lives under `slskd/`.
 
@@ -146,13 +146,13 @@ Nothing is lost, but you get duplicates. To actually replace a file, see [Replac
 
 ### Cover art comes from Spotify or YouTube Music, not from the file
 
-Whatever artwork the downloaded audio carries — including a high-resolution cover embedded in an slskd file — is **discarded and replaced** during tagging. Downtify always embeds the cover it fetches for the track from Spotify or YouTube Music (or SoundCloud's artwork, for a SoundCloud link), at the [cover art resolution](#cover-art-resolution) you configured (600 px by default). The same applies to the title, artists, album and the rest of the tags: the source's own tags are not kept.
+Whatever artwork the downloaded audio carries — including a high-resolution cover embedded in an slskd file — is **discarded and replaced** during tagging. Castify always embeds the cover it fetches for the track from Spotify or YouTube Music (or SoundCloud's artwork, for a SoundCloud link), at the [cover art resolution](#cover-art-resolution) you configured (600 px by default). The same applies to the title, artists, album and the rest of the tags: the source's own tags are not kept.
 
 If what you want is bigger artwork on files you already have, re-downloading is the long way around. [Upgrade library](library-upgrade.md) does exactly that — it compares each file's embedded cover against Spotify, iTunes and YouTube Music, writes the largest one, fills in missing lyrics and tags, and never touches the audio.
 
 Turn this off to never download a song that is already on disk. This matters most when downloading a playlist, importing a [CSV library](library-import.md), or letting the [Playlist Monitor](playlist-monitor.md) sync playlists that share tracks with each other or with songs already in your library — with the option on, every one of those duplicates is downloaded again.
 
-With it off, Downtify looks for the song **anywhere in the download folder**, not just where the new download would go:
+With it off, Castify looks for the song **anywhere in the download folder**, not just where the new download would go:
 
 - the library root (single-track downloads),
 - any playlist's folder (playlist downloads, CSV imports, Playlist Monitor),
@@ -172,17 +172,17 @@ When a song is skipped:
 
 ## Audio provider
 
-The default audio provider is **YouTube Music**. Downtify uses [`ytmusicapi`](https://ytmusicapi.readthedocs.io/) to search for the best match by comparing track duration. When YouTube Music has no acceptable match, or only one whose duration is far off (a likely different recording), Downtify automatically falls back to searching standard YouTube — see [How it works](../how-it-works.md#fallback-to-standard-youtube).
+The default audio provider is **YouTube Music**. Castify uses [`ytmusicapi`](https://ytmusicapi.readthedocs.io/) to search for the best match by comparing track duration. When YouTube Music has no acceptable match, or only one whose duration is far off (a likely different recording), Castify automatically falls back to searching standard YouTube — see [How it works](../how-it-works.md#fallback-to-standard-youtube).
 
 **Settings → Audio source** can also use standard **YouTube** only, **SoundCloud**, **slskd** (Soulseek) or **Deemix**, as an ordered fallback list — see [slskd & Navidrome](slskd-navidrome.md#audio-sources-and-fallback-order).
 
 ### Force a specific audio source
 
-If Downtify picks the wrong YouTube Music video (e.g. a cover instead of the original), you can override it per track:
+If Castify picks the wrong YouTube Music video (e.g. a cover instead of the original), you can override it per track:
 
 **Option A — paste a YouTube Music URL directly**
 
-Paste `https://music.youtube.com/watch?v=…` (or a regular `youtube.com/watch?v=…` URL) into the search bar and hit download. Downtify fetches the audio from that exact video.
+Paste `https://music.youtube.com/watch?v=…` (or a regular `youtube.com/watch?v=…` URL) into the search bar and hit download. Castify fetches the audio from that exact video.
 
 ::: info
 When downloading via YouTube URL, metadata (title, artist, cover) comes from YouTube rather than Spotify. For clean tags, use Option B.
@@ -194,11 +194,11 @@ When downloading via YouTube URL, metadata (title, artist, cover) comes from You
 2. Paste a YouTube or YouTube Music URL into the input that appears — or a SoundCloud track URL, when the **SoundCloud** source is on.
 3. Press **Enter** or click **Apply**.
 
-Downtify re-downloads the track using that exact video (or SoundCloud track) while keeping all Spotify metadata (title, artist, album, cover art, lyrics).
+Castify re-downloads the track using that exact video (or SoundCloud track) while keeping all Spotify metadata (title, artist, album, cover art, lyrics).
 
 ## Embedded metadata
 
-Downtify embeds the following tags in every downloaded file, regardless of format:
+Castify embeds the following tags in every downloaded file, regardless of format:
 
 | Tag | Source |
 |-----|--------|

@@ -21,17 +21,17 @@ jobs:
       - uses: actions/first-interaction@v3
         with:
           issue_message: |
-            ## 👋 Welcome to Downtify, and thanks for opening your first issue!
+            ## 👋 Welcome to Castify, and thanks for opening your first issue!
 
-            Thanks for taking the time to report this. Bug reports, ideas and questions from users are how Downtify gets better. A maintainer will triage this issue as soon as possible. In the meantime, here's what helps us act on it quickly.
+            Thanks for taking the time to report this. Bug reports, ideas and questions from users are how Castify gets better. A maintainer will triage this issue as soon as possible. In the meantime, here's what helps us act on it quickly.
 
             ### 🐛 Reporting a bug?
 
             Please make sure the issue includes:
 
-            - **Downtify version** and **how you run it** (Docker, Docker Compose, Umbrel, local…).
+            - **Castify version** and **how you run it** (Docker, Docker Compose, Umbrel, local…).
             - **Steps to reproduce**, plus what you expected and what happened instead.
-            - **The Spotify link** that triggers it, if any. Downtify only uses public endpoints, so the link isn't sensitive.
+            - **The Spotify link** that triggers it, if any. Castify only uses public endpoints, so the link isn't sensitive.
             - **Logs** from around the time it failed:
 
             ```bash
@@ -45,7 +45,7 @@ jobs:
             💡 Suggesting a feature?
 
             - Start with the problem you're trying to solve, then the solution you have in mind. That makes it easier to find the best fit for the project.
-            - Downtify deliberately works without Spotify credentials, so features that need Spotify Premium or the Spotify Web API won't be accepted.
+            - Castify deliberately works without Spotify credentials, so features that need Spotify Premium or the Spotify Web API won't be accepted.
 
             ❓ Asking a question?
 
@@ -63,9 +63,9 @@ jobs:
 
             Thanks again, and welcome! 🎶
           pr_message: |
-            ## 👋 Welcome to Downtify, and thanks for your first pull request!
+            ## 👋 Welcome to Castify, and thanks for your first pull request!
 
-            It's great to have you here. Every contribution (code, tests, docs or translations) helps keep Downtify alive, and we're glad you chose to spend your time on it. A maintainer will review this PR as soon as possible. In the meantime, here's what helps it get merged
+            It's great to have you here. Every contribution (code, tests, docs or translations) helps keep Castify alive, and we're glad you chose to spend your time on it. A maintainer will review this PR as soon as possible. In the meantime, here's what helps it get merged
             quickly.
 
             ### ✅ Before review

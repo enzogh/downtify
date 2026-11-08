@@ -21,14 +21,14 @@ Sanatçı izlemelerinin nasıl çalıştığı için bkz. [Sanatçı İzleme](#a
 
 ## Nasıl çalışır
 
-Downtify, 60 saniyede bir çalışan bir arka plan görevi tutar. Her taramada, etkin her izlemenin (yapılandırılmış aralığına göre) denetlenme zamanının gelip gelmediğine bakar. Bir *çalma listesinin* zamanı geldiğinde Downtify:
+Castify, 60 saniyede bir çalışan bir arka plan görevi tutar. Her taramada, etkin her izlemenin (yapılandırılmış aralığına göre) denetlenme zamanının gelip gelmediğine bakar. Bir *çalma listesinin* zamanı geldiğinde Castify:
 
 1. Spotify, Deezer veya YouTube Music’ten tam parça listesini getirir
 2. Onu zaten indirilmiş parçalar kümesiyle karşılaştırır
 3. Yeni parçaları elle indirmeyle aynı işlem hattıyla indirir
 4. Çalma listesinin M3U dosyasını günceller (M3U üretimi etkinse)
 
-İzlemeyi eklediğiniz anda başlayan ilk denetim, çalma listesinde zaten olan her şeyi indirir; sonraki denetimler yalnızca o zamandan beri eklenenleri indirir. “Zaten indirilmiş” olan, indirme klasörüne bakılarak değil, küçük bir SQLite veritabanında (`/data` altındaki `downtify_monitor.db`) izlenir — bu yüzden indirilen bir dosyayı diskte başka bir yere (kendi kitaplık düzeninize, başka bir sürücüye, nereye olursa) taşımak, Downtify’ın onun eksik olduğunu düşünüp sonraki denetimde yeniden indirmesine **neden olmaz**.
+İzlemeyi eklediğiniz anda başlayan ilk denetim, çalma listesinde zaten olan her şeyi indirir; sonraki denetimler yalnızca o zamandan beri eklenenleri indirir. “Zaten indirilmiş” olan, indirme klasörüne bakılarak değil, küçük bir SQLite veritabanında (`/data` altındaki `downtify_monitor.db`) izlenir — bu yüzden indirilen bir dosyayı diskte başka bir yere (kendi kitaplık düzeninize, başka bir sürücüye, nereye olursa) taşımak, Castify’ın onun eksik olduğunu düşünüp sonraki denetimde yeniden indirmesine **neden olmaz**.
 
 Ayrı bir tarama her saat çalışır ve indirilmiş her parçanın dosyasının hâlâ orada olup olmadığına bakar. Gerçekten silinen dosyalar (taşınanların aksine) o anda unutulur; böylece parça yeniden indirilmeye uygun hale gelir — anında değil, o saatlik taramadan sonraki izleme denetiminde.
 
@@ -54,16 +54,16 @@ Herkese açık Deezer çalma listeleri diğerleri gibi izlenir: bağlantıyı **
 
 ## YouTube Music çalma listeleri
 
-Spotify’da olmayan şarkılar için bir YouTube Music çalma listesi kullanın: remiksler, canlı setler, cover’lar, tanıtım kanallarının yüklemeleri. Her parça **çalma listesindeki tam o videodan** indirilir. Downtify onu yeniden aramaz; yani eline geçen, çalma listesine eklediğindir.
+Spotify’da olmayan şarkılar için bir YouTube Music çalma listesi kullanın: remiksler, canlı setler, cover’lar, tanıtım kanallarının yüklemeleri. Her parça **çalma listesindeki tam o videodan** indirilir. Castify onu yeniden aramaz; yani eline geçen, çalma listesine eklediğindir.
 
 - **Tüm parçalar getirilir**, çalma listesi ne kadar uzun olursa olsun. Silinmiş veya özel videolar atlanır.
-- **YouTube Music’in grileştirdiği şarkılar yine de indirilir.** Dönüştürücüler ve içe aktarıcılar (Soundiiz, TuneMyMusic ve benzerleri) tarafından yapılan çalma listeleri, şarkıları çoğunlukla YouTube Music’in kullanılamaz gösterdiği ve şarkı kimliği vermediği düz YouTube yüklemeleri olarak listeler. Downtify videoyu girdinin küçük resminden bulur ve diğerleri gibi indirir; böylece böyle bir çalma listesi boş çıkmaz. Gerçekten silinmiş veya özel yapılmış bir video indirilemez: YouTube Music onu öyle işaretlediğinde atlanır, yalnızca küçük resim verdiğinde parça kuyrukta başarısız görünür.
-- **Sanatçı ve başlık video başlığından gelir.** Birçok çalma listesi girdisi, onları yayımlayan kanala atfedilmiş yüklemelerdir (örn. `MrSuicideSheep`) ve gerçek katkı `Bronze Whale - Patterns` gibi başlıktadır. Katalog yayını olmayan her şey için Downtify `Sanatçı - Başlık`’ı dosya adına ve etiketlere böler. Ayrıca `(Official Video)` veya `[Lyrics]` gibi sonekleri atar. Tireden sonraki bir sürümü adlandıran kısım (`Yellow - Live at Glastonbury`) başlıkta kalır. Katalog parçaları (resmi ses ya da bir albüm altında dosyalanmış her şey) YouTube Music’in kendi sanatçı ve başlığını korur.
+- **YouTube Music’in grileştirdiği şarkılar yine de indirilir.** Dönüştürücüler ve içe aktarıcılar (Soundiiz, TuneMyMusic ve benzerleri) tarafından yapılan çalma listeleri, şarkıları çoğunlukla YouTube Music’in kullanılamaz gösterdiği ve şarkı kimliği vermediği düz YouTube yüklemeleri olarak listeler. Castify videoyu girdinin küçük resminden bulur ve diğerleri gibi indirir; böylece böyle bir çalma listesi boş çıkmaz. Gerçekten silinmiş veya özel yapılmış bir video indirilemez: YouTube Music onu öyle işaretlediğinde atlanır, yalnızca küçük resim verdiğinde parça kuyrukta başarısız görünür.
+- **Sanatçı ve başlık video başlığından gelir.** Birçok çalma listesi girdisi, onları yayımlayan kanala atfedilmiş yüklemelerdir (örn. `MrSuicideSheep`) ve gerçek katkı `Bronze Whale - Patterns` gibi başlıktadır. Katalog yayını olmayan her şey için Castify `Sanatçı - Başlık`’ı dosya adına ve etiketlere böler. Ayrıca `(Official Video)` veya `[Lyrics]` gibi sonekleri atar. Tireden sonraki bir sürümü adlandıran kısım (`Yellow - Live at Glastonbury`) başlıkta kalır. Katalog parçaları (resmi ses ya da bir albüm altında dosyalanmış her şey) YouTube Music’in kendi sanatçı ve başlığını korur.
 - **Her `list=` bağlantısı bir çalma listesi değildir.** Bir albümün `OLAK5uy_…` bağlantısı yine albüm olarak indirilir. Bir `watch?v=…&list=…` bağlantısı çalmakta olan tek şarkıdır. Bir radyo karışımının (`list=RD…`) sabit parça listesi yoktur ve izlenemez.
 
 ## Sanatçı İzleme
 
-Sanatçı başına bir çalma listesi oluşturmak yerine bir sanatçı bağlantısı yapıştırın; Downtify onun tüm kataloğunu izler. İzleyici sayfasının **Sanatçılar** sekmesinden bir tane ekleyin — URL’yi yapıştırın, bir aralık seçin, **Sanatçıyı izle**’ye tıklayın. Sanatçı izlemeleri parça sayısı yerine yayın sayısı gösterir.
+Sanatçı başına bir çalma listesi oluşturmak yerine bir sanatçı bağlantısı yapıştırın; Castify onun tüm kataloğunu izler. İzleyici sayfasının **Sanatçılar** sekmesinden bir tane ekleyin — URL’yi yapıştırın, bir aralık seçin, **Sanatçıyı izle**’ye tıklayın. Sanatçı izlemeleri parça sayısı yerine yayın sayısı gösterir.
 
 Kabul edilen URL’ler:
 
@@ -72,10 +72,10 @@ Kabul edilen URL’ler:
 
 Bir handle, izlemeyi eklediğinizde sanatçının kanalına çözümlenir; böylece handle ile ve kanal URL’si ile yapıştırılan aynı sanatçı tek bir izleme olarak tanınır. Bir YouTube Music sanatçısına ait olmayan bir handle reddedilir.
 
-Her taramada Downtify sanatçının diskografisini listeler, zaten işlediği yayınlarla karşılaştırır ve yeni olan her şeyin her parçasını indirir. Kararlı durumdaki bir tarama tek bir isteğe mal olur — parça listeleri yalnızca daha önce görmediği yayınlar için getirilir.
+Her taramada Castify sanatçının diskografisini listeler, zaten işlediği yayınlarla karşılaştırır ve yeni olan her şeyin her parçasını indirir. Kararlı durumdaki bir tarama tek bir isteğe mal olur — parça listeleri yalnızca daha önce görmediği yayınlar için getirilir.
 
 ::: info Diskografi neden YouTube Music’ten gelir
-Spotify’ın herkese açık embed’i bir sanatçının adını ve en çok dinlenen parçalarının önizlemesini gösterir, ama diskografisini **göstermez** — onu okumak, Downtify’ın bilerek kullanmadığı Spotify API kimlik bilgileri gerektirir. Bu yüzden bir Spotify sanatçı bağlantısı adına çözümlenir ve YouTube Music’teki aynı sanatçıyla eşleştirilir; ses de oradan getirilir. Artısı: Downtify’ın görebildiği her yayın gerçekten indirebildiği bir yayındır. Dengesi: bağlantı, tam olarak bu ada sahip YouTube Music sanatçısını izler (büyük/küçük harf ve noktalama dikkate alınmaz); birden fazla sanatçı bu adı taşıyorsa YouTube Music’in en iyi eşleşmesini. Yaygın bir adda izlemenin kastettiğiniz sanatçı olduğunu denetleyin, değilse YouTube Music sanatçı URL’sini doğrudan yapıştırın. Tam adını hiçbir YouTube Music sanatçısının taşımadığı bir Spotify sanatçısı yalnızca bu şekilde eklenebilir: Downtify tahmin yürütmez.
+Spotify’ın herkese açık embed’i bir sanatçının adını ve en çok dinlenen parçalarının önizlemesini gösterir, ama diskografisini **göstermez** — onu okumak, Castify’ın bilerek kullanmadığı Spotify API kimlik bilgileri gerektirir. Bu yüzden bir Spotify sanatçı bağlantısı adına çözümlenir ve YouTube Music’teki aynı sanatçıyla eşleştirilir; ses de oradan getirilir. Artısı: Castify’ın görebildiği her yayın gerçekten indirebildiği bir yayındır. Dengesi: bağlantı, tam olarak bu ada sahip YouTube Music sanatçısını izler (büyük/küçük harf ve noktalama dikkate alınmaz); birden fazla sanatçı bu adı taşıyorsa YouTube Music’in en iyi eşleşmesini. Yaygın bir adda izlemenin kastettiğiniz sanatçı olduğunu denetleyin, değilse YouTube Music sanatçı URL’sini doğrudan yapıştırın. Tam adını hiçbir YouTube Music sanatçısının taşımadığı bir Spotify sanatçısı yalnızca bu şekilde eklenebilir: Castify tahmin yürütmez.
 :::
 
 ::: warning İlk tarama tüm eski kataloğu indirir
@@ -211,7 +211,7 @@ Varsayılan olarak her gün (veya hafta / 2 hafta / ay) denetlenen bir çalma li
 
 ## Parça başına üst veri zenginleştirme
 
-Spotify çalma listesi embed girdilerinde yayın yılı yoktur ve parça başına albüm kapağı yerine çalma listesi kapağı kullanılır. Downtify, doğru kapağı ve yılı almak için indirmeden önce her yeni parçayı ayrı ayrı yeniden getirir — parça başına getirme başarısız olursa çalma listesi düzeyindeki verilere döner. YouTube Music çalma listesi girdileri bu adımı atlar: her biri zaten kendi videosunun üst verisini taşır.
+Spotify çalma listesi embed girdilerinde yayın yılı yoktur ve parça başına albüm kapağı yerine çalma listesi kapağı kullanılır. Castify, doğru kapağı ve yılı almak için indirmeden önce her yeni parçayı ayrı ayrı yeniden getirir — parça başına getirme başarısız olursa çalma listesi düzeyindeki verilere döner. YouTube Music çalma listesi girdileri bu adımı atlar: her biri zaten kendi videosunun üst verisini taşır.
 
 ## M3U entegrasyonu
 
@@ -223,7 +223,7 @@ Elle çalma listesi/albüm indirmeleri ve CSV içe aktarmaları da aynı şekild
 
 ## Bir çalma listesinden ayrılan şarkılara ne olur
 
-Canlı çalma listeleri (Spotify’ın *Top 50*’si, *Haftalık Keşif*, editoryal listeler) her hafta değişir. Downtify bir izlemeyi **yeni müzik kaynağı** olarak ele alır, asla ne tuttuğunuzu belirleyen bir şey olarak değil:
+Canlı çalma listeleri (Spotify’ın *Top 50*’si, *Haftalık Keşif*, editoryal listeler) her hafta değişir. Castify bir izlemeyi **yeni müzik kaynağı** olarak ele alır, asla ne tuttuğunuzu belirleyen bir şey olarak değil:
 
 - **İndirilmiş ses dosyaları bir izleme tarafından asla silinmez.** Bir parça çalma listesinden ayrıldığında da, izlediğiniz her çalma listesinden ayrıldığında da, çalma listesinin kendisi küçüldüğünde de, **İzlemeyi bırak**’a bastığınızda da değil.
 - **Çalma listesini yalnızca çalma listesi izler.** Her taramada [M3U dosyası](m3u-export.md), çalma listesinin geçerli parçalarından, geçerli sırasıyla yeniden yazılır; yani düşen bir parça M3U’dan kaybolur. Dosyası klasörde ve kitaplığınızda kalır, aranabilir ve çalınabilir — Navidrome, Jellyfin ya da aynı klasöre yönlendirilmiş her şey üzerinden de.
@@ -232,7 +232,7 @@ Canlı çalma listeleri (Spotify’ın *Top 50*’si, *Haftalık Keşif*, editor
 Bu, bir liste çalma listesini kullanışlı bir keşif akışı yapar: yeni şarkılar kendiliğinden gelir ve geride bıraktıkları kitaplığınız olarak birikir.
 
 ```
-Top 50 - USA        →  new song appears   →  Downtify downloads it
+Top 50 - USA        →  new song appears   →  Castify downloads it
                     →  song drops out     →  M3U updated, file kept
 ```
 
@@ -244,7 +244,7 @@ Sesi silen tek şeyler sizin açıkça istedikleriniz: Kitaplıkta bir parça ya
 **İzlemeyi bırak** (izlemenin ⋯ menüsünde) yalnızca izlemeyi unutur: diskte hiçbir şey değişmez. **Kitaplık** sayfasında bir çalma listesinde **Sil** yıkıcı olandır — o çalma listesinin parçalarını, M3U’sunu ve katalog girdisini kaldırır.
 :::
 
-Bir dosya gerçekten kaybolursa — indirme klasöründen çıkardınız ya da elle sildiniz —, saatlik bir tarama bunu fark eder ve Downtify’ın onunla ilgili kaydını unutur; böylece parçayı hâlâ listeleyen bir izlemenin sonraki denetimi onu yeniden indirir. İndirme klasörü içinde yalnızca *taşınan* bir dosya hâlâ bulunur ve yeniden indirilmez.
+Bir dosya gerçekten kaybolursa — indirme klasöründen çıkardınız ya da elle sildiniz —, saatlik bir tarama bunu fark eder ve Castify’ın onunla ilgili kaydını unutur; böylece parçayı hâlâ listeleyen bir izlemenin sonraki denetimi onu yeniden indirir. İndirme klasörü içinde yalnızca *taşınan* bir dosya hâlâ bulunur ve yeniden indirilmez.
 
 ## Depolama
 
@@ -256,13 +256,13 @@ Bir dosya gerçekten kaybolursa — indirme klasöründen çıkardınız ya da e
 - Bir izlemenin eklediği her parça (`watch_events`): ne zaman, dosya, hangi ses sağlayıcısının getirdiği, izlemenin onu indirip indirmediği ya da kitaplıkta zaten bulup bulmadığı ve ilk kontrolüyle gelip gelmediği. Bu satırlar izlemenin kimliğini, adını ve sahibini o anki hâliyle saklar ve izlemeden uzun yaşar: bir izlemeyi bırakmak ya da başka bir hedefe yöneltmek onları silmez, böylece şarkıları nereden geldiklerini söylemeye devam eder
 - Her izlemenin indirmekte başarısız olmaya devam ettiği parçalar (`watch_failures`); biri başarılı olana, listeden çıkana ya da izleme başka bir hedefe yöneltilene kadar
 
-Sanatçı İzleme’den önce oluşturulan veritabanları başlangıçta otomatik taşınır; mevcut satırlar çalma listesi izlemeleri olarak çalışmaya devam eder. Downtify yukarıdaki geçmişi tutmaya başlamadan önce kaydedilen parçalar, ilk açılışta bir kez bilinmeyen sonuçla (**Kayıttan önce**) eklenir — bir izlemenin ilk gününden olanlar onun ilk kontrolü sayılır.
+Sanatçı İzleme’den önce oluşturulan veritabanları başlangıçta otomatik taşınır; mevcut satırlar çalma listesi izlemeleri olarak çalışmaya devam eder. Castify yukarıdaki geçmişi tutmaya başlamadan önce kaydedilen parçalar, ilk açılışta bir kez bilinmeyen sonuçla (**Kayıttan önce**) eklenir — bir izlemenin ilk gününden olanlar onun ilk kontrolü sayılır.
 
 ## İzleme başına etkinlik ve depolama
 
 İzleyici sayfası ve her izlemenin kendi sayfası (bir izlemenin **⋯** menüsündeki **Etkinlik ve şarkılar** ya da **Etkinlik** sütununa tıklama) kitaplığını hangi izlemelerin büyüttüğünü gösterir — çok sayıda izlemede ya da otomatik oluşturulan bir mix’in neden beklemediğin şarkılar getirdiğini anlamak için kullanışlıdır.
 
-**Etkinlik olarak sayılanlar.** Yalnızca bir izlemenin gerçekten eklediği şarkılar sayılır: indirdikleri. Kitaplığında zaten bulduğu şarkılar (başka bir izleme ya da kendi indirmen onlara sahipti) ayrıca **Zaten kitaplıkta** olarak sayılır; ilk kontrolün getirdikleri de öyle, çünkü o kontrol listede zaten olan her şeyi indirir. Böylece ilk kontrolü 300 şarkı indirmiş olsa bile durağan bir liste sakin görünür, haftada 15 şarkı ekleyen bir mix de haftada 15 olarak görünür. Downtify bu geçmişi tutmadan önce kaydedilen parçalar eklenmiş sayılır ve sayfa kaç tane olduğunu söyler.
+**Etkinlik olarak sayılanlar.** Yalnızca bir izlemenin gerçekten eklediği şarkılar sayılır: indirdikleri. Kitaplığında zaten bulduğu şarkılar (başka bir izleme ya da kendi indirmen onlara sahipti) ayrıca **Zaten kitaplıkta** olarak sayılır; ilk kontrolün getirdikleri de öyle, çünkü o kontrol listede zaten olan her şeyi indirir. Böylece ilk kontrolü 300 şarkı indirmiş olsa bile durağan bir liste sakin görünür, haftada 15 şarkı ekleyen bir mix de haftada 15 olarak görünür. Castify bu geçmişi tutmadan önce kaydedilen parçalar eklenmiş sayılır ve sayfa kaç tane olduğunu söyler.
 
 Seçilen dönemde (7, 30 ya da 90 gün, tarayıcıda hatırlanır) bir izleme şunları gösterir:
 

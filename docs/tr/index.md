@@ -1,6 +1,6 @@
 ---
 layout: home
-title: Downtify
+title: Castify
 titleTemplate: Kendi sunucunuzda barındırılan müzik indirici
 description: Kendi sunucunuzda barındırılan müzik indirici. Bir Spotify bağlantısı yapıştırın, etiketleri eksiksiz bir ses dosyası alın — API anahtarı yok, hesap yok, zahmet yok.
 icon: lucide/house
@@ -72,7 +72,7 @@ quickStart:
 
 ## Gerçekte nasıl çalışır
 
-Spotify’ın resmi API’si indirmeleri Premium aboneliğe bağlar. Downtify yan kapıyı kullanır — Spotify’ın herkese açık gömme sayfalarında zaten gösterdiği meta verileri okur, YouTube Music’ten en yakın sesi ister, dosyayı `yt-dlp` ve `ffmpeg`’e verir ve `mutagen` ile doğru etiketleri yazar. Tüm hat tek bir Docker kapsayıcısında yaşar.
+Spotify’ın resmi API’si indirmeleri Premium aboneliğe bağlar. Castify yan kapıyı kullanır — Spotify’ın herkese açık gömme sayfalarında zaten gösterdiği meta verileri okur, YouTube Music’ten en yakın sesi ister, dosyayı `yt-dlp` ve `ffmpeg`’e verir ve `mutagen` ile doğru etiketleri yazar. Tüm hat tek bir Docker kapsayıcısında yaşar.
 
 <HomePipeline :steps="$frontmatter.pipeline" />
 

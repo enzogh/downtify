@@ -4,14 +4,13 @@ icon: lucide/sparkles
 
 # Özellikler
 
-Downtify, Spotify’dan yerel bir müzik kitaplığı oluşturmak ve sürdürmek için ihtiyacınız olan her şeyi kapsar.
+Castify, Spotify’dan yerel bir müzik kitaplığı oluşturmak ve sürdürmek için ihtiyacınız olan her şeyi kapsar.
 
 ## Genel bakış
 
 | Özellik | Ne yapar |
 |---------|-------------|
 | [Müzik listeleri](charts.md) | Deezer’ın küresel listesine göz atın ve gündemdekini indirin |
-| [Benzerler](similar.md) | Bir sanatçı ya da parça yazın; YouTube Music, tam olarak çalınabilen ve indirilebilen benzer parçalarla yanıt verir, anahtar gerekmez |
 | [Bulucu](finder.md) | Deezer’da arayın, sonra bir sanatçıya, albümlerine ve herhangi bir albümün parçalarına sütunlar halinde göz atın |
 | [İndirme ayarları](download-settings.md) | Biçimi (MP3/FLAC/M4A/OGG/OPUS), bit hızını, eşzamanlı indirmeleri ve indirmeler arası beklemeyi seçin |
 | [İndirme kuyruğu](download-queue.md) | Ayarları değiştirmeden veya güncellemeden önce indirmeleri duraklatın: süren indirmeler biter, yenisi başlamaz ve bekleyen şarkılar yeniden başlatmadan sonra da kalır |
@@ -28,12 +27,12 @@ Downtify, Spotify’dan yerel bir müzik kitaplığı oluşturmak ve sürdürmek
 | [Kullanıcılar ve oturum açma](users.md) | Kullanıcı adı ve parolayla oturum açma (yeni sunucuda `admin` / `downtify`), yönetici ve normal kullanıcı hesapları, kullanıcı başına tercihler ve oturum açmaların ve herkesin ne dinlediğinin etkinlik günlüğü |
 | [Müstehcen içerik işareti](explicit-marker.md) | Açık sözlü şarkıların yanındaki “E” — aramada, Kitaplıkta ve oynatıcıda — ve dosyanın etiketlerinde |
 | [Sesi değiştir](replace-audio.md) | Yanlış şarkı ya da sürüm mü? Doğrusunu YouTube Music veya YouTube’da seçin; dosya adını, etiketlerini ve çalma listelerini korur |
-| [Sunucu ayarları](server.md) | Downtify’ın dinlediği bağlantı noktası, Ayarlar’dan (yöneticiler) değiştirilir; isterseniz hemen yeniden başlatma ile |
+| [Sunucu ayarları](server.md) | Castify’ın dinlediği bağlantı noktası, Ayarlar’dan (yöneticiler) değiştirilir; isterseniz hemen yeniden başlatma ile |
 | [Mobil uygulamalar](mobile-apps.md) | Telefon uygulamalarını QR koduyla eşleştirin ve kitaplığı onlara akıtın (özgün ya da dönüştürülmüş) |
 | [Keşfet](discover.md) | Henüz sahip olmadığınız sanatçılar, albümler ve çalma listeleri; kitaplığınız, beğenileriniz ve dinlediklerinizden önerilir; istemediklerinizi gizleyin |
 | [slskd ve Navidrome](slskd-navidrome.md) | slskd ile Soulseek’ten indirin, çalma listelerini Navidrome’a yansıtın ve çalma listesi indirmelerini izleyin |
-| [Kitaplık kataloğu ve yol eşitleme](library-catalog.md) | Downtify’ın kitaplık dosyalarını ve çalma listelerini nasıl izlediği, Kitaplıkta oluşturduğunuz çalma listeleri ve dosyaları taşıdıktan sonra yolların düzeltilmesi |
-| [Mevcut müzik klasörleri](external-library.md) | Downtify’ı zaten sahip olduğunuz ses klasörlerine yöneltin; eşitleme etiketleri okur, sanatçıları eşleştirir ve kitaplıkta zaten olan şarkıları atlar |
+| [Kitaplık kataloğu ve yol eşitleme](library-catalog.md) | Castify’ın kitaplık dosyalarını ve çalma listelerini nasıl izlediği, Kitaplıkta oluşturduğunuz çalma listeleri ve dosyaları taşıdıktan sonra yolların düzeltilmesi |
+| [Mevcut müzik klasörleri](external-library.md) | Castify’ı zaten sahip olduğunuz ses klasörlerine yöneltin; eşitleme etiketleri okur, sanatçıları eşleştirir ve kitaplıkta zaten olan şarkıları atlar |
 | [Kitaplığı iyileştir](library-upgrade.md) | Zaten indirdiğiniz müziği tarayın ve küçük kapakları, eksik sözleri ve eksik etiketleri onarın |
 | [Depolama ve kullanım](storage-usage.md) | Kitaplığın ne kadar büyük olduğunu ve ne hızla büyüdüğünü, her parçanın hangi kaynaktan geldiğini, indirmelerin nasıl sonuçlandığını ve yinelenenlerin, slskd kopyalarının ve artıkların ne kadar yer kapladığını görün |
 | [M3U dışa aktarma](m3u-export.md) | Jellyfin, Navidrome, Plex ve her medya uygulaması için otomatik üretilen çalma listesi dosyaları |
@@ -48,7 +47,7 @@ Downtify, Spotify’dan yerel bir müzik kitaplığı oluşturmak ve sürdürmek
 
 ## Girdi türleri
 
-Downtify arama çubuğunda çeşitli girdi türlerini kabul eder:
+Castify arama çubuğunda çeşitli girdi türlerini kabul eder:
 
 | Girdi | Örnek |
 |-------|---------|

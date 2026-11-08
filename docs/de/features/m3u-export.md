@@ -4,7 +4,7 @@ icon: lucide/list-music
 
 # M3U-Export
 
-Downtify erzeugt automatisch eine Standard-Playlist-Datei im Format `EXTM3U`, sobald eine Spotify-Playlist heruntergeladen wird — manuell oder über die [Playlist-Überwachung](playlist-monitor.md).
+Castify erzeugt automatisch eine Standard-Playlist-Datei im Format `EXTM3U`, sobald eine Spotify-Playlist heruntergeladen wird — manuell oder über die [Playlist-Überwachung](playlist-monitor.md).
 
 ## Speicherort der Datei
 
@@ -19,7 +19,7 @@ Ist *Nach Künstler sortieren* aktiv, verteilen sich die Titel auf mehrere Küns
 
 ## Relative Pfade
 
-Die Titelpfade in der M3U werden **relativ zur M3U-Datei selbst** geschrieben, nicht als absolute Pfade. Dieselbe Datei funktioniert also sowohl, wenn sie innerhalb des Downtify-Containers (`/downloads/…`) gelesen wird, als auch bei einem anderen Verbraucher, der dieselbe Bibliothek unter einem anderen Stammverzeichnis einbindet — etwa Jellyfin unter `/nas/music/…`. Richte deinen Medienserver einfach auf denselben Bibliotheks-Mount, und die Playlist erscheint als eine Einheit.
+Die Titelpfade in der M3U werden **relativ zur M3U-Datei selbst** geschrieben, nicht als absolute Pfade. Dieselbe Datei funktioniert also sowohl, wenn sie innerhalb des Castify-Containers (`/downloads/…`) gelesen wird, als auch bei einem anderen Verbraucher, der dieselbe Bibliothek unter einem anderen Stammverzeichnis einbindet — etwa Jellyfin unter `/nas/music/…`. Richte deinen Medienserver einfach auf denselben Bibliotheks-Mount, und die Playlist erscheint als eine Einheit.
 
 ## Aktivieren / Deaktivieren
 
@@ -27,7 +27,7 @@ Die M3U-Erzeugung steuerst du unter **Einstellungen → Downloads und Dateien �
 
 ## Cover
 
-Direkt unter dieser Einstellung schreibt **Playlist-Cover speichern** (standardmäßig an) das eigene Titelbild der Playlist unter demselben Namen neben ihre M3U — vor den Titeln, damit der Ordner von Anfang an wie die Playlist aussieht. Downtify zeigt dann dieses Artwork für die Playlist statt eines Rasters ihrer Titel-Cover. Eine Playlist, die du in der Bibliothek anlegst, bekommt auf dieselbe Weise ein Mosaik aus bis zu vier Titel-Covern. Siehe [Playlist-Cover](playlist-cover-art.md).
+Direkt unter dieser Einstellung schreibt **Playlist-Cover speichern** (standardmäßig an) das eigene Titelbild der Playlist unter demselben Namen neben ihre M3U — vor den Titeln, damit der Ordner von Anfang an wie die Playlist aussieht. Castify zeigt dann dieses Artwork für die Playlist statt eines Rasters ihrer Titel-Cover. Eine Playlist, die du in der Bibliothek anlegst, bekommt auf dieselbe Weise ein Mosaik aus bis zu vier Titel-Covern. Siehe [Playlist-Cover](playlist-cover-art.md).
 
 ## Wann sie geschrieben wird
 
@@ -61,7 +61,7 @@ Das ist kompatibel mit Jellyfin, Navidrome, Plex, VLC, Kodi, Sonos und jedem and
 
 ## Playlists, die du anlegst
 
-**Bibliothek → Playlists → Neue Playlist** schreibt dieselbe Art M3U unter `Playlists/`, mit einer zusätzlichen Zeile `#EXTDOWNTIFY:manual`, damit Downtify sie von einer heruntergeladenen Spotify-/YouTube-Playlist unterscheiden kann. Du kannst sie umbenennen und Songs hinzufügen oder entfernen (auch aus [zusätzlichen Ordnern](external-library.md)). Das Löschen dieser Playlist, eines Titels oder das Aufheben der Zuordnung eines zusätzlichen Ordners aktualisiert die M3U; Audio wird nur gelöscht, wenn du den Titel selbst oder eine importierte Playlist löschst.
+**Bibliothek → Playlists → Neue Playlist** schreibt dieselbe Art M3U unter `Playlists/`, mit einer zusätzlichen Zeile `#EXTDOWNTIFY:manual`, damit Castify sie von einer heruntergeladenen Spotify-/YouTube-Playlist unterscheiden kann. Du kannst sie umbenennen und Songs hinzufügen oder entfernen (auch aus [zusätzlichen Ordnern](external-library.md)). Das Löschen dieser Playlist, eines Titels oder das Aufheben der Zuordnung eines zusätzlichen Ordners aktualisiert die M3U; Audio wird nur gelöscht, wenn du den Titel selbst oder eine importierte Playlist löschst.
 
 ### Songs zu einer Playlist hinzufügen
 

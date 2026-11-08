@@ -4,7 +4,7 @@ icon: lucide/headphones
 
 # Yerleşik oynatıcı
 
-Downtify, indirdiğiniz müziği ayrı bir uygulama olmadan dinleyebilmeniz için bir web oynatıcıyla gelir. Kitaplıktaki herhangi bir parça, albüm, sanatçı veya çalma listesinde — ya da Kuyruktaki tamamlanmış bir indirmede — oynat’a basın, oynatıcı başlar.
+Castify, indirdiğiniz müziği ayrı bir uygulama olmadan dinleyebilmeniz için bir web oynatıcıyla gelir. Kitaplıktaki herhangi bir parça, albüm, sanatçı veya çalma listesinde — ya da Kuyruktaki tamamlanmış bir indirmede — oynat’a basın, oynatıcı başlar.
 
 ## Oynatıcı çubuğu
 
@@ -45,10 +45,10 @@ Kapağı ve kuyruğu sözler olmadan mı tercih edersiniz? **Ayarlar → Genel �
 Şimdi çalıyor bunun yerine **Sıradaki**’nde açılır. Kapatmadan önceki bir `&panel=lyrics` bağlantısı da boş bir sekme yerine oraya düşer. Sözler gizliyken oynatıcı bir parçanın sözlerini hiç istemez.
 
 ::: info Gizlemek silmek değildir
-Bu yalnızca oynatıcının gösterdiğini değiştirir. Dosyalarınız Downtify’ın içlerine gömdüğü sözleri korur ve yanlarındaki `.lrc` dosyaları yerinde kalır; böylece medya sunucuları ve diğer oynatıcılar onları yine görür. İndirmeler de söz getirmeye devam eder — bu, **Etiketler ve sözler** altındaki ayrı **Şarkı sözlerini indir** ayarıdır (bkz. [Şarkı sözleri](lyrics.md)).
+Bu yalnızca oynatıcının gösterdiğini değiştirir. Dosyalarınız Castify’ın içlerine gömdüğü sözleri korur ve yanlarındaki `.lrc` dosyaları yerinde kalır; böylece medya sunucuları ve diğer oynatıcılar onları yine görür. İndirmeler de söz getirmeye devam eder — bu, **Etiketler ve sözler** altındaki ayrı **Şarkı sözlerini indir** ayarıdır (bkz. [Şarkı sözleri](lyrics.md)).
 :::
 
-Tema ve ekolayzır gibi bu seçim de tarayıcıda (`localStorage`) saklanır; yani cihaz ve tarayıcı başınadır, Downtify sunucusu başına değil — sözleri telefonda gizleyip bilgisayarda açık tutabilirsiniz.
+Tema ve ekolayzır gibi bu seçim de tarayıcıda (`localStorage`) saklanır; yani cihaz ve tarayıcı başınadır, Castify sunucusu başına değil — sözleri telefonda gizleyip bilgisayarda açık tutabilirsiniz.
 
 ## Ekolayzır
 
@@ -60,9 +60,9 @@ Tema ve ekolayzır gibi bu seçim de tarayıcıda (`localStorage`) saklanır; ya
 - **Açma/kapama anahtarı** ve **Sıfırla** (Düz’e, ön amfi 0’a, kapalıya döner). Bir bandı oynatmak veya bir hazır ayar seçmek ekolayzırı da açar.
 - Kaydırıcıların arkasındaki eğri, tüm bantların birleşik yanıtıdır.
 
-Bantları yükseltmek yüksek sesli müziği tam ölçeğin ötesine iter ve bozar; bu yüzden Downtify sesi eğrinin en yüksek güçlendirmesi kadar otomatik olarak düşürür — panel ne kadar olduğunu söyler. Bu tepeyi 0 dB’de tutar, böylece güçlendirilmiş bir hazır ayar sesi yalnızca yükseltmek yerine yeniden şekillendirir. Ön amfiyi 0 dB’nin üzerine çıkarmak bu güvenlik payını kaldırır ve panel yüksek bölümlerin bozulabileceği uyarısını verir.
+Bantları yükseltmek yüksek sesli müziği tam ölçeğin ötesine iter ve bozar; bu yüzden Castify sesi eğrinin en yüksek güçlendirmesi kadar otomatik olarak düşürür — panel ne kadar olduğunu söyler. Bu tepeyi 0 dB’de tutar, böylece güçlendirilmiş bir hazır ayar sesi yalnızca yükseltmek yerine yeniden şekillendirir. Ön amfiyi 0 dB’nin üzerine çıkarmak bu güvenlik payını kaldırır ve panel yüksek bölümlerin bozulabileceği uyarısını verir.
 
-Ayarlar tarayıcıda (`localStorage`) saklanır ve siz değiştirene kadar çaldığınız her şeye, her sekmede uygulanır. Tarayıcı başınadır, Downtify sunucusu başına değil.
+Ayarlar tarayıcıda (`localStorage`) saklanır ve siz değiştirene kadar çaldığınız her şeye, her sekmede uygulanır. Tarayıcı başınadır, Castify sunucusu başına değil.
 
 ### Tarayıcı desteği
 
@@ -86,7 +86,7 @@ Her parçanın menüsünde (**⋯** düğmesi veya masaüstünde sağ tık) şun
 
 Aynı eylemler Kitaplıktaki çok parçalı bir seçim için de geçerlidir.
 
-Kuyruk, geçerli parça, konumu, karıştır ve tekrarla hatırlanır; böylece Downtify’ı yeniden açmak kaldığınız yerden sürdürür (2000’den fazla parçalık kuyruklar hatırlanmaz). Silinen dosyalar kuyruktan otomatik olarak düşer.
+Kuyruk, geçerli parça, konumu, karıştır ve tekrarla hatırlanır; böylece Castify’ı yeniden açmak kaldığınız yerden sürdürür (2000’den fazla parçalık kuyruklar hatırlanmaz). Silinen dosyalar kuyruktan otomatik olarak düşer.
 
 ## Klavye ve medya tuşları
 

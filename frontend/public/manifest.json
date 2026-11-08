@@ -1,6 +1,6 @@
 {
-  "name": "Downtify",
-  "short_name": "Downtify",
+  "name": "Castify",
+  "short_name": "Castify",
   "description": "Self-hosted Spotify downloader — tracks, albums and playlists with full metadata, cover art and lyrics.",
   "start_url": "/",
   "scope": "/",

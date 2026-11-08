@@ -6,7 +6,7 @@ export const PANEL_IDS = ['lyrics', 'queue', 'details', 'equalizer']
 
 /**
  * The panels on offer: the lyrics one only while lyrics are shown, and
- * never for a podcast episode — Downtify has no lyrics source for
+ * never for a podcast episode — Castify has no lyrics source for
  * those, so the tab would only ever show "no lyrics for this track".
  * A streamed track (not in the library) offers neither lyrics nor
  * details — there is no file behind either tab.

@@ -4,7 +4,7 @@ icon: lucide/mic-vocal
 
 # Songtexte
 
-Downtify sucht Songtexte, während ein Titel heruntergeladen wird, und bettet sie in die Datei ein — dazu eine `.lrc`-Begleitdatei, wenn sie zeitsynchron sind.
+Castify sucht Songtexte, während ein Titel heruntergeladen wird, und bettet sie in die Datei ein — dazu eine `.lrc`-Begleitdatei, wenn sie zeitsynchron sind.
 
 ## Songtexte aktivieren
 
@@ -12,7 +12,7 @@ Songtexte sind **standardmäßig aktiviert**. Ausschalten unter **Einstellungen 
 
 ## Anbieter und Reihenfolge
 
-Kataloge unterscheiden sich: Ein Song, den ein Anbieter nicht kennt, ist oft bei einem anderen zu finden. Downtify führt daher eine geordnete Liste von Anbietern und probiert sie nacheinander durch, beim ersten mit einem Treffer hört es auf.
+Kataloge unterscheiden sich: Ein Song, den ein Anbieter nicht kennt, ist oft bei einem anderen zu finden. Castify führt daher eine geordnete Liste von Anbietern und probiert sie nacheinander durch, beim ersten mit einem Treffer hört es auf.
 
 | Anbieter | Songtexte | Hinweise |
 |----------|--------|-------|
@@ -22,7 +22,7 @@ Kataloge unterscheiden sich: Ein Song, den ein Anbieter nicht kennt, ist oft bei
 Unter **Einstellungen → Tags und Songtexte → Anbieter** kannst du die Anbieter in die gewünschte Reihenfolge ziehen oder die Pfeile benutzen und jeden ausschalten. Mindestens einer bleibt an; um die Suche nach Songtexten ganz zu beenden, nutze den Schalter **Songtexte herunterladen**.
 
 ::: info Und Genius, Musixmatch und AZLyrics?
-Sie sind nicht verfügbar, und Downtify bietet sie nicht mehr an:
+Sie sind nicht verfügbar, und Castify bietet sie nicht mehr an:
 
 - **AZLyrics** verbietet die Nutzung seiner Songtexte durch Dritte auf der Seite selbst.
 - Die Desktop-API von **Musixmatch** antwortet mit einem leeren Token, sofern du keine Zugangsdaten hast, die sie Anwendungen nicht gibt.
@@ -33,7 +33,7 @@ Gespeicherte Einstellungen, die sie noch nennen, funktionieren weiter: Die Namen
 
 ## Anbieter überspringen, die nichts hatten
 
-Nach einer Suche vermerkt Downtify für jeden Song, welche Anbieter geantwortet haben und welche leer ausgingen, in `downtify_library.db` unter `/data`.
+Nach einer Suche vermerkt Castify für jeden Song, welche Anbieter geantwortet haben und welche leer ausgingen, in `downtify_library.db` unter `/data`.
 
 Ein Anbieter, der für einen Song nichts hatte, wird **30 Tage** lang nicht erneut danach gefragt, damit erneute Downloads und große Bibliotheksdurchläufe nicht dieselben fehlgeschlagenen Suchen wiederholen. Danach wird er wieder probiert, denn Kataloge wachsen. Ein Anbieter, der Songtexte *hatte*, wird nie übersprungen, sodass eine erneut heruntergeladene Datei sie zurückbekommt.
 
@@ -48,7 +48,7 @@ Ein Anbieter, der für einen Song nichts hatte, wird **30 Tage** lang nicht erne
 
 ## Begleitdatei .lrc
 
-Sind synchrone Songtexte verfügbar, speichert Downtify zusätzlich eine `.lrc`-Datei. Standardmäßig liegt sie **neben dem Audio** mit demselben Basisnamen. Unter **Einstellungen → Tags und Songtexte** kannst du das ausschalten und stattdessen einen **Songtext-Ordner** wählen (Standard `/data/lyrics`). Dieser Ordner muss **außerhalb** von `/downloads`, des slskd-Baums und aller zusätzlichen Musikordner liegen — der relative Pfad des Audios wird darunter nachgebildet (`Künstler/Album/titel.lrc`). Player, die externe Songtexte lesen (und der [integrierte Player](player.md#now-playing)), finden die Begleitdatei weiterhin. Wenn du diese Einstellung änderst und für einen zusätzlichen Ordner **Synchronisieren** ausführst, werden vorhandene `.lrc`-Dateien an den neuen Ort kopiert; die Quelldatei wird entfernt, wenn dieser Baum beschreibbar ist, und bei einem schreibgeschützten Mount belassen. Eine Begleitdatei wird auch dann geschrieben, wenn die Songtexte schon in den Tags eingebettet sind.
+Sind synchrone Songtexte verfügbar, speichert Castify zusätzlich eine `.lrc`-Datei. Standardmäßig liegt sie **neben dem Audio** mit demselben Basisnamen. Unter **Einstellungen → Tags und Songtexte** kannst du das ausschalten und stattdessen einen **Songtext-Ordner** wählen (Standard `/data/lyrics`). Dieser Ordner muss **außerhalb** von `/downloads`, des slskd-Baums und aller zusätzlichen Musikordner liegen — der relative Pfad des Audios wird darunter nachgebildet (`Künstler/Album/titel.lrc`). Player, die externe Songtexte lesen (und der [integrierte Player](player.md#now-playing)), finden die Begleitdatei weiterhin. Wenn du diese Einstellung änderst und für einen zusätzlichen Ordner **Synchronisieren** ausführst, werden vorhandene `.lrc`-Dateien an den neuen Ort kopiert; die Quelldatei wird entfernt, wenn dieser Baum beschreibbar ist, und bei einem schreibgeschützten Mount belassen. Eine Begleitdatei wird auch dann geschrieben, wenn die Songtexte schon in den Tags eingebettet sind.
 
 Das Löschen des Titels auf der Bibliotheksseite entfernt die `.lrc` (neben der Datei und im eigenen Ordner) zusammen mit dem Audio, sodass Songtexte nie als verwaiste Datei liegen bleiben.
 

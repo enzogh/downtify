@@ -18,12 +18,15 @@
             class="absolute inset-0 transition-colors duration-700"
             :style="{ backgroundColor: tint }"
           />
-          <img
-            v-if="track.hasCover"
-            :src="track.cover"
-            alt=""
-            class="absolute inset-0 size-full scale-125 object-cover opacity-55 blur-[90px] saturate-150"
-          />
+          <Transition name="np-backdrop">
+            <img
+              v-if="track.hasCover"
+              :key="track.cover"
+              :src="track.cover"
+              alt=""
+              class="absolute inset-0 size-full scale-125 object-cover opacity-55 blur-[90px] saturate-150"
+            />
+          </Transition>
           <div
             class="absolute inset-0 bg-gradient-to-b from-black/25 via-black/45 to-black/80"
           />
@@ -116,45 +119,54 @@
               class="now-playing-stage flex h-full min-h-0 w-full min-w-0 max-w-full flex-col justify-center gap-4 overflow-hidden lg:gap-5"
               :class="mobilePanel ? 'max-lg:hidden' : ''"
             >
-              <div class="now-playing-cover mx-auto">
-                <CoverArt
-                  :src="track.hasCover ? track.cover : ''"
-                  :name="track.album || track.title"
-                  rounded="rounded-[20px]"
-                  :letter-size="140"
-                  :icon-size="72"
-                  class="aspect-square w-full min-h-0 min-w-0 transition-transform duration-500 ease-out-soft"
-                  :class="player.isPlaying.value ? 'scale-100' : 'scale-[0.94]'"
-                />
+              <!-- Covers stack in one grid cell, so the next one fades in
+                   over the last instead of the view blinking empty. -->
+              <div class="now-playing-cover mx-auto grid">
+                <Transition name="np-cross">
+                  <CoverArt
+                    :key="trackKey"
+                    :src="track.hasCover ? track.cover : ''"
+                    :name="track.album || track.title"
+                    rounded="rounded-[20px]"
+                    :letter-size="140"
+                    :icon-size="72"
+                    class="aspect-square w-full min-h-0 min-w-0 [grid-area:1/1] transition-[scale] duration-500 ease-out-soft"
+                    :class="
+                      player.isPlaying.value ? 'scale-100' : 'scale-[0.94]'
+                    "
+                  />
+                </Transition>
               </div>
               <div
                 class="flex w-full min-w-0 shrink-0 items-end justify-between gap-4"
               >
-                <div class="min-w-0 flex-1">
-                  <div class="flex min-w-0 items-center gap-2.5">
-                    <h2
-                      class="now-playing-title text-display truncate font-bold"
+                <Transition name="np-swap" mode="out-in">
+                  <div :key="trackKey" class="min-w-0 flex-1">
+                    <div class="flex min-w-0 items-center gap-2.5">
+                      <h2
+                        class="now-playing-title text-display truncate font-bold"
+                      >
+                        {{ track.title }}
+                      </h2>
+                      <ExplicitBadge v-if="track.explicit" tone="onDark" />
+                    </div>
+                    <p
+                      v-if="track.artists?.length && !track.isPodcast"
+                      class="mt-1 truncate text-base text-white/70"
                     >
-                      {{ track.title }}
-                    </h2>
-                    <ExplicitBadge v-if="track.explicit" tone="onDark" />
+                      <TrackArtistLinks
+                        :artists="track.artists"
+                        only-known
+                        search-missing
+                        link-class="hover:text-white hover:underline"
+                        @navigate="nowPlaying.close()"
+                      />
+                    </p>
+                    <p v-else class="mt-1 truncate text-base text-white/70">
+                      {{ track.artist }}
+                    </p>
                   </div>
-                  <p
-                    v-if="track.artists?.length && !track.isPodcast"
-                    class="mt-1 truncate text-base text-white/70"
-                  >
-                    <TrackArtistLinks
-                      :artists="track.artists"
-                      only-known
-                      search-missing
-                      link-class="hover:text-white hover:underline"
-                      @navigate="nowPlaying.close()"
-                    />
-                  </p>
-                  <p v-else class="mt-1 truncate text-base text-white/70">
-                    {{ track.artist }}
-                  </p>
-                </div>
+                </Transition>
                 <div class="flex shrink-0 items-center gap-1">
                   <LikeButton
                     v-if="!track?.isPodcast && !track?.stream"
@@ -254,17 +266,6 @@
                   @click="player.seekBy(-15)"
                 >
                   <AppIcon name="skip-back" :size="22" />
-                </button>
-                <!-- Left of shuffle: tracks like this one
-                     (podcasts have none). -->
-                <button
-                  v-if="similarArtist && similarTitle"
-                  type="button"
-                  class="flex size-11 items-center justify-center rounded-full text-white/80 transition-colors hover:bg-white/10"
-                  :aria-label="t('similar.findSimilar')"
-                  @click="goSimilar"
-                >
-                  <AppIcon name="wand" :size="22" />
                 </button>
                 <button
                   type="button"
@@ -507,6 +508,7 @@ import { groupingArtistName } from '/src/lib/library'
 import { saveName } from '/src/lib/paths'
 import { useBuyLinks } from '/src/model/buyLinks'
 import { buyTargetForTrack } from '/src/lib/buyLinks'
+import { hasLyricsSource, prefetchLyrics } from '/src/model/lyrics'
 import { useI18n } from '/src/i18n'
 
 const player = usePlayer()
@@ -527,25 +529,29 @@ const closeButton = ref(null)
 
 const track = computed(() => player.currentTrack.value)
 
-// Tracks like this one (podcasts have none): left of shuffle.
-const similarArtist = computed(() => {
-  if (track.value?.isPodcast) return ''
-  return (track.value?.artists || [])[0] || track.value?.artist || ''
+// One key per song: what the cover, title and lyrics fade between.
+const trackKey = computed(() => {
+  const tr = track.value
+  if (!tr) return ''
+  return tr.file || tr.video_id || tr.url || `${tr.artist} - ${tr.title}`
 })
-const similarTitle = computed(
-  () => track.value?.name || track.value?.title || ''
-)
 
-function goSimilar() {
-  const artist = (
-    (track.value?.artists || [])[0] ||
-    track.value?.artist ||
-    ''
-  ).trim()
-  const title = (track.value?.name || track.value?.title || '').trim()
-  if (!artist || !title) return
-  router.push({ name: 'Similar', query: { artist, track: title } })
-}
+// The next library songs' lyrics load ahead, so they're on screen the
+// moment their song starts instead of after a skeleton.
+const LYRICS_LOOKAHEAD = 3
+const comingUp = computed(() =>
+  nowPlaying.isOpen.value && showLyrics.value
+    ? player.upcoming.value
+        .slice(0, LYRICS_LOOKAHEAD)
+        .map((entry) => entry.track)
+        .filter(hasLyricsSource)
+    : []
+)
+watch(
+  () => comingUp.value.map((tr) => tr.file).join('\n'),
+  () => prefetchLyrics(comingUp.value),
+  { immediate: true }
+)
 const palette = useCoverPalette(track)
 const tint = computed(
   () =>

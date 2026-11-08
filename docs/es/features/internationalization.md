@@ -4,13 +4,13 @@ icon: lucide/languages
 
 # Internacionalización
 
-Downtify se traduce en dos lugares independientes: la **app** (su interfaz) y esta **documentación**. El idioma por defecto de ambos es el **inglés**, con otros nueve idiomas incluidos de serie.
+Castify se traduce en dos lugares independientes: la **app** (su interfaz) y esta **documentación**. El idioma por defecto de ambos es el **inglés**, con otros nueve idiomas incluidos de serie.
 
 ## Cambiar de idioma
 
 ### La app
 
-Ve a **Ajustes → Idioma** y elige tu idioma preferido. La elección se guarda en el `localStorage` del navegador y se aplica al instante sin recargar la página. La página también se lo comunica al servidor (la entrada `ui_language` de `settings.json`, consulta [`POST /api/settings/update`](../api-reference.md#post-apisettingsupdate)), en cada carga y cada vez que lo cambias, para que el trabajo que se ejecuta sin un navegador conozca tu idioma - la biografía de un artista, obtenida en segundo plano cuando termina de descargarse una de sus canciones, llega en él (consulta [Cuando termina una descarga](artist-images.md#when-a-download-finishes)). No tienes que hacer nada: si elegiste un idioma antes de que esto existiera, se recoge la próxima vez que abras Downtify. Con varios navegadores configurados en idiomas distintos, gana el último que cargó o lo cambió.
+Ve a **Ajustes → Idioma** y elige tu idioma preferido. La elección se guarda en el `localStorage` del navegador y se aplica al instante sin recargar la página. La página también se lo comunica al servidor (la entrada `ui_language` de `settings.json`, consulta [`POST /api/settings/update`](../api-reference.md#post-apisettingsupdate)), en cada carga y cada vez que lo cambias, para que el trabajo que se ejecuta sin un navegador conozca tu idioma - la biografía de un artista, obtenida en segundo plano cuando termina de descargarse una de sus canciones, llega en él (consulta [Cuando termina una descarga](artist-images.md#when-a-download-finishes)). No tienes que hacer nada: si elegiste un idioma antes de que esto existiera, se recoge la próxima vez que abras Castify. Con varios navegadores configurados en idiomas distintos, gana el último que cargó o lo cambió.
 
 ### La documentación
 

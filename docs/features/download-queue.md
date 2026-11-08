@@ -8,7 +8,7 @@ Everything you download goes through the **Queue** page: what is downloading (**
 
 ## Pausing and resuming
 
-**Pause downloads**, at the top of the Queue page, stops the queue from starting anything new — handy before you change settings, look into a problem, or update and restart Downtify while a long queue is waiting.
+**Pause downloads**, at the top of the Queue page, stops the queue from starting anything new — handy before you change settings, look into a problem, or update and restart Castify while a long queue is waiting.
 
 - Downloads already running finish normally; nothing is cancelled. Until the last of them is done, the page reads **Pausing downloads…** with how many are left.
 - Then it reads **Downloads paused**: no new downloads will start until resumed. The waiting songs stay queued, in the same order, they read **Paused**, and the Queue badge in the sidebar turns grey.
@@ -24,10 +24,10 @@ The same global control is available at the top of Settings → Downloads & file
 
 ## Restarting or updating
 
-The queue outlives a restart, a crash or a container update. The songs that were waiting — and the ones that were mid-download when Downtify stopped, which start over — are queued again on the next start, and a paused queue comes back paused. So with a long queue:
+The queue outlives a restart, a crash or a container update. The songs that were waiting — and the ones that were mid-download when Castify stopped, which start over — are queued again on the next start, and a paused queue comes back paused. So with a long queue:
 
 1. **Pause downloads** and wait for **Downloads paused**.
-2. Restart or update Downtify, change what you needed to.
+2. Restart or update Castify, change what you needed to.
 3. **Resume downloads**.
 
 When the songs of a playlist download finish after a restart, its [M3U](m3u-export.md) and Navidrome playlist are refreshed once, as at the end of the original download.

@@ -4,7 +4,7 @@ icon: lucide/cog
 
 # Comment ça marche
 
-Le pipeline de téléchargement de Downtify comporte trois étapes :
+Le pipeline de téléchargement de Castify comporte trois étapes :
 
 ```
 Spotify embed  →  YouTube Music search  →  yt-dlp + ffmpeg + mutagen
@@ -13,19 +13,19 @@ Spotify embed  →  YouTube Music search  →  yt-dlp + ffmpeg + mutagen
 
 ## 1. Métadonnées — extraction de la page d’intégration Spotify
 
-Quand vous collez une URL Spotify, Downtify récupère la page publique `open.spotify.com/embed` de ce titre, album ou playlist. Aucun compte Spotify, aucune clé d’API ni abonnement Premium n’est nécessaire — la page d’intégration est publiquement accessible.
+Quand vous collez une URL Spotify, Castify récupère la page publique `open.spotify.com/embed` de ce titre, album ou playlist. Aucun compte Spotify, aucune clé d’API ni abonnement Premium n’est nécessaire — la page d’intégration est publiquement accessible.
 
 Pour les **titres**, l’intégration renvoie : titre, artiste(s), nom de l’album, année de sortie, durée et URL de la pochette.
 
-Pour les **albums et playlists**, elle renvoie la liste des titres. Les intégrations de playlist sont plafonnées à environ 50–100 entrées ; Downtify demande donc aussi la liste complète au point de terminaison anonyme `api.spotify.com` de Spotify, avec pagination, pour gérer les playlists de plusieurs centaines de morceaux.
+Pour les **albums et playlists**, elle renvoie la liste des titres. Les intégrations de playlist sont plafonnées à environ 50–100 entrées ; Castify demande donc aussi la liste complète au point de terminaison anonyme `api.spotify.com` de Spotify, avec pagination, pour gérer les playlists de plusieurs centaines de morceaux.
 
 ::: info Enrichissement des métadonnées par titre
-Les entrées de playlist dans l’intégration n’ont pas l’année de sortie et utilisent la pochette de la playlist au lieu de la pochette d’album de chaque titre. Pour la [Surveillance de playlists](features/playlist-monitor.md), Downtify récupère à nouveau chaque nouveau titre individuellement afin d’obtenir la bonne pochette et la bonne année avant de télécharger.
+Les entrées de playlist dans l’intégration n’ont pas l’année de sortie et utilisent la pochette de la playlist au lieu de la pochette d’album de chaque titre. Pour la [Surveillance de playlists](features/playlist-monitor.md), Castify récupère à nouveau chaque nouveau titre individuellement afin d’obtenir la bonne pochette et la bonne année avant de télécharger.
 :::
 
 ## 2. Correspondance audio — YouTube Music, puis YouTube
 
-Downtify utilise [`ytmusicapi`](https://ytmusicapi.readthedocs.io/) pour chercher sur YouTube Music la meilleure correspondance audio. La requête est construite à partir du titre du morceau et du nom de l’artiste.
+Castify utilise [`ytmusicapi`](https://ytmusicapi.readthedocs.io/) pour chercher sur YouTube Music la meilleure correspondance audio. La requête est construite à partir du titre du morceau et du nom de l’artiste.
 
 Un résultat n’est accepté que si son titre ressemble au titre source et s’il partage au moins un artiste. Le suffixe de version à tiret de Spotify et celui entre parenthèses de YouTube Music sont traités comme identiques (`Tubarões - Ao Vivo` correspond à `Tubarões (Ao Vivo)`), et un crédit d’artistes que YouTube Music regroupe en une seule entrée (`A, B, and C`) est éclaté avant la comparaison. Un « The » initial dans les noms d’artistes est ignoré (`Eden Project` correspond à `The Eden Project`), et un titre peut correspondre à une partie du titre d’une mise en ligne séparée par ` - ` (`くちづけDiamond - Kuchizuke Diamond`, `Game OST - Song Title - Artist`) tant que les autres parties ne désignent pas une version différente. Les versions karaoké, reprise, instrumentale, accélérée/ralentie, live (y compris `Ao Vivo`/`En Vivo`), acoustique, remix et dans une autre langue (par ex. `(Spanish Version)`) sont rejetées, sauf si le morceau source est lui-même cette version. Parmi les résultats restants, celui dont la durée est la plus proche de celle de Spotify l’emporte, avec un bonus pour un nom d’album concordant. Si aucun résultat ne convient, la recherche est refaite avec les mots dans l’autre ordre (`<titre> <artiste>` au lieu de `<artiste> <titre>`) — YouTube Music classe les résultats différemment selon l’ordre des mots, et certains morceaux n’apparaissent près du haut que d’une façon. Si cela ne donne rien non plus et que l’album est connu, la liste des titres de l’album est parcourue directement.
 
@@ -40,17 +40,17 @@ Les résultats de YouTube standard passent les mêmes vérifications de titre, d
 
 Si aucun des deux sites n’a de correspondance acceptable, le titre échoue avec `Could not find a YouTube match for '<title>'` plutôt que de télécharger le mauvais morceau.
 
-Pour les URL YouTube saisies directement, cette étape est ignorée — Downtify télécharge cette vidéo précise.
+Pour les URL YouTube saisies directement, cette étape est ignorée — Castify télécharge cette vidéo précise.
 
 ::: info Liens Deezer
-Un lien Deezer de titre/album/playlist/artiste collé (`deezer.com/track/…`) fonctionne comme un lien Spotify : l’API REST publique de Deezer fournit titre, artiste(s), album et pochette, chaque titre est diffusé en entier depuis YouTube avant que vous ne le téléchargiez, et cette même étape le fait correspondre sur YouTube Music/YouTube. Downtify n’a pas de résolveur de discographie Deezer propre au-delà de ce que renvoie déjà l’API de Deezer ; un lien Deezer se télécharge donc et (pour une playlist) obtient son propre M3U et sa pochette, mais ne peut pas être surveillé par la [Surveillance de playlists](features/playlist-monitor.md).
+Un lien Deezer de titre/album/playlist/artiste collé (`deezer.com/track/…`) fonctionne comme un lien Spotify : l’API REST publique de Deezer fournit titre, artiste(s), album et pochette, chaque titre est diffusé en entier depuis YouTube avant que vous ne le téléchargiez, et cette même étape le fait correspondre sur YouTube Music/YouTube. Castify n’a pas de résolveur de discographie Deezer propre au-delà de ce que renvoie déjà l’API de Deezer ; un lien Deezer se télécharge donc et (pour une playlist) obtient son propre M3U et sa pochette, mais ne peut pas être surveillé par la [Surveillance de playlists](features/playlist-monitor.md).
 :::
 
 ## 3. Téléchargement et tags — yt-dlp + ffmpeg + mutagen
 
 ### Téléchargement
 
-[yt-dlp](https://github.com/yt-dlp/yt-dlp) télécharge l’audio depuis YouTube. Downtify le configure pour essayer plusieurs clients de lecteur dans l’ordre (`ios`, `android`, `web_embedded`, `mweb`, `web`, `tv`) afin de contourner les défis de détection de bots de YouTube. Voir [Variables d’environnement](getting-started/environment-variables.md) pour les options anti-bot avancées.
+[yt-dlp](https://github.com/yt-dlp/yt-dlp) télécharge l’audio depuis YouTube. Castify le configure pour essayer plusieurs clients de lecteur dans l’ordre (`ios`, `android`, `web_embedded`, `mweb`, `web`, `tv`) afin de contourner les défis de détection de bots de YouTube. Voir [Variables d’environnement](getting-started/environment-variables.md) pour les options anti-bot avancées.
 
 ### Conversion
 
@@ -76,7 +76,7 @@ Les tags ID3/Vorbis/MP4 exacts dépendent du format de sortie. Voir [Paroles](fe
 
 ## Progression en temps réel
 
-Downtify diffuse la progression des téléchargements vers le navigateur via une connexion **WebSocket** (`/api/ws`). À mesure que yt-dlp signale l’avancement, le serveur diffuse des mises à jour de pourcentage et d’état à tous les clients connectés. Vous voyez donc la barre de progression avancer en temps réel — sans polling, sans rechargement de la page.
+Castify diffuse la progression des téléchargements vers le navigateur via une connexion **WebSocket** (`/api/ws`). À mesure que yt-dlp signale l’avancement, le serveur diffuse des mises à jour de pourcentage et d’état à tous les clients connectés. Vous voyez donc la barre de progression avancer en temps réel — sans polling, sans rechargement de la page.
 
 ## Nom des fichiers et organisation
 

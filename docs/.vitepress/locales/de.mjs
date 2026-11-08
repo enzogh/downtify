@@ -4,7 +4,7 @@ export default {
   lang: 'de',
   description:
     'Selbst gehosteter Musik-Downloader. Spotify-Link einfügen, perfekt getaggte Audiodatei erhalten — ohne API-Schlüssel, ohne Konto, ohne Aufwand.',
-  titleSuffix: 'Downtify-Dokumentation',
+  titleSuffix: 'Castify-Dokumentation',
   containers: {
     info: 'Hinweis',
     tip: 'Tipp',
@@ -19,7 +19,7 @@ export default {
     navigation: 'Navigation',
     sidebar: 'Seitenleiste',
     documentation: 'Dokumentation',
-    docsHome: 'Startseite der Downtify-Dokumentation',
+    docsHome: 'Startseite der Castify-Dokumentation',
     docsBadge: 'Docs',
     searchDocs: 'Dokumentation durchsuchen',
     search: 'Suchen',
@@ -66,7 +66,6 @@ export default {
       'getting-started/environment-variables.md': 'Umgebungsvariablen',
       'features/index.md': 'Überblick',
       'features/charts.md': 'Charts',
-      'features/similar.md': 'Ähnliche Titel',
       'features/finder.md': 'Finder',
       'features/download-settings.md': 'Download-Einstellungen',
       'features/download-queue.md': 'Download-Warteschlange',

@@ -172,8 +172,6 @@ export default {
     serverHint:
       'Applies to all accounts, browsers and Android clients. Wait for external work to finish before enabling it. The phone still needs access to the server unless tracks are downloaded.',
     empty: 'No matching tracks in the accessible library.',
-    similar:
-      'Similar tracks from saved library tags. No external provider is contacted.',
   },
   playlistFavorites: {
     title: 'Favori çalma listeleri',
@@ -262,7 +260,7 @@ export default {
     search: '“{query}” ara',
     website: 'Resmî web sitesi',
     failed: 'Mağazalarda aranamadı.',
-    note: 'Bandcamp her satışın büyük kısmını sanatçıya verir. Bunlar sıradan bağlantılardır: Downtify bir şey satmaz ve bunlardan kazanç elde etmez.',
+    note: 'Bandcamp her satışın büyük kısmını sanatçıya verir. Bunlar sıradan bağlantılardır: Castify bir şey satmaz ve bunlardan kazanç elde etmez.',
   },
   playlistSearch: {
     placeholder: 'Bu listede ara',
@@ -306,7 +304,6 @@ export default {
     discover: 'Keşfet',
     podcasts: 'Podcastler',
     charts: 'Müzik listeleri',
-    similar: 'Benzerler',
     settings: 'Ayarlar',
     more: 'Daha fazla',
     playlists: 'Çalma listeleri',
@@ -388,7 +385,7 @@ export default {
       'YouTube Music’te ara ya da bir şarkı, albüm veya çalma listesinin Spotify veya YouTube Music bağlantısını yapıştır.',
     step2Title: 'İndir',
     step2Body:
-      'Downtify sesi alır ve her dosyaya başlık, sanatçı, albüm, kapak ve şarkı sözü ekler.',
+      'Castify sesi alır ve her dosyaya başlık, sanatçı, albüm, kapak ve şarkı sözü ekler.',
     step3Title: 'Her yerde dinle',
     step3Body:
       'Burada çal, çalma listelerini İzleyici ile senkronize tut ya da Jellyfin, Plex veya Navidrome’u kitaplığına yönlendir.',
@@ -422,7 +419,7 @@ export default {
     typeSingle: 'Single',
     typeEp: 'EP',
     unsupportedLink:
-      'Downtify bu bağlantıyı indiremiyor. Bir Spotify parçası, albümü veya çalma listesi, bir YouTube Music bağlantısı ya da bir SoundCloud parçası yapıştır.',
+      'Castify bu bağlantıyı indiremiyor. Bir Spotify parçası, albümü veya çalma listesi, bir YouTube Music bağlantısı ya da bir SoundCloud parçası yapıştır.',
     tipSearchTitle: 'Adla ara',
     tipSearchBody:
       'Bir sanatçı, albüm veya şarkı yaz — sonuçlar YouTube Music’ten gelir.',
@@ -439,30 +436,6 @@ export default {
     failed: 'Liste yüklenemedi',
     empty: 'Şu anda listede bir şey yok',
     playlist: 'Çalma listesi',
-  },
-  similar: {
-    title: 'Benzerler',
-    subtitle: 'Adını verdiğiniz parçaya benzeyen şarkılar, YouTube Music ile.',
-    artist: 'Sanatçı',
-    artistPlaceholder: 'Cher',
-    track: 'Parça',
-    trackPlaceholder: 'Believe',
-    searchButton: 'Benzerleri bul',
-    resultsFor: '{artist} adlı sanatçının “{track}” parçasına benzeyenler',
-    resultsForArtist: '{artist} adlı sanatçıya benzeyenler',
-    resultsForTrack: '“{track}” parçasına benzeyenler',
-    failed: 'Benzer parçalar bulunamadı',
-    noResults: 'Benzer bir şey bulunamadı',
-    noResultsHint: 'Sanatçı ve parça yazımını kontrol edin.',
-    findSimilar: 'Benzer parçaları bul',
-    noDownloadMatch: '“{name}” için indirilebilir eşleşme yok',
-    resolveFailed: 'Bu parça indirme için hazırlanamadı',
-    tipSimilarTitle: 'Tek parçadan başlayın',
-    tipSimilarBody:
-      'Sanatçıyı veya parçayı yazın — YouTube, karmasıyla yanıt verir.',
-    tipDownloadTitle: 'Tamamını dinleyin',
-    tipDownloadBody:
-      'Her satır oynatıcıda tamamıyla çalar; beğendiklerinizi indirin.',
   },
   stream: {
     failed: '“{name}” çalınamadı.',
@@ -575,7 +548,7 @@ export default {
     pausedTitle: 'İndirmeler duraklatıldı',
     pausedBody: 'Sürdürülene kadar yeni indirme başlamayacak.',
     pausedKept:
-      'Bekleyen şarkılar, Downtify yeniden başlasa veya güncellense bile kuyrukta kalır.',
+      'Bekleyen şarkılar, Castify yeniden başlasa veya güncellense bile kuyrukta kalır.',
     emptyTitle: 'Kuyrukta bir şey yok',
     emptyBody:
       'Müzik ara ya da bir bağlantı yapıştır — indirmeler burada görünür.',
@@ -652,7 +625,7 @@ export default {
     noMatchesHint: 'Başka bir filtre dene.',
     clearFilters: 'Filtreleri temizle',
     loadFailed: 'Kitaplık yüklenemedi',
-    loadFailedHint: 'Downtify’ın çalıştığından emin ol ve tekrar dene.',
+    loadFailedHint: 'Castify’ın çalıştığından emin ol ve tekrar dene.',
     maybeDeleted: 'Silinmiş veya yeniden adlandırılmış olabilir.',
     backToLibrary: 'Kitaplığa dön',
     selectAll: 'Tümünü seç',
@@ -695,7 +668,7 @@ export default {
     replaceAudio: 'Use verified Deemix recordings',
     replaceAudioHint:
       'Match the exact artist, title and album. Keep music in the Deemix folder. Ambiguous matches leave originals untouched. This scan replaces audio instead of retagging it.',
-    deleteOriginals: 'Remove old Downtify audio after import',
+    deleteOriginals: 'Remove old Castify audio after import',
     deleteOriginalsHint:
       'Only remove each verified original after playlists, likes and playback references are updated. External files and sidecars are never removed.',
     replacementProgress:
@@ -707,7 +680,7 @@ export default {
     subtitle:
       'Zaten indirdiğiniz müzikleri yeniden indirmek yerine iyileştirin.',
     intro:
-      'Downtify kitaplığınızdaki her parçaya bakar ve eski bir sürümün geride bıraktıklarını onarır: küçük kapaklar, eksik şarkı sözleri, yarım etiketler.',
+      'Castify kitaplığınızdaki her parçaya bakar ve eski bir sürümün geride bıraktıklarını onarır: küçük kapaklar, eksik şarkı sözleri, yarım etiketler.',
     audioNote:
       'Ses dosyaları asla değiştirilmez: yalnızca kapak, şarkı sözü ve etiketler güncellenir. Yanlış kaynaktan inen bir parça olduğu gibi kalır — silip yeniden indirin.',
     safeNote:
@@ -739,7 +712,7 @@ export default {
       'Hiç şarkı sözü olmayan parçaları sağlayıcı listenizle arar ve bulduğunu dosyaya gömer.',
     metadata: 'Etiketleri yenile',
     metadataHint:
-      'Albüm, albüm sanatçısı, çıkış tarihi ve parça numarasını Spotify’dan doldurur. Yalnızca Downtify’ın Spotify parçasını hâlâ bildiği parçalar için.',
+      'Albüm, albüm sanatçısı, çıkış tarihi ve parça numarasını Spotify’dan doldurur. Yalnızca Castify’ın Spotify parçasını hâlâ bildiği parçalar için.',
     tracksAffected: { one: '{count} parça', other: '{count} parça' },
     options: 'Seçenekler',
     artworkMin: 'Şu boyutun altındaki kapakları iyileştir',
@@ -752,7 +725,7 @@ export default {
     preferYoutube: 'YouTube Music’i yeğle',
     recheck: 'Bir parçayı şu süre boyunca yeniden denetleme',
     recheckHint:
-      'Yakında denetlenmiş bir parça sonraki taramada atlanır. Daha yeni bir Downtify her zaman her şeyi yeniden denetler.',
+      'Yakında denetlenmiş bir parça sonraki taramada atlanır. Daha yeni bir Castify her zaman her şeyi yeniden denetler.',
     recheckDays: { one: '{count} gün', other: '{count} gün' },
     recheckNever: 'Her parçayı her zaman denetle',
     start: 'Başlat',
@@ -824,7 +797,7 @@ export default {
     estimatedNote:
       '{date} öncesinde boyut, hâlâ kitaplıkta olan şarkıların tarihlerinden tahmin edilir; o zamandan beri silinen şarkılar dahil değildir.',
     allEstimatedNote:
-      'Downtify bundan sonra kitaplık boyutunu her saat not eder. Önceki günler, hâlâ kitaplıkta olan şarkıların tarihlerinden tahmin edilir.',
+      'Castify bundan sonra kitaplık boyutunu her saat not eder. Önceki günler, hâlâ kitaplıkta olan şarkıların tarihlerinden tahmin edilir.',
     addedPerDay: 'Günlük eklenen',
     addedPerWeek: 'Haftalık eklenen',
     sourcesTitle: 'Kaynağa göre',
@@ -863,11 +836,11 @@ export default {
     downloadedBySource: 'Kaynağa göre indirilen · {size}',
     noDownloads: 'Bu dönemde hiçbir şey indirilmedi.',
     logEmptyNote:
-      'Henüz hiçbir indirme sayılmadı: Downtify bunları bu sürümden itibaren sayar.',
+      'Henüz hiçbir indirme sayılmadı: Castify bunları bu sürümden itibaren sayar.',
     logSinceNote: 'İndirmeler {date} tarihinden beri sayılıyor.',
     cleanupTitle: 'Temizlenebilir',
     cleanupHint:
-      'Downtify’ın gereksiz ya da artakalan olarak tanıyabildiği alan. Buradan hiçbir şey silinmez.',
+      'Castify’ın gereksiz ya da artakalan olarak tanıyabildiği alan. Buradan hiçbir şey silinmez.',
     duplicatesTitle: 'Yinelenen şarkılar',
     duplicatesHint:
       '{exact} aynı dosya olarak iki kez saklanmış, {likely} büyük olasılıkla başka bir kaynaktan gelen aynı şarkı. Boyut, yalnızca en büyük kopyayı tutmanın boşaltacağı alandır.',
@@ -877,7 +850,7 @@ export default {
     },
     workingTitle: 'slskd çalışma kopyaları',
     workingHint:
-      'Downtify kitaplığa kopyaladıktan sonra slskd klasöründe kalan Soulseek aktarımları.',
+      'Castify kitaplığa kopyaladıktan sonra slskd klasöründe kalan Soulseek aktarımları.',
     workingInPlace:
       'slskd dosyaları yerinde bırakılıyor, yani slskd klasörü kitaplığın bir parçası.',
     leftoversTitle: 'Artakalan geçici dosyalar',
@@ -886,7 +859,7 @@ export default {
     orphansHint:
       'Şarkıları artık olmayan şarkı sözü dosyaları ve albüm kapakları.',
     foldersTitle: 'Klasörler',
-    foldersHint: 'Downtify’ın yazdığı klasörlerdeki her şey, türüne göre.',
+    foldersHint: 'Castify’ın yazdığı klasörlerdeki her şey, türüne göre.',
     rescan: 'Yeniden tara',
     scanFailed: 'Klasörler taranamadı.',
     scanning: 'Klasörler taranıyor…',
@@ -1008,7 +981,7 @@ export default {
       unavailable: 'Bu çalma listesi için tanılama kullanılamıyor.',
       items: {
         spotify_tracks: 'Spotify parçaları',
-        downloaded: 'Downtify tarafından indirildi',
+        downloaded: 'Castify tarafından indirildi',
         physical_files: 'Bulunan dosyalar',
         track_index: 'TrackIndex eşlemeleri',
         monitor_history: 'Monitor geçmişi',
@@ -1334,9 +1307,9 @@ export default {
     tileSharedHint: '{size}, diğer izlemelerde de var, bir kez saklanır',
     tileFailing: 'Başarısız',
     unknownNote: {
-      one: '{count} şarkı, Downtify şarkıların bir izlemeye nasıl girdiğini kaydetmeden önce eklendi.',
+      one: '{count} şarkı, Castify şarkıların bir izlemeye nasıl girdiğini kaydetmeden önce eklendi.',
       other:
-        '{count} şarkı, Downtify şarkıların bir izlemeye nasıl girdiğini kaydetmeden önce eklendi.',
+        '{count} şarkı, Castify şarkıların bir izlemeye nasıl girdiğini kaydetmeden önce eklendi.',
     },
     missingNote: {
       one: 'Bu izlemenin kaydettiği {count} şarkı artık diskte değil.',
@@ -1364,9 +1337,9 @@ export default {
       other: '{count} tanesi ilk kontrolle geldi',
     },
     periodUnknown: {
-      one: 'Bunlardan {count} tanesi, Downtify nasıl geldiğini kaydetmeden önce kaydedildi',
+      one: 'Bunlardan {count} tanesi, Castify nasıl geldiğini kaydetmeden önce kaydedildi',
       other:
-        'Bunlardan {count} tanesi, Downtify nasıl geldiğini kaydetmeden önce kaydedildi',
+        'Bunlardan {count} tanesi, Castify nasıl geldiğini kaydetmeden önce kaydedildi',
     },
     barsPerDay: 'Günlük yeni şarkılar',
     barsPerWeek: 'Haftalık yeni şarkılar',
@@ -1397,7 +1370,7 @@ export default {
     body: 'Onu kitaplığına getiren çalma listesi izlemeleri.',
     failed: 'Bu şarkının nereden geldiği yüklenemedi.',
     firstTitle: 'İlk indiren',
-    none: 'Hiçbir izleme indirmedi: elle indirildi ya da Downtify bunu kaydetmeden önce indirildi.',
+    none: 'Hiçbir izleme indirmedi: elle indirildi ya da Castify bunu kaydetmeden önce indirildi.',
     otherAccount: 'Başka bir hesabın izlemesi',
     backfill: 'İlk kontrol',
     estimated: 'Muhtemelen',
@@ -1445,7 +1418,7 @@ export default {
     detach: 'Kaynaktan ayır',
     detachTitle: '“{name}” kaynağından ayrılsın mı?',
     detachBody:
-      'Şarkı ekleyip çıkarabilirsin. Şarkılar olduğu gibi kalır, ancak Downtify listeyi Spotify veya YouTube Music ile eşit tutmayı bırakır ve varsa izlemesini kaldırır.',
+      'Şarkı ekleyip çıkarabilirsin. Şarkılar olduğu gibi kalır, ancak Castify listeyi Spotify veya YouTube Music ile eşit tutmayı bırakır ve varsa izlemesini kaldırır.',
     detached: '“{name}” artık düzenlenebilir',
     by: '{owner} tarafından',
     sharedWithCount: {
@@ -1464,7 +1437,7 @@ export default {
   settings: {
     apps: 'Uygulamalar',
     title: 'Ayarlar',
-    subtitle: 'Downtify’ın müziğini nasıl bulduğu, indirdiği ve etiketlediği.',
+    subtitle: 'Castify’ın müziğini nasıl bulduğu, indirdiği ve etiketlediği.',
     sections: 'Bölümler',
     general: 'Genel',
     sources: 'Ses kaynakları',
@@ -1529,7 +1502,7 @@ export default {
       'Keep audio, artwork and lyrics in the shared Deemix folder, without rewriting its tags. Configure a private ARL file on the server; do not paste it here.',
     deemixUrl: 'Deemix server URL',
     deemixRemote: 'Download folder inside Deemix',
-    deemixLocal: 'Same folder inside Downtify (read-only is supported)',
+    deemixLocal: 'Same folder inside Castify (read-only is supported)',
     deemixQuality: 'Audio quality',
     slskdTitle: 'slskd',
     slskdFormats: 'Biçim önceliği',
@@ -1553,7 +1526,7 @@ export default {
     slskdUrl: 'Sunucu URL’si',
     slskdKey: 'API anahtarı',
     slskdFolder: 'slskd indirme klasörü',
-    slskdFolderHint: 'Ana makinedeki değil, Downtify kapsayıcısındaki yol.',
+    slskdFolderHint: 'Ana makinedeki değil, Castify kapsayıcısındaki yol.',
     slskdTimeout: 'Toplam zaman aşımı',
     slskdQueuedTimeout: 'Kuyruk zaman aşımı',
     slskdInPlace: 'Dosyaları slskd klasöründe bırak',
@@ -1644,7 +1617,7 @@ export default {
     lyricsNeteaseHint: 'Geniş katalog, genellikle zamanlı',
     navidromeTitle: 'Navidrome',
     navidromeHint:
-      'İndirilen çalma listelerini Navidrome’a yansıt. Müzik klasörü Downtify indirmelerini içermeli.',
+      'İndirilen çalma listelerini Navidrome’a yansıt. Müzik klasörü Castify indirmelerini içermeli.',
     navidromeEnabled: 'Navidrome kullan',
     navidromeEnabledHint: 'Sunucu URL’si, kullanıcı adı ve parola gerekir.',
     navidromeUrl: 'Sunucu URL’si',
@@ -1653,7 +1626,7 @@ export default {
     navidromeAdminUser: 'Yönetici kullanıcı adı',
     navidromeAdminPassword: 'Yönetici parolası',
     navidromeAdminHint:
-      'İsteğe bağlı — yeni şarkıların daha çabuk görünmesi için Downtify’ın tarama başlatmasını sağlar.',
+      'İsteğe bağlı — yeni şarkıların daha çabuk görünmesi için Castify’ın tarama başlatmasını sağlar.',
     test: {
       connection_not_deemix: 'The server is not a compatible Deemix instance.',
       quality_unavailable:
@@ -1662,12 +1635,12 @@ export default {
       button: 'Bağlantıyı sına',
       testing: 'Sınanıyor…',
       needFields: 'Önce yukarıdaki alanları doldurun.',
-      requestFailed: 'Sınama çalıştırılamadı. Downtify hâlâ erişilebilir mi?',
+      requestFailed: 'Sınama çalıştırılamadı. Castify hâlâ erişilebilir mi?',
       connected: '{server} sunucusuna bağlandı.',
       unknown: 'Sınamadan beklenmeyen yanıt ({code}).',
       config_missing: 'Önce zorunlu alanları doldurun.',
       connection_unreachable:
-        '{url} adresine ulaşılamıyor. Adresi ve sunucunun çalıştığını, Downtify’dan erişilebilir olduğunu denetleyin.',
+        '{url} adresine ulaşılamıyor. Adresi ve sunucunun çalıştığını, Castify’dan erişilebilir olduğunu denetleyin.',
       connection_timeout: '{url} zamanında yanıt vermedi.',
       connection_bad_url:
         'Bu adres geçerli değil. http:// veya https:// ile başlayın.',
@@ -1684,9 +1657,9 @@ export default {
       soulseek_ok: 'slskd Soulseek’e bağlı.',
       soulseek_offline:
         'slskd Soulseek’e bağlı değil. Bağlanana kadar hiçbir şey bulamaz.',
-      folder_ok: 'Downtify {detail} yolunu okuyabiliyor.',
+      folder_ok: 'Castify {detail} yolunu okuyabiliyor.',
       folder_missing:
-        'Downtify {detail} yolunu okuyamıyor. Burası slskd’nin indirdiği klasör olmalı ve bu kapsayıcıya bağlanmış olmalı.',
+        'Castify {detail} yolunu okuyamıyor. Burası slskd’nin indirdiği klasör olmalı ve bu kapsayıcıya bağlanmış olmalı.',
       scan_ok: 'Bu hesap kitaplık taraması başlatabilir.',
       scan_not_admin:
         'Bu hesap kitaplık taraması başlatamaz — Navidrome bunu yalnızca yöneticilere verir. Yeni şarkılar daha erken görünsün diye yönetici kullanıcı adını ve parolasını doldurun.',
@@ -1708,7 +1681,7 @@ export default {
       'Kitaplığın daha hızlı yüklenmesi için çıkarılan kapakları diskte tut. Ek alan kullanır.',
     reconcile: 'Kitaplık yollarını düzelt',
     reconcileHint:
-      'Dosyaları Downtify dışında taşıdın veya yeniden adlandırdın mı? Bu, kayıtlı yolları günceller ve etkinse M3U ve Navidrome listelerini yeniden yazar.',
+      'Dosyaları Castify dışında taşıdın veya yeniden adlandırdın mı? Bu, kayıtlı yolları günceller ve etkinse M3U ve Navidrome listelerini yeniden yazar.',
     reconcileButton: 'Yolları düzelt',
     reconcilePaths: {
       one: '{count} yol güncellendi.',
@@ -1727,10 +1700,10 @@ export default {
     reconcileError: 'Kitaplık yolları düzeltilemedi.',
     externalLibraryTitle: 'Mevcut müzik klasörleri',
     externalLibraryHint:
-      'Zaten sahip olduğunuz ses klasörleri. Dosyalar yerinde kalır; Downtify etiketlerini okur ve eşleşen sanatçıların altına koyar. Docker’da kapsayıcı içindeki yolu kullanın ve ana makine klasörünü bağlayın.',
+      'Zaten sahip olduğunuz ses klasörleri. Dosyalar yerinde kalır; Castify etiketlerini okur ve eşleşen sanatçıların altına koyar. Docker’da kapsayıcı içindeki yolu kullanın ve ana makine klasörünü bağlayın.',
     externalLibraryFolder: 'Klasör',
     externalLibraryFolderHint:
-      'Downtify kapsayıcısındaki yol, ana makinedeki değil.',
+      'Castify kapsayıcısındaki yol, ana makinedeki değil.',
     externalLibraryPlaceholder: '/music/collection',
     externalLibraryAdd: 'Klasör ekle',
     externalLibraryRemove: 'Klasörü kaldır',
@@ -1777,7 +1750,7 @@ export default {
     version: 'Sürüm {version}',
     upToDate: 'Güncel',
     source: 'Kaynak kodu',
-    sourceHint: 'Downtify açık kaynaklıdır.',
+    sourceHint: 'Castify açık kaynaklıdır.',
     docs: 'Belgeler',
     docsHint: 'Kurulum, ayarlar ve API başvurusu.',
     openDocs: 'Belgeleri aç',
@@ -1790,7 +1763,7 @@ export default {
     networkHint: 'Bu sunucuya nasıl erişilir. Bunu yalnızca yöneticiler görür.',
     experimental: 'Deneysel',
     experimentalHint:
-      'Mobil uygulamalar hâlâ geliştiriliyor. Android uygulamasının henüz yayımlanmış bir sürümü yok ve eşleme ile yayın akışının çalışma biçimi Downtify sürümleri arasında değişebilir.',
+      'Mobil uygulamalar hâlâ geliştiriliyor. Android uygulamasının henüz yayımlanmış bir sürümü yok ve eşleme ile yayın akışının çalışma biçimi Castify sürümleri arasında değişebilir.',
   },
   shortcuts: {
     title: 'Klavye kısayolları',
@@ -1813,7 +1786,7 @@ export default {
     help: 'Kısayolları göster',
   },
   auth: {
-    signInTitle: 'Downtify’a giriş yap',
+    signInTitle: 'Castify’a giriş yap',
     signInBody: 'Kullanıcı adınız ve parolanızla giriş yapın.',
     signInBodyOidcOnly: 'Kimlik sağlayıcınızla giriş yapın.',
     username: 'Kullanıcı adı',
@@ -1827,7 +1800,7 @@ export default {
     tooMany: 'Çok fazla deneme. Birkaç dakika bekleyip tekrar deneyin.',
     forgotHint:
       'Yönetici parolasını mı unuttunuz? Sunucuda “python main.py auth-reset” komutunu çalıştırın.',
-    noticeTitle: 'Downtify artık kullanıcı hesaplarına sahip',
+    noticeTitle: 'Castify artık kullanıcı hesaplarına sahip',
     noticeBody:
       'Artık herkes kullanıcı adı ve parolayla giriş yapıyor; bir yönetici Ayarlar → Kullanıcılar bölümünden başkalarına hesap açabilir. Şununla giriş yapın:',
     noticeKeptPassword: 'daha önce belirlediğiniz parola',
@@ -1836,7 +1809,7 @@ export default {
   },
   apps: {
     serverGroup: 'Bu sunucu',
-    serverGroupHint: 'Downtify uygulamalarının bu sunucuyu nasıl gördüğü.',
+    serverGroupHint: 'Castify uygulamalarının bu sunucuyu nasıl gördüğü.',
     serverName: 'Sunucu adı',
     serverNameHint: 'Uygulamalarda ve ağınızda sunucu ararken gösterilir.',
     serverId: 'Sunucu kimliği {id}',
@@ -1858,7 +1831,7 @@ export default {
     signOutEverywhereTitle: 'Her yerden çıkış yapılsın mı?',
     pairTitle: 'Telefon eşleştir',
     pairBody:
-      'Downtify uygulamasında “Kodu tara”yı seçin ve kamerayı buraya tutun.',
+      'Castify uygulamasında “Kodu tara”yı seçin ve kamerayı buraya tutun.',
     qrLabel: 'Eşleştirme için QR kodu',
     orTypeCode: 'veya bu kodu yazın',
     expiresIn: '{time} içinde sona erer',
@@ -1873,7 +1846,7 @@ export default {
       'Tüm uygulamalarınızın eşleşmesini kaldırır ve bu dahil giriş yaptığınız tüm tarayıcılardan çıkış yapar.',
     signOutEverywhereBody:
       'Uygulamalarınızı yeniden eşlemeniz ve her tarayıcıda yeniden giriş yapmanız gerekecek.',
-    androidGroup: 'Android için Downtify',
+    androidGroup: 'Android için Castify',
     androidHint:
       'Kitaplığınıza doğrudan bu sunucudan göz atıp çalan bir uygulama.',
     androidBody:
@@ -1906,7 +1879,7 @@ export default {
   },
   port: {
     label: 'Port',
-    hint: 'Downtify’ın dinlediği port. Sunucu başladığında ya da “Kaydet ve yeniden başlat” ile hemen uygulanır.',
+    hint: 'Castify’ın dinlediği port. Sunucu başladığında ya da “Kaydet ve yeniden başlat” ile hemen uygulanır.',
     locked:
       'Sunucuda {source} tarafından belirlenmiş. Portu buradan seçmek için onu kaldırın.',
     save: 'Kaydet',
@@ -1916,18 +1889,18 @@ export default {
     saved: '{port} portu sonraki başlangıç için kaydedildi',
     invalid: '{min} ile {max} arasında bir port kullanın',
     dockerWarning:
-      'Downtify Docker’da çalışıyor: port eşlemesini aynı porta çevirin (ports: YENİ:YENİ) ve kapsayıcıyı yeniden oluşturun ya da network_mode: host kullanın - yoksa Downtify’a erişilemez. DOWNTIFY_PORT ayarlamak eski portu geri getirir.',
+      'Castify Docker’da çalışıyor: port eşlemesini aynı porta çevirin (ports: YENİ:YENİ) ve kapsayıcıyı yeniden oluşturun ya da network_mode: host kullanın - yoksa Castify’a erişilemez. DOWNTIFY_PORT ayarlamak eski portu geri getirir.',
     proxyWarning:
-      'Downtify’a başka bir adresten (ters vekil veya port eşlemesi) erişiyorsunuz: onu da yeni porta yönlendirin.',
+      'Castify’a başka bir adresten (ters vekil veya port eşlemesi) erişiyorsunuz: onu da yeni porta yönlendirin.',
     confirmTitle: '{port} portunda yeniden başlatılsın mı?',
     confirmBody:
       'Süren indirmeler durdurulur ve tüm sayfalar ile uygulamalar yeni porta yeniden bağlanır.',
     restartingTitle: '{port} portunda yeniden başlatılıyor',
     restartingBody:
-      'Downtify’ın geri gelmesi bekleniyor… Bu sayfa yeni adresi kendisi açacak.',
+      'Castify’ın geri gelmesi bekleniyor… Bu sayfa yeni adresi kendisi açacak.',
     unreachable:
-      'Downtify henüz yeni portta yanıt vermedi. Yeni adresi deneyin veya sunucu günlüklerine bakın.',
-    openNew: 'Downtify yeniden başlıyor. Yeni adresinde açın:',
+      'Castify henüz yeni portta yanıt vermedi. Yeni adresi deneyin veya sunucu günlüklerine bakın.',
+    openNew: 'Castify yeniden başlıyor. Yeni adresinde açın:',
   },
   account: {
     title: 'Hesap',
@@ -1951,7 +1924,7 @@ export default {
     needsAdmin: 'Bunu yalnızca bir yönetici yapabilir',
     defaultPasswordTitle: 'Varsayılan parolayı değiştirin',
     defaultPasswordBody:
-      '{name} varsayılan parolayla giriş yaptı; bu parolayı Downtify’ı bilen herkes bilir. Ayarlar → Genel bölümünden değiştirin.',
+      '{name} varsayılan parolayla giriş yaptı; bu parolayı Castify’ı bilen herkes bilir. Ayarlar → Genel bölümünden değiştirin.',
     later: 'Sonra',
     changePassword: 'Parolayı değiştir',
   },
@@ -2166,7 +2139,7 @@ export default {
     kicker: 'Podcast',
     notFound: 'Artık bu programa abone değilsiniz',
     noEpisodesTitle: 'Henüz bölüm yok',
-    noEpisodesBody: 'Downtify bu beslemeyi kendi zamanlamasında kontrol eder.',
+    noEpisodesBody: 'Castify bu beslemeyi kendi zamanlamasında kontrol eder.',
     download: 'Bölümü indir',
     downloadFailed: 'Bölüm indirilemedi',
     played: 'Dinlendi',

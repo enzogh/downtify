@@ -21,7 +21,6 @@ export const NAV = [
     items: [
       { title: 'Overview', page: 'features/index.md' },
       { title: 'Charts', page: 'features/charts.md' },
-      { title: 'Similar', page: 'features/similar.md' },
       { title: 'Finder', page: 'features/finder.md' },
       { title: 'Download Settings', page: 'features/download-settings.md' },
       { title: 'Download Queue', page: 'features/download-queue.md' },

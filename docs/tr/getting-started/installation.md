@@ -4,7 +4,7 @@ icon: lucide/download
 
 # Kurulum
 
-Downtify’ı çalıştırmanın en hızlı yolu tek bir `docker run` komutudur. Ana makinede Python, Node.js veya başka sistem bağımlılığına gerek yok — her şey imajın içinde gelir.
+Castify’ı çalıştırmanın en hızlı yolu tek bir `docker run` komutudur. Ana makinede Python, Node.js veya başka sistem bağımlılığına gerek yok — her şey imajın içinde gelir.
 
 ## Ön koşullar
 
@@ -37,7 +37,7 @@ Her iki birim de kapsayıcı yeniden başlatmaları ve yükseltmeleri boyunca ka
 
 ## Özel bağlantı noktası
 
-Downtify’ı farklı bir ana makine bağlantı noktasında sunmak için `-p`’nin sol tarafını değiştirin:
+Castify’ı farklı bir ana makine bağlantı noktasında sunmak için `-p`’nin sol tarafını değiştirin:
 
 ```bash
 docker run -d \

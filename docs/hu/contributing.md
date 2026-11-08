@@ -12,7 +12,7 @@ Használd a [GitHub issue-követőt](https://github.com/henriquesebastiao/downti
 
 Hibajelentésekhez add meg:
 
-- A Downtify verzióját
+- A Castify verzióját
 - Hogyan telepítetted (Docker run, Docker Compose, Umbrel, …)
 - A reprodukálás lépéseit
 - Mit vártál, és mi történt
@@ -106,7 +106,7 @@ downtify/
 
 ## Fordítás
 
-A Downtifynak két lefordítandó dolga van, és bármelyiket — vagy mindkettőt — elvállalhatod:
+A Castifynak két lefordítandó dolga van, és bármelyiket — vagy mindkettőt — elvállalhatod:
 
 | Amit fordítasz | Hol | Útmutató |
 |---------------|-------|-------|
@@ -133,4 +133,4 @@ A részletekért lásd: [Nemzetköziesítés](features/internationalization.md):
 - Beküldés előtt futtasd az `uv run pytest` parancsot
 - A PR-t a `main` ellen nyisd meg
 
-Ha a Downtify hasznos volt számodra, fontold meg, hogy hagysz egy csillagot a GitHubon — ez segít a projektnek növekedni.
+Ha a Castify hasznos volt számodra, fontold meg, hogy hagysz egy csillagot a GitHubon — ez segít a projektnek növekedni.

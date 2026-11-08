@@ -14,7 +14,7 @@ Már exportáltad a könyvtáradat egy másik szolgáltatásból? Importáld a C
 | [TuneMyMusic](https://www.tunemymusic.com/) | |
 | [Exportify](https://github.com/watsonbox/exportify) | |
 
-A Downtify egyetlen eszköz pontos oszlopsémáját sem kódolja be. Ehelyett a CSV fejlécsorát kis- és nagybetűk megkülönböztetése nélkül veti össze ismert aliasok halmazával (`Title` / `Track` / `Track Title` / `Track Name` / `Song` / …, `Artist` / `Artists` / `Artist Name` / `Artist Name(s)` / … és `Album` / `Album Name` / `Album Title` / …), így a három bármelyikének exportja — vagy egy kézzel készített, ugyanezeket az oszlopneveket használó CSV — átnevezés nélkül működik.
+A Castify egyetlen eszköz pontos oszlopsémáját sem kódolja be. Ehelyett a CSV fejlécsorát kis- és nagybetűk megkülönböztetése nélkül veti össze ismert aliasok halmazával (`Title` / `Track` / `Track Title` / `Track Name` / `Song` / …, `Artist` / `Artists` / `Artist Name` / `Artist Name(s)` / … és `Album` / `Album Name` / `Album Title` / …), így a három bármelyikének exportja — vagy egy kézzel készített, ugyanezeket az oszlopneveket használó CSV — átnevezés nélkül működik.
 
 A cím és az előadó kötelező. Az albumot beolvassa, ha van, és a szám albumneveként tárolja (Sor, illesztés és fájlcímkék). Egyes exportálók további oszlopait (ISRC, Spotify-számazonosító URI, hossz) figyelmen kívül hagyja. Minden sor feloldása ugyanúgy történik, mint egy szabad szöveges keresésé, a YouTube Musicon keresztül.
 
@@ -23,7 +23,7 @@ A cím és az előadó kötelező. Az albumot beolvassa, ha van, és a szám alb
 1. A kezdőlapon kattints a keresőmező alatti **CSV importálása (Soundiiz, Exportify…)** gombra.
 2. Válaszd ki az exportált `.csv` fájlt.
 
-A fájlt teljes egészében a böngésződ olvassa be, és egyszerű szövegként küldi el a szervernek — máshová sosem töltődik fel. A Downtify feldolgozza, sorba állítja az összes felismert sort, te pedig a Letöltési sorra érkezel, ahol az előrehaladás WebSocketen át érkezik, pontosan úgy, mint bármely más kötegelt letöltésnél.
+A fájlt teljes egészében a böngésződ olvassa be, és egyszerű szövegként küldi el a szervernek — máshová sosem töltődik fel. A Castify feldolgozza, sorba állítja az összes felismert sort, te pedig a Letöltési sorra érkezel, ahol az előrehaladás WebSocketen át érkezik, pontosan úgy, mint bármely más kötegelt letöltésnél.
 
 Az importált köteg a fájlról kapja a nevét (a neve `.csv` nélkül), és — mint bármely más lejátszási lista letöltése — [M3U fájlt](m3u-export.md) kap, ha ez a beállítás be van kapcsolva.
 

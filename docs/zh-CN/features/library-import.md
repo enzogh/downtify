@@ -14,16 +14,16 @@ icon: lucide/import
 | [TuneMyMusic](https://www.tunemymusic.com/) | |
 | [Exportify](https://github.com/watsonbox/exportify) | |
 
-Downtify 不会针对某一种工具的固定列结构进行硬编码，而是将 CSV 首行的列名（不区分大小写）与一组已知别名匹配。例如，标题列可以是 `Title`、`Track`、`Track Title`、`Track Name`、`Song` 等；艺人列可以是 `Artist`、`Artists`、`Artist Name`、`Artist Name(s)` 等；专辑列可以是 `Album`、`Album Name`、`Album Title` 等。因此，以上工具导出的文件以及使用相同列名手动制作的 CSV 都无需重命名列即可导入。
+Castify 不会针对某一种工具的固定列结构进行硬编码，而是将 CSV 首行的列名（不区分大小写）与一组已知别名匹配。例如，标题列可以是 `Title`、`Track`、`Track Title`、`Track Name`、`Song` 等；艺人列可以是 `Artist`、`Artists`、`Artist Name`、`Artist Name(s)` 等；专辑列可以是 `Album`、`Album Name`、`Album Title` 等。因此，以上工具导出的文件以及使用相同列名手动制作的 CSV 都无需重命名列即可导入。
 
-标题和艺人是必填项。若存在专辑列，Downtify 会读取其值并将专辑名称用于队列、匹配和文件标签。其他导出列（如 ISRC、Spotify track URI 和时长）会被忽略。每一行都像自由文本搜索一样，通过 YouTube Music 解析。
+标题和艺人是必填项。若存在专辑列，Castify 会读取其值并将专辑名称用于队列、匹配和文件标签。其他导出列（如 ISRC、Spotify track URI 和时长）会被忽略。每一行都像自由文本搜索一样，通过 YouTube Music 解析。
 
 ## 导入方法
 
 1. 在首页搜索框下方点击 **Import a library CSV**。
 2. 选择导出的 `.csv` 文件。
 
-文件完全在浏览器中读取，并以纯文本发送到服务器，不会上传到其他位置。Downtify 会解析文件、将识别出的行加入队列，然后打开 Download Queue 页面。进度通过 WebSocket 实时推送，与其他批量下载相同。
+文件完全在浏览器中读取，并以纯文本发送到服务器，不会上传到其他位置。Castify 会解析文件、将识别出的行加入队列，然后打开 Download Queue 页面。进度通过 WebSocket 实时推送，与其他批量下载相同。
 
 导入批次使用文件名命名（去掉 `.csv` 扩展名）；与其他播放列表下载一样，如果启用了相关设置，也会生成 [M3U 文件](m3u-export.md)。
 

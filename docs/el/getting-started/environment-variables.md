@@ -4,7 +4,7 @@ icon: lucide/settings
 
 # Μεταβλητές περιβάλλοντος
 
-Όλες οι μεταβλητές περιβάλλοντος είναι προαιρετικές. Το Downtify λειτουργεί αμέσως χωρίς καμία από αυτές.
+Όλες οι μεταβλητές περιβάλλοντος είναι προαιρετικές. Το Castify λειτουργεί αμέσως χωρίς καμία από αυτές.
 
 ## Βασικές
 
@@ -44,7 +44,7 @@ environment:
 | `DOWNTIFY_OIDC_USERNAME_CLAIM` | `preferred_username` | Claim used for new account names, falling back to `email` and then `sub`. |
 | `DOWNTIFY_OIDC_GROUPS_CLAIM` | `groups` | Claim containing group names; dotted paths are supported. |
 | `DOWNTIFY_OIDC_ALLOWED_GROUPS` | _(empty)_ | Comma-separated group allowlist; unset means any authenticated provider identity may sign in. |
-| `DOWNTIFY_OIDC_ADMIN_GROUPS` | _(empty)_ | Comma-separated groups mapped to Downtify admins. Other OIDC users are normal users. |
+| `DOWNTIFY_OIDC_ADMIN_GROUPS` | _(empty)_ | Comma-separated groups mapped to Castify admins. Other OIDC users are normal users. |
 | `DOWNTIFY_TRUSTED_PROXIES` | _(μη ορισμένη)_ | Διευθύνσεις ή δίκτυα του reverse proxy σου, χωρισμένα με κόμμα (π.χ. `172.18.0.0/16,10.0.0.5`). Μόνο για αιτήματα από αυτά γίνονται πιστευτές οι κεφαλίδες `X-Forwarded-For`, `X-Forwarded-Proto` και `X-Forwarded-Host` — για τη διεύθυνση πελάτη βάσει της οποίας περιορίζονται οι προσπάθειες σύνδεσης και σύζευξης, τη σημαία secure του cookie σύνδεσης και τον έλεγχο ίδιου ιστότοπου. Μη ορισμένη: αυτές οι κεφαλίδες αγνοούνται. |
 | `DOWNTIFY_DISCOVERY` | `true` | Το `false` σταματά την αναγγελία του διακομιστή στο τοπικό δίκτυο (mDNS, `_downtify._tcp`), που οι εφαρμογές χρησιμοποιούν για να τον απαριθμούν στο *Βρέθηκαν σε αυτό το δίκτυο*. Στο δίκτυο bridge του Docker η αναγγελία δεν φτάνει έτσι κι αλλιώς στο LAN — δες [Docker Compose](docker-compose.md#finding-the-server-from-the-apps). |
 | `DOWNTIFY_TRANSCODE_CACHE_MB` | `2048` | Μέγιστο μέγεθος, σε MB, κάτω από το οποίο διατηρείται η κρυφή μνήμη μετατρεμμένων αντιγράφων (`/data/transcode_cache`)· τα αντίγραφα που έπαιξαν πιο παλιά φεύγουν πρώτα. |
@@ -60,7 +60,7 @@ OIDC is optional. Configure the issuer, client ID and secret together; partial c
 
 | Μεταβλητή | Προεπιλογή | Περιγραφή |
 |----------|---------|-------------|
-| `DOWNTIFY_TRASH` | `false` | Το `true` ενεργοποιεί τον κάδο μουσικής για τον φάκελο λήψεων: τα κομμάτια που αφαιρούνται πηγαίνουν σε κάδο που φυλάσσεται 30 ημέρες, και το ίδιο το Downtify μετακινεί τα αρχεία. Όσο είναι ενεργός, μόνο οι διαχειριστές αφαιρούν κομμάτια. |
+| `DOWNTIFY_TRASH` | `false` | Το `true` ενεργοποιεί τον κάδο μουσικής για τον φάκελο λήψεων: τα κομμάτια που αφαιρούνται πηγαίνουν σε κάδο που φυλάσσεται 30 ημέρες, και το ίδιο το Castify μετακινεί τα αρχεία. Όσο είναι ενεργός, μόνο οι διαχειριστές αφαιρούν κομμάτια. |
 | `DOWNTIFY_TRASH_CONFIG` | _(μη ορισμένη)_ | Διαδρομή, μέσα στο container, ενός αρχείου JSON με τους φακέλους που καλύπτει ο κάδος και πού τρέχει ο worker του (`embedded` ή `external`). Υπερισχύει του `DOWNTIFY_TRASH`. Ένα αρχείο που δεν διαβάζεται σταματά την εκκίνηση του διακομιστή. Δες [Το αρχείο ρυθμίσεων](../features/music-trash.md#the-configuration-file). |
 
 ## Έλεγχος υγείας
@@ -84,7 +84,7 @@ environment:
 |----------|---------|-------------|
 | `DOWNTIFY_FORCE_IPV4` | _(μη ορισμένη)_ | Όρισέ το `1` για να αναγκάσεις το yt-dlp να χρησιμοποιεί μόνο IPv4. Χρήσιμο όταν ο υπολογιστής σου έχει χαλασμένη ή περιορισμένη διεύθυνση IPv6. |
 | `DOWNTIFY_YT_SLEEP_REQUESTS` | _(unset)_ | Seconds yt-dlp waits between its requests to YouTube during a download. Unset, downloads aren't paced — until YouTube answers `429 Too Many Requests`: that song is retried once with a 1 s pause, and every download stays paced for the next 15 minutes. Set a number to force a pause always (`1` is the old behaviour, about 7 s slower per song), or `0` to never pause. To space out whole downloads instead, use **Settings → Downloads → Delay between downloads**. |
-| `DOWNTIFY_YT_PLAYER_CLIENTS` | `ios,android,web_embedded,mweb,web,tv` | Λίστα, χωρισμένη με κόμμα, των πελατών player του yt-dlp που θα δοκιμαστούν, με τη σειρά. Η προεπιλεγμένη λίστα του Downtify ευνοεί ήδη πελάτες που δουλεύουν χωρίς runtime JavaScript. Άλλαξέ την μόνο αν ξέρεις ότι ένας συγκεκριμένος πελάτης μπλοκάρεται. |
+| `DOWNTIFY_YT_PLAYER_CLIENTS` | `ios,android,web_embedded,mweb,web,tv` | Λίστα, χωρισμένη με κόμμα, των πελατών player του yt-dlp που θα δοκιμαστούν, με τη σειρά. Η προεπιλεγμένη λίστα του Castify ευνοεί ήδη πελάτες που δουλεύουν χωρίς runtime JavaScript. Άλλαξέ την μόνο αν ξέρεις ότι ένας συγκεκριμένος πελάτης μπλοκάρεται. |
 | `DOWNTIFY_YT_PO_TOKEN` | _(μη ορισμένη)_ | Διακριτικά Proof-of-Origin για το yt-dlp, χωρισμένα με κόμμα, καθένα στη μορφή `<client>.<context>+<token>` (π.χ. `mweb.gvs+ABC123`). Χρειάζονται μόνο αν το YouTube αρχίσει να απαιτεί PO Tokens για τους πελάτες που χρησιμοποιείς. |
 | `DOWNTIFY_COOKIES_FILE` | _(μη ορισμένη)_ | Διαδρομή ενός `cookies.txt` σε μορφή Netscape **μέσα στο κοντέινερ**. Επιτρέπει στο yt-dlp να πιστοποιείται ως πραγματική συνεδρία browser — απαραίτητο για ακατάλληλα/περιορισμένης ηλικίας κομμάτια και όποτε το YouTube επιβάλλει τείχος σύνδεσης. Υπερισχύει ενός αρχείου που ανέβηκε στη web διεπαφή και κάνει εκείνο το τμήμα της διεπαφής μόνο για ανάγνωση. Δες [Cookies του YouTube](../features/youtube-cookies.md). |
 | `DOWNTIFY_COOKIES_FROM_BROWSER` | _(μη ορισμένη)_ | Όνομα browser από τον οποίο θα εξαχθούν cookies (π.χ. `chrome`, `firefox`). Απαιτεί το αποθηκευτικό cookies του browser να είναι προσβάσιμο μέσα στο κοντέινερ, οπότε σπάνια χρησιμοποιείται στο Docker. |

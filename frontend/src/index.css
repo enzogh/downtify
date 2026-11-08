@@ -37,6 +37,48 @@
   transform: translateY(24px) scale(0.98);
 }
 
+/* Song change inside Now playing: covers and the blurred backdrop
+   cross-fade (the old one stays until the new one covers it), the title
+   and lyrics slide out and back in. Only opacity and transform, so it
+   stays smooth on phones; reduced motion collapses it (tokens.css). */
+.np-cross-enter-active {
+  transition:
+    opacity 420ms ease,
+    transform 520ms var(--ease-out-soft);
+}
+.np-cross-leave-active {
+  transition: opacity 160ms ease 380ms;
+}
+.np-cross-enter-from {
+  opacity: 0;
+  transform: scale(0.96);
+}
+.np-cross-leave-to {
+  opacity: 0;
+}
+.np-backdrop-enter-active,
+.np-backdrop-leave-active {
+  transition: opacity 700ms ease;
+}
+.np-backdrop-enter-from,
+.np-backdrop-leave-to {
+  opacity: 0 !important;
+}
+.np-swap-enter-active,
+.np-swap-leave-active {
+  transition:
+    opacity 200ms ease,
+    transform 260ms var(--ease-out-soft);
+}
+.np-swap-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.np-swap-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
 /* Cover and lyrics follow leftover height, not only width breakpoints.
    The stage shares the cover's cap so a long title ellipsizes instead of
    widening the auto grid column and pushing the lyrics aside. */

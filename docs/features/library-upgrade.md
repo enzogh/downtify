@@ -4,7 +4,7 @@ icon: lucide/wand-sparkles
 
 # Upgrade library
 
-A library built up over time carries whatever each Downtify version could do when a track was downloaded: the smallest cover a source offered, no lyrics, tags without an album or a year. **Upgrade library** looks at what is already on disk and repairs only what is behind — no re-downloading, and nothing to sort out by hand.
+A library built up over time carries whatever each Castify version could do when a track was downloaded: the smallest cover a source offered, no lyrics, tags without an album or a year. **Upgrade library** looks at what is already on disk and repairs only what is behind — no re-downloading, and nothing to sort out by hand.
 
 Open it from **Library → Upgrade library**.
 
@@ -14,7 +14,7 @@ The default mode rewrites **artwork, lyrics and tags**. Optional [Deemix replace
 
 ## How it works
 
-1. **Scan.** Downtify reads every library track and reports what is behind, per category. Nothing is written.
+1. **Scan.** Castify reads every library track and reports what is behind, per category. Nothing is written.
 2. **Choose.** Each category the scan found something for is listed with its track count and a switch. Untick what you don't want.
 3. **Upgrade.** The chosen tracks go into a queue that is worked through one at a time. You can pause, resume or stop it, and it survives a restart.
 
@@ -32,7 +32,7 @@ A track counts as behind when:
 - it has **neither** embedded lyrics **nor** an `.lrc` sidecar (next to the file or in the lyrics folder from Settings);
 - any of **album**, **album artist**, **year** or **track number** is missing from its tags.
 
-**Refresh tags** only works for tracks Downtify still has a Spotify track ID for — the ones it downloaded from a Spotify link, kept in the [track index](library-catalog.md#what-gets-stored). Other tracks are queued but come back as _Nothing to do_.
+**Refresh tags** only works for tracks Castify still has a Spotify track ID for — the ones it downloaded from a Spotify link, kept in the [track index](library-catalog.md#what-gets-stored). Other tracks are queued but come back as _Nothing to do_.
 
 ## Options
 
@@ -40,7 +40,7 @@ A track counts as behind when:
 
 `300px` · `500px` · **`600px`** · `1000px` · `1200px`
 
-Covers at this size or larger are left alone. Downtify only writes a cover that is **strictly bigger** than the one already in the file, so running an upgrade twice never rewrites anything for nothing.
+Covers at this size or larger are left alone. Castify only writes a cover that is **strictly bigger** than the one already in the file, so running an upgrade twice never rewrites anything for nothing.
 
 Where the sizes come from:
 
@@ -67,11 +67,11 @@ After a track has been looked at, it is skipped by the next scan for this long, 
 
 The memory is kept **per track and per category**, which is what makes partial runs work: repairing only the artwork of 16,000 tracks says nothing about whether anyone ever went looking for their lyrics, so a later lyrics run still considers every one of them. A scan also records the categories it examined and found nothing to do for — looking and finding nothing is a check like any other.
 
-Downtify remembers, for each track and category: when it was checked, the Downtify version that checked it, and — for artwork — the largest cover found and where it came from. Which lyrics providers were already asked is kept separately, per song and provider (see [Lyrics](lyrics.md)).
+Castify remembers, for each track and category: when it was checked, the Castify version that checked it, and — for artwork — the largest cover found and where it came from. Which lyrics providers were already asked is kept separately, per song and provider (see [Lyrics](lyrics.md)).
 
 Two things always override it:
 
-- a **newer Downtify version** re-checks everything, since it may match or tag better than the one that ran before;
+- a **newer Castify version** re-checks everything, since it may match or tag better than the one that ran before;
 - choosing **Always check every track** ignores the memory for that scan.
 
 When a scan finds nothing left to do _because_ everything was checked recently, it says so and offers to run again without the memory, rather than leaving you with an unexplained "nothing to upgrade".
@@ -82,7 +82,7 @@ The progress panel shows tracks done out of the queue, an approximate data figur
 
 **Pause** stops after the track in flight and keeps the queue. **Stop** drops the rest of it; tracks already upgraded stay upgraded. You can leave the page — the run keeps going, and any other open tab follows along.
 
-The queue lives in `/data/downtify_library.db`, so **restarting Downtify (or the container) mid-run picks it back up** where it stopped. A track that was in flight when the process died is put back in the queue.
+The queue lives in `/data/downtify_library.db`, so **restarting Castify (or the container) mid-run picks it back up** where it stopped. A track that was in flight when the process died is put back in the queue.
 
 ## Nothing is lost if an upgrade fails
 
@@ -94,7 +94,7 @@ The original **modification time is kept**, so upgrading a library doesn't reshu
 
 An upgrade rewrites tags in place, so tracks on a read-only filesystem are **skipped**, with an explanation, before looking up metadata, artwork or lyrics. They remain playable and in their playlists; their files and mount permissions are left unchanged. A skipped read-only track is not remembered as successfully checked, so it can be considered again if its folder becomes writable later. Unexpected permission, disk-space and I/O errors still appear as failures.
 
-This differs from [existing-folder enrichment](external-library.md), which can keep artwork and lyrics separately in Downtify's data folder without rewriting protected audio files.
+This differs from [existing-folder enrichment](external-library.md), which can keep artwork and lyrics separately in Castify's data folder without rewriting protected audio files.
 
 ## Why audio isn't replaced
 
@@ -104,14 +104,14 @@ Ordinary tag upgrades do not replace audio. The separate mode below requires exa
 
 After enabling and testing the [Deemix source](deemix.md), **Upgrade library** offers two independent switches before scanning:
 
-- **Use verified Deemix recordings**: scan original Downtify downloads, including copies hidden by a preferred external collection. Match exact artist, full title/version and album; reject ambiguous catalog results. The old clip's duration is not used to reject a correct catalog recording. Verify the downloaded tags, catalog duration, selected quality and full FFmpeg decode.
-- **Remove old Downtify audio after import**: additionally remove each unchanged original after publication. This is off by default. Keeping originals still updates playlists and favorites to the Deemix recording.
+- **Use verified Deemix recordings**: scan original Castify downloads, including copies hidden by a preferred external collection. Match exact artist, full title/version and album; reject ambiguous catalog results. The old clip's duration is not used to reject a correct catalog recording. Verify the downloaded tags, catalog duration, selected quality and full FFmpeg decode.
+- **Remove old Castify audio after import**: additionally remove each unchanged original after publication. This is off by default. Keeping originals still updates playlists and favorites to the Deemix recording.
 
-This scan produces an **audio** category instead of artwork/lyrics/tag jobs. Deemix owns the output files, artwork, album layout and native lyrics. Downtify reads them in place. Existing native or embedded lyrics are preserved; only absent lyrics may be supplemented in a writable dedicated lyrics folder, without rewriting audio. A higher-quality lossless original is retained when Deemix is configured for MP3.
+This scan produces an **audio** category instead of artwork/lyrics/tag jobs. Deemix owns the output files, artwork, album layout and native lyrics. Castify reads them in place. Existing native or embedded lyrics are preserved; only absent lyrics may be supplemented in a writable dedicated lyrics folder, without rewriting audio. A higher-quality lossless original is retained when Deemix is configured for MP3.
 
 Publication happens once per batch. M3U comments, manual markers and track order are preserved, then catalog paths, playlist memberships, every user's likes, ownership and hidden-track rules move in one SQLite transaction. Cached Navidrome IDs for old files are invalidated for a fresh native lookup. Previously issued mobile IDs and old playback URLs keep read-only aliases to the registered replacement; mutations never use those URL aliases.
 
-Durable receipts in the library database record source/target SHA-256 values and publication state. Sources remain until the replacement and references verify. A changed or missing mount, edited file, external read-only playlist reference, active playback or failed catalog publication stops cleanup with a visible reason. Pause/resume and restart reuse receipts. There is no general duplicate sweep or age-based cleanup: only verified originals in Downtify's download folder are eligible. Manual Deemix/slskd downloads, external originals, directories and sidecars are never deleted. Once an original is removed, rolling back the container does not restore that file; restore it from your own storage backup if needed.
+Durable receipts in the library database record source/target SHA-256 values and publication state. Sources remain until the replacement and references verify. A changed or missing mount, edited file, external read-only playlist reference, active playback or failed catalog publication stops cleanup with a visible reason. Pause/resume and restart reuse receipts. There is no general duplicate sweep or age-based cleanup: only verified originals in Castify's download folder are eligible. Manual Deemix/slskd downloads, external originals, directories and sidecars are never deleted. Once an original is removed, rolling back the container does not restore that file; restore it from your own storage backup if needed.
 
 For NAS consumers whose mount names differ from Docker paths, an administrator can set `DOWNTIFY_DEEMIX_M3U_ROOT` to a container alias resolving to the Deemix root. Relative M3U paths use that alias (for example `/Download` mapped to `/music/existing`). Optional `DOWNTIFY_LIBRARY_READY_MARKERS` is a JSON object of marker paths and expected text, checked before preparation and cleanup. A missing marker fails closed. Neither variable is required for the default mode.
 

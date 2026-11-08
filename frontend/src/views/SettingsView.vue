@@ -830,7 +830,7 @@
                   v-model="s.external_library.primary_folder"
                   class="rounded-lg border border-line-3 bg-surface-2 p-2"
                 >
-                  <option value="">Downtify</option>
+                  <option value="">Castify</option>
                   <option
                     v-for="folder in s.external_library.folders"
                     :key="folder"
@@ -876,7 +876,7 @@
             >
               <AppLogo :size="56" />
               <div class="min-w-0">
-                <p class="text-display text-2xl font-bold">Downtify</p>
+                <p class="text-display text-2xl font-bold">Castify</p>
                 <p class="tabular text-sm text-muted">
                   {{ t('settings.version', { version: version || '—' }) }}
                 </p>

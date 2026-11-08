@@ -15,7 +15,7 @@ Error: ERROR: [youtube] <id>: Sign in to confirm your age.
 This video may be inappropriate for some users.
 ```
 
-**Ursache** — YouTube liefert altersbeschränkte (explizite) Titel nur an ein angemeldetes Erwachsenenkonto. Downtify lädt standardmäßig anonym herunter, daher verweigert YouTube.
+**Ursache** — YouTube liefert altersbeschränkte (explizite) Titel nur an ein angemeldetes Erwachsenenkonto. Castify lädt standardmäßig anonym herunter, daher verweigert YouTube.
 
 **Lösung** — YouTube-Cookies bereitstellen: **Einstellungen** (⚙️) → **YouTube-Cookies** → **cookies.txt hochladen**. Wie du die Datei exportierst, steht unter [YouTube-Cookies](features/youtube-cookies.md).
 
@@ -36,7 +36,7 @@ Schlägt es trotz konfigurierter Cookies weiterhin fehl, sind die Cookies veralt
 
 ## Eine cookies.txt unter Windows / Docker Desktop wird nicht erkannt
 
-**Symptom** — `DOWNTIFY_COOKIES_FILE` ist gesetzt, aber Downtify verhält sich, als gäbe es keine Cookies.
+**Symptom** — `DOWNTIFY_COOKIES_FILE` ist gesetzt, aber Castify verhält sich, als gäbe es keine Cookies.
 
 **Ursache** — der Pfad ist ein *Container*-Pfad. Ein Windows-Pfad wie `C:\Users\me\cookies.txt` bedeutet im Container nichts, und die Datei muss per Bind-Mount eingebunden sein, bevor die Variable darauf zeigen kann.
 
@@ -57,7 +57,7 @@ environment:
 
 ## Hochgeladene Cookies sind nach dem Container-Update verschwunden
 
-Die hochgeladene Datei liegt im Datenverzeichnis von Downtify (`/data`). Ist dieses Verzeichnis kein benanntes Volume oder Bind-Mount, geht alles darin — Einstellungen und die Datenbank der Playlist-Überwachung eingeschlossen — verloren, wenn der Container neu erstellt wird:
+Die hochgeladene Datei liegt im Datenverzeichnis von Castify (`/data`). Ist dieses Verzeichnis kein benanntes Volume oder Bind-Mount, geht alles darin — Einstellungen und die Datenbank der Playlist-Überwachung eingeschlossen — verloren, wenn der Container neu erstellt wird:
 
 ```yaml
 volumes:
@@ -67,13 +67,13 @@ volumes:
 
 ## „cookies.txt is invalid“ beim Hochladen
 
-Downtify prüft die Datei beim Hochladen. Sie muss ein **Netscape**-Cookie-Jar sein: ein Cookie pro Zeile, Felder durch Tabs getrennt, optional mit `#`-Kommentaren. Ein JSON-Export, eine Tabelle oder ein kopierter `Cookie:`-Header wird abgelehnt.
+Castify prüft die Datei beim Hochladen. Sie muss ein **Netscape**-Cookie-Jar sein: ein Cookie pro Zeile, Felder durch Tabs getrennt, optional mit `#`-Kommentaren. Ein JSON-Export, eine Tabelle oder ein kopierter `Cookie:`-Header wird abgelehnt.
 
 Nutze eine Browsererweiterung, die im Netscape-Format exportiert (siehe [YouTube-Cookies](features/youtube-cookies.md)), und exportiere, während der Tab auf `youtube.com` steht.
 
 ## Eine Playlist lädt Titel erneut herunter, die ich schon habe
 
-Downtify vermerkt jeden automatisch heruntergeladenen Titel in seiner Datenbank, daher löst das Verschieben von Dateien an einen anderen Ort auf der Platte keinen erneuten Download aus. Ein Titel wird erst erneut heruntergeladen, wenn eine stündliche Prüfung feststellt, dass seine Datei im Download-Verzeichnis tatsächlich fehlt. Siehe [Playlist-Überwachung](features/playlist-monitor.md#how-it-works).
+Castify vermerkt jeden automatisch heruntergeladenen Titel in seiner Datenbank, daher löst das Verschieben von Dateien an einen anderen Ort auf der Platte keinen erneuten Download aus. Ein Titel wird erst erneut heruntergeladen, wenn eine stündliche Prüfung feststellt, dass seine Datei im Download-Verzeichnis tatsächlich fehlt. Siehe [Playlist-Überwachung](features/playlist-monitor.md#how-it-works).
 
 Verschwinden Dateien bei jedem Neustart, ist das Volume `/downloads` nicht persistent — gleiche Lösung wie oben.
 
@@ -85,12 +85,12 @@ Das heißt meist, dass der Song tatsächlich nicht auf YouTube ist oder nur unte
 
 ## Das heruntergeladene Audio hat falsche Metadaten oder ein falsches Cover
 
-Downtify bezieht die Metadaten von Spotify und ordnet das Audio auf YouTube Music zu. Eine Abweichung bedeutet meist, dass die Zuordnung bei einem Cover, Remix oder einer Live-Version gelandet ist. Der Download über den **Album**-Link von Spotify statt über ein Suchergebnis gibt dem Abgleich deutlich mehr an die Hand (Titelnummer, Album, Veröffentlichungstyp).
+Castify bezieht die Metadaten von Spotify und ordnet das Audio auf YouTube Music zu. Eine Abweichung bedeutet meist, dass die Zuordnung bei einem Cover, Remix oder einer Live-Version gelandet ist. Der Download über den **Album**-Link von Spotify statt über ein Suchergebnis gibt dem Abgleich deutlich mehr an die Hand (Titelnummer, Album, Veröffentlichungstyp).
 
 ## Immer noch festgefahren?
 
 Eröffne ein Issue unter [github.com/henriquesebastiao/downtify/issues](https://github.com/henriquesebastiao/downtify/issues) mit:
 
-- der Downtify-Version (unten in der Seitenleiste und unter **Einstellungen → Über** zu sehen),
+- der Castify-Version (unten in der Seitenleiste und unter **Einstellungen → Über** zu sehen),
 - den Container-Logs rund um den Fehler (`docker compose logs downtify`),
 - und der Angabe, ob Cookies konfiguriert sind.

@@ -4,13 +4,13 @@ icon: lucide/languages
 
 # Nemzetköziesítés
 
-A Downtify két független helyen van lefordítva: az **alkalmazásban** (a felületén) és ebben a **dokumentációban**. Mindkettő alapértelmezett nyelve az **angol**, kilenc további nyelvvel készen.
+A Castify két független helyen van lefordítva: az **alkalmazásban** (a felületén) és ebben a **dokumentációban**. Mindkettő alapértelmezett nyelve az **angol**, kilenc további nyelvvel készen.
 
 ## Nyelv váltása
 
 ### Az alkalmazás
 
-Menj a **Beállítások → Nyelv** oldalra, és válaszd ki a kedvenc nyelvedet. A választás a böngésző `localStorage`-ában tárolódik, és az oldal újratöltése nélkül azonnal érvénybe lép. Az oldal minden betöltéskor és minden módosításkor a szervernek is jelzi (a `settings.json` `ui_language` bejegyzése, lásd: [`POST /api/settings/update`](../api-reference.md#post-apisettingsupdate)), hogy a böngésző nélkül futó munka is ismerje a nyelved - egy előadó életrajza, amelyet a háttérben kér le, amikor az egyik száma befejezi a letöltést, ezen a nyelven érkezik (lásd: [Amikor egy letöltés befejeződik](artist-images.md#when-a-download-finishes)). A te részedről nincs teendő: ha ez előtt választottál nyelvet, a Downtify következő megnyitásakor átveszi. Ha több böngésző van különböző nyelvekre állítva, az nyer, amelyik utoljára töltötte be vagy módosította.
+Menj a **Beállítások → Nyelv** oldalra, és válaszd ki a kedvenc nyelvedet. A választás a böngésző `localStorage`-ában tárolódik, és az oldal újratöltése nélkül azonnal érvénybe lép. Az oldal minden betöltéskor és minden módosításkor a szervernek is jelzi (a `settings.json` `ui_language` bejegyzése, lásd: [`POST /api/settings/update`](../api-reference.md#post-apisettingsupdate)), hogy a böngésző nélkül futó munka is ismerje a nyelved - egy előadó életrajza, amelyet a háttérben kér le, amikor az egyik száma befejezi a letöltést, ezen a nyelven érkezik (lásd: [Amikor egy letöltés befejeződik](artist-images.md#when-a-download-finishes)). A te részedről nincs teendő: ha ez előtt választottál nyelvet, a Castify következő megnyitásakor átveszi. Ha több böngésző van különböző nyelvekre állítva, az nyer, amelyik utoljára töltötte be vagy módosította.
 
 ### A dokumentáció
 

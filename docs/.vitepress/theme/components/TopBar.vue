@@ -20,7 +20,7 @@
       >
         <Logo :size="26" />
         <span class="text-display hidden text-[17px] font-bold xs:inline"
-          >Downtify</span
+          >Castify</span
         >
       </a>
 

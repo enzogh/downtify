@@ -4,13 +4,13 @@ icon: lucide/languages
 
 # Internationalisierung
 
-Downtify wird an zwei voneinander unabhängigen Stellen übersetzt: der **App** (ihrer Oberfläche) und dieser **Dokumentation**. Die Standardsprache beider ist **Englisch**, mit neun weiteren Sprachen von Haus aus.
+Castify wird an zwei voneinander unabhängigen Stellen übersetzt: der **App** (ihrer Oberfläche) und dieser **Dokumentation**. Die Standardsprache beider ist **Englisch**, mit neun weiteren Sprachen von Haus aus.
 
 ## Sprache wechseln
 
 ### Die App
 
-Gehe zu **Einstellungen → Sprache** und wähle deine bevorzugte Sprache. Die Wahl wird im `localStorage` des Browsers gespeichert und sofort ohne Neuladen der Seite angewendet. Die Seite teilt sie bei jedem Laden und bei jeder Änderung auch dem Server mit (der Eintrag `ui_language` in `settings.json`, siehe [`POST /api/settings/update`](../api-reference.md#post-apisettingsupdate)), damit Arbeit, die ohne Browser läuft, deine Sprache kennt - die Biografie eines Künstlers, die im Hintergrund abgerufen wird, wenn einer seiner Titel fertig heruntergeladen ist, kommt darin an (siehe [Wenn ein Download fertig ist](artist-images.md#when-a-download-finishes)). Du musst nichts tun: Hast du eine Sprache gewählt, bevor es das gab, wird sie beim nächsten Öffnen von Downtify übernommen. Sind mehrere Browser auf verschiedene Sprachen eingestellt, gewinnt der, der sie zuletzt geladen oder geändert hat.
+Gehe zu **Einstellungen → Sprache** und wähle deine bevorzugte Sprache. Die Wahl wird im `localStorage` des Browsers gespeichert und sofort ohne Neuladen der Seite angewendet. Die Seite teilt sie bei jedem Laden und bei jeder Änderung auch dem Server mit (der Eintrag `ui_language` in `settings.json`, siehe [`POST /api/settings/update`](../api-reference.md#post-apisettingsupdate)), damit Arbeit, die ohne Browser läuft, deine Sprache kennt - die Biografie eines Künstlers, die im Hintergrund abgerufen wird, wenn einer seiner Titel fertig heruntergeladen ist, kommt darin an (siehe [Wenn ein Download fertig ist](artist-images.md#when-a-download-finishes)). Du musst nichts tun: Hast du eine Sprache gewählt, bevor es das gab, wird sie beim nächsten Öffnen von Castify übernommen. Sind mehrere Browser auf verschiedene Sprachen eingestellt, gewinnt der, der sie zuletzt geladen oder geändert hat.
 
 ### Die Dokumentation
 

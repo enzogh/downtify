@@ -4,7 +4,7 @@ icon: lucide/list-music
 
 # M3U-exportálás
 
-A Downtify automatikusan szabványos `EXTM3U` lejátszásilista-fájlt hoz létre, valahányszor egy Spotify-lejátszási lista letöltődik — kézzel vagy a [Lejátszási lista figyelő](playlist-monitor.md) révén.
+A Castify automatikusan szabványos `EXTM3U` lejátszásilista-fájlt hoz létre, valahányszor egy Spotify-lejátszási lista letöltődik — kézzel vagy a [Lejátszási lista figyelő](playlist-monitor.md) révén.
 
 ## A fájl helye
 
@@ -19,7 +19,7 @@ A [Kedvelt számok](liked-songs.md) is a `Playlists/Downtify Liked Songs.m3u` f�
 
 ## Relatív útvonalak
 
-Az M3U-ban a számok útvonalai **magához az M3U fájlhoz képest relatívan** vannak megírva, nem abszolút útvonalként. Így ugyanaz a fájl működik, akár a Downtify-konténeren belülről (`/downloads/…`), akár másik fogyasztótól olvassák, amely ugyanazt a könyvtárat más gyökérnél csatolja — például a Jellyfin a `/nas/music/…` alatt. Elég a médiaszervert ugyanarra a könyvtárcsatolásra irányítani, és a lejátszási lista egy egységként jelenik meg.
+Az M3U-ban a számok útvonalai **magához az M3U fájlhoz képest relatívan** vannak megírva, nem abszolút útvonalként. Így ugyanaz a fájl működik, akár a Castify-konténeren belülről (`/downloads/…`), akár másik fogyasztótól olvassák, amely ugyanazt a könyvtárat más gyökérnél csatolja — például a Jellyfin a `/nas/music/…` alatt. Elég a médiaszervert ugyanarra a könyvtárcsatolásra irányítani, és a lejátszási lista egy egységként jelenik meg.
 
 ## Be- és kikapcsolás
 
@@ -27,7 +27,7 @@ Az M3U-generálást a **Beállítások → Letöltések és fájlok → M3U list
 
 ## Borító
 
-Közvetlenül e beállítás alatt a **Lejátszási lista borítójának mentése** (alapértelmezetten be van kapcsolva) a lejátszási lista saját borítóképét az M3U mellé írja, azonos néven — a számok előtt, hogy a mappa a kezdetektől a lejátszási listához hasonlítson. A Downtify ezután ezt a képet mutatja a lejátszási listához a számborítók rácsa helyett. A Könyvtárban létrehozott lejátszási lista legfeljebb négy számborítóból álló mozaikot kap, ugyanígy megírva. Lásd: [Lejátszási lista borítók](playlist-cover-art.md).
+Közvetlenül e beállítás alatt a **Lejátszási lista borítójának mentése** (alapértelmezetten be van kapcsolva) a lejátszási lista saját borítóképét az M3U mellé írja, azonos néven — a számok előtt, hogy a mappa a kezdetektől a lejátszási listához hasonlítson. A Castify ezután ezt a képet mutatja a lejátszási listához a számborítók rácsa helyett. A Könyvtárban létrehozott lejátszási lista legfeljebb négy számborítóból álló mozaikot kap, ugyanígy megírva. Lásd: [Lejátszási lista borítók](playlist-cover-art.md).
 
 ## Mikor íródik
 
@@ -61,7 +61,7 @@ Kompatibilis a Jellyfinnel, Navidrome-mal, Plexszel, VLC-vel, Kodival, Sonosszal
 
 ## Általad létrehozott lejátszási listák
 
-A **Könyvtár → Lejátszási listák → Új lista** ugyanilyen M3U-t ír a `Playlists/` alá, egy extra `#EXTDOWNTIFY:manual` sorral, hogy a Downtify meg tudja különböztetni a letöltött Spotify/YouTube-lejátszási listától. Átnevezheted, és dalokat adhatsz hozzá vagy távolíthatsz el (a [további mappákból](external-library.md) valókat is). A lejátszási lista törlése, egy szám törlése vagy egy további mappa leválasztása frissíti az M3U-t; a hang csak akkor törlődik, ha magát a számot vagy egy importált lejátszási listát törlöd.
+A **Könyvtár → Lejátszási listák → Új lista** ugyanilyen M3U-t ír a `Playlists/` alá, egy extra `#EXTDOWNTIFY:manual` sorral, hogy a Castify meg tudja különböztetni a letöltött Spotify/YouTube-lejátszási listától. Átnevezheted, és dalokat adhatsz hozzá vagy távolíthatsz el (a [további mappákból](external-library.md) valókat is). A lejátszási lista törlése, egy szám törlése vagy egy további mappa leválasztása frissíti az M3U-t; a hang csak akkor törlődik, ha magát a számot vagy egy importált lejátszási listát törlöd.
 
 ### Dalok hozzáadása lejátszási listához
 

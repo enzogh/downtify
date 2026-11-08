@@ -4,7 +4,7 @@ icon: lucide/wand-sparkles
 
 # Bibliothek verbessern
 
-Eine über die Zeit gewachsene Bibliothek trägt das, was die jeweilige Downtify-Version beim Herunterladen eines Titels konnte: das kleinste Cover, das eine Quelle bot, keine Songtexte, Tags ohne Album oder Jahr. **Bibliothek verbessern** sieht sich an, was schon auf der Festplatte liegt, und repariert nur, was zurückliegt — ohne erneutes Herunterladen und ohne etwas von Hand zu ordnen.
+Eine über die Zeit gewachsene Bibliothek trägt das, was die jeweilige Castify-Version beim Herunterladen eines Titels konnte: das kleinste Cover, das eine Quelle bot, keine Songtexte, Tags ohne Album oder Jahr. **Bibliothek verbessern** sieht sich an, was schon auf der Festplatte liegt, und repariert nur, was zurückliegt — ohne erneutes Herunterladen und ohne etwas von Hand zu ordnen.
 
 Öffne es über **Bibliothek → Bibliothek verbessern**.
 
@@ -14,7 +14,7 @@ Der Standardmodus schreibt **Cover, Songtexte und Tags** neu. Der optionale [Dee
 
 ## So funktioniert es
 
-1. **Scan.** Downtify liest jeden Bibliothekstitel und meldet, was zurückliegt, pro Kategorie. Nichts wird geschrieben.
+1. **Scan.** Castify liest jeden Bibliothekstitel und meldet, was zurückliegt, pro Kategorie. Nichts wird geschrieben.
 2. **Auswahl.** Jede Kategorie, für die der Scan etwas fand, wird mit ihrer Titelzahl und einem Schalter aufgelistet. Hake ab, was du nicht willst.
 3. **Verbessern.** Die gewählten Titel kommen in eine Warteschlange, die einzeln abgearbeitet wird. Du kannst sie pausieren, fortsetzen oder stoppen, und sie übersteht einen Neustart.
 
@@ -32,7 +32,7 @@ Ein Titel gilt als zurückliegend, wenn:
 - er **weder** eingebettete Songtexte **noch** ein `.lrc`-Sidecar hat (neben der Datei oder im Songtext-Ordner aus den Einstellungen);
 - in seinen Tags **Album**, **Album-Künstler**, **Jahr** oder **Titelnummer** fehlt.
 
-**Tags aktualisieren** funktioniert nur für Titel, für die Downtify noch eine Spotify-Titel-ID hat — die, die es von einem Spotify-Link heruntergeladen hat und die im [Titelindex](library-catalog.md#what-gets-stored) stehen. Andere Titel werden eingereiht, kommen aber als _Keine Änderung nötig_ zurück.
+**Tags aktualisieren** funktioniert nur für Titel, für die Castify noch eine Spotify-Titel-ID hat — die, die es von einem Spotify-Link heruntergeladen hat und die im [Titelindex](library-catalog.md#what-gets-stored) stehen. Andere Titel werden eingereiht, kommen aber als _Keine Änderung nötig_ zurück.
 
 ## Optionen
 
@@ -40,7 +40,7 @@ Ein Titel gilt als zurückliegend, wenn:
 
 `300px` · `500px` · **`600px`** · `1000px` · `1200px`
 
-Cover dieser Größe oder größer bleiben unberührt. Downtify schreibt nur ein Cover, das **strikt größer** ist als das schon in der Datei, sodass ein zweimaliger Verbesserungslauf nie umsonst etwas neu schreibt.
+Cover dieser Größe oder größer bleiben unberührt. Castify schreibt nur ein Cover, das **strikt größer** ist als das schon in der Datei, sodass ein zweimaliger Verbesserungslauf nie umsonst etwas neu schreibt.
 
 Woher die Größen kommen:
 
@@ -67,11 +67,11 @@ Nachdem ein Titel angesehen wurde, überspringt ihn der nächste Scan so lange, 
 
 Das Gedächtnis wird **pro Titel und pro Kategorie** geführt, wodurch Teilläufe funktionieren: Nur die Cover von 16.000 Titeln zu reparieren, sagt nichts darüber, ob je jemand nach ihren Songtexten gesucht hat, daher berücksichtigt ein späterer Songtext-Lauf weiterhin jeden davon. Ein Scan hält auch die Kategorien fest, die er untersucht hat und für die er nichts zu tun fand — Nachsehen und nichts finden ist eine Prüfung wie jede andere.
 
-Downtify merkt sich pro Titel und Kategorie: wann er geprüft wurde, welche Downtify-Version ihn geprüft hat und — bei Covern — das größte gefundene Cover und woher es kam. Welche Songtext-Anbieter schon gefragt wurden, wird getrennt gespeichert, pro Song und Anbieter (siehe [Songtexte](lyrics.md)).
+Castify merkt sich pro Titel und Kategorie: wann er geprüft wurde, welche Castify-Version ihn geprüft hat und — bei Covern — das größte gefundene Cover und woher es kam. Welche Songtext-Anbieter schon gefragt wurden, wird getrennt gespeichert, pro Song und Anbieter (siehe [Songtexte](lyrics.md)).
 
 Zwei Dinge heben es immer auf:
 
-- eine **neuere Downtify-Version** prüft alles neu, da sie besser zuordnen oder taggen kann als die vorherige;
+- eine **neuere Castify-Version** prüft alles neu, da sie besser zuordnen oder taggen kann als die vorherige;
 - die Wahl **Jeden Titel immer prüfen** ignoriert das Gedächtnis für diesen Scan.
 
 Findet ein Scan nichts mehr zu tun, _weil_ alles kürzlich geprüft wurde, sagt er das und bietet an, ohne das Gedächtnis erneut zu laufen, statt dich mit einem unerklärten „nichts zu verbessern“ zurückzulassen.
@@ -82,7 +82,7 @@ Das Fortschrittspanel zeigt erledigte Titel aus der Warteschlange, eine ungefäh
 
 **Pausieren** stoppt nach dem laufenden Titel und behält die Warteschlange. **Anhalten** verwirft den Rest; bereits verbesserte Titel bleiben verbessert. Du kannst die Seite verlassen — der Lauf geht weiter, und jeder andere offene Tab folgt mit.
 
-Die Warteschlange liegt in `/data/downtify_library.db`, sodass ein **Neustart von Downtify (oder des Containers) mitten im Lauf ihn dort fortsetzt**, wo er aufhörte. Ein Titel, der in Bearbeitung war, als der Prozess starb, kommt zurück in die Warteschlange.
+Die Warteschlange liegt in `/data/downtify_library.db`, sodass ein **Neustart von Castify (oder des Containers) mitten im Lauf ihn dort fortsetzt**, wo er aufhörte. Ein Titel, der in Bearbeitung war, als der Prozess starb, kommt zurück in die Warteschlange.
 
 ## Nichts geht verloren, wenn eine Verbesserung fehlschlägt
 
@@ -94,7 +94,7 @@ Das **ursprüngliche Änderungsdatum bleibt erhalten**, sodass das Verbessern ei
 
 Eine Verbesserung schreibt Tags an Ort und Stelle neu, daher werden Titel auf einem schreibgeschützten Dateisystem **übersprungen**, mit einer Erklärung, bevor Metadaten, Cover oder Songtexte nachgeschlagen werden. Sie bleiben abspielbar und in ihren Playlists; ihre Dateien und Mount-Berechtigungen bleiben unverändert. Ein übersprungener schreibgeschützter Titel wird nicht als erfolgreich geprüft gemerkt, kann also erneut berücksichtigt werden, wenn sein Ordner später beschreibbar wird. Unerwartete Berechtigungs-, Speicherplatz- und E/A-Fehler erscheinen weiterhin als Fehlschläge.
 
-Das unterscheidet sich von der [Anreicherung vorhandener Ordner](external-library.md), die Cover und Songtexte getrennt im Datenordner von Downtify halten kann, ohne geschützte Audiodateien neu zu schreiben.
+Das unterscheidet sich von der [Anreicherung vorhandener Ordner](external-library.md), die Cover und Songtexte getrennt im Datenordner von Castify halten kann, ohne geschützte Audiodateien neu zu schreiben.
 
 ## Warum Audio nicht ersetzt wird
 
@@ -104,14 +104,14 @@ Gewöhnliche Tag-Verbesserungen ersetzen kein Audio. Der separate Modus unten er
 
 Nach dem Aktivieren und Testen der [Deemix-Quelle](deemix.md) bietet **Bibliothek verbessern** vor dem Scan zwei unabhängige Schalter:
 
-- **Use verified Deemix recordings**: scannt die ursprünglichen Downtify-Downloads, auch von einer bevorzugten externen Sammlung verdeckte Kopien. Ordnet exakt Künstler, vollständigen Titel/Version und Album zu; lehnt mehrdeutige Katalogergebnisse ab. Die Länge des alten Clips wird nicht verwendet, um eine korrekte Katalogaufnahme abzulehnen. Prüft die heruntergeladenen Tags, die Katalogdauer, die gewählte Qualität und die vollständige FFmpeg-Dekodierung.
-- **Remove old Downtify audio after import**: entfernt zusätzlich jedes unveränderte Original nach der Veröffentlichung. Standardmäßig aus. Das Behalten der Originale aktualisiert Playlists und Favoriten trotzdem auf die Deemix-Aufnahme.
+- **Use verified Deemix recordings**: scannt die ursprünglichen Castify-Downloads, auch von einer bevorzugten externen Sammlung verdeckte Kopien. Ordnet exakt Künstler, vollständigen Titel/Version und Album zu; lehnt mehrdeutige Katalogergebnisse ab. Die Länge des alten Clips wird nicht verwendet, um eine korrekte Katalogaufnahme abzulehnen. Prüft die heruntergeladenen Tags, die Katalogdauer, die gewählte Qualität und die vollständige FFmpeg-Dekodierung.
+- **Remove old Castify audio after import**: entfernt zusätzlich jedes unveränderte Original nach der Veröffentlichung. Standardmäßig aus. Das Behalten der Originale aktualisiert Playlists und Favoriten trotzdem auf die Deemix-Aufnahme.
 
-Dieser Scan erzeugt statt Cover-/Songtext-/Tag-Aufträgen eine **Audio**-Kategorie. Deemix besitzt die Ausgabedateien, das Artwork, das Albumlayout und die nativen Songtexte. Downtify liest sie an Ort und Stelle. Vorhandene native oder eingebettete Songtexte bleiben erhalten; nur fehlende Songtexte dürfen in einem beschreibbaren, dedizierten Songtext-Ordner ergänzt werden, ohne das Audio neu zu schreiben. Ein verlustfreies Original höherer Qualität bleibt erhalten, wenn Deemix auf MP3 konfiguriert ist.
+Dieser Scan erzeugt statt Cover-/Songtext-/Tag-Aufträgen eine **Audio**-Kategorie. Deemix besitzt die Ausgabedateien, das Artwork, das Albumlayout und die nativen Songtexte. Castify liest sie an Ort und Stelle. Vorhandene native oder eingebettete Songtexte bleiben erhalten; nur fehlende Songtexte dürfen in einem beschreibbaren, dedizierten Songtext-Ordner ergänzt werden, ohne das Audio neu zu schreiben. Ein verlustfreies Original höherer Qualität bleibt erhalten, wenn Deemix auf MP3 konfiguriert ist.
 
 Die Veröffentlichung geschieht einmal pro Batch. M3U-Kommentare, manuelle Markierungen und die Titelreihenfolge bleiben erhalten; dann wandern Katalogpfade, Playlist-Zugehörigkeiten, die Likes aller Benutzer, Besitz und Regeln für verborgene Titel in einer einzigen SQLite-Transaktion. Gecachte Navidrome-IDs alter Dateien werden für eine frische native Suche ungültig gemacht. Bereits ausgegebene mobile IDs und alte Wiedergabe-URLs behalten schreibgeschützte Aliase auf den registrierten Ersatz; Änderungen nutzen diese URL-Aliase nie.
 
-Dauerhafte Belege in der Bibliotheksdatenbank halten die SHA-256-Werte von Quelle/Ziel und den Veröffentlichungsstatus fest. Quellen bleiben, bis Ersatz und Referenzen verifiziert sind. Ein geänderter oder fehlender Mount, eine bearbeitete Datei, eine externe schreibgeschützte Playlist-Referenz, aktive Wiedergabe oder eine fehlgeschlagene Katalogveröffentlichung stoppen die Bereinigung mit sichtbarem Grund. Pause/Fortsetzen und Neustart verwenden die Belege wieder. Es gibt keinen allgemeinen Dublettendurchlauf und keine altersbasierte Bereinigung: Nur verifizierte Originale im Download-Ordner von Downtify kommen infrage. Manuelle Deemix-/slskd-Downloads, externe Originale, Verzeichnisse und Sidecars werden nie gelöscht. Ist ein Original einmal entfernt, stellt ein Zurückrollen des Containers diese Datei nicht wieder her; stelle sie bei Bedarf aus deinem eigenen Speicher-Backup wieder her.
+Dauerhafte Belege in der Bibliotheksdatenbank halten die SHA-256-Werte von Quelle/Ziel und den Veröffentlichungsstatus fest. Quellen bleiben, bis Ersatz und Referenzen verifiziert sind. Ein geänderter oder fehlender Mount, eine bearbeitete Datei, eine externe schreibgeschützte Playlist-Referenz, aktive Wiedergabe oder eine fehlgeschlagene Katalogveröffentlichung stoppen die Bereinigung mit sichtbarem Grund. Pause/Fortsetzen und Neustart verwenden die Belege wieder. Es gibt keinen allgemeinen Dublettendurchlauf und keine altersbasierte Bereinigung: Nur verifizierte Originale im Download-Ordner von Castify kommen infrage. Manuelle Deemix-/slskd-Downloads, externe Originale, Verzeichnisse und Sidecars werden nie gelöscht. Ist ein Original einmal entfernt, stellt ein Zurückrollen des Containers diese Datei nicht wieder her; stelle sie bei Bedarf aus deinem eigenen Speicher-Backup wieder her.
 
 Für NAS-Nutzer, deren Mount-Namen von den Docker-Pfaden abweichen, kann ein Administrator `DOWNTIFY_DEEMIX_M3U_ROOT` auf einen Container-Alias setzen, der auf die Deemix-Wurzel zeigt. Relative M3U-Pfade nutzen diesen Alias (zum Beispiel `/Download`, abgebildet auf `/music/existing`). Das optionale `DOWNTIFY_LIBRARY_READY_MARKERS` ist ein JSON-Objekt aus Markerpfaden und erwartetem Text, geprüft vor Vorbereitung und Bereinigung. Ein fehlender Marker schlägt sicherheitshalber fehl. Keine der Variablen ist für den Standardmodus nötig.
 

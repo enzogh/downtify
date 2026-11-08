@@ -4,13 +4,13 @@ icon: lucide/languages
 
 # Uluslararasılaştırma
 
-Downtify iki bağımsız yerde çevrilir: **uygulama** (arayüzü) ve bu **belgeler**. İkisinin de varsayılan dili **İngilizce**dir; kutudan çıktığı gibi dokuz dil daha içerir.
+Castify iki bağımsız yerde çevrilir: **uygulama** (arayüzü) ve bu **belgeler**. İkisinin de varsayılan dili **İngilizce**dir; kutudan çıktığı gibi dokuz dil daha içerir.
 
 ## Dil değiştirme
 
 ### Uygulama
 
-**Ayarlar → Dil**’e gidin ve tercih ettiğiniz dili seçin. Seçim tarayıcının `localStorage`’ında saklanır ve sayfa yenilenmeden anında uygulanır. Sayfa ayrıca her yüklemede ve her değiştirdiğinizde sunucuya da bildirir (`settings.json` içindeki `ui_language` girdisi, bkz. [`POST /api/settings/update`](../api-reference.md#post-apisettingsupdate)); böylece tarayıcı olmadan çalışan işler dilinizi bilir - bir sanatçının biyografisi, parçalarından biri indirmeyi bitirdiğinde arka planda getirilir ve o dilde gelir (bkz. [Bir indirme bittiğinde](artist-images.md#when-a-download-finishes)). Sizin yapacağınız bir şey yok: bu özellikten önce bir dil seçtiyseniz, Downtify’ı bir sonraki açışınızda alınır. Farklı dillere ayarlanmış birden çok tarayıcıyla, onu en son yükleyen ya da değiştiren kazanır.
+**Ayarlar → Dil**’e gidin ve tercih ettiğiniz dili seçin. Seçim tarayıcının `localStorage`’ında saklanır ve sayfa yenilenmeden anında uygulanır. Sayfa ayrıca her yüklemede ve her değiştirdiğinizde sunucuya da bildirir (`settings.json` içindeki `ui_language` girdisi, bkz. [`POST /api/settings/update`](../api-reference.md#post-apisettingsupdate)); böylece tarayıcı olmadan çalışan işler dilinizi bilir - bir sanatçının biyografisi, parçalarından biri indirmeyi bitirdiğinde arka planda getirilir ve o dilde gelir (bkz. [Bir indirme bittiğinde](artist-images.md#when-a-download-finishes)). Sizin yapacağınız bir şey yok: bu özellikten önce bir dil seçtiyseniz, Castify’ı bir sonraki açışınızda alınır. Farklı dillere ayarlanmış birden çok tarayıcıyla, onu en son yükleyen ya da değiştiren kazanır.
 
 ### Belgeler
 

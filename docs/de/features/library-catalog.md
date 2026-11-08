@@ -4,7 +4,7 @@ icon: lucide/library
 
 # Bibliothekskatalog und Pfad-Synchronisierung
 
-Downtify führt einen kleinen **Katalog** der Dateien unter `/downloads` (den slskd-Ordner, wenn [slskd-Dateien an Ort und Stelle gelassen werden](slskd-navidrome.md#leave-files-in-place), und [zusätzliche Ordner](external-library.md), die du in den Einstellungen hinzufügst), damit Bibliotheksseite, Player, M3U-Export, Navidrome-Synchronisierung und Dublettenerkennung konsistent bleiben, wenn Dateien verschoben werden oder Playlists wachsen.
+Castify führt einen kleinen **Katalog** der Dateien unter `/downloads` (den slskd-Ordner, wenn [slskd-Dateien an Ort und Stelle gelassen werden](slskd-navidrome.md#leave-files-in-place), und [zusätzliche Ordner](external-library.md), die du in den Einstellungen hinzufügst), damit Bibliotheksseite, Player, M3U-Export, Navidrome-Synchronisierung und Dublettenerkennung konsistent bleiben, wenn Dateien verschoben werden oder Playlists wachsen.
 
 ## Was gespeichert wird
 
@@ -26,14 +26,14 @@ Dateien werden über Verschiebungen hinweg durch einen **Inhaltsschlüssel** zug
 
 ### Cover auf der Festplatte zwischenspeichern
 
-Ist es an, hält Downtify extrahierte Coverbilder unter `/data/cover_cache`, damit Bibliothek und Player nicht für jedes Vorschaubild die Tags neu lesen. Jederzeit gefahrlos abschaltbar; es kostet nur Speicherplatz.
+Ist es an, hält Castify extrahierte Coverbilder unter `/data/cover_cache`, damit Bibliothek und Player nicht für jedes Vorschaubild die Tags neu lesen. Jederzeit gefahrlos abschaltbar; es kostet nur Speicherplatz.
 
 ### Bibliothekspfade korrigieren
 
-Nutze das, nachdem du **Dateien außerhalb von Downtify auf der Festplatte verschoben oder umbenannt** oder von Hand gelöscht hast.
+Nutze das, nachdem du **Dateien außerhalb von Castify auf der Festplatte verschoben oder umbenannt** oder von Hand gelöscht hast.
 
 1. Öffne **Einstellungen → Bibliothek → Bibliothekspfade korrigieren**.
-2. Downtify scannt die Bibliotheksordner und:
+2. Castify scannt die Bibliotheksordner und:
     - **aktualisiert Pfade** im Titelindex und Playlist-Katalog, wenn eine Datei nicht mehr dort ist, wo sie war, dieselbe Datei (gleicher Inhaltsschlüssel) aber anderswo gefunden wird;
     - **entfernt veraltete Einträge** für Dateien, die nicht mehr existieren;
     - **indexiert** ältere Einträge, die vor der Einführung der Inhaltsschlüssel gespeichert wurden;
@@ -44,7 +44,7 @@ Es läuft nur, wenn du die Schaltfläche drückst (oder `POST /api/library/recon
 
 ### Vorhandene Musikordner
 
-Um eine Sammlung abzuspielen, die Downtify nicht heruntergeladen hat, füge die Ordner unter **Einstellungen → Bibliothek** hinzu und drücke **Ordner synchronisieren**. Die Dateien bleiben auf der Festplatte; Tags werden gelesen und Künstler zugeordnet. Siehe [Vorhandene Musikordner](external-library.md).
+Um eine Sammlung abzuspielen, die Castify nicht heruntergeladen hat, füge die Ordner unter **Einstellungen → Bibliothek** hinzu und drücke **Ordner synchronisieren**. Die Dateien bleiben auf der Festplatte; Tags werden gelesen und Künstler zugeordnet. Siehe [Vorhandene Musikordner](external-library.md).
 
 ::: warning
 Das Neuschreiben einer Playlist löscht Bibliotheksdateien, deren Tags erkennbar nicht zu dem Spotify-Titel passen, für den sie registriert sind — siehe [slskd und Navidrome](slskd-navidrome.md#playlist-sync).
@@ -59,7 +59,7 @@ Das Löschen von Titeln auf der **Bibliothek**-Seite räumt den Katalog bereits 
 Die Bibliotheksseite hat vier Tabs — **Alben**, **Künstler**, **Playlists** und **Titel**:
 
 - **Alben, Künstler und Playlists** erscheinen als Cover-Raster oder kompakte Liste (der Umschalter wird gemerkt), mit Textfilter und Sortierung nach zuletzt hinzugefügt, Name, Künstler, Jahr oder Titelanzahl. Alben und Künstler werden aus den Tags jeder Datei aufgebaut (Album-Künstler, Album, Jahr), hängen also nicht davon ab, wie die Dateien auf der Festplatte organisiert sind. Eine Compilation — Album-Künstler `Various Artists`, mit dem Compilation-Flag — bleibt unter Alben ein einziges Album, während ihre Titel auf den Seiten ihrer Künstler stehen. Ein Titel mit `Various Artists` ohne dieses Flag (so haben ältere Versionen jeden Song mit mehreren Künstlern getaggt, auch ein Duo wie `Zé Neto & Cristiano`) wird stattdessen nach seinem ersten Künstler gruppiert. Ein Titel ohne Album-Tag erscheint unter Titel und seinem Künstler, nicht unter Alben.
-- **Künstler** listet jeden Künstler, dem ein Titel gehört — seinem Album-Künstler, bei einer Compilation (oder einer Datei ohne Album-Künstler) seinem ersten Künstler. Die Seite dieses Künstlers enthält auch die Titel, auf denen er Gast ist, mit **Gast** gekennzeichnet; sein Alben-Tab zeigt nur eigene Alben (und ist ausgeblendet, wenn es keine gibt). Ein Name, der immer nur neben jemand anderem genannt wird, bekommt keine eigene Seite: Tags können die Mitglieder eines Duos einzeln nennen (`Henrique; Juliano`, wie YouTube Music manche Duos nennt und ältere Downtify-Versionen sie schrieben), und eine Seite pro Mitglied wäre ein Künstler, den es nicht gibt. **Various Artists** wird nicht aufgeführt: Die Titel einer Compilation stehen auf den Seiten ihrer Künstler, und das Album selbst bleibt unter Alben.
+- **Künstler** listet jeden Künstler, dem ein Titel gehört — seinem Album-Künstler, bei einer Compilation (oder einer Datei ohne Album-Künstler) seinem ersten Künstler. Die Seite dieses Künstlers enthält auch die Titel, auf denen er Gast ist, mit **Gast** gekennzeichnet; sein Alben-Tab zeigt nur eigene Alben (und ist ausgeblendet, wenn es keine gibt). Ein Name, der immer nur neben jemand anderem genannt wird, bekommt keine eigene Seite: Tags können die Mitglieder eines Duos einzeln nennen (`Henrique; Juliano`, wie YouTube Music manche Duos nennt und ältere Castify-Versionen sie schrieben), und eine Seite pro Mitglied wäre ein Künstler, den es nicht gibt. **Various Artists** wird nicht aufgeführt: Die Titel einer Compilation stehen auf den Seiten ihrer Künstler, und das Album selbst bleibt unter Alben.
 - Überall, wo ein Titel seine Künstler zeigt — Titellisten, die Jetzt-läuft-Ansicht, Finder- und Top-Song-Zeilen — führt jeder Name zur Bibliotheksseite des Künstlers oder zu einer Suche nach ihm, wenn die Bibliothek keine Seite für ihn hat. In diesen Zeilen führt auch der Albumname zum Album in der Bibliothek oder zu einer Suche danach, wenn die Bibliothek es nicht hat. Entdecken und sein Finder schicken dich nie zur Suche: Dort ist ein Künstler oder Album, das die Bibliothek nicht hat, einfacher Text. Die Künstler stammen aus dem `ARTISTS`-Tag der Datei (siehe [Mehrere Künstler und Compilations](file-organization.md#several-artists-and-compilations)), sodass ein Name wie *Earth, Wind & Fire* nie am Komma getrennt wird; bei einer Datei ohne diesen Tag wird der Künstlertext an `;`, ` / ` oder `, ` getrennt, außer dieser Text ist auch der Album-Künstler der Datei, oder die Namen, in die er zerfällt, ergeben den Album-Künstler (`Henrique; Juliano` auf einem Album von `Henrique, Juliano`) — dann ist es ein Name.
 - **Playlists** sind die heruntergeladenen Playlists mit einer [M3U-Datei](m3u-export.md), Playlists, die du mit **Neue Playlist** erstellst (bearbeitbar), sowie verfolgte [Playlist-Downloads](slskd-navidrome.md#playlist-downloads), die noch keine M3U haben. Importierte Spotify-/YouTube-Playlists bleiben schreibgeschützt, bis du sie [löst](#detach-an-imported-playlist). Playlists, die andere [mit dir teilen](users.md#sharing-playlists), stehen unter dem Raster, getrennt von deinen eigenen. Sobald du einen Song [geliked](liked-songs.md) hast, steht *Lieblingssongs* zuerst. Eine von dir erstellte Playlist nutzt ein Mosaik aus bis zu vier Titelcovern; importierte Playlists behalten das mit der M3U gespeicherte Artwork.
 - **Titel** ist eine sortierbare Tabelle (Titel, Album, Format, Hinzufügedatum, Länge) mit Textfilter, Formatfilter und Kontrollkästchen — klicke eines an, dann mit Umschalt ein anderes, um einen Bereich auszuwählen. Sortiere durch Klick auf eine Spaltenüberschrift oder mit dem Menü **Sortieren nach** über der Tabelle (die einzige Möglichkeit am Handy, wo die Überschriften verborgen sind): zuletzt hinzugefügt oder älteste zuerst, Titel, Künstler oder Album A–Z oder Z–A, längste oder kürzeste zuerst. Die Wahl wird gemerkt.
@@ -79,18 +79,18 @@ Daneben grenzen Filter die Liste ein. Jeder zeigt, wie viele Titel er enthält, 
 | **Alle** | Alle heruntergeladenen Titel der Playlist |
 | **Fehlend** | Titel der Quell-Playlist, die noch nicht in der Bibliothek sind (Downloads von Spotify-Playlists), mit ihrem Download-Status – beim Auswählen bei Spotify nachgeschlagen |
 | **Fehlgeschlagen** | Die fehlenden Titel, deren Download fehlgeschlagen ist, jeweils mit einer Schaltfläche für einen neuen Versuch – sobald **Fehlend** nachgeschlagen wurde |
-| **YouTube Music**, **Soulseek (slskd)**, **Deemix** … | Die Titel, die diese Quelle geholt hat. Downtify merkt sich das für Titel, die ab jetzt heruntergeladen werden; ältere zählen als **Unbekannte Quelle**, außer slskd-Dateien, die an ihrem Ort bleiben, und Titeln aus deinen eigenen Ordnern |
-| **Nicht in Navidrome** | Bei eingeschalteter [Navidrome-Synchronisierung](slskd-navidrome.md) die Titel, die Downtify noch keinem Navidrome-Titel zugeordnet hat |
+| **YouTube Music**, **Soulseek (slskd)**, **Deemix** … | Die Titel, die diese Quelle geholt hat. Castify merkt sich das für Titel, die ab jetzt heruntergeladen werden; ältere zählen als **Unbekannte Quelle**, außer slskd-Dateien, die an ihrem Ort bleiben, und Titeln aus deinen eigenen Ordnern |
+| **Nicht in Navidrome** | Bei eingeschalteter [Navidrome-Synchronisierung](slskd-navidrome.md) die Titel, die Castify noch keinem Navidrome-Titel zugeordnet hat |
 
 Suche und Filter wirken zusammen, und darunter steht, wie viele Titel angezeigt werden. Jeder Titel behält seine Nummer in der Playlist, und Sortieren, Abspielen und das Menü jedes Titels beziehen sich auf das Angezeigte.
 
 ### Eine importierte Playlist lösen
 
-Eine aus einem Spotify- oder YouTube-Music-Link importierte Playlist kann nicht bearbeitet werden, weil Downtify sie mit ihrer Quelle synchron hält. Um eine aufzuräumen — einen Song entfernen, der nicht dazugehört, einen hinzufügen, der dazugehört — öffne sie und wähle **Von der Quelle lösen**. Sie wird zu einer Playlist wie die, die du erstellst: Ihre Songs und ihr Besitzer bleiben, wie sie sind, und du erhältst **Titel hinzufügen**, **Umbenennen** und das Entfernen von Songs. Im Gegenzug wird die Verbindung zur Quelle gekappt: Sie wird nicht mehr von Spotify oder YouTube Music aktualisiert, ihre Beobachtung in der [Playlist-Überwachung](playlist-monitor.md) (falls vorhanden) wird entfernt, und ihr „fehlende Songs“-Tracking verschwindet. Bereits heruntergeladene Songs werden nie angefasst, und ihr Artwork bleibt bis zu deiner ersten Bearbeitung, wenn ein Mosaik ihrer Songs es ersetzt. Das Lösen lässt sich in der App nicht rückgängig machen; den Link erneut herunterzuladen erzeugt eine neue importierte Playlist.
+Eine aus einem Spotify- oder YouTube-Music-Link importierte Playlist kann nicht bearbeitet werden, weil Castify sie mit ihrer Quelle synchron hält. Um eine aufzuräumen — einen Song entfernen, der nicht dazugehört, einen hinzufügen, der dazugehört — öffne sie und wähle **Von der Quelle lösen**. Sie wird zu einer Playlist wie die, die du erstellst: Ihre Songs und ihr Besitzer bleiben, wie sie sind, und du erhältst **Titel hinzufügen**, **Umbenennen** und das Entfernen von Songs. Im Gegenzug wird die Verbindung zur Quelle gekappt: Sie wird nicht mehr von Spotify oder YouTube Music aktualisiert, ihre Beobachtung in der [Playlist-Überwachung](playlist-monitor.md) (falls vorhanden) wird entfernt, und ihr „fehlende Songs“-Tracking verschwindet. Bereits heruntergeladene Songs werden nie angefasst, und ihr Artwork bleibt bis zu deiner ersten Bearbeitung, wenn ein Mosaik ihrer Songs es ersetzt. Das Lösen lässt sich in der App nicht rückgängig machen; den Link erneut herunterzuladen erzeugt eine neue importierte Playlist.
 
 Jedes Konto sieht dieselbe Bibliothek: Was ein Admin [vor Benutzern verbirgt](users.md#hiding-from-users), fehlt für sie, und ein Admin sieht alles, mit einem durchgestrichenen Auge an dem, was verborgen ist. Admins verbergen und zeigen über das `…`-Menü eines Songs, Albums oder Künstlers oder über die Auswahlleiste in **Titel**.
 
-**Als ZIP herunterladen** speichert die ausgewählten Titel als einzelnes ZIP auf dem Gerät, von dem aus du browst, und behält ihre Ordnerstruktur — praktisch, wenn Downtify auf einem Heimserver läuft und du einen Stapel Titel lokal haben willst. Kombiniere es mit **Alle auswählen**, um alles mitzunehmen, was der aktuelle Filter zeigt. Das Archiv wird beim Herunterladen aufgebaut, sodass nichts auf die Festplatte des Servers geschrieben wird, und ist auf 2000 Titel pro Download begrenzt.
+**Als ZIP herunterladen** speichert die ausgewählten Titel als einzelnes ZIP auf dem Gerät, von dem aus du browst, und behält ihre Ordnerstruktur — praktisch, wenn Castify auf einem Heimserver läuft und du einen Stapel Titel lokal haben willst. Kombiniere es mit **Alle auswählen**, um alles mitzunehmen, was der aktuelle Filter zeigt. Das Archiv wird beim Herunterladen aufgebaut, sodass nichts auf die Festplatte des Servers geschrieben wird, und ist auf 2000 Titel pro Download begrenzt.
 
 ## API
 

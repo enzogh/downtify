@@ -28,10 +28,10 @@ icon: lucide/sliders-horizontal
 | High | 256 |
 | Best | **320**（默认） |
 
-所有有损格式都会按所选比特率编码。如果 YouTube 提供的音频已经使用目标编解码器且比特率大致相同（例如 **M4A @ 128** 对应约 128 kbps 的 AAC 音频流），Downtify 会直接保留该音频，而不重新编码，因为重新编码只会降低音质。
+所有有损格式都会按所选比特率编码。如果 YouTube 提供的音频已经使用目标编解码器且比特率大致相同（例如 **M4A @ 128** 对应约 128 kbps 的 AAC 音频流），Castify 会直接保留该音频，而不重新编码，因为重新编码只会降低音质。
 
 ::: info 提高比特率不会增加音质
-YouTube 音频的比特率最高约为 **128–160 kbps**（AAC 或 Opus），Downtify 始终下载可用的最佳音频流。将其编码为 256 或 320 kbps 会生成更大的文件，但只能忠实保留源音频已有的信息，无法恢复源音频中不存在的细节。如果更在意文件大小，请选择较低的比特率。
+YouTube 音频的比特率最高约为 **128–160 kbps**（AAC 或 Opus），Castify 始终下载可用的最佳音频流。将其编码为 256 或 320 kbps 会生成更大的文件，但只能忠实保留源音频已有的信息，无法恢复源音频中不存在的细节。如果更在意文件大小，请选择较低的比特率。
 :::
 
 ## 输出文件名模板
@@ -86,7 +86,7 @@ YouTube 音频的比特率最高约为 **128–160 kbps**（AAC 或 Opus），Do
 
 ## 下载间隔
 
-每首歌曲下载完成后，Downtify 会等待指定秒数再开始下一首，而不是连续发送请求。
+每首歌曲下载完成后，Castify 会等待指定秒数再开始下一首，而不是连续发送请求。
 
 | 数值 | 行为 |
 |-------|-----------|
@@ -103,7 +103,7 @@ YouTube 音频的比特率最高约为 **128–160 kbps**（AAC 或 Opus），Do
 
 ## 下载封面
 
-控制 Downtify 是否嵌入专辑封面，默认开启。关闭后将完全跳过封面获取；标题、艺人、专辑、年份和歌词等其他标签仍会正常嵌入。由于无需请求或写入封面图片，文件会更小，下载也略快。
+控制 Castify 是否嵌入专辑封面，默认开启。关闭后将完全跳过封面获取；标题、艺人、专辑、年份和歌词等其他标签仍会正常嵌入。由于无需请求或写入封面图片，文件会更小，下载也略快。
 
 关闭此设置后，**Organize by album** 也不会生成独立的 `cover.jpg`（参见[文件整理](file-organization.md)）。通过这种方式下载的曲目在[播放器](player.md)和媒体库中不会显示封面，而会显示默认的音符图标。
 
@@ -111,33 +111,33 @@ YouTube 音频的比特率最高约为 **128–160 kbps**（AAC 或 Opus），Do
 
 ## 封面分辨率
 
-只有启用上方的**下载封面**时，此设置才生效。用于指定 Downtify 从 **YouTube Music** 或 **Deezer** 获取并嵌入封面时请求的目标尺寸（宽和高，单位像素）。可选择预设值（300、600、800、1000、1200），也可拖动滑块设置 **300 到 1200** 之间的任意值；当前像素值显示在滑块旁。默认值为 600。
+只有启用上方的**下载封面**时，此设置才生效。用于指定 Castify 从 **YouTube Music** 或 **Deezer** 获取并嵌入封面时请求的目标尺寸（宽和高，单位像素）。可选择预设值（300、600、800、1000、1200），也可拖动滑块设置 **300 到 1200** 之间的任意值；当前像素值显示在滑块旁。默认值为 600。
 
 如果要将媒体库用于 Plex 等以较高分辨率显示封面的媒体服务器，此设置会很有帮助。
 
 两个来源的处理方式不同，因为只有一个来源支持按需调整尺寸：
 
 - **YouTube Music**：可以通过修改缩略图 URL 调整尺寸。根据实时 CDN 验证，提高预设值后，大多数专辑封面会返回更多真实细节（而非单纯放大），最高可达源图片本身的分辨率。
-- **Deezer**：每首歌曲、专辑、艺人或播放列表的封面只提供四种固定尺寸（56、250、500 和 1000px），无法请求中间尺寸。Downtify 会选择不小于所设尺寸的最小图片。例如请求 300px 时会获取 500px 图片，因为 Deezer 没有 300px 规格；设置超过 1000px 时仍会获取其最大尺寸 1000px。
+- **Deezer**：每首歌曲、专辑、艺人或播放列表的封面只提供四种固定尺寸（56、250、500 和 1000px），无法请求中间尺寸。Castify 会选择不小于所设尺寸的最小图片。例如请求 300px 时会获取 500px 图片，因为 Deezer 没有 300px 规格；设置超过 1000px 时仍会获取其最大尺寸 1000px。
 
 ::: info Spotify 来源的封面不受影响
-对于通过 Spotify 解析的曲目/专辑/播放列表，Downtify 已经嵌入 Spotify 公共 embed API 提供的**最大尺寸**封面，没有更大的尺寸可供请求。此设置只会提高通过 YouTube Music 解析的曲目（自由文本搜索、YouTube 链接，以及为获取实际音频而重新匹配 YouTube Music 的 Spotify 曲目）或 Deezer 解析的曲目（粘贴 Deezer 链接或来自[排行榜](charts.md)的曲目）的封面尺寸上限。
+对于通过 Spotify 解析的曲目/专辑/播放列表，Castify 已经嵌入 Spotify 公共 embed API 提供的**最大尺寸**封面，没有更大的尺寸可供请求。此设置只会提高通过 YouTube Music 解析的曲目（自由文本搜索、YouTube 链接，以及为获取实际音频而重新匹配 YouTube Music 的 Spotify 曲目）或 Deezer 解析的曲目（粘贴 Deezer 链接或来自[排行榜](charts.md)的曲目）的封面尺寸上限。
 :::
 
 更改此设置后立即生效，包括当前打开的搜索页面；无需重新下载磁盘上已有内容。
 
 ## 覆盖现有文件
 
-默认开启，与 Downtify 过去的行为一致：每次下载都会完整运行处理流程（获取音频、写入标签、封面和歌词），并覆盖计算得到的输出路径上已有文件。
+默认开启，与 Castify 过去的行为一致：每次下载都会完整运行处理流程（获取音频、写入标签、封面和歌词），并覆盖计算得到的输出路径上已有文件。
 
 ### “重新下载”具体意味着什么
 
-启用后，重新下载会执行一次**全新的下载流程**，而不是修复已有文件。Downtify 不会检查当前文件，而是按配置顺序搜索[音频来源](#audio-provider)。例如 slskd 排在第一位时，会先尝试 slskd，而不只是将它作为备用来源。Downtify 会获取第一个有响应来源的音频，并写入当前的标签、封面和歌词。
+启用后，重新下载会执行一次**全新的下载流程**，而不是修复已有文件。Castify 不会检查当前文件，而是按配置顺序搜索[音频来源](#audio-provider)。例如 slskd 排在第一位时，会先尝试 slskd，而不只是将它作为备用来源。Castify 会获取第一个有响应来源的音频，并写入当前的标签、封面和歌词。
 
 在批量重新下载之前，有一点值得注意：
 
 ::: warning 格式不同会留下旧文件
-新文件会写入[文件名模板](#output-filename-template)生成的路径，并使用**新**音频的扩展名。只有新旧文件扩展名相同时，Downtify 才会覆盖旧文件。
+新文件会写入[文件名模板](#output-filename-template)生成的路径，并使用**新**音频的扩展名。只有新旧文件扩展名相同时，Castify 才会覆盖旧文件。
 
 例如，重新下载 `Artist - Song.mp3` 时，slskd 返回 FLAC，最终会同时保留 `Artist - Song.mp3`（旧文件，不会改动）和 `Artist - Song.flac`。默认启用的 [Leave slskd files in place](slskd-navidrome.md#leave-files-in-place) 会让 slskd 文件留在原处，不复制到下载目录；因此旧文件留在原位置，新文件位于 `slskd/` 下。
 
@@ -146,13 +146,13 @@ YouTube 音频的比特率最高约为 **128–160 kbps**（AAC 或 Opus），Do
 
 ### 封面来自 Spotify 或 YouTube Music，而非音频文件
 
-无论下载的音频自带什么封面（包括 slskd 文件中嵌入的高分辨率封面），写入标签时都会**丢弃并替换**。Downtify 始终会从 Spotify 或 YouTube Music 获取曲目封面（SoundCloud 链接则使用 SoundCloud 封面），并按你设置的[封面分辨率](#cover-art-resolution)（默认 600px）嵌入。标题、艺人、专辑和其他标签也一样：不会保留来源音频自身的标签。
+无论下载的音频自带什么封面（包括 slskd 文件中嵌入的高分辨率封面），写入标签时都会**丢弃并替换**。Castify 始终会从 Spotify 或 YouTube Music 获取曲目封面（SoundCloud 链接则使用 SoundCloud 封面），并按你设置的[封面分辨率](#cover-art-resolution)（默认 600px）嵌入。标题、艺人、专辑和其他标签也一样：不会保留来源音频自身的标签。
 
 如果只是想为已有文件添加大尺寸封面，重新下载并不是最佳方法。[升级媒体库](library-upgrade.md)会将每个文件的嵌入封面与 Spotify、iTunes 和 YouTube Music 的版本进行比较，写入最大尺寸的图片，补充缺失歌词和标签，而不会改动音频。
 
 关闭此选项后，磁盘上已有的歌曲不会重复下载。当播放列表、[CSV 媒体库](library-import.md)或[播放列表监控](playlist-monitor.md)中存在相同歌曲时，此设置尤其有用；启用时这些重复歌曲都会重新下载。
 
-关闭后，Downtify 会在下载目录**的任意位置**查找该歌曲，而不只检查新下载将写入的位置，包括：
+关闭后，Castify 会在下载目录**的任意位置**查找该歌曲，而不只检查新下载将写入的位置，包括：
 
 - 媒体库根目录（单首歌曲下载）；
 - 任意播放列表文件夹（播放列表下载、CSV 导入和播放列表监控）；
@@ -172,17 +172,17 @@ YouTube 音频的比特率最高约为 **128–160 kbps**（AAC 或 Opus），Do
 
 ## 音频来源
 
-默认音频来源是 **YouTube Music**。Downtify 使用 [`ytmusicapi`](https://ytmusicapi.readthedocs.io/) 搜索歌曲，并根据曲目时长选择最佳匹配。如果 YouTube Music 没有可接受的匹配，或唯一匹配的时长差距过大（很可能是不同录音），Downtify 会自动回退到普通 YouTube 搜索。详见[工作原理](../how-it-works.md#fallback-to-standard-youtube)。
+默认音频来源是 **YouTube Music**。Castify 使用 [`ytmusicapi`](https://ytmusicapi.readthedocs.io/) 搜索歌曲，并根据曲目时长选择最佳匹配。如果 YouTube Music 没有可接受的匹配，或唯一匹配的时长差距过大（很可能是不同录音），Castify 会自动回退到普通 YouTube 搜索。详见[工作原理](../how-it-works.md#fallback-to-standard-youtube)。
 
 **Settings → Audio source** 也可设置为仅使用普通 **YouTube**、**SoundCloud**、**slskd**（Soulseek）或 **Deemix**，并按顺序排列备用来源。参见 [slskd 与 Navidrome](slskd-navidrome.md#audio-sources-and-fallback-order)。
 
 ### 强制使用指定音频来源
 
-如果 Downtify 选中了错误的 YouTube Music 视频（例如匹配到翻唱而不是原版），可以针对单首歌曲覆盖此选择：
+如果 Castify 选中了错误的 YouTube Music 视频（例如匹配到翻唱而不是原版），可以针对单首歌曲覆盖此选择：
 
 **方式 A：直接粘贴 YouTube Music URL**
 
-将 `https://music.youtube.com/watch?v=…`（或普通 `youtube.com/watch?v=…`）粘贴到搜索栏并点击下载。Downtify 会直接获取该视频中的音频。
+将 `https://music.youtube.com/watch?v=…`（或普通 `youtube.com/watch?v=…`）粘贴到搜索栏并点击下载。Castify 会直接获取该视频中的音频。
 
 ::: info
 通过 YouTube URL 下载时，元数据（标题、艺人、封面）来自 YouTube，而非 Spotify。若需要准确的标签，请使用方式 B。
@@ -194,11 +194,11 @@ YouTube 音频的比特率最高约为 **128–160 kbps**（AAC 或 Opus），Do
 2. 在出现的输入框中粘贴 YouTube 或 YouTube Music URL；启用 **SoundCloud** 来源时，也可以粘贴 SoundCloud 曲目 URL。
 3. 按 **Enter** 或点击 **Apply**。
 
-Downtify 会使用指定视频（或 SoundCloud 曲目）重新下载，同时保留 Spotify 的所有元数据（标题、艺人、专辑、封面和歌词）。
+Castify 会使用指定视频（或 SoundCloud 曲目）重新下载，同时保留 Spotify 的所有元数据（标题、艺人、专辑、封面和歌词）。
 
 ## 嵌入的元数据
 
-无论格式为何，Downtify 都会在每个下载文件中嵌入以下标签：
+无论格式为何，Castify 都会在每个下载文件中嵌入以下标签：
 
 | 标签 | 来源 |
 |-----|--------|

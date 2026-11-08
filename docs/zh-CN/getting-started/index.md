@@ -4,7 +4,7 @@ icon: lucide/play
 
 # 快速入门
 
-Downtify 是一款自托管 Web 应用，可从 Spotify 下载音乐，无需 API 密钥、账号或 Premium 订阅。所有服务都运行在一个 Docker 容器中。
+Castify 是一款自托管 Web 应用，可从 Spotify 下载音乐，无需 API 密钥、账号或 Premium 订阅。所有服务都运行在一个 Docker 容器中。
 
 ## 你需要准备
 
@@ -38,6 +38,6 @@ Downtify 是一款自托管 Web 应用，可从 Spotify 下载音乐，无需 AP
 
 ## 后续步骤
 
-Downtify 启动后，在浏览器中打开 [http://localhost:8000](http://localhost:8000)。将 Spotify 歌曲、专辑或播放列表链接粘贴到搜索栏，然后点击 **Download**。
+Castify 启动后，在浏览器中打开 [http://localhost:8000](http://localhost:8000)。将 Spotify 歌曲、专辑或播放列表链接粘贴到搜索栏，然后点击 **Download**。
 
 继续阅读文档，了解[下载设置](../features/download-settings.md)、[播放列表监控](../features/playlist-monitor.md)、[内置播放器](../features/player.md)等功能。

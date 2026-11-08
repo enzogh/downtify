@@ -4,13 +4,13 @@ icon: lucide/languages
 
 # Internacionalização
 
-O Downtify é traduzido em dois lugares independentes: o **app** (a interface) e esta **documentação**. O idioma padrão de ambos é o **inglês**, com outros nove idiomas incluídos de fábrica.
+O Castify é traduzido em dois lugares independentes: o **app** (a interface) e esta **documentação**. O idioma padrão de ambos é o **inglês**, com outros nove idiomas incluídos de fábrica.
 
 ## Mudando o idioma
 
 ### O app
 
-Vá em **Configurações → Idioma** e escolha o idioma de sua preferência. A escolha é salva no `localStorage` do navegador e aplicada na hora, sem recarregar a página. A página também informa o servidor (a entrada `ui_language` do `settings.json`, veja [`POST /api/settings/update`](../api-reference.md#post-apisettingsupdate)), a cada carregamento e sempre que você a muda, para que o trabalho que roda sem um navegador conheça o seu idioma - a biografia de um artista, buscada em segundo plano quando uma faixa dele termina de baixar, vem nele (veja [Quando um download termina](artist-images.md#when-a-download-finishes)). Não há nada a fazer do seu lado: se você escolheu um idioma antes de isso existir, ele é captado na próxima vez que você abrir o Downtify. Com vários navegadores em idiomas diferentes, vale o último que carregou ou mudou.
+Vá em **Configurações → Idioma** e escolha o idioma de sua preferência. A escolha é salva no `localStorage` do navegador e aplicada na hora, sem recarregar a página. A página também informa o servidor (a entrada `ui_language` do `settings.json`, veja [`POST /api/settings/update`](../api-reference.md#post-apisettingsupdate)), a cada carregamento e sempre que você a muda, para que o trabalho que roda sem um navegador conheça o seu idioma - a biografia de um artista, buscada em segundo plano quando uma faixa dele termina de baixar, vem nele (veja [Quando um download termina](artist-images.md#when-a-download-finishes)). Não há nada a fazer do seu lado: se você escolheu um idioma antes de isso existir, ele é captado na próxima vez que você abrir o Castify. Com vários navegadores em idiomas diferentes, vale o último que carregou ou mudou.
 
 ### A documentação
 

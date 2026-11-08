@@ -31,7 +31,7 @@ Kayıplı biçimler (MP3, M4A, OGG, OPUS) için kullanılabilir. FLAC bu ayarı 
 İndirilen ses, her kayıplı biçim için seçtiğiniz bit hızında kodlanır. YouTube’un sunduğu ses zaten hedef codec’e yaklaşık o bit hızında sahipse (örn. **M4A @ 128** için ~128 kbps AAC akışı), yeniden kodlanmak yerine olduğu gibi tutulur; çünkü yeniden kodlama yalnızca kalite kaybettirir.
 
 ::: info Daha yüksek bit hızı kalite katmaz
-YouTube’un sesi en fazla yaklaşık **128–160 kbps**’e (AAC veya Opus) çıkar ve Downtify her zaman mevcut en iyi akışı indirir. Bunu 256 veya 320 kbps ile kodlamak, o kaynağı sadakatle koruyan daha büyük dosyalar verir ama kaynağın hiç sahip olmadığı ayrıntıyı geri getiremez. Dosya boyutu sizin için daha önemliyse daha düşük bir bit hızı seçin.
+YouTube’un sesi en fazla yaklaşık **128–160 kbps**’e (AAC veya Opus) çıkar ve Castify her zaman mevcut en iyi akışı indirir. Bunu 256 veya 320 kbps ile kodlamak, o kaynağı sadakatle koruyan daha büyük dosyalar verir ama kaynağın hiç sahip olmadığı ayrıntıyı geri getiremez. Dosya boyutu sizin için daha önemliyse daha düşük bir bit hızı seçin.
 :::
 
 ## Çıktı dosya adı şablonu
@@ -86,7 +86,7 @@ Sınır her toplu indirmeye — çalma listesi/albüm indirmeleri, toplu kuyruk 
 
 ## İndirmeler arası bekleme
 
-Downtify’ın, istekleri arka arkaya ateşlemek yerine bir şarkıyı bitirdikten sonra sonrakine başlamadan önce yapılandırılabilir sayıda saniye beklemesini sağlar.
+Castify’ın, istekleri arka arkaya ateşlemek yerine bir şarkıyı bitirdikten sonra sonrakine başlamadan önce yapılandırılabilir sayıda saniye beklemesini sağlar.
 
 | Değer | Davranış |
 |-------|-----------|
@@ -103,7 +103,7 @@ Aynı fikir, indirmeler yerine **[Mevcut müzik klasörleri](external-library.md
 
 ## Kapakları indir
 
-Downtify’ın albüm kapağını hiç gömüp gömmeyeceğini belirler. Varsayılan olarak açıktır. Kapak getirmeyi tamamen atlamak için kapatın — diğer tüm etiketler (başlık, sanatçı, albüm, yıl, söz) normal şekilde gömülmeye devam eder, ama kapak görüntüsü hiç istenmediği veya yazılmadığı için dosyalar küçülür ve biraz daha hızlı iner.
+Castify’ın albüm kapağını hiç gömüp gömmeyeceğini belirler. Varsayılan olarak açıktır. Kapak getirmeyi tamamen atlamak için kapatın — diğer tüm etiketler (başlık, sanatçı, albüm, yıl, söz) normal şekilde gömülmeye devam eder, ama kapak görüntüsü hiç istenmediği veya yazılmadığı için dosyalar küçülür ve biraz daha hızlı iner.
 
 Bunu kapatmak, *Albüme göre düzenle* seçeneğinin (bkz. [Dosya düzeni](file-organization.md)) ürettiği ayrı `cover.jpg` dosyasının yazılmasını da atlar; [oynatıcı](player.md) ve kitaplık bu şekilde indirilen parçalar için kapak göstermez (bunun yerine yedek nota simgesi görünür).
 
@@ -111,33 +111,33 @@ Bu `cover.jpg`, albüm klasöründeki tüm parçalarca paylaşılır. Kitaplık 
 
 ## Kapak çözünürlüğü
 
-Yalnızca **Kapakları indir** (yukarıda) açıkken geçerlidir. Downtify’ın **YouTube Music** veya **Deezer** kaynaklı gömülü kapak için istediği hedef boyutu (piksel cinsinden genişlik ve yükseklik) belirler. Bir hazır değer (300, 600, 800, 1000, 1200) seçin ya da kaydırıcıyı **300 ile 1200** arasında herhangi bir yere sürükleyin; geçerli değer piksel olarak yanında gösterilir. Varsayılan 600’dür.
+Yalnızca **Kapakları indir** (yukarıda) açıkken geçerlidir. Castify’ın **YouTube Music** veya **Deezer** kaynaklı gömülü kapak için istediği hedef boyutu (piksel cinsinden genişlik ve yükseklik) belirler. Bir hazır değer (300, 600, 800, 1000, 1200) seçin ya da kaydırıcıyı **300 ile 1200** arasında herhangi bir yere sürükleyin; geçerli değer piksel olarak yanında gösterilir. Varsayılan 600’dür.
 
-Kitaplığınızı Plex gibi, kapakları Downtify’ın varsayılan olarak gömdüğünden daha yüksek çözünürlükte gösteren bir medya sunucusuna beslerken kullanışlıdır.
+Kitaplığınızı Plex gibi, kapakları Castify’ın varsayılan olarak gömdüğünden daha yüksek çözünürlükte gösteren bir medya sunucusuna beslerken kullanışlıdır.
 
 İki kaynak ayarı farklı uygular, çünkü yalnızca biri gerçekten istek üzerine yeniden boyutlandırılabilir:
 
 - **YouTube Music** küçük resimleri URL’leri düzenlenerek yeniden boyutlandırılabilir — gerçek CDN’de doğrulandı, yüksek hazır değerler çoğu albüm kapağı için (yalnızca büyütme değil) gerçekten daha fazla ayrıntı döndürür, kaynak görüntünün kendi çözünürlüğüne kadar.
-- **Deezer**, herhangi bir parça, albüm, sanatçı veya çalma listesi kapağı için yalnızca dört sabit boyut sunar (56, 250, 500 ve 1000 px) — istenebilecek ara boyut yoktur. Downtify, bu dördünün yapılandırılan değerden en az o kadar büyük olan en küçüğünü seçer (300 px istemek 500 px olanı getirir, çünkü tam 300 px boyutu yoktur); 1000 px’ten fazlasını istemek de Deezer’ın en büyüğü olan 1000 px’i getirir.
+- **Deezer**, herhangi bir parça, albüm, sanatçı veya çalma listesi kapağı için yalnızca dört sabit boyut sunar (56, 250, 500 ve 1000 px) — istenebilecek ara boyut yoktur. Castify, bu dördünün yapılandırılan değerden en az o kadar büyük olan en küçüğünü seçer (300 px istemek 500 px olanı getirir, çünkü tam 300 px boyutu yoktur); 1000 px’ten fazlasını istemek de Deezer’ın en büyüğü olan 1000 px’i getirir.
 
 ::: info Spotify kaynaklı kapaklar etkilenmez
-Downtify, Spotify’ın herkese açık embed API’sinin Spotify tarafından çözülen parçalar/albümler/çalma listeleri için sunduğu **en büyük** kapağı zaten gömer — istenebilecek daha büyük boyut yok. Bu ayar yalnızca YouTube Music (serbest metin araması, YouTube URL’leri ve sesin kendisi için YouTube Music ile yeniden eşleştirilen her Spotify parçası) veya Deezer (yapıştırılmış bir Deezer bağlantısı ya da [Listeler](charts.md)’den bir parça) üzerinden çözülen parçalar için tavanı yükseltir.
+Castify, Spotify’ın herkese açık embed API’sinin Spotify tarafından çözülen parçalar/albümler/çalma listeleri için sunduğu **en büyük** kapağı zaten gömer — istenebilecek daha büyük boyut yok. Bu ayar yalnızca YouTube Music (serbest metin araması, YouTube URL’leri ve sesin kendisi için YouTube Music ile yeniden eşleştirilen her Spotify parçası) veya Deezer (yapıştırılmış bir Deezer bağlantısı ya da [Listeler](charts.md)’den bir parça) üzerinden çözülen parçalar için tavanı yükseltir.
 :::
 
 Bu değeri Ayarlar’da değiştirmek, o an açık olan arama sayfası dahil hemen etkili olur — diskte zaten bulunan hiçbir şeyi yeniden indirmeyi gerektirmez.
 
 ## Var olan dosyaların üzerine yaz
 
-Downtify’ın geçmiş davranışıyla uyumlu olarak varsayılan olarak açıktır: her indirme işlem hattından (ses getirme, etiketleme, kapak, söz) geçer ve hesaplanan çıktı yolunda zaten duran dosyanın üzerine yazar.
+Castify’ın geçmiş davranışıyla uyumlu olarak varsayılan olarak açıktır: her indirme işlem hattından (ses getirme, etiketleme, kapak, söz) geçer ve hesaplanan çıktı yolunda zaten duran dosyanın üzerine yazar.
 
 ### “Tekrar”ın gerçekte ne anlama geldiği
 
-Açıkken yeniden indirme, var olan dosyanın onarımı değil, **tamamen yeni bir çalıştırmadır**. Downtify elinizde ne olduğuna bakmaz: [ses kaynaklarınızı](#audio-provider) yapılandırılan sırayla arar — yani slskd ilkse, slskd yalnızca yedek olarak değil, önce denenir —, sesi yanıt veren kaynaktan getirir ve üzerine bugünün etiketlerini, kapağını ve sözlerini yazar.
+Açıkken yeniden indirme, var olan dosyanın onarımı değil, **tamamen yeni bir çalıştırmadır**. Castify elinizde ne olduğuna bakmaz: [ses kaynaklarınızı](#audio-provider) yapılandırılan sırayla arar — yani slskd ilkse, slskd yalnızca yedek olarak değil, önce denenir —, sesi yanıt veren kaynaktan getirir ve üzerine bugünün etiketlerini, kapağını ve sözlerini yazar.
 
 Bunun, büyük bir kitaplığı yeniden indirmeden önce bilmeye değer bir sonucu var:
 
 ::: warning Farklı bir biçim eski dosyayı geride bırakır
-Yeni dosya, [dosya adı şablonunun](#output-filename-template) ürettiği yola, **yeni** sesin uzantısıyla yazılır. Downtify eski dosyanın üzerine yalnızca ikisi de aynı uzantıda bittiğinde yazar.
+Yeni dosya, [dosya adı şablonunun](#output-filename-template) ürettiği yola, **yeni** sesin uzantısıyla yazılır. Castify eski dosyanın üzerine yalnızca ikisi de aynı uzantıda bittiğinde yazar.
 
 Yani slskd bir FLAC ile yanıt verdiğinde `Sanatçı - Şarkı.mp3`’ü yeniden indirmek size **ikisini birden** verir: `Sanatçı - Şarkı.mp3` (eski, dokunulmamış) ve `Sanatçı - Şarkı.flac`. [slskd dosyalarını yerinde bırak](slskd-navidrome.md#leave-files-in-place) açıkken — varsayılan — slskd dosyası indirme klasörünüze bile kopyalanmaz; eski dosya tam olduğu yerde kalır, yenisi `slskd/` altında durur.
 
@@ -146,13 +146,13 @@ Hiçbir şey kaybolmaz, ama kopyalarınız olur. Bir dosyayı gerçekten değiş
 
 ### Kapak dosyadan değil, Spotify veya YouTube Music’ten gelir
 
-İndirilen sesin taşıdığı her kapak görseli — bir slskd dosyasına gömülü yüksek çözünürlüklü kapak dahil — etiketleme sırasında **atılır ve değiştirilir**. Downtify her zaman parça için Spotify veya YouTube Music’ten getirdiği kapağı, yapılandırdığınız [kapak çözünürlüğünde](#cover-art-resolution) (varsayılan 600 px) gömer. Aynısı başlık, sanatçılar, albüm ve diğer etiketler için de geçerlidir: kaynağın kendi etiketleri korunmaz.
+İndirilen sesin taşıdığı her kapak görseli — bir slskd dosyasına gömülü yüksek çözünürlüklü kapak dahil — etiketleme sırasında **atılır ve değiştirilir**. Castify her zaman parça için Spotify veya YouTube Music’ten getirdiği kapağı, yapılandırdığınız [kapak çözünürlüğünde](#cover-art-resolution) (varsayılan 600 px) gömer. Aynısı başlık, sanatçılar, albüm ve diğer etiketler için de geçerlidir: kaynağın kendi etiketleri korunmaz.
 
 İstediğiniz zaten sahip olduğunuz dosyalarda daha büyük kapaklarsa, yeniden indirmek uzun yoldur. [Kitaplığı iyileştir](library-upgrade.md) tam olarak bunu yapar — her dosyanın gömülü kapağını Spotify, iTunes ve YouTube Music ile karşılaştırır, en büyüğünü yazar, eksik sözleri ve etiketleri doldurur ve sese asla dokunmaz.
 
 Zaten diskte olan bir şarkıyı hiç indirmemek için kapatın. Bu en çok bir çalma listesi indirirken, bir [CSV kitaplığı](library-import.md) içe aktarırken ya da [Çalma Listesi İzleyici](playlist-monitor.md)’nin birbirleriyle veya kitaplığınızdaki şarkılarla parça paylaşan çalma listelerini eşitlemesine izin verirken önemlidir — seçenek açıkken bu kopyaların her biri yeniden indirilir.
 
-Kapalıyken Downtify şarkıyı yalnızca yeni indirmenin gideceği yerde değil, **indirme klasörünün her yerinde** arar:
+Kapalıyken Castify şarkıyı yalnızca yeni indirmenin gideceği yerde değil, **indirme klasörünün her yerinde** arar:
 
 - kitaplık kökü (tek parça indirmeleri),
 - herhangi bir çalma listesinin klasörü (çalma listesi indirmeleri, CSV içe aktarmaları, Çalma Listesi İzleyici),
@@ -172,17 +172,17 @@ Bir şarkı atlandığında:
 
 ## Ses sağlayıcı
 
-Varsayılan ses sağlayıcı **YouTube Music**’tir. Downtify, parça süresini karşılaştırarak en iyi eşleşmeyi aramak için [`ytmusicapi`](https://ytmusicapi.readthedocs.io/) kullanır. YouTube Music’te kabul edilebilir bir eşleşme yoksa ya da yalnızca süresi çok farklı olan (muhtemelen başka bir kayıt) varsa, Downtify otomatik olarak standart YouTube aramasına geçer — bkz. [Nasıl çalışır](../how-it-works.md#fallback-to-standard-youtube).
+Varsayılan ses sağlayıcı **YouTube Music**’tir. Castify, parça süresini karşılaştırarak en iyi eşleşmeyi aramak için [`ytmusicapi`](https://ytmusicapi.readthedocs.io/) kullanır. YouTube Music’te kabul edilebilir bir eşleşme yoksa ya da yalnızca süresi çok farklı olan (muhtemelen başka bir kayıt) varsa, Castify otomatik olarak standart YouTube aramasına geçer — bkz. [Nasıl çalışır](../how-it-works.md#fallback-to-standard-youtube).
 
 **Ayarlar → Ses kaynakları** ayrıca yalnızca standart **YouTube**’u ya da **slskd**’yi (Soulseek) sıralı bir yedek listesi olarak kullanabilir — bkz. [slskd ve Navidrome](slskd-navidrome.md#audio-sources-and-fallback-order).
 
 ### Belirli bir ses kaynağını zorlama
 
-Downtify yanlış YouTube Music videosunu seçerse (örn. orijinal yerine bir cover), parça başına geçersiz kılabilirsiniz:
+Castify yanlış YouTube Music videosunu seçerse (örn. orijinal yerine bir cover), parça başına geçersiz kılabilirsiniz:
 
 **Seçenek A — doğrudan bir YouTube Music URL’si yapıştırın**
 
-`https://music.youtube.com/watch?v=…` (veya normal bir `youtube.com/watch?v=…` URL’si) adresini arama çubuğuna yapıştırın ve indire basın. Downtify sesi tam o videodan getirir.
+`https://music.youtube.com/watch?v=…` (veya normal bir `youtube.com/watch?v=…` URL’si) adresini arama çubuğuna yapıştırın ve indire basın. Castify sesi tam o videodan getirir.
 
 ::: info
 YouTube URL’si ile indirirken üst veriler (başlık, sanatçı, kapak) Spotify yerine YouTube’dan gelir. Temiz etiketler için Seçenek B’yi kullanın.
@@ -194,11 +194,11 @@ YouTube URL’si ile indirirken üst veriler (başlık, sanatçı, kapak) Spotif
 2. Beliren alana bir YouTube veya YouTube Music URL’si yapıştırın.
 3. **Enter**’a basın veya **Uygula**’ya tıklayın.
 
-Downtify parçayı tam o videoyu kullanarak yeniden indirir ve tüm Spotify üst verilerini (başlık, sanatçı, albüm, kapak, söz) korur.
+Castify parçayı tam o videoyu kullanarak yeniden indirir ve tüm Spotify üst verilerini (başlık, sanatçı, albüm, kapak, söz) korur.
 
 ## Gömülü üst veriler
 
-Downtify, biçimden bağımsız olarak indirilen her dosyaya aşağıdaki etiketleri gömer:
+Castify, biçimden bağımsız olarak indirilen her dosyaya aşağıdaki etiketleri gömer:
 
 | Etiket | Kaynak |
 |-----|--------|

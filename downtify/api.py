@@ -766,7 +766,7 @@ DEFAULT_SETTINGS: dict[str, Any] = {
         'scan_wait_seconds': 120,
         'scan_poll_seconds': 5,
         'scan_retry_seconds': 15,
-        'client_name': 'Downtify',
+        'client_name': 'Castify',
         'api_version': '1.16.1',
     },
     # Folders of already-tagged audio to include in the library (in
@@ -2013,7 +2013,7 @@ async def shutdown_resources() -> None:
         return
     _shutdown_done = True
 
-    logger.info('Downtify shutdown: closing WebSockets and background tasks')
+    logger.info('Castify shutdown: closing WebSockets and background tasks')
     if state.loudness_analyzer is not None:
         await asyncio.to_thread(state.loudness_analyzer.close)
     await state.connections.close_all()
@@ -2058,7 +2058,7 @@ async def shutdown_resources() -> None:
         pass
 
     release_thread_pools()
-    logger.info('Downtify shutdown: complete')
+    logger.info('Castify shutdown: complete')
 
 
 def library_context() -> LibraryContext:
@@ -10060,7 +10060,7 @@ async def resolve_podcast(request: Request) -> dict[str, Any]:
                 status_code=404,
                 detail=(
                     f'"{exc.show_name}" has no public RSS feed — likely a '
-                    'Spotify-exclusive show, which Downtify cannot download'
+                    'Spotify-exclusive show, which Castify cannot download'
                 ),
             ) from exc
         except ValueError as exc:

@@ -4,7 +4,7 @@ export default {
   lang: 'bg',
   description:
     'Самостоятелно хостван инструмент за сваляне на музика. Поставете линк от Spotify и получете перфектно етикетиран аудиофайл — без API ключове, без акаунт, без излишни усилия.',
-  titleSuffix: 'Документация на Downtify',
+  titleSuffix: 'Документация на Castify',
   containers: {
     info: 'Бележка',
     tip: 'Съвет',
@@ -19,7 +19,7 @@ export default {
     navigation: 'Навигация',
     sidebar: 'Странична лента',
     documentation: 'Документация',
-    docsHome: 'Начало на документацията на Downtify',
+    docsHome: 'Начало на документацията на Castify',
     docsBadge: 'Docs',
     searchDocs: 'Търсене в документацията',
     search: 'Търсене',
@@ -66,7 +66,6 @@ export default {
       'getting-started/environment-variables.md': 'Променливи на средата',
       'features/index.md': 'Общ преглед',
       'features/charts.md': 'Класации',
-      'features/similar.md': 'Подобни',
       'features/finder.md': 'Търсач',
       'features/download-settings.md': 'Настройки за сваляне',
       'features/download-queue.md': 'Опашка за сваляне',

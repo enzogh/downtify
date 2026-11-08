@@ -18,7 +18,7 @@ icon: lucide/eye-off
 - **该歌曲不再视为缺失**：**Download missing** 会跳过它，播放列表可以在不包含此歌曲的情况下视为完整。
 - **再次从链接下载播放列表**时，隐藏的歌曲仍不会加入播放列表。
 
-Spotify 或 YouTube Music 上的原始播放列表不会改变：Downtify 无需账号即可读取来源，因此无法编辑来源列表。
+Spotify 或 YouTube Music 上的原始播放列表不会改变：Castify 无需账号即可读取来源，因此无法编辑来源列表。
 
 只有播放列表所有者（或管理员）可以隐藏歌曲。被[共享播放列表](users.md#sharing-playlists)的用户会看到所有者维护的列表。播放列表至少要保留一首歌曲；如需清空，请删除整个播放列表。
 
@@ -30,7 +30,7 @@ Library 播放列表没有外部来源会重新添加歌曲，因此可以直接
 
 隐藏了歌曲的播放列表会在曲目列表下方显示 **N hidden songs**。点击 **Show tracks** 可查看隐藏列表，再点击 **Show again** 即可将歌曲放回播放列表原来的位置。
 
-如果歌曲文件已经删除，会显示 **No longer in your library**。恢复显示只会取消隐藏；下一次监控扫描或点击 **Download missing** 时，Downtify 会像处理其他缺失歌曲一样重新下载它。
+如果歌曲文件已经删除，会显示 **No longer in your library**。恢复显示只会取消隐藏；下一次监控扫描或点击 **Download missing** 时，Castify 会像处理其他缺失歌曲一样重新下载它。
 
 ## 应用中的行为
 

@@ -4,7 +4,7 @@ icon: lucide/heart
 
 # Lieblingssongs
 
-Tippe auf das Herz eines Songs, um ihn zu liken. Sobald ein Song geliked ist, führt Downtify eine Playlist **Lieblingssongs** mit allen Songs, die du geliked hast — deine Favoriten sind so einen Klick entfernt, in Downtify und in jedem Medienserver, der auf deine Bibliothek zeigt.
+Tippe auf das Herz eines Songs, um ihn zu liken. Sobald ein Song geliked ist, führt Castify eine Playlist **Lieblingssongs** mit allen Songs, die du geliked hast — deine Favoriten sind so einen Klick entfernt, in Castify und in jedem Medienserver, der auf deine Bibliothek zeigt.
 
 Es muss nichts aktiviert werden.
 
@@ -51,16 +51,16 @@ Ein Like folgt der Datei, der es gegeben wurde:
 
 | Was mit der Datei passiert | Was mit dem Like passiert |
 |--------------------------|--------------------------|
-| Du löschst den Song in Downtify | Das Like verschwindet mit ihm, und die Playlist wird neu geschrieben |
+| Du löschst den Song in Castify | Das Like verschwindet mit ihm, und die Playlist wird neu geschrieben |
 | Du verschiebst ihn und führst [Bibliothekspfade reparieren](library-catalog.md#fix-library-paths) aus | Das Like folgt der Datei an ihren neuen Ort |
-| Sie verschwindet außerhalb von Downtify (ein ausgehängtes Laufwerk, manuelles Löschen) | Das Like bleibt erhalten, der Song fehlt aber in der Playlist, bis er zurück ist |
+| Sie verschwindet außerhalb von Castify (ein ausgehängtes Laufwerk, manuelles Löschen) | Das Like bleibt erhalten, der Song fehlt aber in der Playlist, bis er zurück ist |
 
 Dass das Like einer fehlenden Datei erhalten bleibt, heißt: Ein abgestecktess Laufwerk kostet dich nicht deine Herzen. Hast du Dateien von Hand gelöscht und willst auch die Likes loswerden, nutze **Alle Likes entfernen** oder nimm die Likes zurück, bevor du die Songs löschst.
 
 ## Gut zu wissen
 
 - Likes werden in der Bibliotheksdatenbank gespeichert (`downtify_library.db`, in deinem `/data`-Volume), nicht in den Audiodateien. In die Tags eines Songs wird nichts geschrieben.
-- Die Playlist wird von Downtify nicht in [Navidrome](slskd-navidrome.md) angelegt. Es ist eine schlichte M3U-Datei; was ein Medienserver damit macht, hängt davon ab, wie er M3U-Dateien liest.
+- Die Playlist wird von Castify nicht in [Navidrome](slskd-navidrome.md) angelegt. Es ist eine schlichte M3U-Datei; was ein Medienserver damit macht, hängt davon ab, wie er M3U-Dateien liest.
 - Die [Playlist-Datei](m3u-export.md) wird auch geschrieben, wenn *M3U-Playlists schreiben* in den Download-Einstellungen ausgeschaltet ist: Die Playlist ist der Sinn der Funktion.
 
 ## API

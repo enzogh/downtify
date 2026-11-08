@@ -4,7 +4,7 @@ icon: lucide/heart
 
 # Liked songs
 
-Tap the heart on a song to like it. As soon as one song is liked, Downtify keeps a **Liked songs** playlist with every song you have liked, so your favourites are one click away — in Downtify and in any media server pointed at your library.
+Tap the heart on a song to like it. As soon as one song is liked, Castify keeps a **Liked songs** playlist with every song you have liked, so your favourites are one click away — in Castify and in any media server pointed at your library.
 
 There is nothing to switch on.
 
@@ -51,16 +51,16 @@ A like follows the file it was given to:
 
 | What happens to the file | What happens to the like |
 |--------------------------|--------------------------|
-| You delete the song in Downtify | The like goes with it, and the playlist is rewritten |
+| You delete the song in Castify | The like goes with it, and the playlist is rewritten |
 | You move it and run [Fix library paths](library-catalog.md#fix-library-paths) | The like follows the file to its new place |
-| It disappears outside Downtify (an unmounted drive, a manual delete) | The like is kept, but the song is left out of the playlist until it is back |
+| It disappears outside Castify (an unmounted drive, a manual delete) | The like is kept, but the song is left out of the playlist until it is back |
 
 Keeping the like of a missing file means an unplugged drive doesn't cost you your hearts. If you deleted files by hand and want the likes gone too, use **Remove all likes**, or unlike the songs before you delete them.
 
 ## Good to know
 
 - Likes are stored in the library database (`downtify_library.db`, in your `/data` volume), not in the audio files. Nothing is written into a song's tags.
-- The playlist is not created in [Navidrome](slskd-navidrome.md) by Downtify. It is a plain M3U file, so what a media server does with it depends on how that server reads M3U files.
+- The playlist is not created in [Navidrome](slskd-navidrome.md) by Castify. It is a plain M3U file, so what a media server does with it depends on how that server reads M3U files.
 - The [playlist file](m3u-export.md) is written even when *Write M3U playlists* is off in the download settings: the playlist is the point of the feature.
 
 ## API

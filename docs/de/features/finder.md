@@ -12,7 +12,7 @@ Der **Finder** ist eine Möglichkeit, den Deezer-Katalog vor dem Herunterladen z
 
 **Titel finden** im **⋯**-Menü eines von Entdecken vorgeschlagenen Künstlers zeigt dessen Titel hier als Suche: Deezer wird nach dem Namen des Künstlers durchsucht, und nur die Titel genau dieses Künstlers — erkannt an seiner Deezer-ID, sodass ein Namensvetter oder ein Titel, der nur so heißt, außen vor bleibt — werden aufgelistet, bis zu den ersten paar hundert.
 
-- **Titel** werden vollständig gestreamt und wie jedes Suchergebnis heruntergeladen. Downtify ordnet den Titel anhand von Titel, Künstler und Länge bei YouTube Music zu (mit YouTube als Rückfall). Ein Klick auf den Titelnamen öffnet sein Album in der Spaltenansicht, der Titel ist hervorgehoben.
+- **Titel** werden vollständig gestreamt und wie jedes Suchergebnis heruntergeladen. Castify ordnet den Titel anhand von Titel, Künstler und Länge bei YouTube Music zu (mit YouTube als Rückfall). Ein Klick auf den Titelnamen öffnet sein Album in der Spaltenansicht, der Titel ist hervorgehoben.
 - **Alben** öffnen sich bei ihrem Künstler, das Album ist ausgewählt. Die Download-Schaltfläche auf dem Cover reiht das ganze Album ein.
 - **Künstler** öffnen die Spaltenansicht bei diesem Künstler.
 
@@ -31,7 +31,7 @@ Auf einem breiten Bildschirm ziehst du die Kante zwischen zwei Spalten, um eine 
 Am Handy liegen die Spalten nebeneinander, und du wischst zwischen ihnen. Ein Album auszuwählen schiebt dich zu seinen Titeln.
 
 ::: info Warum die Titelanzahl einen Moment später erscheint
-Die Diskografieliste von Deezer enthält keine Titelanzahl, daher fragt Downtify sie für jedes Album einzeln ab, ein paar Alben auf einmal, und bleibt dabei unter dem Limit von Deezer von 50 Anfragen alle 5 Sekunden. Die Zahlen erscheinen, während du schaust, und werden bis zum Neustart von Downtify gemerkt. Ein Album, dessen Anzahl nicht abgerufen werden konnte, zeigt `…`.
+Die Diskografieliste von Deezer enthält keine Titelanzahl, daher fragt Castify sie für jedes Album einzeln ab, ein paar Alben auf einmal, und bleibt dabei unter dem Limit von Deezer von 50 Anfragen alle 5 Sekunden. Die Zahlen erscheinen, während du schaust, und werden bis zum Neustart von Castify gemerkt. Ein Album, dessen Anzahl nicht abgerufen werden konnte, zeigt `…`.
 :::
 
 ## API

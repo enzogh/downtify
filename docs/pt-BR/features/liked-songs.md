@@ -4,7 +4,7 @@ icon: lucide/heart
 
 # Músicas curtidas
 
-Toque no coração de uma música para curti-la. Assim que uma música é curtida, o Downtify mantém uma playlist **Músicas curtidas** com todas as que você curtiu, deixando seus favoritos a um clique — no Downtify e em qualquer servidor de mídia apontado para a sua biblioteca.
+Toque no coração de uma música para curti-la. Assim que uma música é curtida, o Castify mantém uma playlist **Músicas curtidas** com todas as que você curtiu, deixando seus favoritos a um clique — no Castify e em qualquer servidor de mídia apontado para a sua biblioteca.
 
 Não há nada para ativar.
 
@@ -51,16 +51,16 @@ Uma curtida acompanha o arquivo ao qual foi dada:
 
 | O que acontece com o arquivo | O que acontece com a curtida |
 |--------------------------|--------------------------|
-| Você exclui a música no Downtify | A curtida vai junto, e a playlist é reescrita |
+| Você exclui a música no Castify | A curtida vai junto, e a playlist é reescrita |
 | Você o move e executa [Corrigir caminhos da biblioteca](library-catalog.md#fix-library-paths) | A curtida acompanha o arquivo até o novo lugar |
-| Ele some fora do Downtify (disco desmontado, exclusão manual) | A curtida é mantida, mas a música fica fora da playlist até voltar |
+| Ele some fora do Castify (disco desmontado, exclusão manual) | A curtida é mantida, mas a música fica fora da playlist até voltar |
 
 Manter a curtida de um arquivo ausente significa que um disco desconectado não te custa os corações. Se você apagou arquivos à mão e quer as curtidas apagadas também, use **Remover todas as curtidas** ou descurta as músicas antes de apagá-las.
 
 ## Bom saber
 
 - As curtidas ficam no banco de dados da biblioteca (`downtify_library.db`, no seu volume `/data`), não nos arquivos de áudio. Nada é escrito nas tags da música.
-- A playlist não é criada no [Navidrome](slskd-navidrome.md) pelo Downtify. É um arquivo M3U simples, então o que um servidor de mídia faz com ele depende de como esse servidor lê arquivos M3U.
+- A playlist não é criada no [Navidrome](slskd-navidrome.md) pelo Castify. É um arquivo M3U simples, então o que um servidor de mídia faz com ele depende de como esse servidor lê arquivos M3U.
 - O [arquivo da playlist](m3u-export.md) é escrito mesmo com *Gravar playlists M3U* desativado nas configurações de download: a playlist é o objetivo do recurso.
 
 ## API

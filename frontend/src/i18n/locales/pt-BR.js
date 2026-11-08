@@ -177,8 +177,6 @@ export default {
     serverHint:
       'Applies to all accounts, browsers and Android clients. Wait for external work to finish before enabling it. The phone still needs access to the server unless tracks are downloaded.',
     empty: 'No matching tracks in the accessible library.',
-    similar:
-      'Similar tracks from saved library tags. No external provider is contacted.',
   },
   playlistFavorites: {
     title: 'Playlists favoritas',
@@ -268,7 +266,7 @@ export default {
     search: 'Buscar “{query}”',
     website: 'Site oficial',
     failed: 'Não foi possível consultar as lojas.',
-    note: 'O Bandcamp repassa a maior parte de cada venda ao artista. São links comuns: o Downtify não vende nada nem ganha com eles.',
+    note: 'O Bandcamp repassa a maior parte de cada venda ao artista. São links comuns: o Castify não vende nada nem ganha com eles.',
   },
   playlistSearch: {
     placeholder: 'Buscar nesta playlist',
@@ -312,7 +310,6 @@ export default {
     discover: 'Descobrir',
     podcasts: 'Podcasts',
     charts: 'Paradas de sucesso',
-    similar: 'Similares',
     settings: 'Configurações',
     more: 'Mais',
     playlists: 'Playlists',
@@ -393,7 +390,7 @@ export default {
       'Busque no YouTube Music ou cole um link do Spotify ou YouTube Music de uma música, álbum ou playlist.',
     step2Title: 'Baixe',
     step2Body:
-      'O Downtify obtém o áudio e preenche cada arquivo com título, artista, álbum, capa e letra.',
+      'O Castify obtém o áudio e preenche cada arquivo com título, artista, álbum, capa e letra.',
     step3Title: 'Ouça onde quiser',
     step3Body:
       'Toque aqui, mantenha playlists sincronizadas com o Monitor de Playlists ou aponte Jellyfin, Plex ou Navidrome para sua biblioteca.',
@@ -427,7 +424,7 @@ export default {
     typeSingle: 'Single',
     typeEp: 'EP',
     unsupportedLink:
-      'O Downtify não consegue baixar esse link. Cole uma faixa, álbum ou playlist do Spotify, um link do YouTube Music ou uma faixa do SoundCloud.',
+      'O Castify não consegue baixar esse link. Cole uma faixa, álbum ou playlist do Spotify, um link do YouTube Music ou uma faixa do SoundCloud.',
     tipSearchTitle: 'Busque pelo nome',
     tipSearchBody:
       'Digite um artista, álbum ou música — os resultados vêm do YouTube Music.',
@@ -444,29 +441,6 @@ export default {
     failed: 'Não deu para carregar a parada',
     empty: 'Nada na parada por enquanto',
     playlist: 'Playlist',
-  },
-  similar: {
-    title: 'Similares',
-    subtitle: 'Faixas parecidas com uma que você indicar, via YouTube Music.',
-    artist: 'Artista',
-    artistPlaceholder: 'Cher',
-    track: 'Faixa',
-    trackPlaceholder: 'Believe',
-    searchButton: 'Buscar similares',
-    resultsFor: 'Parecidas com “{track}” de {artist}',
-    resultsForArtist: 'Parecidas com {artist}',
-    resultsForTrack: 'Parecidas com “{track}”',
-    failed: 'Não foi possível encontrar faixas similares',
-    noResults: 'Nada parecido encontrado',
-    noResultsHint: 'Confira a ortografia de artista e faixa.',
-    findSimilar: 'Buscar faixas similares',
-    noDownloadMatch: 'Sem correspondência para baixar de “{name}”',
-    resolveFailed: 'Não foi possível preparar essa faixa para baixar',
-    tipSimilarTitle: 'Comece por uma faixa',
-    tipSimilarBody:
-      'Digite o artista ou a faixa — o YouTube responde com a seleção para ela.',
-    tipDownloadTitle: 'Ouça na íntegra',
-    tipDownloadBody: 'Cada linha toca inteira no player; baixe as que gostar.',
   },
   stream: {
     failed: 'Não foi possível tocar “{name}”.',
@@ -580,7 +554,7 @@ export default {
     pausedTitle: 'Downloads pausados',
     pausedBody: 'Nenhum download novo será iniciado até você retomar.',
     pausedKept:
-      'As músicas em espera continuam na fila, mesmo se o Downtify for reiniciado ou atualizado.',
+      'As músicas em espera continuam na fila, mesmo se o Castify for reiniciado ou atualizado.',
     emptyTitle: 'Nada na fila',
     emptyBody: 'Busque músicas ou cole um link — os downloads aparecem aqui.',
     emptyAction: 'Encontrar músicas',
@@ -656,7 +630,7 @@ export default {
     noMatchesHint: 'Tente outro filtro.',
     clearFilters: 'Limpar filtros',
     loadFailed: 'Não foi possível carregar a biblioteca',
-    loadFailedHint: 'Verifique se o Downtify está em execução e tente de novo.',
+    loadFailedHint: 'Verifique se o Castify está em execução e tente de novo.',
     maybeDeleted: 'Pode ter sido excluído ou renomeado.',
     backToLibrary: 'Voltar à biblioteca',
     selectAll: 'Selecionar tudo',
@@ -702,7 +676,7 @@ export default {
     replaceAudio: 'Use verified Deemix recordings',
     replaceAudioHint:
       'Match the exact artist, title and album. Keep music in the Deemix folder. Ambiguous matches leave originals untouched. This scan replaces audio instead of retagging it.',
-    deleteOriginals: 'Remove old Downtify audio after import',
+    deleteOriginals: 'Remove old Castify audio after import',
     deleteOriginalsHint:
       'Only remove each verified original after playlists, likes and playback references are updated. External files and sidecars are never removed.',
     replacementProgress:
@@ -714,7 +688,7 @@ export default {
     subtitle:
       'Melhore as músicas que você já baixou, em vez de baixá-las de novo.',
     intro:
-      'O Downtify olha cada música da sua biblioteca e conserta as que ficaram para trás em uma versão antiga: capas pequenas, letras faltando, tags incompletas.',
+      'O Castify olha cada música da sua biblioteca e conserta as que ficaram para trás em uma versão antiga: capas pequenas, letras faltando, tags incompletas.',
     audioNote:
       'Os arquivos de áudio nunca são substituídos: só as capas, letras e tags são atualizadas. Uma música baixada da fonte errada continua como está — apague e baixe de novo.',
     safeNote:
@@ -746,7 +720,7 @@ export default {
       'Procura letras para músicas que não têm nenhuma, usando sua lista de provedores, e embute o que encontrar.',
     metadata: 'Atualizar tags',
     metadataHint:
-      'Preenche álbum, artista do álbum, data de lançamento e número da faixa pelo Spotify. Só para músicas cuja faixa do Spotify o Downtify ainda conhece.',
+      'Preenche álbum, artista do álbum, data de lançamento e número da faixa pelo Spotify. Só para músicas cuja faixa do Spotify o Castify ainda conhece.',
     tracksAffected: { one: '{count} música', other: '{count} músicas' },
     options: 'Opções',
     artworkMin: 'Melhorar capas menores que',
@@ -759,7 +733,7 @@ export default {
     preferYoutube: 'Preferir o YouTube Music',
     recheck: 'Não verificar uma música de novo por',
     recheckHint:
-      'Uma música verificada há pouco é ignorada na próxima análise. Um Downtify mais novo sempre verifica tudo de novo.',
+      'Uma música verificada há pouco é ignorada na próxima análise. Um Castify mais novo sempre verifica tudo de novo.',
     recheckDays: { one: '{count} dia', other: '{count} dias' },
     recheckNever: 'Sempre verificar todas as músicas',
     start: 'Começar',
@@ -831,7 +805,7 @@ export default {
     estimatedNote:
       'Antes de {date}, o tamanho é estimado pelas datas das músicas que ainda estão na biblioteca, então as apagadas desde então ficam de fora.',
     allEstimatedNote:
-      'O Downtify anota o tamanho da biblioteca a cada hora a partir de agora. Os dias anteriores são estimados pelas datas das músicas que ainda estão na biblioteca.',
+      'O Castify anota o tamanho da biblioteca a cada hora a partir de agora. Os dias anteriores são estimados pelas datas das músicas que ainda estão na biblioteca.',
     addedPerDay: 'Adicionado por dia',
     addedPerWeek: 'Adicionado por semana',
     sourcesTitle: 'Por fonte',
@@ -870,11 +844,11 @@ export default {
     downloadedBySource: 'Baixado por fonte · {size}',
     noDownloads: 'Nada foi baixado neste período.',
     logEmptyNote:
-      'Nenhum download foi contado ainda: o Downtify passa a contá-los a partir desta versão.',
+      'Nenhum download foi contado ainda: o Castify passa a contá-los a partir desta versão.',
     logSinceNote: 'Os downloads são contados desde {date}.',
     cleanupTitle: 'Pode ser limpo',
     cleanupHint:
-      'Espaço que o Downtify reconhece como redundante ou que sobrou. Nada é apagado daqui.',
+      'Espaço que o Castify reconhece como redundante ou que sobrou. Nada é apagado daqui.',
     duplicatesTitle: 'Músicas duplicadas',
     duplicatesHint:
       '{exact} guardadas duas vezes como o mesmo arquivo, {likely} provavelmente a mesma música de outra fonte. O tamanho é o que manter só a maior cópia liberaria.',
@@ -884,7 +858,7 @@ export default {
     },
     workingTitle: 'Cópias de trabalho do slskd',
     workingHint:
-      'Transferências do Soulseek que ficaram na pasta do slskd depois que o Downtify as copiou para a biblioteca.',
+      'Transferências do Soulseek que ficaram na pasta do slskd depois que o Castify as copiou para a biblioteca.',
     workingInPlace:
       'Os arquivos do slskd ficam onde estão, então a pasta do slskd faz parte da biblioteca.',
     leftoversTitle: 'Arquivos temporários que sobraram',
@@ -893,7 +867,7 @@ export default {
     orphansHint:
       'Arquivos de letra e capas de álbum cujas músicas não existem mais.',
     foldersTitle: 'Pastas',
-    foldersHint: 'Tudo o que há nas pastas em que o Downtify grava, por tipo.',
+    foldersHint: 'Tudo o que há nas pastas em que o Castify grava, por tipo.',
     rescan: 'Verificar de novo',
     scanFailed: 'Não foi possível verificar as pastas.',
     scanning: 'Verificando as pastas…',
@@ -1014,7 +988,7 @@ export default {
       unavailable: 'O diagnóstico não está disponível para esta playlist.',
       items: {
         spotify_tracks: 'Faixas no Spotify',
-        downloaded: 'Baixadas pelo Downtify',
+        downloaded: 'Baixadas pelo Castify',
         physical_files: 'Arquivos encontrados',
         track_index: 'Mapeamentos no TrackIndex',
         monitor_history: 'Histórico do Monitor',
@@ -1339,9 +1313,9 @@ export default {
       '{size}, também em outros monitoramentos, guardados uma vez',
     tileFailing: 'Com falha',
     unknownNote: {
-      one: '{count} música foi adicionada antes de o Downtify registrar como as músicas entram em um monitoramento.',
+      one: '{count} música foi adicionada antes de o Castify registrar como as músicas entram em um monitoramento.',
       other:
-        '{count} músicas foram adicionadas antes de o Downtify registrar como as músicas entram em um monitoramento.',
+        '{count} músicas foram adicionadas antes de o Castify registrar como as músicas entram em um monitoramento.',
     },
     missingNote: {
       one: '{count} música registrada por este monitoramento não está mais no disco.',
@@ -1373,9 +1347,9 @@ export default {
       other: '{count} vieram com a primeira verificação',
     },
     periodUnknown: {
-      one: '{count} delas foi registrada antes de o Downtify registrar como',
+      one: '{count} delas foi registrada antes de o Castify registrar como',
       other:
-        '{count} delas foram registradas antes de o Downtify registrar como',
+        '{count} delas foram registradas antes de o Castify registrar como',
     },
     barsPerDay: 'Músicas novas por dia',
     barsPerWeek: 'Músicas novas por semana',
@@ -1406,7 +1380,7 @@ export default {
     body: 'Os monitoramentos do Monitor de Playlists que a trouxeram para a sua biblioteca.',
     failed: 'Não foi possível carregar de onde veio esta música.',
     firstTitle: 'Baixada primeiro por',
-    none: 'Nenhum monitoramento a baixou: foi baixada manualmente ou antes de o Downtify registrar isso.',
+    none: 'Nenhum monitoramento a baixou: foi baixada manualmente ou antes de o Castify registrar isso.',
     otherAccount: 'Um monitoramento de outra conta',
     backfill: 'Primeira verificação',
     estimated: 'Provavelmente',
@@ -1458,7 +1432,7 @@ export default {
     detach: 'Desvincular da origem',
     detachTitle: 'Desvincular “{name}” da origem?',
     detachBody:
-      'Você poderá adicionar e remover músicas. As músicas continuam como estão, mas o Downtify deixa de manter a playlist em sincronia com o Spotify ou YouTube Music e remove o monitoramento, se houver.',
+      'Você poderá adicionar e remover músicas. As músicas continuam como estão, mas o Castify deixa de manter a playlist em sincronia com o Spotify ou YouTube Music e remove o monitoramento, se houver.',
     detached: '“{name}” agora pode ser editada',
     by: 'de {owner}',
     sharedWithCount: {
@@ -1477,7 +1451,7 @@ export default {
   settings: {
     apps: 'Apps',
     title: 'Configurações',
-    subtitle: 'Como o Downtify encontra, baixa e marca suas músicas.',
+    subtitle: 'Como o Castify encontra, baixa e marca suas músicas.',
     sections: 'Seções',
     general: 'Geral',
     sources: 'Fontes de áudio',
@@ -1542,7 +1516,7 @@ export default {
       'Keep audio, artwork and lyrics in the shared Deemix folder, without rewriting its tags. Configure a private ARL file on the server; do not paste it here.',
     deemixUrl: 'Deemix server URL',
     deemixRemote: 'Download folder inside Deemix',
-    deemixLocal: 'Same folder inside Downtify (read-only is supported)',
+    deemixLocal: 'Same folder inside Castify (read-only is supported)',
     deemixQuality: 'Audio quality',
     slskdTitle: 'slskd',
     slskdFormats: 'Prioridade dos formatos',
@@ -1567,7 +1541,7 @@ export default {
     slskdUrl: 'URL do servidor',
     slskdKey: 'Chave de API',
     slskdFolder: 'Pasta de downloads do slskd',
-    slskdFolderHint: 'O caminho dentro do contêiner do Downtify, não no host.',
+    slskdFolderHint: 'O caminho dentro do contêiner do Castify, não no host.',
     slskdTimeout: 'Tempo limite total',
     slskdQueuedTimeout: 'Tempo limite na fila',
     slskdInPlace: 'Manter arquivos na pasta do slskd',
@@ -1661,7 +1635,7 @@ export default {
     lyricsNeteaseHint: 'Catálogo grande, normalmente sincronizado',
     navidromeTitle: 'Navidrome',
     navidromeHint:
-      'Espelha as playlists baixadas no Navidrome. A pasta de músicas dele precisa incluir os downloads do Downtify.',
+      'Espelha as playlists baixadas no Navidrome. A pasta de músicas dele precisa incluir os downloads do Castify.',
     navidromeEnabled: 'Usar Navidrome',
     navidromeEnabledHint: 'Requer a URL do servidor, usuário e senha.',
     navidromeUrl: 'URL do servidor',
@@ -1670,7 +1644,7 @@ export default {
     navidromeAdminUser: 'Usuário administrador',
     navidromeAdminPassword: 'Senha do administrador',
     navidromeAdminHint:
-      'Opcional — permite ao Downtify iniciar uma varredura para novas músicas aparecerem mais rápido.',
+      'Opcional — permite ao Castify iniciar uma varredura para novas músicas aparecerem mais rápido.',
     test: {
       connection_not_deemix: 'The server is not a compatible Deemix instance.',
       quality_unavailable:
@@ -1680,12 +1654,12 @@ export default {
       testing: 'Testando…',
       needFields: 'Preencha os campos acima primeiro.',
       requestFailed:
-        'Não foi possível executar o teste. O Downtify ainda está acessível?',
+        'Não foi possível executar o teste. O Castify ainda está acessível?',
       connected: 'Conectado a {server}.',
       unknown: 'Resposta inesperada do teste ({code}).',
       config_missing: 'Preencha os campos obrigatórios primeiro.',
       connection_unreachable:
-        'Não foi possível alcançar {url}. Confira o endereço e se o servidor está rodando e acessível pelo Downtify.',
+        'Não foi possível alcançar {url}. Confira o endereço e se o servidor está rodando e acessível pelo Castify.',
       connection_timeout: '{url} não respondeu a tempo.',
       connection_bad_url:
         'Esse endereço não é válido. Comece com http:// ou https://.',
@@ -1702,9 +1676,9 @@ export default {
       soulseek_ok: 'O slskd está conectado ao Soulseek.',
       soulseek_offline:
         'O slskd não está conectado ao Soulseek. Ele não encontrará nada até se conectar.',
-      folder_ok: 'O Downtify consegue ler {detail}.',
+      folder_ok: 'O Castify consegue ler {detail}.',
       folder_missing:
-        'O Downtify não consegue ler {detail}. Essa deve ser a pasta onde o slskd baixa, montada neste contêiner.',
+        'O Castify não consegue ler {detail}. Essa deve ser a pasta onde o slskd baixa, montada neste contêiner.',
       scan_ok: 'Esta conta pode iniciar varreduras da biblioteca.',
       scan_not_admin:
         'Esta conta não pode iniciar varreduras da biblioteca — o Navidrome só permite a administradores. Preencha o usuário e a senha de administrador para as músicas novas aparecerem mais cedo.',
@@ -1726,7 +1700,7 @@ export default {
       'Guarda as capas extraídas em disco para a biblioteca carregar mais rápido. Usa espaço extra.',
     reconcile: 'Corrigir caminhos da biblioteca',
     reconcileHint:
-      'Moveu ou renomeou arquivos fora do Downtify? Isto atualiza os caminhos salvos e reescreve as playlists M3U e do Navidrome quando ativadas.',
+      'Moveu ou renomeou arquivos fora do Castify? Isto atualiza os caminhos salvos e reescreve as playlists M3U e do Navidrome quando ativadas.',
     reconcileButton: 'Corrigir caminhos',
     reconcilePaths: {
       one: '{count} caminho atualizado.',
@@ -1748,7 +1722,7 @@ export default {
       'Pastas de áudio que você já tem. Os arquivos ficam onde estão. O sync lê as tags, busca letras e capa quando faltam — o mesmo que um download — e agrupa nos artistas correspondentes. No Docker, use o caminho dentro do contêiner e monte a pasta do host.',
     externalLibraryFolder: 'Pasta',
     externalLibraryFolderHint:
-      'O caminho no contêiner do Downtify, não no host.',
+      'O caminho no contêiner do Castify, não no host.',
     externalLibraryPlaceholder: '/music/collection',
     externalLibraryAdd: 'Adicionar pasta',
     externalLibraryRemove: 'Remover pasta',
@@ -1795,7 +1769,7 @@ export default {
     version: 'Versão {version}',
     upToDate: 'Atualizado',
     source: 'Código-fonte',
-    sourceHint: 'O Downtify é código aberto.',
+    sourceHint: 'O Castify é código aberto.',
     docs: 'Documentação',
     docsHint: 'Instalação, configurações e referência da API.',
     openDocs: 'Abrir documentação',
@@ -1808,7 +1782,7 @@ export default {
     networkHint: 'Como este servidor pode ser acessado. Só admins veem isto.',
     experimental: 'Experimental',
     experimentalHint:
-      'Os apps para celular ainda estão em construção. O app Android ainda não tem uma versão publicada, e a forma de parear e transmitir pode mudar entre versões do Downtify.',
+      'Os apps para celular ainda estão em construção. O app Android ainda não tem uma versão publicada, e a forma de parear e transmitir pode mudar entre versões do Castify.',
   },
   shortcuts: {
     title: 'Atalhos de teclado',
@@ -1831,7 +1805,7 @@ export default {
     help: 'Ver atalhos',
   },
   auth: {
-    signInTitle: 'Entrar no Downtify',
+    signInTitle: 'Entrar no Castify',
     signInBody: 'Entre com seu usuário e senha.',
     signInBodyOidcOnly: 'Entre usando seu provedor de identidade.',
     username: 'Usuário',
@@ -1845,7 +1819,7 @@ export default {
     tooMany: 'Tentativas demais. Espere alguns minutos e tente de novo.',
     forgotHint:
       'Esqueceu a senha do admin? Rode “python main.py auth-reset” no servidor.',
-    noticeTitle: 'O Downtify agora tem contas de usuário',
+    noticeTitle: 'O Castify agora tem contas de usuário',
     noticeBody:
       'Agora todos entram com usuário e senha, e um admin pode criar contas para outras pessoas em Configurações → Usuários. Entre com:',
     noticeKeptPassword: 'a senha que você definiu antes',
@@ -1854,7 +1828,7 @@ export default {
   },
   apps: {
     serverGroup: 'Este servidor',
-    serverGroupHint: 'Como os apps do Downtify veem este servidor.',
+    serverGroupHint: 'Como os apps do Castify veem este servidor.',
     serverName: 'Nome do servidor',
     serverNameHint:
       'Aparece nos apps e quando eles procuram servidores na sua rede.',
@@ -1875,7 +1849,7 @@ export default {
     signOutEverywhereTitle: 'Sair de todos os lugares?',
     pairTitle: 'Parear um celular',
     pairBody:
-      'No app do Downtify, escolha “Escanear o código” e aponte a câmera para cá.',
+      'No app do Castify, escolha “Escanear o código” e aponte a câmera para cá.',
     qrLabel: 'QR code para parear',
     orTypeCode: 'ou digite este código',
     expiresIn: 'Expira em {time}',
@@ -1890,7 +1864,7 @@ export default {
       'Despareia todos os seus apps e sai de todos os navegadores em que você entrou, inclusive este.',
     signOutEverywhereBody:
       'Seus apps pareados vão precisar ser pareados de novo, e você vai precisar entrar de novo em cada navegador.',
-    androidGroup: 'Downtify para Android',
+    androidGroup: 'Castify para Android',
     androidHint:
       'Um app que navega e toca sua biblioteca direto deste servidor.',
     androidBody:
@@ -1923,7 +1897,7 @@ export default {
   },
   port: {
     label: 'Porta',
-    hint: 'A porta em que o Downtify funciona. Vale quando o servidor inicia, ou na hora com “Salvar e reiniciar”.',
+    hint: 'A porta em que o Castify funciona. Vale quando o servidor inicia, ou na hora com “Salvar e reiniciar”.',
     locked:
       'Definida por {source} no servidor. Remova para escolher a porta aqui.',
     save: 'Salvar',
@@ -1933,18 +1907,18 @@ export default {
     saved: 'Porta {port} salva para a próxima inicialização',
     invalid: 'Use uma porta de {min} a {max}',
     dockerWarning:
-      'O Downtify roda no Docker: mude o mapeamento de portas para a mesma porta (ports: NOVA:NOVA) e recrie o contêiner, ou use network_mode: host - senão o Downtify fica inacessível. Definir DOWNTIFY_PORT volta para a porta antiga.',
+      'O Castify roda no Docker: mude o mapeamento de portas para a mesma porta (ports: NOVA:NOVA) e recrie o contêiner, ou use network_mode: host - senão o Castify fica inacessível. Definir DOWNTIFY_PORT volta para a porta antiga.',
     proxyWarning:
-      'Você acessa o Downtify por outro endereço (um proxy reverso ou um mapeamento de portas): aponte-o para a nova porta também.',
+      'Você acessa o Castify por outro endereço (um proxy reverso ou um mapeamento de portas): aponte-o para a nova porta também.',
     confirmTitle: 'Reiniciar na porta {port}?',
     confirmBody:
       'Downloads em andamento são interrompidos, e todas as páginas e apps se reconectam na nova porta.',
     restartingTitle: 'Reiniciando na porta {port}',
     restartingBody:
-      'Esperando o Downtify voltar… Esta página abre o novo endereço sozinha.',
+      'Esperando o Castify voltar… Esta página abre o novo endereço sozinha.',
     unreachable:
-      'O Downtify ainda não respondeu na nova porta. Tente o novo endereço ou veja os logs do servidor.',
-    openNew: 'O Downtify está reiniciando. Abra-o no novo endereço:',
+      'O Castify ainda não respondeu na nova porta. Tente o novo endereço ou veja os logs do servidor.',
+    openNew: 'O Castify está reiniciando. Abra-o no novo endereço:',
   },
   account: {
     title: 'Conta',
@@ -1968,7 +1942,7 @@ export default {
     needsAdmin: 'Só um admin pode fazer isso',
     defaultPasswordTitle: 'Troque a senha padrão',
     defaultPasswordBody:
-      '{name} entrou com a senha padrão, que qualquer um que conheça o Downtify sabe. Troque-a em Configurações → Geral.',
+      '{name} entrou com a senha padrão, que qualquer um que conheça o Castify sabe. Troque-a em Configurações → Geral.',
     later: 'Depois',
     changePassword: 'Trocar senha',
   },
@@ -2180,7 +2154,7 @@ export default {
     kicker: 'Podcast',
     notFound: 'Você não está mais inscrito neste programa',
     noEpisodesTitle: 'Nenhum episódio ainda',
-    noEpisodesBody: 'O Downtify verifica esse feed no próprio horário dele.',
+    noEpisodesBody: 'O Castify verifica esse feed no próprio horário dele.',
     download: 'Baixar episódio',
     downloadFailed: 'Não foi possível baixar o episódio',
     played: 'Reproduzido',

@@ -16,7 +16,7 @@ describe('replace audio helpers', () => {
     expect(sameLength(null)).toBe(false)
   })
 
-  it('offers it for library songs in formats Downtify writes', () => {
+  it('offers it for library songs in formats Castify writes', () => {
     expect(canReplace({ file: 'Artist/Song.flac' })).toBe(true)
     expect(canReplace({ file: 'Song.wav' })).toBe(false)
     expect(canReplace({ file: 'Show/Ep.mp3', isPodcast: true })).toBe(false)

@@ -731,7 +731,7 @@ def build_app() -> FastAPI:
 
     app = FastAPI(
         lifespan=lifespan,
-        title='Downtify',
+        title='Castify',
         description=(
             'Download your Spotify playlists and songs along with album '
             'art and metadata in a self-hosted way via Docker.'
@@ -1341,7 +1341,7 @@ def main() -> None:
     set_restart_handler(stop_for_restart)
 
     logger.info(
-        'Starting Downtify {} on http://{}:{}',
+        'Starting Castify {} on http://{}:{}',
         __version__,
         args.host,
         port,
@@ -1375,7 +1375,7 @@ if __name__ == '__main__':
         api.release_thread_pools()
         if exit_code == 0 and restart_wanted():
             # A new port from Settings: the same process starts over.
-            logger.info('Restarting Downtify')
+            logger.info('Restarting Castify')
             os.execv(sys.executable, [sys.executable, *sys.argv])
         # Skip threading._python_exit joins on in-flight yt-dlp / iTunes
         # / cover-fetch workers. Without this the process stays alive

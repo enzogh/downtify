@@ -21,14 +21,14 @@ Les surveillances appartiennent à qui les a créées : chaque compte suit ses p
 
 ## Comment ça marche
 
-Downtify garde une tâche d’arrière-plan qui s’exécute toutes les 60 secondes. À chaque passage, il vérifie si chaque surveillance activée doit être inspectée (selon son intervalle configuré). Quand une *playlist* est due, Downtify :
+Castify garde une tâche d’arrière-plan qui s’exécute toutes les 60 secondes. À chaque passage, il vérifie si chaque surveillance activée doit être inspectée (selon son intervalle configuré). Quand une *playlist* est due, Castify :
 
 1. Récupère la liste complète des morceaux sur Spotify, Deezer ou YouTube Music
 2. La compare à l’ensemble des morceaux déjà téléchargés
 3. Télécharge les nouveaux morceaux avec le même pipeline qu’un téléchargement manuel
 4. Met à jour le fichier M3U de la playlist (si la génération de M3U est activée)
 
-La première vérification, qui démarre dès que vous ajoutez la surveillance, télécharge tout ce qui est déjà dans la playlist ; les suivantes ne téléchargent que ce qui a été ajouté depuis. Le « déjà téléchargé » est consigné dans une petite base SQLite (`downtify_monitor.db` sous `/data`), et non en consultant le dossier de téléchargements — si bien que déplacer un fichier téléchargé ailleurs sur le disque (dans votre propre organisation de bibliothèque, un autre disque, n’importe où) ne fait **pas** croire à Downtify qu’il manque, et il n’est pas retéléchargé à la vérification suivante.
+La première vérification, qui démarre dès que vous ajoutez la surveillance, télécharge tout ce qui est déjà dans la playlist ; les suivantes ne téléchargent que ce qui a été ajouté depuis. Le « déjà téléchargé » est consigné dans une petite base SQLite (`downtify_monitor.db` sous `/data`), et non en consultant le dossier de téléchargements — si bien que déplacer un fichier téléchargé ailleurs sur le disque (dans votre propre organisation de bibliothèque, un autre disque, n’importe où) ne fait **pas** croire à Castify qu’il manque, et il n’est pas retéléchargé à la vérification suivante.
 
 Un passage distinct s’exécute toutes les heures et vérifie si le fichier de chaque morceau téléchargé est toujours là. Les fichiers réellement supprimés (par opposition à ceux que vous avez déplacés) sont oubliés à ce moment-là, si bien que le morceau redevient éligible au téléchargement — à la vérification suivante de la surveillance après ce passage horaire, pas instantanément.
 
@@ -54,16 +54,16 @@ Les playlists Deezer publiques se surveillent comme les autres : collez le lien 
 
 ## Playlists YouTube Music
 
-Utilisez une playlist YouTube Music pour des morceaux qui ne sont pas sur Spotify : remixes, lives, reprises, uploads de chaînes promotionnelles. Chaque morceau est téléchargé depuis **la vidéo exacte de la playlist**. Downtify ne le recherche pas de nouveau, donc ce que vous obtenez est ce que vous avez ajouté à la playlist.
+Utilisez une playlist YouTube Music pour des morceaux qui ne sont pas sur Spotify : remixes, lives, reprises, uploads de chaînes promotionnelles. Chaque morceau est téléchargé depuis **la vidéo exacte de la playlist**. Castify ne le recherche pas de nouveau, donc ce que vous obtenez est ce que vous avez ajouté à la playlist.
 
 - **Tous les morceaux sont récupérés**, quelle que soit la longueur de la playlist. Les vidéos supprimées ou privées sont ignorées.
-- **Les morceaux que YouTube Music grise sont quand même téléchargés.** Les playlists créées par des convertisseurs et des importeurs (Soundiiz, TuneMyMusic et consorts) listent souvent des morceaux comme de simples uploads YouTube que YouTube Music affiche comme indisponibles et sans identifiant de morceau. Downtify retrouve la vidéo à partir de la miniature de l’entrée et la télécharge comme n’importe quelle autre, si bien qu’une telle playlist ne ressort pas vide. Une vidéo réellement supprimée ou rendue privée ne peut pas être téléchargée : quand YouTube Music la signale ainsi, elle est ignorée, et quand il ne donne qu’une miniature, le morceau apparaît en échec dans la file.
-- **L’artiste et le titre viennent du titre de la vidéo.** Beaucoup d’entrées de playlist sont des uploads attribués à la chaîne qui les a publiés (par ex. `MrSuicideSheep`), et le vrai crédit est dans le titre, comme `Bronze Whale - Patterns`. Pour tout ce qui n’est pas une sortie de catalogue, Downtify sépare `Artiste - Titre` dans le nom de fichier et les tags. Il retire aussi des suffixes comme `(Official Video)` ou `[Lyrics]`. Une partie après le tiret qui nomme une version (`Yellow - Live at Glastonbury`) reste dans le titre. Les morceaux de catalogue (audio officiel, ou tout ce qui est classé sous un album) gardent l’artiste et le titre propres à YouTube Music.
+- **Les morceaux que YouTube Music grise sont quand même téléchargés.** Les playlists créées par des convertisseurs et des importeurs (Soundiiz, TuneMyMusic et consorts) listent souvent des morceaux comme de simples uploads YouTube que YouTube Music affiche comme indisponibles et sans identifiant de morceau. Castify retrouve la vidéo à partir de la miniature de l’entrée et la télécharge comme n’importe quelle autre, si bien qu’une telle playlist ne ressort pas vide. Une vidéo réellement supprimée ou rendue privée ne peut pas être téléchargée : quand YouTube Music la signale ainsi, elle est ignorée, et quand il ne donne qu’une miniature, le morceau apparaît en échec dans la file.
+- **L’artiste et le titre viennent du titre de la vidéo.** Beaucoup d’entrées de playlist sont des uploads attribués à la chaîne qui les a publiés (par ex. `MrSuicideSheep`), et le vrai crédit est dans le titre, comme `Bronze Whale - Patterns`. Pour tout ce qui n’est pas une sortie de catalogue, Castify sépare `Artiste - Titre` dans le nom de fichier et les tags. Il retire aussi des suffixes comme `(Official Video)` ou `[Lyrics]`. Une partie après le tiret qui nomme une version (`Yellow - Live at Glastonbury`) reste dans le titre. Les morceaux de catalogue (audio officiel, ou tout ce qui est classé sous un album) gardent l’artiste et le titre propres à YouTube Music.
 - **Tout lien `list=` n’est pas une playlist.** Le lien `OLAK5uy_…` d’un album est toujours téléchargé comme un album. Un lien `watch?v=…&list=…` est le seul morceau qui jouait. Un mix radio (`list=RD…`) n’a pas de liste de morceaux fixe et ne peut pas être surveillé.
 
 ## Suivi d’artistes
 
-Au lieu de construire une playlist par artiste, collez un lien d’artiste et Downtify suit tout son catalogue. Ajoutez-en un depuis l’onglet **Artistes** de la page Surveillance — collez l’URL, choisissez un intervalle, cliquez sur **Surveiller l’artiste**. Les surveillances d’artistes affichent un nombre de sorties au lieu d’un nombre de morceaux.
+Au lieu de construire une playlist par artiste, collez un lien d’artiste et Castify suit tout son catalogue. Ajoutez-en un depuis l’onglet **Artistes** de la page Surveillance — collez l’URL, choisissez un intervalle, cliquez sur **Surveiller l’artiste**. Les surveillances d’artistes affichent un nombre de sorties au lieu d’un nombre de morceaux.
 
 URL acceptées :
 
@@ -72,10 +72,10 @@ URL acceptées :
 
 Un handle est résolu vers la chaîne de l’artiste quand vous ajoutez la surveillance, si bien que le même artiste collé par handle et par URL de chaîne est reconnu comme une seule surveillance. Un handle qui n’appartient pas à un artiste YouTube Music est rejeté.
 
-À chaque passage, Downtify liste la discographie de l’artiste, la compare aux sorties qu’il a déjà traitées et télécharge chaque morceau de tout ce qui est nouveau. Un passage en régime établi coûte une seule requête — les listes de morceaux ne sont récupérées que pour les sorties qu’il n’a pas encore vues.
+À chaque passage, Castify liste la discographie de l’artiste, la compare aux sorties qu’il a déjà traitées et télécharge chaque morceau de tout ce qui est nouveau. Un passage en régime établi coûte une seule requête — les listes de morceaux ne sont récupérées que pour les sorties qu’il n’a pas encore vues.
 
 ::: info Pourquoi la discographie vient de YouTube Music
-L’intégration publique de Spotify expose le nom d’un artiste et un aperçu de ses morceaux les plus populaires, mais **pas** sa discographie — la lire exigerait des identifiants de l’API Spotify, que Downtify n’utilise délibérément pas. Un lien d’artiste Spotify est donc résolu vers son nom et apparié au même artiste sur YouTube Music, d’où l’audio est aussi récupéré. L’avantage : toute sortie que Downtify peut voir est une sortie qu’il peut réellement télécharger. Le compromis : le lien suit l’artiste YouTube Music qui porte exactement ce nom (casse et ponctuation mises à part), la meilleure correspondance de YouTube Music quand plusieurs le partagent. Pour un nom courant, vérifiez que la surveillance est bien l’artiste voulu, sinon collez directement l’URL de l’artiste YouTube Music. Un artiste Spotify dont aucun artiste YouTube Music ne porte exactement le nom ne peut être ajouté que de cette façon : Downtify ne devine pas.
+L’intégration publique de Spotify expose le nom d’un artiste et un aperçu de ses morceaux les plus populaires, mais **pas** sa discographie — la lire exigerait des identifiants de l’API Spotify, que Castify n’utilise délibérément pas. Un lien d’artiste Spotify est donc résolu vers son nom et apparié au même artiste sur YouTube Music, d’où l’audio est aussi récupéré. L’avantage : toute sortie que Castify peut voir est une sortie qu’il peut réellement télécharger. Le compromis : le lien suit l’artiste YouTube Music qui porte exactement ce nom (casse et ponctuation mises à part), la meilleure correspondance de YouTube Music quand plusieurs le partagent. Pour un nom courant, vérifiez que la surveillance est bien l’artiste voulu, sinon collez directement l’URL de l’artiste YouTube Music. Un artiste Spotify dont aucun artiste YouTube Music ne porte exactement le nom ne peut être ajouté que de cette façon : Castify ne devine pas.
 :::
 
 ::: warning Le premier passage télécharge tout le catalogue ancien
@@ -211,7 +211,7 @@ Par défaut, une playlist vérifiée chaque jour (ou semaine / 2 semaines / mois
 
 ## Enrichissement des métadonnées par morceau
 
-Les entrées de l’intégration de playlist Spotify n’ont pas l’année de sortie et utilisent la pochette de la playlist au lieu de la pochette de l’album de chaque morceau. Downtify récupère de nouveau chaque nouveau morceau individuellement pour obtenir la bonne pochette et la bonne année avant de télécharger — en retombant sur les données au niveau de la playlist si la récupération par morceau échoue. Les entrées de playlist YouTube Music sautent cette étape : chacune porte déjà les métadonnées de sa propre vidéo.
+Les entrées de l’intégration de playlist Spotify n’ont pas l’année de sortie et utilisent la pochette de la playlist au lieu de la pochette de l’album de chaque morceau. Castify récupère de nouveau chaque nouveau morceau individuellement pour obtenir la bonne pochette et la bonne année avant de télécharger — en retombant sur les données au niveau de la playlist si la récupération par morceau échoue. Les entrées de playlist YouTube Music sautent cette étape : chacune porte déjà les métadonnées de sa propre vidéo.
 
 ## Intégration M3U
 
@@ -223,7 +223,7 @@ Avec [Enregistrer la pochette de la playlist](playlist-cover-art.md) activé, la
 
 ## Ce qui arrive aux morceaux qui quittent une playlist
 
-Les playlists « vivantes » (le *Top 50* de Spotify, *Découvertes de la semaine*, classements éditoriaux) changent chaque semaine. Downtify traite une surveillance comme une **source de nouvelle musique**, jamais comme quelque chose qui gouverne ce que vous gardez :
+Les playlists « vivantes » (le *Top 50* de Spotify, *Découvertes de la semaine*, classements éditoriaux) changent chaque semaine. Castify traite une surveillance comme une **source de nouvelle musique**, jamais comme quelque chose qui gouverne ce que vous gardez :
 
 - **Les fichiers audio téléchargés ne sont jamais supprimés par une surveillance.** Ni quand un morceau quitte la playlist, ni quand il quitte toutes les playlists que vous surveillez, ni quand la playlist elle-même rétrécit, ni quand vous appuyez sur **Arrêter la surveillance**.
 - **Seule la playlist suit la playlist.** À chaque passage, le [fichier M3U](m3u-export.md) est réécrit à partir des morceaux actuels de la playlist, dans son ordre actuel, si bien qu’un morceau sorti disparaît du M3U. Son fichier reste dans le dossier, et reste dans votre bibliothèque, consultable et lisible — y compris via Navidrome, Jellyfin ou tout ce qui est pointé sur le même dossier.
@@ -232,7 +232,7 @@ Les playlists « vivantes » (le *Top 50* de Spotify, *Découvertes de la semain
 Cela fait d’une playlist de classement un flux de découverte utilisable : de nouveaux morceaux arrivent automatiquement, et ce qu’ils laissent derrière eux s’accumule dans votre bibliothèque.
 
 ```
-Top 50 - USA        →  new song appears   →  Downtify downloads it
+Top 50 - USA        →  new song appears   →  Castify downloads it
                     →  song drops out     →  M3U updated, file kept
 ```
 
@@ -244,7 +244,7 @@ Pour retirer de la playlist un titre dont vous ne voulez pas, et qu’il n’y r
 **Arrêter la surveillance** (dans le menu ⋯ de la surveillance) ne fait qu’oublier la surveillance : rien ne change sur le disque. **Supprimer** sur une playlist de la page **Bibliothèque** est l’action destructrice — elle retire les morceaux de cette playlist, son M3U et son entrée de catalogue.
 :::
 
-Si un fichier disparaît vraiment — vous l’avez sorti du dossier de téléchargements ou supprimé à la main —, un passage horaire s’en aperçoit et oublie l’enregistrement qu’en avait Downtify, si bien que la vérification suivante d’une surveillance qui liste encore le morceau le télécharge de nouveau. Un fichier simplement *déplacé* dans le dossier de téléchargements est toujours retrouvé et n’est pas retéléchargé.
+Si un fichier disparaît vraiment — vous l’avez sorti du dossier de téléchargements ou supprimé à la main —, un passage horaire s’en aperçoit et oublie l’enregistrement qu’en avait Castify, si bien que la vérification suivante d’une surveillance qui liste encore le morceau le télécharge de nouveau. Un fichier simplement *déplacé* dans le dossier de téléchargements est toujours retrouvé et n’est pas retéléchargé.
 
 ## Stockage
 
@@ -256,13 +256,13 @@ L’état du moniteur est stocké dans une base SQLite à `/data/downtify_monito
 - Chaque morceau ajouté par une surveillance (`watch_events`) : quand, le fichier, quel fournisseur audio l’a récupéré, si la surveillance l’a téléchargé ou l’a trouvé déjà dans la bibliothèque, et s’il est venu avec sa première vérification. Ces lignes gardent l’id, le nom et le propriétaire de la surveillance tels qu’ils étaient, et lui survivent : arrêter ou rediriger une surveillance les conserve, ses titres disent donc toujours d’où ils viennent
 - Les morceaux que chaque surveillance n’arrive toujours pas à télécharger (`watch_failures`), jusqu’à ce que l’un réussisse, quitte la playlist ou que la surveillance soit redirigée
 
-Les bases créées avant le Suivi d’artistes sont migrées automatiquement au démarrage ; les lignes existantes continuent de fonctionner comme des surveillances de playlists. Les morceaux enregistrés avant que Downtify garde l’historique ci-dessus y sont ajoutés une fois, au premier démarrage, avec un résultat inconnu (**Avant le suivi**) — ceux du premier jour d’une surveillance comptent comme sa première vérification.
+Les bases créées avant le Suivi d’artistes sont migrées automatiquement au démarrage ; les lignes existantes continuent de fonctionner comme des surveillances de playlists. Les morceaux enregistrés avant que Castify garde l’historique ci-dessus y sont ajoutés une fois, au premier démarrage, avec un résultat inconnu (**Avant le suivi**) — ceux du premier jour d’une surveillance comptent comme sa première vérification.
 
 ## Activité et stockage par surveillance
 
 La page Surveillance et la page de chaque surveillance (**Activité et titres** dans le menu **⋯** d’une surveillance, ou un clic sur son **Activité**) indiquent quelles surveillances font grossir votre bibliothèque — pratique avec beaucoup de surveillances, ou pour comprendre pourquoi un mix généré a apporté des titres inattendus.
 
-**Ce qui compte comme activité.** Seuls comptent les titres qu’une surveillance a vraiment ajoutés : ceux qu’elle a téléchargés. Ceux qu’elle a trouvés déjà dans votre bibliothèque (une autre surveillance, ou un téléchargement de votre part, les avait) comptent à part comme **Déjà dans la bibliothèque**, tout comme ce qu’apporte sa première vérification, quand elle télécharge tout ce que la playlist contenait déjà. Une playlist statique paraît donc inactive même si sa première vérification a téléchargé 300 titres, et un mix qui ajoute 15 titres par semaine affiche 15 par semaine. Les morceaux enregistrés avant que Downtify garde cet historique comptent comme ajoutés, et la page indique combien il y en a.
+**Ce qui compte comme activité.** Seuls comptent les titres qu’une surveillance a vraiment ajoutés : ceux qu’elle a téléchargés. Ceux qu’elle a trouvés déjà dans votre bibliothèque (une autre surveillance, ou un téléchargement de votre part, les avait) comptent à part comme **Déjà dans la bibliothèque**, tout comme ce qu’apporte sa première vérification, quand elle télécharge tout ce que la playlist contenait déjà. Une playlist statique paraît donc inactive même si sa première vérification a téléchargé 300 titres, et un mix qui ajoute 15 titres par semaine affiche 15 par semaine. Les morceaux enregistrés avant que Castify garde cet historique comptent comme ajoutés, et la page indique combien il y en a.
 
 Sur la période choisie (7, 30 ou 90 jours, mémorisée dans le navigateur) une surveillance affiche :
 

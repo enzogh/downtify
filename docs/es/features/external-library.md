@@ -4,7 +4,7 @@ icon: lucide/folder-plus
 
 # Carpetas de música existentes
 
-La Biblioteca de Downtify se construye a partir de los archivos que descargó — más las **carpetas adicionales** que le indiques. Esas carpetas no se copian a `/downloads`. Downtify lee las etiquetas de cada archivo (título, artista, álbum, número de pista, año), omite las canciones que ya tienes y coloca el resto bajo el artista correspondiente en la Biblioteca y el reproductor.
+La Biblioteca de Castify se construye a partir de los archivos que descargó — más las **carpetas adicionales** que le indiques. Esas carpetas no se copian a `/downloads`. Castify lee las etiquetas de cada archivo (título, artista, álbum, número de pista, año), omite las canciones que ya tienes y coloca el resto bajo el artista correspondiente en la Biblioteca y el reproductor.
 
 ## Añadir carpetas
 
@@ -29,14 +29,14 @@ La sincronización no copia archivos a `/downloads`. Cuando la carpeta es escrib
 :::
 
 ::: tip Montajes de solo lectura
-Monta la colección con `:ro` si no quieres que Downtify reescriba los MP3. La sincronización los sigue indexando. Pon los archivos `.lrc` en la [carpeta de letras](lyrics.md#sidecar-lrc-file) (desactiva **Guardar .lrc junto al audio**). Las portadas que falten se guardan en `/data/cover_cache` (el endpoint de portadas de la Biblioteca), no en el MP3. El género de iTunes se guarda en la base de datos de metadatos de la biblioteca de Downtify, no en el archivo. Un `.lrc` que ya está junto a un archivo de solo lectura se **copia** a la carpeta de letras y se deja donde está.
+Monta la colección con `:ro` si no quieres que Castify reescriba los MP3. La sincronización los sigue indexando. Pon los archivos `.lrc` en la [carpeta de letras](lyrics.md#sidecar-lrc-file) (desactiva **Guardar .lrc junto al audio**). Las portadas que falten se guardan en `/data/cover_cache` (el endpoint de portadas de la Biblioteca), no en el MP3. El género de iTunes se guarda en la base de datos de metadatos de la biblioteca de Castify, no en el archivo. Un `.lrc` que ya está junto a un archivo de solo lectura se **copia** a la carpeta de letras y se deja donde está.
 :::
 
 ## Qué hace la sincronización
 
 1. Recorre cada carpeta configurada en busca de audio reproducible (los mismos formatos que el resto de la biblioteca: MP3, M4A, FLAC, OGG, WAV, AAC, OPUS).
 2. Lee las etiquetas incrustadas. Un archivo sin título/artista recurre a `Artista - Título` en el nombre del archivo, igual que otras filas de la biblioteca.
-3. **Omite** un archivo cuando la biblioteca ya tiene esa canción (mismo artista + título, y duración con una diferencia de pocos segundos cuando ambas se conocen) — tanto si la descargó Downtify como si viene de otra carpeta adicional.
+3. **Omite** un archivo cuando la biblioteca ya tiene esa canción (mismo artista + título, y duración con una diferencia de pocos segundos cuando ambas se conocen) — tanto si la descargó Castify como si viene de otra carpeta adicional.
 4. **Empareja artistas** con nombres ya presentes en la biblioteca (`The Beatles` y `Beatles` pasan a ser un solo artista). Los nombres que no coinciden con un artista conocido aparecen como un artista nuevo. Los artistas nuevos se ponen en cola para el mismo relleno de perfil (foto/bio cuando esos ajustes están activados) que una descarga terminada.
 5. **Etiqueta como una descarga** cuando la carpeta es escribible. Para cada canción importada usa los mismos proveedores de letras, la misma búsqueda de portada (solo cuando el archivo no tiene imagen) y la misma búsqueda de género de iTunes que usaría una descarga. La letra va al archivo; un archivo auxiliar `.lrc` se escribe junto al audio o en la [carpeta de letras](lyrics.md#sidecar-lrc-file) elegida en Ajustes. La portada y el género siguen los [Ajustes de descarga](download-settings.md) (`download_cover_art`, `download_lyrics`). En un montaje de **solo lectura** el MP3 no se reescribe: una portada que falte se guarda en `/data/cover_cache`, el género se guarda en el catálogo de la biblioteca y los archivos `.lrc` van a la carpeta de letras si elegiste una. Las búsquedas se ejecutan en lotes de **Descargas simultáneas**; una **Pausa entre la sincronización** en Ajustes → Descargas y archivos espera entre esos lotes para que las carpetas grandes no topen con los límites de los proveedores.
 6. Invalida la caché de rutas de la biblioteca para que la página de la Biblioteca y el reproductor vean el resultado sin esperar al breve TTL de escaneo habitual.
@@ -45,7 +45,7 @@ La sincronización se ejecuta **en segundo plano**. Puedes salir de Ajustes; si 
 
 Ejecuta **Sincronizar carpetas** de nuevo después de meter más archivos en esas carpetas. Guardar la lista de carpetas sin sincronizar también las incluye en el siguiente escaneo de la biblioteca (alrededor de un minuto, o la siguiente descarga/eliminación).
 
-Quitar una carpeta de la lista la **desasigna**: esas canciones salen de la Biblioteca y del reproductor, y los extras creados por Downtify (archivos auxiliares `.lrc`, portadas en caché) se eliminan. Los archivos de audio en disco se quedan donde están.
+Quitar una carpeta de la lista la **desasigna**: esas canciones salen de la Biblioteca y del reproductor, y los extras creados por Castify (archivos auxiliares `.lrc`, portadas en caché) se eliminan. Los archivos de audio en disco se quedan donde están.
 
 Las carpetas que no existen o no se pueden leer se informan tras la sincronización; las demás se siguen escaneando.
 

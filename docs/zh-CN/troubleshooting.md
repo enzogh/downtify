@@ -15,7 +15,7 @@ Error: ERROR: [youtube] <id>: Sign in to confirm your age.
 This video may be inappropriate for some users.
 ```
 
-**原因**：YouTube 只向已登录的成年账号提供受年龄限制（显式内容）的歌曲。Downtify 默认匿名下载，因此 YouTube 会拒绝请求。
+**原因**：YouTube 只向已登录的成年账号提供受年龄限制（显式内容）的歌曲。Castify 默认匿名下载，因此 YouTube 会拒绝请求。
 
 **解决方法**：提供 YouTube Cookie：**Settings**（⚙️）→ **YouTube cookies** → **Upload cookies.txt**。导出方法请参阅 [YouTube Cookie](features/youtube-cookies.md)。
 
@@ -36,7 +36,7 @@ This video may be inappropriate for some users.
 
 ## Windows / Docker Desktop 未读取 cookies.txt
 
-**现象**：已设置 `DOWNTIFY_COOKIES_FILE`，但 Downtify 的行为就像没有 Cookie 一样。
+**现象**：已设置 `DOWNTIFY_COOKIES_FILE`，但 Castify 的行为就像没有 Cookie 一样。
 
 **原因**：该变量需要的是*容器内*路径。`C:\Users\me\cookies.txt` 这样的 Windows 路径在容器中无效；必须先将文件绑定挂载到容器，变量才能指向它。
 
@@ -57,7 +57,7 @@ environment:
 
 ## 更新容器后，已上传的 Cookie 不见了
 
-上传的文件保存在 Downtify 数据目录（`/data`）。如果该目录没有映射到命名卷或绑定挂载，重新创建容器时其中的所有内容都会丢失，包括设置和播放列表监控数据库：
+上传的文件保存在 Castify 数据目录（`/data`）。如果该目录没有映射到命名卷或绑定挂载，重新创建容器时其中的所有内容都会丢失，包括设置和播放列表监控数据库：
 
 ```yaml
 volumes:
@@ -67,13 +67,13 @@ volumes:
 
 ## 上传时提示“cookies.txt 无效”
 
-Downtify 会在上传时校验文件。文件必须是 **Netscape** Cookie 格式：每行一条 Cookie，字段以制表符分隔，也可以包含 `#` 注释。JSON 导出文件、电子表格或复制的 `Cookie:` 请求头均不符合要求。
+Castify 会在上传时校验文件。文件必须是 **Netscape** Cookie 格式：每行一条 Cookie，字段以制表符分隔，也可以包含 `#` 注释。JSON 导出文件、电子表格或复制的 `Cookie:` 请求头均不符合要求。
 
 请使用可导出 Netscape 格式的浏览器扩展（参阅 [YouTube Cookie](features/youtube-cookies.md)），并在打开 `youtube.com` 时导出。
 
 ## 播放列表重复下载已有歌曲
 
-Downtify 会在数据库中记录所有自动下载的歌曲，因此将文件移到磁盘其他位置不会触发重新下载。只有每小时检查发现下载目录中确实缺少对应文件时，才会重新下载。详见[播放列表监控](features/playlist-monitor.md#how-it-works)。
+Castify 会在数据库中记录所有自动下载的歌曲，因此将文件移到磁盘其他位置不会触发重新下载。只有每小时检查发现下载目录中确实缺少对应文件时，才会重新下载。详见[播放列表监控](features/playlist-monitor.md#how-it-works)。
 
 如果每次重启后文件都会消失，说明 `/downloads` 卷没有持久化，请按上文的方法配置。
 
@@ -85,12 +85,12 @@ YouTube Music 和普通 YouTube 都没有返回通过匹配检查的结果。检
 
 ## 下载的音频标签或封面不正确
 
-Downtify 从 Spotify 获取元数据，并在 YouTube Music 上匹配音频。信息不符通常是因为匹配到了翻唱、混音或现场版本。与搜索结果相比，使用 Spotify **专辑**链接下载能为匹配器提供更多信息（曲目编号、专辑和发行类型）。
+Castify 从 Spotify 获取元数据，并在 YouTube Music 上匹配音频。信息不符通常是因为匹配到了翻唱、混音或现场版本。与搜索结果相比，使用 Spotify **专辑**链接下载能为匹配器提供更多信息（曲目编号、专辑和发行类型）。
 
 ## 仍未解决？
 
 请在 [GitHub 问题跟踪页](https://github.com/henriquesebastiao/downtify/issues)提交问题，并附上：
 
-- Downtify 版本（显示在侧边栏底部以及 **Settings → About** 中）；
+- Castify 版本（显示在侧边栏底部以及 **Settings → About** 中）；
 - 出错时段附近的容器日志（`docker compose logs downtify`）；
 - 是否已配置 Cookie。

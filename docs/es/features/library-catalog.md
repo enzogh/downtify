@@ -4,7 +4,7 @@ icon: lucide/library
 
 # Catálogo de la biblioteca y sincronización de rutas
 
-Downtify mantiene un pequeño **catálogo** de los archivos bajo `/downloads` (la carpeta de slskd, cuando los [archivos de slskd se dejan en su sitio](slskd-navidrome.md#leave-files-in-place), y las [carpetas extra](external-library.md) que añades en Ajustes) para que la página Biblioteca, el reproductor, la exportación M3U, la sincronización con Navidrome y la detección de duplicados sigan siendo coherentes cuando se mueven archivos o crecen las playlists.
+Castify mantiene un pequeño **catálogo** de los archivos bajo `/downloads` (la carpeta de slskd, cuando los [archivos de slskd se dejan en su sitio](slskd-navidrome.md#leave-files-in-place), y las [carpetas extra](external-library.md) que añades en Ajustes) para que la página Biblioteca, el reproductor, la exportación M3U, la sincronización con Navidrome y la detección de duplicados sigan siendo coherentes cuando se mueven archivos o crecen las playlists.
 
 ## Qué se guarda
 
@@ -26,14 +26,14 @@ Los archivos se asocian tras moverse mediante una **clave de contenido** — un 
 
 ### Guardar portadas en caché en disco
 
-Cuando está activado, Downtify guarda las imágenes de portada extraídas en `/data/cover_cache`, para que la Biblioteca y el reproductor no relean las etiquetas por cada miniatura. Se puede desactivar en cualquier momento; solo cuesta espacio en disco.
+Cuando está activado, Castify guarda las imágenes de portada extraídas en `/data/cover_cache`, para que la Biblioteca y el reproductor no relean las etiquetas por cada miniatura. Se puede desactivar en cualquier momento; solo cuesta espacio en disco.
 
 ### Reparar rutas de la biblioteca
 
-Úsalo después de **mover o renombrar archivos en disco** fuera de Downtify, o de borrarlos a mano.
+Úsalo después de **mover o renombrar archivos en disco** fuera de Castify, o de borrarlos a mano.
 
 1. Abre **Ajustes → Biblioteca → Reparar rutas de la biblioteca**.
-2. Downtify escanea las carpetas de la biblioteca y:
+2. Castify escanea las carpetas de la biblioteca y:
     - **actualiza las rutas** en el índice de canciones y el catálogo de playlists cuando un archivo ya no está donde estaba pero se encuentra el mismo archivo (misma clave de contenido) en otro sitio;
     - **elimina las entradas obsoletas** de archivos que ya no existen;
     - **indexa** entradas antiguas guardadas antes de que existieran las claves de contenido;
@@ -44,7 +44,7 @@ Solo se ejecuta cuando pulsas el botón (o llamas a `POST /api/library/reconcile
 
 ### Carpetas de música existentes
 
-Para reproducir una colección que Downtify no descargó, añade las carpetas en **Ajustes → Biblioteca** y pulsa **Sincronizar carpetas**. Los archivos se quedan en disco; se leen las etiquetas y se asocian los artistas. Consulta [Carpetas de música existentes](external-library.md).
+Para reproducir una colección que Castify no descargó, añade las carpetas en **Ajustes → Biblioteca** y pulsa **Sincronizar carpetas**. Los archivos se quedan en disco; se leen las etiquetas y se asocian los artistas. Consulta [Carpetas de música existentes](external-library.md).
 
 ::: warning
 Reescribir una playlist borra archivos de la biblioteca cuyas etiquetas claramente no coinciden con la canción de Spotify para la que están registrados — consulta [slskd y Navidrome](slskd-navidrome.md#playlist-sync).
@@ -59,7 +59,7 @@ Borrar canciones desde la página **Biblioteca** ya limpia el catálogo y reescr
 La página Biblioteca tiene cuatro pestañas — **Álbumes**, **Artistas**, **Playlists** y **Canciones**:
 
 - **Álbumes, artistas y playlists** se muestran como una cuadrícula de portadas o una lista compacta (el interruptor se recuerda), con un filtro de texto y ordenación por añadidos recientemente, nombre, artista, año o número de canciones. Los álbumes y artistas se construyen a partir de las etiquetas de cada archivo (artista del álbum, álbum, año), así que no dependen de cómo estén organizados los archivos en disco. Un recopilatorio — artista del álbum `Various Artists`, con la marca de recopilatorio — queda como un solo álbum en Álbumes, mientras que sus canciones están en las páginas de sus artistas. Una canción etiquetada `Various Artists` sin esa marca (como las versiones antiguas etiquetaban cualquier canción con varios artistas, incluido un dúo como `Zé Neto & Cristiano`) se agrupa por su primer artista. Una canción sin etiqueta de álbum aparece en Canciones y en su artista, no en Álbumes.
-- **Artistas** lista cada artista al que pertenece una canción — su artista del álbum, o en un recopilatorio (o un archivo sin artista del álbum) su primer artista. La página de ese artista incluye también las canciones en las que es invitado, marcadas con **Colaboración**; su pestaña Álbumes solo muestra álbumes propios (y se oculta si no hay ninguno). Un nombre que solo aparece acreditado junto a otro no tiene página propia: las etiquetas pueden nombrar a los integrantes de un dúo uno a uno (`Henrique; Juliano`, como YouTube Music acredita a algunos dúos y como los escribían versiones antiguas de Downtify), y una página para cada integrante sería un artista que no existe. **Various Artists** no aparece: las canciones de un recopilatorio están en las páginas de sus artistas, y el álbum sigue en Álbumes.
+- **Artistas** lista cada artista al que pertenece una canción — su artista del álbum, o en un recopilatorio (o un archivo sin artista del álbum) su primer artista. La página de ese artista incluye también las canciones en las que es invitado, marcadas con **Colaboración**; su pestaña Álbumes solo muestra álbumes propios (y se oculta si no hay ninguno). Un nombre que solo aparece acreditado junto a otro no tiene página propia: las etiquetas pueden nombrar a los integrantes de un dúo uno a uno (`Henrique; Juliano`, como YouTube Music acredita a algunos dúos y como los escribían versiones antiguas de Castify), y una página para cada integrante sería un artista que no existe. **Various Artists** no aparece: las canciones de un recopilatorio están en las páginas de sus artistas, y el álbum sigue en Álbumes.
 - Allí donde una canción muestra sus artistas — listas de canciones, la pantalla Reproduciendo, el Finder y las filas de canciones populares — cada nombre enlaza a la página del artista en la Biblioteca, o a una búsqueda si la Biblioteca no tiene página suya. En esas filas el nombre del álbum también enlaza a ese álbum en la Biblioteca, o a una búsqueda si la Biblioteca no lo tiene. Descubrir y su Finder nunca te envían a Buscar: allí, un artista o álbum que la Biblioteca no tiene es texto plano. Los artistas salen de la etiqueta `ARTISTS` del archivo (consulta [Varios artistas y recopilatorios](file-organization.md#several-artists-and-compilations)), así que un nombre como *Earth, Wind & Fire* nunca se parte por su coma; un archivo sin esa etiqueta tiene su texto de artista partido por `;`, ` / ` o `, `, salvo que ese texto sea también el artista del álbum del archivo, o que los nombres resultantes formen el artista del álbum (`Henrique; Juliano` en un álbum de `Henrique, Juliano`) — entonces es un solo nombre.
 - **Playlists** son las playlists descargadas con un [archivo M3U](m3u-export.md), las playlists que creas con **Nueva playlist** (editables), además de las [descargas de playlists](slskd-navidrome.md#playlist-downloads) seguidas que aún no tienen M3U. Las playlists importadas de Spotify/YouTube siguen siendo de solo lectura hasta que las [desvinculas](#detach-an-imported-playlist). Las playlists que otras personas [comparten contigo](users.md#sharing-playlists) se listan bajo la cuadrícula, aparte de las tuyas. Cuando has dado [«me gusta»](liked-songs.md) a una canción, *Canciones que me gustan* aparece primero. Una playlist creada por ti usa un mosaico de hasta cuatro portadas de canciones; las importadas conservan la imagen guardada con el M3U.
 - **Canciones** es una tabla ordenable (título, álbum, formato, fecha de adición, duración) con filtro de texto, filtro de formato y casillas — haz clic en una y luego Mayús+clic en otra para seleccionar un rango. Ordénala haciendo clic en el encabezado de una columna, o con el menú **Ordenar por** sobre la tabla (la única forma en el móvil, donde los encabezados están ocultos): añadidas recientemente o más antiguas primero, título, artista o álbum de A–Z o Z–A, más largas o más cortas primero. La elección se recuerda.
@@ -79,18 +79,18 @@ Al lado, unos filtros acotan la lista. Cada uno muestra cuántas canciones tiene
 | **Todas** | Todas las canciones descargadas de la playlist |
 | **Faltan** | Canciones de la playlist de origen que aún no están en la biblioteca (descargas de playlists de Spotify), con el estado de su descarga; se consultan en Spotify al elegir el filtro |
 | **Fallidas** | Las canciones que faltan cuya descarga falló, cada una con el botón de reintentar, una vez consultado **Faltan** |
-| **YouTube Music**, **Soulseek (slskd)**, **Deemix**… | Las canciones que descargó esa fuente. Downtify lo recuerda para las canciones descargadas desde ahora; las anteriores cuentan como **Origen desconocido**, salvo los archivos de slskd dejados en su sitio y las canciones de tus propias carpetas |
-| **Fuera de Navidrome** | Con la [sincronización con Navidrome](slskd-navidrome.md) activada, las canciones que Downtify aún no ha emparejado con una canción de Navidrome |
+| **YouTube Music**, **Soulseek (slskd)**, **Deemix**… | Las canciones que descargó esa fuente. Castify lo recuerda para las canciones descargadas desde ahora; las anteriores cuentan como **Origen desconocido**, salvo los archivos de slskd dejados en su sitio y las canciones de tus propias carpetas |
+| **Fuera de Navidrome** | Con la [sincronización con Navidrome](slskd-navidrome.md) activada, las canciones que Castify aún no ha emparejado con una canción de Navidrome |
 
 La búsqueda y un filtro funcionan juntos, y el número de canciones mostradas aparece debajo. Cada canción conserva su número en la playlist, y ordenar, reproducir y el menú de cada canción actúan sobre lo que se muestra.
 
 ### Desvincular una playlist importada
 
-Una playlist importada de un enlace de Spotify o YouTube Music no se puede editar, porque Downtify la mantiene sincronizada con su origen. Para ordenar una — quitar una canción que no pertenece, añadir una que sí — ábrela y elige **Desvincular del origen**. Pasa a ser una playlist como las que creas: sus canciones y propietario se quedan como están, y obtienes **Añadir canciones**, **Renombrar** y quitar canciones. A cambio se corta el vínculo con su origen: deja de actualizarse desde Spotify o YouTube Music, se elimina su vigilancia del [Monitor de playlists](playlist-monitor.md) (si la tenía) y desaparece su seguimiento de «canciones que faltan». Las canciones ya descargadas nunca se tocan, y su imagen se queda hasta tu primera edición, cuando la sustituye un mosaico de sus canciones. Desvincular no se puede deshacer desde la app; descargar el enlace de nuevo crea una nueva playlist importada.
+Una playlist importada de un enlace de Spotify o YouTube Music no se puede editar, porque Castify la mantiene sincronizada con su origen. Para ordenar una — quitar una canción que no pertenece, añadir una que sí — ábrela y elige **Desvincular del origen**. Pasa a ser una playlist como las que creas: sus canciones y propietario se quedan como están, y obtienes **Añadir canciones**, **Renombrar** y quitar canciones. A cambio se corta el vínculo con su origen: deja de actualizarse desde Spotify o YouTube Music, se elimina su vigilancia del [Monitor de playlists](playlist-monitor.md) (si la tenía) y desaparece su seguimiento de «canciones que faltan». Las canciones ya descargadas nunca se tocan, y su imagen se queda hasta tu primera edición, cuando la sustituye un mosaico de sus canciones. Desvincular no se puede deshacer desde la app; descargar el enlace de nuevo crea una nueva playlist importada.
 
 Todas las cuentas ven la misma biblioteca: lo que un admin [oculta a los usuarios](users.md#hiding-from-users) queda fuera para ellos, y un admin lo ve todo con un ojo tachado en lo que está oculto. Los admins ocultan y muestran desde el menú `…` de una canción, álbum o artista, o desde la barra de selección en **Canciones**.
 
-**Descargar como ZIP** guarda las canciones seleccionadas en el dispositivo desde el que navegas como un único ZIP, conservando su estructura de carpetas — útil cuando Downtify corre en un servidor doméstico y quieres un lote de canciones en local. Combínalo con **Seleccionar todo** para llevarte todo lo que muestra el filtro actual. El archivo se construye mientras se descarga, así que no se escribe nada en el disco del servidor, y está limitado a 2000 canciones por descarga.
+**Descargar como ZIP** guarda las canciones seleccionadas en el dispositivo desde el que navegas como un único ZIP, conservando su estructura de carpetas — útil cuando Castify corre en un servidor doméstico y quieres un lote de canciones en local. Combínalo con **Seleccionar todo** para llevarte todo lo que muestra el filtro actual. El archivo se construye mientras se descarga, así que no se escribe nada en el disco del servidor, y está limitado a 2000 canciones por descarga.
 
 ## API
 

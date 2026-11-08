@@ -4,7 +4,7 @@ export default {
   lang: 'ko',
   description:
     '직접 호스팅하는 음악 다운로더. Spotify 링크를 붙여넣으면 태그가 완벽하게 입력된 오디오 파일을 받을 수 있습니다 — API 키도, 계정도, 번거로움도 없습니다.',
-  titleSuffix: 'Downtify 문서',
+  titleSuffix: 'Castify 문서',
   containers: {
     info: '참고',
     tip: '팁',
@@ -19,7 +19,7 @@ export default {
     navigation: '탐색',
     sidebar: '사이드바',
     documentation: '문서',
-    docsHome: 'Downtify 문서 홈',
+    docsHome: 'Castify 문서 홈',
     docsBadge: 'Docs',
     searchDocs: '문서 검색',
     search: '검색',
@@ -65,7 +65,6 @@ export default {
       'getting-started/environment-variables.md': '환경 변수',
       'features/index.md': '개요',
       'features/charts.md': '차트',
-      'features/similar.md': '유사 음악',
       'features/finder.md': '파인더',
       'features/download-settings.md': '다운로드 설정',
       'features/download-queue.md': '다운로드 대기열',

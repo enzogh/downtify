@@ -4,7 +4,7 @@ icon: lucide/file-code
 
 # Docker Compose
 
-Docker Compose, kalıcı ev sunucusu kurulumlarında Downtify’ı çalıştırmanın önerilen yoludur. Güncellemeleri, yedeklemeleri ve yapılandırma değişikliklerini kolaylaştırır.
+Docker Compose, kalıcı ev sunucusu kurulumlarında Castify’ı çalıştırmanın önerilen yoludur. Güncellemeleri, yedeklemeleri ve yapılandırma değişikliklerini kolaylaştırır.
 
 ## Asgari kurulum
 
@@ -36,7 +36,7 @@ docker compose up -d
 
 ## slskd (Soulseek) ile
 
-[slskd’yi ses kaynağı olarak](../features/slskd-navidrome.md) kullanmak için slskd’nin indirme klasörünü de Downtify’a bağlayın — slskd kapsayıcınızın yazdığı **aynı ana makine klasörünü**:
+[slskd’yi ses kaynağı olarak](../features/slskd-navidrome.md) kullanmak için slskd’nin indirme klasörünü de Castify’a bağlayın — slskd kapsayıcınızın yazdığı **aynı ana makine klasörünü**:
 
 ```yaml
 services:
@@ -63,7 +63,7 @@ Kitaplığın ana makinede zaten tuttuğunuz bir koleksiyonu görmesi için onu 
 
 ## Sunucuyu uygulamalardan bulma
 
-[Mobil uygulamalar](../features/mobile-apps.md#finding-the-server-on-your-network) ağınızdaki Downtify sunucularını mDNS ile listeler. Docker’ın varsayılan köprü ağında bu duyuru Docker’dan asla çıkmaz, bu yüzden telefonlar onu görmez. Listelenmesi için kapsayıcıyı ana makinenin ağında çalıştırın — `ports:` eşlemesi o zaman geçerli olmaz ve Downtify doğrudan `DOWNTIFY_PORT` üzerinde dinler:
+[Mobil uygulamalar](../features/mobile-apps.md#finding-the-server-on-your-network) ağınızdaki Castify sunucularını mDNS ile listeler. Docker’ın varsayılan köprü ağında bu duyuru Docker’dan asla çıkmaz, bu yüzden telefonlar onu görmez. Listelenmesi için kapsayıcıyı ana makinenin ağında çalıştırın — `ports:` eşlemesi o zaman geçerli olmaz ve Castify doğrudan `DOWNTIFY_PORT` üzerinde dinler:
 
 ```yaml
 services:

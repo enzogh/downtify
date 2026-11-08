@@ -1,6 +1,6 @@
 # warp-control
 
-Gives Downtify a new exit IP when YouTube flags the current one with
+Gives Castify a new exit IP when YouTube flags the current one with
 "Sign in to confirm you're not a bot". It runs inside a Cloudflare WARP
 proxy container (`caomingjun/warp`) and reconnects WARP on
 `POST /rotate`, which changes the exit IP in 2–3 seconds.
@@ -14,7 +14,7 @@ services:
       WARP_CONTROL_TOKEN: ${WARP_CONTROL_TOKEN}
     volumes:
       - ./contrib/warp-control:/warp-control:ro
-    # no `ports:` - only Downtify, on the Docker network, should reach it
+    # no `ports:` - only Castify, on the Docker network, should reach it
 
   downtify:
     environment:

@@ -10,7 +10,7 @@ icon: lucide/trending-up
 
 Abra **Paradas de sucesso** na barra lateral (ou na folha **Mais** no celular). Quatro abas leem a mesma parada: **Faixas**, **Álbuns**, **Artistas** e **Playlists**.
 
-- **Faixas** — uma lista ranqueada. Pressione uma (ou toque na linha) para ouvi-la por inteiro do YouTube, direto no player integrado, antes de baixar. Baixar uma linha funciona como um resultado de busca: o Downtify procura no YouTube Music (e, se não achar, no YouTube comum) a melhor correspondência para título, artista e duração da faixa, pelo mesmo [pipeline de correspondência](../how-it-works.md) que todos os outros downloads usam. Depois que uma faixa é baixada, a linha toca a versão da sua biblioteca em vez de transmitir.
+- **Faixas** — uma lista ranqueada. Pressione uma (ou toque na linha) para ouvi-la por inteiro do YouTube, direto no player integrado, antes de baixar. Baixar uma linha funciona como um resultado de busca: o Castify procura no YouTube Music (e, se não achar, no YouTube comum) a melhor correspondência para título, artista e duração da faixa, pelo mesmo [pipeline de correspondência](../how-it-works.md) que todos os outros downloads usam. Depois que uma faixa é baixada, a linha toca a versão da sua biblioteca em vez de transmitir.
 - **Álbuns**, **Artistas** e **Playlists** — grades de capas. Clicar em uma a resolve ([`GET /api/url/resolve`](../api-reference.md#get-apiurlresolve)) exatamente como se você tivesse colado aquele link do Deezer na caixa de busca: a lista de faixas é carregada, pronta para escolher e baixar.
 
 ## Por que as faixas baixam (e tocam por inteiro) direto daqui, mas álbuns, artistas e playlists abrem uma página antes

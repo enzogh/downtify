@@ -9,7 +9,7 @@ export default {
   description:
     'Self-hosted music downloader. Paste a Spotify link, get a perfectly tagged audio file — no API keys, no account, no hassle.',
   // `:title · <this>` in the browser tab.
-  titleSuffix: 'Downtify docs',
+  titleSuffix: 'Castify docs',
   // The labels of ::: info / tip / warning / danger / details callouts
   // that don't have a title of their own.
   containers: {
@@ -27,7 +27,7 @@ export default {
     navigation: 'Navigation',
     sidebar: 'Sidebar',
     documentation: 'Documentation',
-    docsHome: 'Downtify docs home',
+    docsHome: 'Castify docs home',
     docsBadge: 'Docs',
     searchDocs: 'Search the docs',
     search: 'Search',
@@ -74,7 +74,6 @@ export default {
       'getting-started/environment-variables.md': 'Environment Variables',
       'features/index.md': 'Overview',
       'features/charts.md': 'Charts',
-      'features/similar.md': 'Similar',
       'features/finder.md': 'Finder',
       'features/download-settings.md': 'Download Settings',
       'features/download-queue.md': 'Download Queue',

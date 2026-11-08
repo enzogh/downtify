@@ -43,9 +43,9 @@ def discovery_enabled() -> bool:
 def instance_name(name: str) -> str:
     """A DNS-SD instance label for *name*: no dots, at most 63 bytes."""
 
-    text = ' '.join(str(name or 'Downtify').replace('.', ' ').split())
+    text = ' '.join(str(name or 'Castify').replace('.', ' ').split())
     encoded = text.encode()[:63]
-    return encoded.decode(errors='ignore').strip() or 'Downtify'
+    return encoded.decode(errors='ignore').strip() or 'Castify'
 
 
 def txt_record(

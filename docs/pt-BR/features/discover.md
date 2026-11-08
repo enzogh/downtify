@@ -11,7 +11,7 @@ Não precisa de conta nem de chave de API: as sugestões vêm da lista pública 
 ## Como as sugestões são escolhidas
 
 1. **Seus artistas são ponderados.** Cada artista da sua biblioteca conta um pouco, e conta mais por cada um destes itens, do mais para o menos importante:
-    - quantas vezes você **ouve** o artista no player do Downtify (o que você ouviu recentemente pesa mais do que o de meses atrás),
+    - quantas vezes você **ouve** o artista no player do Castify (o que você ouviu recentemente pesa mais do que o de meses atrás),
     - quantas músicas dele você **curtiu**,
     - quantas músicas dele estão **na sua biblioteca**.
 

@@ -4,7 +4,7 @@ icon: lucide/download
 
 # Avisos de atualização
 
-O Downtify consulta a própria [página de Releases no GitHub](https://github.com/henriquesebastiao/downtify/releases) uma vez por hora. Quando há uma versão mais nova, um aviso aparece no fim da barra lateral em todas as páginas — no celular, um ponto na aba **Mais** e uma linha no topo da sua folha — e em **Configurações → Sobre**:
+O Castify consulta a própria [página de Releases no GitHub](https://github.com/henriquesebastiao/downtify/releases) uma vez por hora. Quando há uma versão mais nova, um aviso aparece no fim da barra lateral em todas as páginas — no celular, um ponto na aba **Mais** e uma linha no topo da sua folha — e em **Configurações → Sobre**:
 
 > ✦ Atualização 3.0.1 disponível
 
@@ -18,11 +18,11 @@ Clique nele para abrir essa versão no GitHub.
 
 ## Se o GitHub estiver inacessível
 
-Uma verificação que falha (host offline, limite de requisições do GitHub) é registrada no log e simplesmente repetida na próxima passagem horária — o resultado anterior, se houver, continua valendo até lá. A verificação nunca bloqueia nada do que o Downtify faz; não há erro visível para o usuário.
+Uma verificação que falha (host offline, limite de requisições do GitHub) é registrada no log e simplesmente repetida na próxima passagem horária — o resultado anterior, se houver, continua valendo até lá. A verificação nunca bloqueia nada do que o Castify faz; não há erro visível para o usuário.
 
 ## Nada é baixado automaticamente
 
-Isso apenas *avisa* que existe uma nova versão — o Downtify não se atualiza sozinho. Para atualizar de fato, baixe a nova imagem e recrie o contêiner:
+Isso apenas *avisa* que existe uma nova versão — o Castify não se atualiza sozinho. Para atualizar de fato, baixe a nova imagem e recrie o contêiner:
 
 ```bash
 docker compose pull

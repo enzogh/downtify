@@ -4,13 +4,13 @@ icon: lucide/route
 
 # Outbound proxy
 
-Downtify can send supported outbound HTTP traffic through an HTTP, HTTPS or SOCKS5 proxy. This is configured with environment variables, not in Settings.
+Castify can send supported outbound HTTP traffic through an HTTP, HTTPS or SOCKS5 proxy. This is configured with environment variables, not in Settings.
 
 ## Configure
 
 Set `DOWNTIFY_PROXY` to one proxy URL. It accepts `http://`, `https://`, `socks5://` and `socks5h://`, including URL-encoded credentials. `socks5h` keeps destination DNS resolution on the proxy.
 
-If `DOWNTIFY_PROXY` is unset, Downtify uses the standard `HTTP_PROXY`, `HTTPS_PROXY`, `ALL_PROXY` and lowercase equivalents. `DOWNTIFY_PROXY` takes precedence and supplies the same proxy for HTTP and HTTPS.
+If `DOWNTIFY_PROXY` is unset, Castify uses the standard `HTTP_PROXY`, `HTTPS_PROXY`, `ALL_PROXY` and lowercase equivalents. `DOWNTIFY_PROXY` takes precedence and supplies the same proxy for HTTP and HTTPS.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
@@ -28,7 +28,7 @@ services:
       DOWNTIFY_PROXY_BYPASS: slskd,navidrome
 ```
 
-The proxy service must be reachable from Downtify's Docker network. Add the configured slskd or Navidrome hostnames to the bypass list when those services should stay on the local network. Existing `NO_PROXY` entries are preserved.
+The proxy service must be reachable from Castify's Docker network. Add the configured slskd or Navidrome hostnames to the bypass list when those services should stay on the local network. Existing `NO_PROXY` entries are preserved.
 
 ## Check the route
 
@@ -36,7 +36,7 @@ An admin can call `POST /api/proxy/test`. It checks the configured proxy against
 
 ## Coverage and limits
 
-Proxy settings apply to Downtify's HTTPX requests (including Spotify, Deezer, Apple/iTunes, cover art, lyrics, OIDC and update checks), YouTube Music's Requests session, and yt-dlp downloads and stream resolution. SOCKS dependencies are included in the Docker image. HTTPX receives `socks5://` for a `socks5h://` URL; its SOCKS transport sends the destination hostname to the proxy, so DNS remains remote. YouTube Music and yt-dlp retain the original `socks5h` URL.
+Proxy settings apply to Castify's HTTPX requests (including Spotify, Deezer, Apple/iTunes, cover art, lyrics, OIDC and update checks), YouTube Music's Requests session, and yt-dlp downloads and stream resolution. SOCKS dependencies are included in the Docker image. HTTPX receives `socks5://` for a `socks5h://` URL; its SOCKS transport sends the destination hostname to the proxy, so DNS remains remote. YouTube Music and yt-dlp retain the original `socks5h` URL.
 
 Strict mode covers these supported HTTP transports; it cannot constrain arbitrary sockets opened by future or third-party code. A Docker or host firewall that denies direct egress is the only network-layer guarantee. An explicit `NO_PROXY` or `DOWNTIFY_PROXY_BYPASS` entry is an intentional direct route, including in strict mode.
 

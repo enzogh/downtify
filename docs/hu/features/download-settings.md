@@ -31,7 +31,7 @@ Veszteséges formátumoknál (MP3, M4A, OGG, OPUS) érhető el. A FLAC figyelmen
 A letöltött hang minden veszteséges formátumnál a választott bitrátán kódolódik. Ha a YouTube által szolgáltatott hang már a célkodekkel rendelkezik nagyjából azon a bitrátán (pl. a ~128 kbps AAC-adatfolyam az **M4A @ 128** esetén), akkor változatlanul megmarad az újrakódolás helyett, mert az újrakódolás csak minőséget veszítene.
 
 ::: info A magasabb bitráta nem ad hozzá minőséget
-A YouTube hangja legfeljebb nagyjából **128–160 kbps**-ig terjed (AAC vagy Opus), a Downtify pedig mindig a legjobb elérhető adatfolyamot tölti le. 256 vagy 320 kbps-en kódolva nagyobb fájlokat kapsz, amelyek hűen megőrzik azt a forrást, de nem tudnak olyan részletet visszahozni, ami a forrásban sosem volt. Válassz alacsonyabb bitrátát, ha a fájlméret fontosabb.
+A YouTube hangja legfeljebb nagyjából **128–160 kbps**-ig terjed (AAC vagy Opus), a Castify pedig mindig a legjobb elérhető adatfolyamot tölti le. 256 vagy 320 kbps-en kódolva nagyobb fájlokat kapsz, amelyek hűen megőrzik azt a forrást, de nem tudnak olyan részletet visszahozni, ami a forrásban sosem volt. Válassz alacsonyabb bitrátát, ha a fájlméret fontosabb.
 :::
 
 ## Kimeneti fájlnév-sablon
@@ -86,7 +86,7 @@ A korlát minden kötegelt letöltésre vonatkozik — lejátszási lista-/album
 
 ## Szünet a letöltések között
 
-Azt éri el, hogy a Downtify egy dal befejezése után beállítható számú másodpercet várjon a következő megkezdése előtt, ahelyett hogy egymás után sorozatban lőné ki a kéréseket.
+Azt éri el, hogy a Castify egy dal befejezése után beállítható számú másodpercet várjon a következő megkezdése előtt, ahelyett hogy egymás után sorozatban lőné ki a kéréseket.
 
 | Érték | Viselkedés |
 |-------|-----------|
@@ -103,7 +103,7 @@ Ugyanaz az ötlet, de a **[Meglévő zenei mappákra](external-library.md)** és
 
 ## Borítók letöltése
 
-Azt szabályozza, hogy a Downtify beágyaz-e egyáltalán albumborítót. Alapértelmezetten be van kapcsolva. Kapcsold ki, hogy teljesen kihagyja a borítók lekérését — az összes többi címke (cím, előadó, album, év, dalszöveg) továbbra is normálisan beágyazódik, de a fájlok kisebbek lesznek és kicsit gyorsabban töltődnek le, mert a borítóképet soha nem kéri le és nem írja ki.
+Azt szabályozza, hogy a Castify beágyaz-e egyáltalán albumborítót. Alapértelmezetten be van kapcsolva. Kapcsold ki, hogy teljesen kihagyja a borítók lekérését — az összes többi címke (cím, előadó, album, év, dalszöveg) továbbra is normálisan beágyazódik, de a fájlok kisebbek lesznek és kicsit gyorsabban töltődnek le, mert a borítóképet soha nem kéri le és nem írja ki.
 
 Ennek kikapcsolása azt a különálló `cover.jpg` fájlt is kihagyja, amelyet a *Rendezés album szerint* opció (lásd: [Fájlszervezés](file-organization.md)) hoz létre, és a [lejátszó](player.md)/könyvtár nem mutat borítót az így letöltött számokhoz (helyette a tartalék hangjegy ikon látszik).
 
@@ -111,33 +111,33 @@ Ezt a `cover.jpg` fájlt az albummappa összes száma megosztja. Egy szám törl
 
 ## Borító felbontása
 
-Csak akkor számít, ha a **Borítók letöltése** (fent) be van kapcsolva. Beállítja a célméretet (szélesség és magasság, pixelben), amelyet a Downtify a **YouTube Music** vagy a **Deezer** forrású beágyazott borítóhoz kér. Válassz egy előbeállítást (300, 600, 800, 1000, 1200), vagy húzd a csúszkát **300 és 1200** között bárhová; a jelenlegi érték pixelben mellette látszik. Az alapértelmezett 600.
+Csak akkor számít, ha a **Borítók letöltése** (fent) be van kapcsolva. Beállítja a célméretet (szélesség és magasság, pixelben), amelyet a Castify a **YouTube Music** vagy a **Deezer** forrású beágyazott borítóhoz kér. Válassz egy előbeállítást (300, 600, 800, 1000, 1200), vagy húzd a csúszkát **300 és 1200** között bárhová; a jelenlegi érték pixelben mellette látszik. Az alapértelmezett 600.
 
-Hasznos, ha a könyvtáradat olyan médiaszerverbe táplálod, mint a Plex, amely a borítókat nagyobb felbontásban jeleníti meg, mint amit a Downtify alapból beágyaz.
+Hasznos, ha a könyvtáradat olyan médiaszerverbe táplálod, mint a Plex, amely a borítókat nagyobb felbontásban jeleníti meg, mint amit a Castify alapból beágyaz.
 
 A két forrás eltérően alkalmazza a beállítást, mivel csak az egyiket lehet ténylegesen igény szerint átméretezni:
 
 - A **YouTube Music** bélyegképei az URL szerkesztésével átméretezhetők — az élő CDN-en ellenőrizve a magasabb előbeállítások a legtöbb albumborítónál valóban több részletet adnak (nem csak felskálázást), egészen a forráskép saját felbontásáig.
-- A **Deezer** bármely szám, album, előadó vagy lejátszási lista borítójához csak négy fix méretet kínál (56, 250, 500 és 1000 px) — nincs köztes méret, amit kérni lehetne. A Downtify a négy közül a legkisebbet választja, amely még legalább akkora, mint a beállított érték (300 px kérésére az 500 px-eset kapod, mert nincs pontosan 300 px-es méret); 1000 px-nél többet kérve is az 1000 px-es jön, a Deezer legnagyobbja.
+- A **Deezer** bármely szám, album, előadó vagy lejátszási lista borítójához csak négy fix méretet kínál (56, 250, 500 és 1000 px) — nincs köztes méret, amit kérni lehetne. A Castify a négy közül a legkisebbet választja, amely még legalább akkora, mint a beállított érték (300 px kérésére az 500 px-eset kapod, mert nincs pontosan 300 px-es méret); 1000 px-nél többet kérve is az 1000 px-es jön, a Deezer legnagyobbja.
 
 ::: info A Spotify-forrású borítókat ez nem érinti
-A Downtify már a **legnagyobb** borítót beágyazza, amit a Spotify nyilvános embed API-ja a Spotify által feloldott számokhoz/albumokhoz/lejátszási listákhoz kínál — nincs nagyobb méret, amit kérni lehetne. Ez a beállítás csak a YouTube Musicon keresztül feloldott számoknál (szabad szöveges keresés, YouTube URL-ek, és minden Spotify-szám, amelyet a tényleges hanghoz újra a YouTube Musichoz társítottak), illetve a Deezeren át feloldottaknál (beillesztett Deezer-hivatkozás vagy egy szám a [Listák](charts.md) közül) emeli a plafont.
+A Castify már a **legnagyobb** borítót beágyazza, amit a Spotify nyilvános embed API-ja a Spotify által feloldott számokhoz/albumokhoz/lejátszási listákhoz kínál — nincs nagyobb méret, amit kérni lehetne. Ez a beállítás csak a YouTube Musicon keresztül feloldott számoknál (szabad szöveges keresés, YouTube URL-ek, és minden Spotify-szám, amelyet a tényleges hanghoz újra a YouTube Musichoz társítottak), illetve a Deezeren át feloldottaknál (beillesztett Deezer-hivatkozás vagy egy szám a [Listák](charts.md) közül) emeli a plafont.
 :::
 
 Ennek az értéknek a módosítása a Beállításokban azonnal érvénybe lép, a jelenleg megnyitott keresőoldalra is — nem kell újra letölteni semmit, ami már a lemezen van.
 
 ## Meglévő fájlok felülírása
 
-Alapértelmezetten be van kapcsolva, a Downtify korábbi viselkedésének megfelelően: minden letöltés végigmegy a folyamaton (hang lekérése, címkézés, borító, dalszöveg), és felülírja azt, ami már a kiszámított kimeneti útvonalon van.
+Alapértelmezetten be van kapcsolva, a Castify korábbi viselkedésének megfelelően: minden letöltés végigmegy a folyamaton (hang lekérése, címkézés, borító, dalszöveg), és felülírja azt, ami már a kiszámított kimeneti útvonalon van.
 
 ### Mit jelent valójában az „újra”
 
-Bekapcsolva az újralétöltés **teljesen új futás**, nem a meglévő fájl javítása. A Downtify nem nézi meg, mid van már: a beállított sorrendben végigkeresi a [hangforrásaidat](#audio-provider) — tehát ha a slskd az első, először a slskd-t próbálja, nem csak tartalékként —, a hangot attól a forrástól kéri le, amelyik válaszol, és ráírja a mai címkéket, borítót és dalszövegeket.
+Bekapcsolva az újralétöltés **teljesen új futás**, nem a meglévő fájl javítása. A Castify nem nézi meg, mid van már: a beállított sorrendben végigkeresi a [hangforrásaidat](#audio-provider) — tehát ha a slskd az első, először a slskd-t próbálja, nem csak tartalékként —, a hangot attól a forrástól kéri le, amelyik válaszol, és ráírja a mai címkéket, borítót és dalszövegeket.
 
 Ennek van egy következménye, amit érdemes tudni, mielőtt egy nagy könyvtárat újra letöltesz:
 
 ::: warning Eltérő formátum esetén a régi fájl ott marad
-Az új fájl abba az útvonalra íródik, amelyet a [fájlnév-sablon](#output-filename-template) előállít, az **új** hang kiterjesztésével. A Downtify a régi fájlt csak akkor írja felül, ha mindkettő ugyanazzal a kiterjesztéssel végződik.
+Az új fájl abba az útvonalra íródik, amelyet a [fájlnév-sablon](#output-filename-template) előállít, az **új** hang kiterjesztésével. A Castify a régi fájlt csak akkor írja felül, ha mindkettő ugyanazzal a kiterjesztéssel végződik.
 
 Tehát ha az `Előadó - Dal.mp3` újralétöltésekor a slskd FLAC-cel válaszol, **mindkettőt** megkapod: az `Előadó - Dal.mp3` (a régi, érintetlenül) és az `Előadó - Dal.flac` fájlt. Ha a [slskd-fájlok helyben hagyása](slskd-navidrome.md#leave-files-in-place) be van kapcsolva — ez az alapértelmezés —, a slskd-fájl még a letöltési mappádba sem másolódik, így a régi pontosan ott marad, ahol volt, az új pedig a `slskd/` alatt él.
 
@@ -146,13 +146,13 @@ Semmi sem vész el, de duplikátumokat kapsz. Egy fájl tényleges lecserélés�
 
 ### A borító a Spotifyból vagy a YouTube Musicból jön, nem a fájlból
 
-Bármilyen grafikát is hordoz a letöltött hang — beleértve a slskd-fájlba ágyazott nagy felbontású borítót is —, azt a címkézés során **eldobja és lecseréli**. A Downtify mindig azt a borítót ágyazza be, amelyet a számhoz a Spotifyból vagy a YouTube Musicból kér le, az általad beállított [borító felbontásában](#cover-art-resolution) (alapértelmezetten 600 px). Ugyanez igaz a címre, az előadókra, az albumra és a többi címkére: a forrás saját címkéi nem maradnak meg.
+Bármilyen grafikát is hordoz a letöltött hang — beleértve a slskd-fájlba ágyazott nagy felbontású borítót is —, azt a címkézés során **eldobja és lecseréli**. A Castify mindig azt a borítót ágyazza be, amelyet a számhoz a Spotifyból vagy a YouTube Musicból kér le, az általad beállított [borító felbontásában](#cover-art-resolution) (alapértelmezetten 600 px). Ugyanez igaz a címre, az előadókra, az albumra és a többi címkére: a forrás saját címkéi nem maradnak meg.
 
 Ha nagyobb borítót szeretnél a már meglévő fájlokra, az újralétöltés a hosszú út. A [Könyvtár feljavítása](library-upgrade.md) pontosan ezt teszi — minden fájl beágyazott borítóját összeveti a Spotifyéval, az iTunesével és a YouTube Musicéval, a legnagyobbat írja be, kitölti a hiányzó dalszövegeket és címkéket, és soha nem nyúl a hanghoz.
 
 Kapcsold ki, hogy soha ne töltsön le olyan dalt, amely már a lemezen van. Ez leginkább lejátszási lista letöltésekor, [CSV-könyvtár](library-import.md) importálásakor vagy akkor számít, ha a [Lejátszási lista figyelő](playlist-monitor.md) olyan listákat szinkronizál, amelyek egymással vagy a könyvtárad meglévő dalaival közös számokat tartalmaznak — bekapcsolt opciónál minden ilyen duplikátum újra letöltődik.
 
-Kikapcsolva a Downtify a dalt **a letöltési mappa bármely pontján** keresi, nem csak ott, ahová az új letöltés kerülne:
+Kikapcsolva a Castify a dalt **a letöltési mappa bármely pontján** keresi, nem csak ott, ahová az új letöltés kerülne:
 
 - a könyvtár gyökerében (egyedi számletöltések),
 - bármelyik lejátszási lista mappájában (lejátszási lista-letöltések, CSV-importok, Lejátszási lista figyelő),
@@ -172,17 +172,17 @@ A **Beállítások → Letöltések és fájlok → Leghosszabb szám** a számh
 
 ## Hangszolgáltató
 
-Az alapértelmezett hangszolgáltató a **YouTube Music**. A Downtify a [`ytmusicapi`](https://ytmusicapi.readthedocs.io/) segítségével keresi a legjobb találatot a szám hosszának összevetésével. Ha a YouTube Musicnak nincs elfogadható találata, vagy csak olyan, amelynek hossza jócskán eltér (valószínűleg másik felvétel), a Downtify automatikusan a hagyományos YouTube-keresésre vált — lásd: [Hogyan működik](../how-it-works.md#fallback-to-standard-youtube).
+Az alapértelmezett hangszolgáltató a **YouTube Music**. A Castify a [`ytmusicapi`](https://ytmusicapi.readthedocs.io/) segítségével keresi a legjobb találatot a szám hosszának összevetésével. Ha a YouTube Musicnak nincs elfogadható találata, vagy csak olyan, amelynek hossza jócskán eltér (valószínűleg másik felvétel), a Castify automatikusan a hagyományos YouTube-keresésre vált — lásd: [Hogyan működik](../how-it-works.md#fallback-to-standard-youtube).
 
 A **Beállítások → Hangforrások** használhat csak hagyományos **YouTube**-ot vagy **slskd**-t (Soulseek) is rendezett tartaléklistaként — lásd: [slskd és Navidrome](slskd-navidrome.md#audio-sources-and-fallback-order).
 
 ### Adott hangforrás kényszerítése
 
-Ha a Downtify rossz YouTube Music videót választ (pl. feldolgozást az eredeti helyett), számonként felülbírálhatod:
+Ha a Castify rossz YouTube Music videót választ (pl. feldolgozást az eredeti helyett), számonként felülbírálhatod:
 
 **A opció — illessz be közvetlenül egy YouTube Music URL-t**
 
-Illeszd be a `https://music.youtube.com/watch?v=…` címet (vagy egy hagyományos `youtube.com/watch?v=…` URL-t) a keresősávba, és nyomd meg a letöltést. A Downtify a hangot pontosan arról a videóról kéri le.
+Illeszd be a `https://music.youtube.com/watch?v=…` címet (vagy egy hagyományos `youtube.com/watch?v=…` URL-t) a keresősávba, és nyomd meg a letöltést. A Castify a hangot pontosan arról a videóról kéri le.
 
 ::: info
 YouTube URL-lel letöltve a metaadatok (cím, előadó, borító) a YouTube-ról jönnek a Spotify helyett. Tiszta címkékhez használd a B opciót.
@@ -194,11 +194,11 @@ YouTube URL-lel letöltve a metaadatok (cím, előadó, borító) a YouTube-ról
 2. Illessz be egy YouTube vagy YouTube Music URL-t a megjelenő mezőbe.
 3. Nyomd meg az **Entert**, vagy kattints az **Alkalmaz** gombra.
 
-A Downtify újra letölti a számot pontosan azzal a videóval, miközben megtartja az összes Spotify-metaadatot (cím, előadó, album, borító, dalszöveg).
+A Castify újra letölti a számot pontosan azzal a videóval, miközben megtartja az összes Spotify-metaadatot (cím, előadó, album, borító, dalszöveg).
 
 ## Beágyazott metaadatok
 
-A Downtify a következő címkéket ágyazza be minden letöltött fájlba, formátumtól függetlenül:
+A Castify a következő címkéket ágyazza be minden letöltött fájlba, formátumtól függetlenül:
 
 | Címke | Forrás |
 |-----|--------|

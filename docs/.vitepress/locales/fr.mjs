@@ -4,7 +4,7 @@ export default {
   lang: 'fr',
   description:
     'Téléchargeur de musique auto-hébergé. Collez un lien Spotify et obtenez un fichier audio parfaitement étiqueté — sans clé d’API, sans compte, sans prise de tête.',
-  titleSuffix: 'Documentation de Downtify',
+  titleSuffix: 'Documentation de Castify',
   containers: {
     info: 'Note',
     tip: 'Astuce',
@@ -19,7 +19,7 @@ export default {
     navigation: 'Navigation',
     sidebar: 'Barre latérale',
     documentation: 'Documentation',
-    docsHome: 'Accueil de la documentation de Downtify',
+    docsHome: 'Accueil de la documentation de Castify',
     docsBadge: 'Docs',
     searchDocs: 'Rechercher dans la documentation',
     search: 'Rechercher',
@@ -66,7 +66,6 @@ export default {
       'getting-started/environment-variables.md': 'Variables d’environnement',
       'features/index.md': 'Vue d’ensemble',
       'features/charts.md': 'Classements',
-      'features/similar.md': 'Similaires',
       'features/finder.md': 'Explorateur',
       'features/download-settings.md': 'Réglages de téléchargement',
       'features/download-queue.md': 'File de téléchargement',

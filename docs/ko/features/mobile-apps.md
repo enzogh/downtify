@@ -4,10 +4,10 @@ icon: lucide/smartphone
 
 # 모바일 앱
 
-Downtify는 휴대폰의 앱을 지원할 수 있습니다. 앱은 서버에서 직접 라이브러리를 둘러보고 스트리밍하며, 오프라인 청취를 위해 곡을 휴대폰에 보관합니다. 앱에 필요한 모든 것은 **설정 → 앱 연동**에서 설정합니다: 휴대폰 연결과 서버 이름입니다. 서버를 누가 사용할 수 있는지는 [사용자와 로그인](users.md)의 계정으로 정해집니다.
+Castify는 휴대폰의 앱을 지원할 수 있습니다. 앱은 서버에서 직접 라이브러리를 둘러보고 스트리밍하며, 오프라인 청취를 위해 곡을 휴대폰에 보관합니다. 앱에 필요한 모든 것은 **설정 → 앱 연동**에서 설정합니다: 휴대폰 연결과 서버 이름입니다. 서버를 누가 사용할 수 있는지는 [사용자와 로그인](users.md)의 계정으로 정해집니다.
 
 ::: warning 앱은 아직 개발 중입니다
-**설정 → 앱 연동**은 *실험적 기능*으로 표시되어 있습니다. 이 페이지에서 설명하는 서버 쪽은 완성되어 동작하지만, **Android 앱은 아직 어떤 버전도 공개되지 않았으므로** 지금은 설치할 것이 없고, 연결과 스트리밍의 세부 사항은 Downtify 버전 사이에 바뀔 수 있습니다.
+**설정 → 앱 연동**은 *실험적 기능*으로 표시되어 있습니다. 이 페이지에서 설명하는 서버 쪽은 완성되어 동작하지만, **Android 앱은 아직 어떤 버전도 공개되지 않았으므로** 지금은 설치할 것이 없고, 연결과 스트리밍의 세부 사항은 Castify 버전 사이에 바뀔 수 있습니다.
 
 앱은 [henriquesebastiao/downtify-android](https://github.com/henriquesebastiao/downtify-android)에서 공개적으로 개발되고 있습니다. 같은 API를 기반으로 다른 앱도 만들 수 있습니다 — [모바일 클라이언트 규약](../mobile-client-contract.md)을 참고하세요.
 :::
@@ -66,11 +66,11 @@ Android 앱도 웹 플레이어와 같은 측정값으로 곡을 비슷한 음�
 
 ## 리버스 프록시 뒤에서
 
-Downtify가 nginx, Caddy, Traefik 등의 뒤에 있다면(HTTPS를 위해서나 외부에서 접속하기 위해):
+Castify가 nginx, Caddy, Traefik 등의 뒤에 있다면(HTTPS를 위해서나 외부에서 접속하기 위해):
 
 - **WebSocket을 통과시키세요.** `/api/ws`는 `Upgrade`/`Connection` 헤더가 전달되어야 합니다(Caddy와 Traefik은 기본으로 그렇게 하고, nginx는 `proxy_set_header Upgrade $http_upgrade; proxy_set_header Connection "upgrade";`가 필요합니다).
 - **Range 요청**을 그대로 통과시키고 오디오 응답을 버퍼링하지 마세요(nginx: `/api/v1/`과 `/downloads/`에 `proxy_buffering off;`). 그렇지 않으면 탐색과 큰 파일에 문제가 생깁니다.
-- **어느 프록시를 신뢰할지 Downtify에 알려 주세요.** `DOWNTIFY_TRUSTED_PROXIES`를 프록시의 주소(예: `172.18.0.0/16`)로 설정하세요. 그래야만 Downtify가 클라이언트 주소(시도 제한, 연결된 앱 기기의 "마지막 확인")에 `X-Forwarded-For`를, 로그인 쿠키를 secure로 표시하고 요청의 출처를 확인하는 데 `X-Forwarded-Proto`/`X-Forwarded-Host`를 사용합니다. 설정하지 않으면 이 헤더들은 무시됩니다 — 누구나 보낼 수 있기 때문입니다.
+- **어느 프록시를 신뢰할지 Castify에 알려 주세요.** `DOWNTIFY_TRUSTED_PROXIES`를 프록시의 주소(예: `172.18.0.0/16`)로 설정하세요. 그래야만 Castify가 클라이언트 주소(시도 제한, 연결된 앱 기기의 "마지막 확인")에 `X-Forwarded-For`를, 로그인 쿠키를 secure로 표시하고 요청의 출처를 확인하는 데 `X-Forwarded-Proto`/`X-Forwarded-Host`를 사용합니다. 설정하지 않으면 이 헤더들은 무시됩니다 — 누구나 보낼 수 있기 때문입니다.
 - 서버가 외부에서 접근 가능하다면 **HTTPS를 사용하세요**. 비밀번호와 앱의 키가 모든 요청과 함께 오갑니다.
 
 ## 앱 개발자를 위해

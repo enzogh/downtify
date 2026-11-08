@@ -4,7 +4,7 @@ icon: lucide/file-code
 
 # Docker Compose
 
-Docker Compose ist der empfohlene Weg, Downtify für dauerhafte Home-Server-Setups zu betreiben. Es macht Updates, Backups und Konfigurationsänderungen einfach.
+Docker Compose ist der empfohlene Weg, Castify für dauerhafte Home-Server-Setups zu betreiben. Es macht Updates, Backups und Konfigurationsänderungen einfach.
 
 ## Minimales Setup
 
@@ -36,7 +36,7 @@ docker compose up -d
 
 ## Mit slskd (Soulseek)
 
-Um [slskd als Audioquelle](../features/slskd-navidrome.md) zu nutzen, binde auch den Download-Ordner von slskd in Downtify ein — **denselben Host-Ordner**, in den dein slskd-Container schreibt:
+Um [slskd als Audioquelle](../features/slskd-navidrome.md) zu nutzen, binde auch den Download-Ordner von slskd in Castify ein — **denselben Host-Ordner**, in den dein slskd-Container schreibt:
 
 ```yaml
 services:
@@ -63,7 +63,7 @@ Damit die Bibliothek eine Sammlung übernimmt, die du bereits auf dem Host hast,
 
 ## Den Server aus den Apps finden
 
-Die [mobilen Apps](../features/mobile-apps.md#finding-the-server-on-your-network) listen Downtify-Server in deinem Netzwerk per mDNS auf. Im Standard-Bridge-Netzwerk von Docker verlässt diese Ankündigung Docker nie, daher sehen Smartphones sie nicht. Damit sie erscheint, betreibe den Container im Netzwerk des Hosts — die `ports:`-Zuordnung gilt dann nicht mehr, und Downtify lauscht direkt auf `DOWNTIFY_PORT`:
+Die [mobilen Apps](../features/mobile-apps.md#finding-the-server-on-your-network) listen Castify-Server in deinem Netzwerk per mDNS auf. Im Standard-Bridge-Netzwerk von Docker verlässt diese Ankündigung Docker nie, daher sehen Smartphones sie nicht. Damit sie erscheint, betreibe den Container im Netzwerk des Hosts — die `ports:`-Zuordnung gilt dann nicht mehr, und Castify lauscht direkt auf `DOWNTIFY_PORT`:
 
 ```yaml
 services:

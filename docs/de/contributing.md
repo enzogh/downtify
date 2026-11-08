@@ -12,7 +12,7 @@ Nutze den [GitHub-Issue-Tracker](https://github.com/henriquesebastiao/downtify/i
 
 Gib bei Fehlerberichten an:
 
-- Downtify-Version
+- Castify-Version
 - Wie du es installiert hast (Docker run, Docker Compose, Umbrel, …)
 - Schritte zur Reproduktion
 - Was du erwartet hast und was passiert ist
@@ -106,7 +106,7 @@ downtify/
 
 ## Übersetzen
 
-Downtify hat zwei Dinge zu übersetzen, und du kannst eines davon übernehmen — oder beide:
+Castify hat zwei Dinge zu übersetzen, und du kannst eines davon übernehmen — oder beide:
 
 | Du übersetzt | Wo | Anleitung |
 |---------------|-------|-------|
@@ -133,4 +133,4 @@ Siehe [Internationalisierung](features/internationalization.md) für die Details
 - Führe vor dem Einreichen `uv run pytest` aus
 - Eröffne den PR gegen `main`
 
-Wenn Downtify dir nützlich war, denk darüber nach, einen Stern auf GitHub zu hinterlassen — das hilft dem Projekt zu wachsen.
+Wenn Castify dir nützlich war, denk darüber nach, einen Stern auf GitHub zu hinterlassen — das hilft dem Projekt zu wachsen.

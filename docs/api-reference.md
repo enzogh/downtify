@@ -4,7 +4,7 @@ icon: material/api
 
 # API Reference
 
-Downtify exposes a JSON REST API used by the web UI and the mobile apps. All endpoints are served on the same port as the web UI (default: **8000**).
+Castify exposes a JSON REST API used by the web UI and the mobile apps. All endpoints are served on the same port as the web UI (default: **8000**).
 
 Every endpoint needs a signed-in user except a few public ones — see [Server and sign-in](#server-and-sign-in) for which credentials each needs (admins can do everything, normal users less), [Accounts and activity](#accounts-and-activity) for users and the activity log, and [Mobile API (v1)](#mobile-api-v1) for the apps' own routes.
 
@@ -16,7 +16,7 @@ Admin. Checks the configured outbound proxy by requesting the Tor Project's stat
 
 ### `GET /api/version`
 
-Returns the current Downtify version as a plain string.
+Returns the current Castify version as a plain string.
 
 **Response:** `"2.6.0"`
 
@@ -77,7 +77,7 @@ Deezer's own global chart (no genre filter, no auth) — top tracks, albums, art
 }
 ```
 
-Track rows download the same way a search result does — Downtify has no Deezer discography resolver, so `POST /api/download/url` takes a `"source": "deezer"` row's body as-is instead of trying to parse its `url` as a Spotify/YouTube link (the same escape hatch a `text_search` row above uses), and matches it on YouTube Music/YouTube by title, artist and length. A track's `preview_url`, when present, is a 30-second MP3 clip Deezer streams directly (`https://` only) — the web UI plays it with the same preview player an artist's Spotify top songs use; it's `""` when Deezer has no clip for that track. Album, artist and playlist rows are read-only summaries — their `url` only opens the item on `deezer.com`. `502` when Deezer can't be reached or refuses the request.
+Track rows download the same way a search result does — Castify has no Deezer discography resolver, so `POST /api/download/url` takes a `"source": "deezer"` row's body as-is instead of trying to parse its `url` as a Spotify/YouTube link (the same escape hatch a `text_search` row above uses), and matches it on YouTube Music/YouTube by title, artist and length. A track's `preview_url`, when present, is a 30-second MP3 clip Deezer streams directly (`https://` only) — the web UI plays it with the same preview player an artist's Spotify top songs use; it's `""` when Deezer has no clip for that track. Album, artist and playlist rows are read-only summaries — their `url` only opens the item on `deezer.com`. `502` when Deezer can't be reached or refuses the request.
 
 ---
 
@@ -136,7 +136,7 @@ A Deezer artist's songs, shaped like a Finder search — Discover's **Find songs
 |-----------|------|----------|-------------|
 | `artist_id` | string | yes | Deezer artist id (digits) |
 
-**Response:** The artist's whole discography, most recent first, as album rows like the search's, plus `release_date`, `year` and `fans`. Deezer's discography listing carries no track count, so `track_count` is `null` until Downtify has looked it up (see below).
+**Response:** The artist's whole discography, most recent first, as album rows like the search's, plus `release_date`, `year` and `fans`. Deezer's discography listing carries no track count, so `track_count` is `null` until Castify has looked it up (see below).
 
 ---
 
@@ -252,7 +252,7 @@ The first five Spotify top songs of an artist in your Library, for the [Top song
 }
 ```
 
-Each song object also has `preview_url`: the 30-second clip Spotify's own player offers for the song (`https://p.scdn.co/mp3-preview/…`, MP3), or `""` when there is none. Downtify only passes on an `https` link on `p.scdn.co`. `schema` is the file's layout; a file of an older one is treated as stale.
+Each song object also has `preview_url`: the 30-second clip Spotify's own player offers for the song (`https://p.scdn.co/mp3-preview/…`, MP3), or `""` when there is none. Castify only passes on an `https` link on `p.scdn.co`. `schema` is the file's layout; a file of an older one is treated as stale.
 
 | Status | When |
 |--------|------|
@@ -713,7 +713,7 @@ Admin. Carry on with the waiting jobs, with the current settings and audio provi
 
 **Response:** the `paused`, `state` and `active` fields of [`GET /api/queue/state`](#get-apiqueuestate). Read GET for request-specific control capability.
 
-Unfinished jobs (waiting, or interrupted mid-download) are saved in `/data` and queued again when Downtify starts, paused or not; finished and failed ones are not.
+Unfinished jobs (waiting, or interrupted mid-download) are saved in `/data` and queued again when Castify starts, paused or not; finished and failed ones are not.
 
 ---
 
@@ -840,7 +840,7 @@ The `format` setting accepts `mp3`, `flac`, `m4a`, `ogg`, `opus` or `original`. 
 | `cover_resolution` | integer | Target pixel size (width & height) for YouTube Music-sourced cover art. Clamped to `300–1200`. Only used when `download_cover_art` is true. See [Cover art resolution](features/download-settings.md#cover-art-resolution). |
 | `overwrite_existing_files` | boolean | When `false`, a song already in the library (matched by output filename, or by Spotify track ID through the [library track index](features/library-catalog.md)) isn't downloaded again; the download returns the existing file's path instead. See [Overwrite existing files](features/download-settings.md#overwrite-existing-files). |
 | `download_cover_art_playlists` | boolean | Save the playlist's own cover art alongside its M3U file, as `<playlist-name>.jpg`. Only applies while `generate_m3u` is true. Default: `true`. See [Playlist cover art](features/playlist-cover-art.md). |
-| `download_cover_art_artist` | boolean | Let Downtify save an artist's photo on its own - when an artist's page is opened for the first time and when one of their tracks finishes downloading (see [`POST /api/artists/profile/ensure`](#post-apiartistsprofileensure)). The manual picker on an artist's Library page is always available regardless of this setting. Default: `true`. See [Artist photo, banner & bio](features/artist-images.md). |
+| `download_cover_art_artist` | boolean | Let Castify save an artist's photo on its own - when an artist's page is opened for the first time and when one of their tracks finishes downloading (see [`POST /api/artists/profile/ensure`](#post-apiartistsprofileensure)). The manual picker on an artist's Library page is always available regardless of this setting. Default: `true`. See [Artist photo, banner & bio](features/artist-images.md). |
 | `download_cover_art_artist_banner` | boolean | Same as above, for the artist's banner image - independent of the photo setting. Default: `false`. See [Artist photo, banner & bio](features/artist-images.md). |
 | `lyrics_providers` | array | Ordered fallback list of lyrics providers: `lrclib`, `netease`. Each track tries them in order until one has lyrics. Unknown names are dropped; a list left with only the legacy `genius`/`musixmatch`/`azlyrics` names falls back to the defaults. An empty list means no lyrics, as does `download_lyrics: false`. See [Lyrics](features/lyrics.md). |
 | `download_lyrics` | boolean | Whether to look lyrics up at all. |
@@ -879,7 +879,7 @@ Admin. Directory names that complete a path as typed in Settings (extra music fo
 
 Try a slskd connection without saving anything. See [Testing the connection](features/slskd-navidrome.md#testing-the-connection).
 
-**Request body:** the `slskd` settings object as it stands in the form — at least `base_url` and `api_key`; `source_dir` is the folder Downtify checks it can read. The body wins over the saved settings, so a field that was cleared stays cleared. An empty body tests the saved settings instead.
+**Request body:** the `slskd` settings object as it stands in the form — at least `base_url` and `api_key`; `source_dir` is the folder Castify checks it can read. The body wins over the saved settings, so a field that was cleared stays cleared. An empty body tests the saved settings instead.
 
 **Response:** always `200`, whether or not the test passed:
 
@@ -1323,7 +1323,7 @@ Create an empty playlist the user can edit in **Library → Playlists**. Writes 
 
 ### `PUT /api/library/playlists/cover`
 
-Upload a custom cover for a **manual** playlist. Only its owner or an admin may change it; imported playlists return `403`, and playlists the caller cannot open return `404`. The raw request body must be an `image/jpeg`, `image/png` or `image/webp` image no larger than 10 MiB. Downtify validates and converts it to the `.jpg` sidecar beside the M3U, then sends `playlists_changed` so connected clients refresh the cover.
+Upload a custom cover for a **manual** playlist. Only its owner or an admin may change it; imported playlists return `403`, and playlists the caller cannot open return `404`. The raw request body must be an `image/jpeg`, `image/png` or `image/webp` image no larger than 10 MiB. Castify validates and converts it to the `.jpg` sidecar beside the M3U, then sends `playlists_changed` so connected clients refresh the cover.
 
 **Query parameter:** `name` — playlist name.
 
@@ -1467,7 +1467,7 @@ What the playlist page [filters its songs by](features/library-catalog.md#search
 }
 ```
 
-`providers` maps the playlist's files (as `GET /tracks` lists them) to the audio provider that fetched them: `youtube-music`, `youtube`, `soundcloud`, `slskd` or `deemix`, or `folder` for a file from an [extra music folder](features/external-library.md). Downtify records it when a download finishes, so files downloaded before that are left out — except slskd files left in place, recognised by their `slskd/` path. `navidrome.enabled` is whether Navidrome sync is on; while it is, `unmatched` lists the playlist's files that have no Navidrome song id in Downtify's index yet (not matched by a playlist sync or after a download). Songs an admin hid from users are left out for them.
+`providers` maps the playlist's files (as `GET /tracks` lists them) to the audio provider that fetched them: `youtube-music`, `youtube`, `soundcloud`, `slskd` or `deemix`, or `folder` for a file from an [extra music folder](features/external-library.md). Castify records it when a download finishes, so files downloaded before that are left out — except slskd files left in place, recognised by their `slskd/` path. `navidrome.enabled` is whether Navidrome sync is on; while it is, `unmatched` lists the playlist's files that have no Navidrome song id in Castify's index yet (not matched by a playlist sync or after a download). Songs an admin hid from users are left out for them.
 
 ---
 
@@ -1523,7 +1523,7 @@ The songs hidden from an **imported** playlist the caller may change (their own;
 }
 ```
 
-`key` is what `show` takes below: the song's source track id (Spotify id or YouTube video id) when Downtify knows it, else an id of its file. `present` is `false` once the file is no longer in the library. `label` comes from the M3U's `#EXTINF` line (the file name when it had none).
+`key` is what `show` takes below: the song's source track id (Spotify id or YouTube video id) when Castify knows it, else an id of its file. `present` is `false` once the file is no longer in the library. `label` comes from the M3U's `#EXTINF` line (the file name when it had none).
 
 ---
 
@@ -1551,7 +1551,7 @@ Hide songs from an **imported** playlist, or show hidden ones again. A hidden so
 
 ### `POST /api/library/reconcile`
 
-Fix library paths after files were moved or deleted outside Downtify, then rewrite the affected M3U files / Navidrome playlists when those are enabled. See [Fix library paths](features/library-catalog.md#fix-library-paths).
+Fix library paths after files were moved or deleted outside Castify, then rewrite the affected M3U files / Navidrome playlists when those are enabled. See [Fix library paths](features/library-catalog.md#fix-library-paths).
 
 **Response:**
 
@@ -1761,7 +1761,7 @@ Admin. The library's size, growth and download outcomes over the last `days` (qu
 }
 ```
 
-- `library` leaves out the slskd **working copies** (`working`): transfers copied into the library while slskd files aren't left in place, and — in that mode — any other `slskd/…` file Downtify doesn't know as a library song.
+- `library` leaves out the slskd **working copies** (`working`): transfers copied into the library while slskd files aren't left in place, and — in that mode — any other `slskd/…` file Castify doesn't know as a library song.
 - `by_provider` ids are `youtube-music`, `youtube`, `soundcloud`, `slskd`, `deemix`, `folder` (an extra music folder) or `unknown`; `by_location` ids are `downloads`, `slskd` and `folders`.
 - `period` counts the songs still in the library that came in during the period (download time when recorded, else the file's modification time), per bucket of `bucket_days`, oldest first.
 - `growth.points` run from `days` ago to today (one a day up to 90 days, one a week beyond); a day before the first daily snapshot is `estimated` from the same file dates. `since` is the oldest snapshot used, `null` when none.
@@ -2374,7 +2374,7 @@ The same audio as a fresh direct URL (`{ "url": "https://r1---sn.googlevideo.com
 
 ### `GET /api/similar/tracks`
 
-Tracks similar to one track, from YouTube Music's own radio mix for it, backing the [Similar](features/similar.md) page. Needs no key.
+Tracks similar to one track, from YouTube Music's own radio mix for it, used by autoplay (when the queue runs out), the Home mixes and the playlist recommendations. Needs no key.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -2977,7 +2977,7 @@ Who this server is, signing in, and pairing apps — see [Users & Sign-in](featu
 | User | a web session of any user (the `downtify_session` cookie) | Client, plus your own account (`/api/me…`), your paired devices and pairing (`/api/auth/devices…`, `/api/auth/pairing…`) |
 | Admin | a web session of an **admin** | Everything else: settings, cookies, deleting files and playlists, library upgrade/reconcile/archive, hiding songs from users, queue changes, monitor and podcast subscription changes, artist photo/bio edits, CSV import, renaming the server, users, the activity log, signing everyone out |
 
-Without credentials: `401` (`WWW-Authenticate: Bearer`). A normal user's browser calling an admin route: `403` `{"detail": "This needs an admin"}`; a device calling a route that needs a browser: `403` `{"detail": "This needs a signed-in browser"}`. A cookie-authenticated change (`POST`/`PUT`/`PATCH`/`DELETE`, or the WebSocket) whose `Origin`/`Referer` is another site: `403`. CORS allows any origin **without** credentials, so a web session only works from Downtify's own page.
+Without credentials: `401` (`WWW-Authenticate: Bearer`). A normal user's browser calling an admin route: `403` `{"detail": "This needs an admin"}`; a device calling a route that needs a browser: `403` `{"detail": "This needs a signed-in browser"}`. A cookie-authenticated change (`POST`/`PUT`/`PATCH`/`DELETE`, or the WebSocket) whose `Origin`/`Referer` is another site: `403`. CORS allows any origin **without** credentials, so a web session only works from Castify's own page.
 
 ### `GET /api/server/info`
 
@@ -3067,7 +3067,7 @@ Public. How this request is signed in.
 
 ### `GET /api/auth/oidc` and `GET /api/auth/oidc/callback`
 
-Public, only when OIDC is configured. The first endpoint starts the Authorization Code flow with PKCE and redirects to the provider. The provider returns to `/api/auth/oidc/callback`; Downtify checks state, nonce, issuer, audience, expiry and the ID-token signature before provisioning or finding the `(issuer, sub)` account and issuing a normal `downtify_session` cookie. Provider rejection returns to the sign-in page with a generic error. See [OpenID Connect setup](features/users.md#openid-connect).
+Public, only when OIDC is configured. The first endpoint starts the Authorization Code flow with PKCE and redirects to the provider. The provider returns to `/api/auth/oidc/callback`; Castify checks state, nonce, issuer, audience, expiry and the ID-token signature before provisioning or finding the `(issuer, sub)` account and issuing a normal `downtify_session` cookie. Provider rejection returns to the sign-in page with a generic error. See [OpenID Connect setup](features/users.md#openid-connect).
 
 ---
 
@@ -3679,7 +3679,7 @@ Real-time download progress events.
 | `client_id` | yes | Unique client identifier (UUID recommended) |
 | `ticket` | no | A [WebSocket ticket](#post-apiauthws-ticket), for a client that can't send `Authorization` |
 
-The handshake needs a device token (`Authorization: Bearer …`), a web session cookie (from Downtify's own page) or a ticket; otherwise it's refused. A socket is closed with code `4401` when its device is unpaired or its user is signed out everywhere or deleted.
+The handshake needs a device token (`Authorization: Bearer …`), a web session cookie (from Castify's own page) or a ticket; otherwise it's refused. A socket is closed with code `4401` when its device is unpaired or its user is signed out everywhere or deleted.
 
 **Events received from the server:**
 

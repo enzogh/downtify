@@ -4,7 +4,7 @@ icon: lucide/settings
 
 # 환경 변수
 
-모든 환경 변수는 선택 사항입니다. Downtify는 아무것도 설정하지 않아도 바로 동작합니다.
+모든 환경 변수는 선택 사항입니다. Castify는 아무것도 설정하지 않아도 바로 동작합니다.
 
 ## 핵심
 
@@ -44,7 +44,7 @@ environment:
 | `DOWNTIFY_OIDC_USERNAME_CLAIM` | `preferred_username` | Claim used for new account names, falling back to `email` and then `sub`. |
 | `DOWNTIFY_OIDC_GROUPS_CLAIM` | `groups` | Claim containing group names; dotted paths are supported. |
 | `DOWNTIFY_OIDC_ALLOWED_GROUPS` | _(empty)_ | Comma-separated group allowlist; unset means any authenticated provider identity may sign in. |
-| `DOWNTIFY_OIDC_ADMIN_GROUPS` | _(empty)_ | Comma-separated groups mapped to Downtify admins. Other OIDC users are normal users. |
+| `DOWNTIFY_OIDC_ADMIN_GROUPS` | _(empty)_ | Comma-separated groups mapped to Castify admins. Other OIDC users are normal users. |
 | `DOWNTIFY_TRUSTED_PROXIES` | _(설정 안 됨)_ | 리버스 프록시의 주소 또는 네트워크를 쉼표로 구분(예: `172.18.0.0/16,10.0.0.5`). 이들에게서 온 요청의 `X-Forwarded-For`, `X-Forwarded-Proto`, `X-Forwarded-Host` 헤더만 신뢰합니다. 로그인과 페어링 시도를 제한하는 기준이 되는 클라이언트 주소, 로그인 쿠키의 secure 플래그, same-site 검사에 쓰입니다. 설정하지 않으면 이 헤더들은 무시됩니다. |
 | `DOWNTIFY_DISCOVERY` | `true` | `false`로 하면 앱이 *이 네트워크에서 찾음*에 서버를 나열하는 데 쓰는 로컬 네트워크 알림(mDNS, `_downtify._tcp`)을 중단합니다. Docker 브리지 네트워크에서는 알림이 어차피 LAN에 닿지 않습니다. [Docker Compose](docker-compose.md#finding-the-server-from-the-apps)를 참고하세요. |
 | `DOWNTIFY_TRANSCODE_CACHE_MB` | `2048` | 트랜스코딩된 사본의 캐시(`/data/transcode_cache`)를 유지하는 최대 크기(MB). 가장 오래 재생되지 않은 사본부터 삭제됩니다. |
@@ -60,7 +60,7 @@ OIDC is optional. Configure the issuer, client ID and secret together; partial c
 
 | 변수 | 기본값 | 설명 |
 |----------|---------|-------------|
-| `DOWNTIFY_TRASH` | `false` | `true`로 설정하면 다운로드 폴더에 음악 휴지통이 켜집니다. 곡을 삭제하면 30일 동안 보관되는 휴지통으로 옮겨지며, Downtify가 직접 파일을 옮깁니다. 켜져 있는 동안에는 관리자만 곡을 삭제할 수 있습니다. |
+| `DOWNTIFY_TRASH` | `false` | `true`로 설정하면 다운로드 폴더에 음악 휴지통이 켜집니다. 곡을 삭제하면 30일 동안 보관되는 휴지통으로 옮겨지며, Castify가 직접 파일을 옮깁니다. 켜져 있는 동안에는 관리자만 곡을 삭제할 수 있습니다. |
 | `DOWNTIFY_TRASH_CONFIG` | _(설정 안 됨)_ | 컨테이너 안에 있는 JSON 파일의 경로로, 휴지통이 다루는 폴더와 워커가 실행되는 위치(`embedded` 또는 `external`)를 지정합니다. `DOWNTIFY_TRASH`보다 우선합니다. 파일을 읽을 수 없으면 서버가 시작되지 않습니다. [설정 파일](../features/music-trash.md#the-configuration-file)을 참고하세요. |
 
 ## 상태 확인
@@ -84,7 +84,7 @@ YouTube는 주기적으로 자동 다운로더를 확인합니다. 기본값이 
 |----------|---------|-------------|
 | `DOWNTIFY_FORCE_IPV4` | _(설정 안 됨)_ | `1`로 하면 yt-dlp가 IPv4만 쓰도록 강제합니다. 호스트의 IPv6 주소가 고장났거나 요청 제한에 걸릴 때 유용합니다. |
 | `DOWNTIFY_YT_SLEEP_REQUESTS` | _(unset)_ | Seconds yt-dlp waits between its requests to YouTube during a download. Unset, downloads aren't paced — until YouTube answers `429 Too Many Requests`: that song is retried once with a 1 s pause, and every download stays paced for the next 15 minutes. Set a number to force a pause always (`1` is the old behaviour, about 7 s slower per song), or `0` to never pause. To space out whole downloads instead, use **Settings → Downloads → Delay between downloads**. |
-| `DOWNTIFY_YT_PLAYER_CLIENTS` | `ios,android,web_embedded,mweb,web,tv` | 순서대로 시도할 yt-dlp 플레이어 클라이언트의 쉼표 구분 목록. Downtify의 기본 목록은 이미 JavaScript 런타임 없이 동작하는 클라이언트를 우선합니다. 특정 클라이언트가 차단된다는 것을 알 때만 바꾸세요. |
+| `DOWNTIFY_YT_PLAYER_CLIENTS` | `ios,android,web_embedded,mweb,web,tv` | 순서대로 시도할 yt-dlp 플레이어 클라이언트의 쉼표 구분 목록. Castify의 기본 목록은 이미 JavaScript 런타임 없이 동작하는 클라이언트를 우선합니다. 특정 클라이언트가 차단된다는 것을 알 때만 바꾸세요. |
 | `DOWNTIFY_YT_PO_TOKEN` | _(설정 안 됨)_ | yt-dlp용 Proof-of-Origin 토큰을 쉼표로 구분하며, 각각 `<client>.<context>+<token>` 형식입니다(예: `mweb.gvs+ABC123`). YouTube가 사용 중인 클라이언트에 PO Token을 요구하기 시작할 때만 필요합니다. |
 | `DOWNTIFY_COOKIES_FILE` | _(설정 안 됨)_ | **컨테이너 안의** Netscape 형식 `cookies.txt` 경로. yt-dlp가 실제 브라우저 세션처럼 인증할 수 있게 하며, 선정적/연령 제한 트랙과 YouTube가 로그인 장벽을 둘 때 필요합니다. 웹 UI에서 업로드한 파일보다 우선하고 UI의 해당 섹션을 읽기 전용으로 만듭니다. [YouTube 쿠키](../features/youtube-cookies.md)를 참고하세요. |
 | `DOWNTIFY_COOKIES_FROM_BROWSER` | _(설정 안 됨)_ | 쿠키를 추출할 브라우저 이름(예: `chrome`, `firefox`). 브라우저의 쿠키 저장소가 컨테이너 안에서 접근 가능해야 하므로 Docker에서는 거의 쓸 수 없습니다. |

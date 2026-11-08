@@ -16,9 +16,9 @@ Passe o mouse sobre o **E** (ou deixe que um leitor de tela o leia) para ver "Ex
 
 ## De onde vem a marca
 
-Quem decide é o serviço de onde você baixa: Spotify, YouTube Music e Deezer sinalizam, cada um, suas músicas explícitas, e o Downtify usa o que o serviço escolhido informa. Quando o Downtify baixa uma música do YouTube Music, a marca descreve o **vídeo que ele de fato baixa**: se a música é explícita no Spotify mas o Downtify casou com uma edição limpa, o arquivo não é marcado, e se o Spotify diz que é limpa mas a correspondência é explícita, ele é marcado.
+Quem decide é o serviço de onde você baixa: Spotify, YouTube Music e Deezer sinalizam, cada um, suas músicas explícitas, e o Castify usa o que o serviço escolhido informa. Quando o Castify baixa uma música do YouTube Music, a marca descreve o **vídeo que ele de fato baixa**: se a música é explícita no Spotify mas o Castify casou com uma edição limpa, o arquivo não é marcado, e se o Spotify diz que é limpa mas a correspondência é explícita, ele é marcado.
 
-Uma música que o serviço não sinaliza fica sem marca alguma — o que não é o mesmo que ser certificada como limpa, e o Downtify nunca grava uma marca de "limpa".
+Uma música que o serviço não sinaliza fica sem marca alguma — o que não é o mesmo que ser certificada como limpa, e o Castify nunca grava uma marca de "limpa".
 
 ## No arquivo
 
@@ -33,10 +33,10 @@ A marca é gravada nas tags do arquivo, do jeito que o iTunes faz, para que serv
 Arquivos que você já tinha são lidos do mesmo jeito: tudo o que o iTunes, o MusicBrainz Picard ou outro editor de tags marcou com `1` (ou o antigo `4`) também mostra o **E**, inclusive músicas de [pastas extras](external-library.md).
 
 ::: info Músicas baixadas antes desta versão
-Arquivos que o Downtify gravou antes de a marca existir não têm nada nas tags, então não mostram o **E**, mesmo que a música seja explícita. Baixe a música de novo com [Substituir áudio](replace-audio.md) ou do zero para marcá-la. Um arquivo mantém a marca quando [Melhorar a biblioteca](library-upgrade.md) ou Substituir áudio o regrava: a marca só é adicionada, nunca removida.
+Arquivos que o Castify gravou antes de a marca existir não têm nada nas tags, então não mostram o **E**, mesmo que a música seja explícita. Baixe a música de novo com [Substituir áudio](replace-audio.md) ou do zero para marcá-la. Um arquivo mantém a marca quando [Melhorar a biblioteca](library-upgrade.md) ou Substituir áudio o regrava: a marca só é adicionada, nunca removida.
 :::
 
-Na primeira vez que a Biblioteca carrega depois da atualização, o Downtify lê de novo as tags de todos os arquivos para procurar a marca, como fez quando aprendeu a mostrar codec e gênero. Em uma biblioteca grande num disco lento isso leva um momento, uma única vez.
+Na primeira vez que a Biblioteca carrega depois da atualização, o Castify lê de novo as tags de todos os arquivos para procurar a marca, como fez quando aprendeu a mostrar codec e gênero. Em uma biblioteca grande num disco lento isso leva um momento, uma única vez.
 
 ## Para quem desenvolve apps
 

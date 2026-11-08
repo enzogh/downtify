@@ -22,7 +22,7 @@ Füge eines davon in das Feld **Podcast hinzufügen** ein oder tippe einen Namen
 | Der Name einer Sendung (Freitext) | Wird im iTunes-Podcast-Verzeichnis gesucht |
 
 ::: info Exklusiv bei Spotify laufende Sendungen können nicht heruntergeladen werden
-Eine Sendung, die nur auf Spotify existiert (ohne öffentlichen Feed), wird als solche gemeldet — Downtify rät nicht und weicht nicht auf etwas anderes aus. Suche die Sendung nach Namen, um das zu prüfen, bevor du von Exklusivität ausgehst.
+Eine Sendung, die nur auf Spotify existiert (ohne öffentlichen Feed), wird als solche gemeldet — Castify rät nicht und weicht nicht auf etwas anderes aus. Suche die Sendung nach Namen, um das zu prüfen, bevor du von Exklusivität ausgehst.
 :::
 
 Vor dem Bestätigen wählst du:
@@ -62,7 +62,7 @@ Folgen laufen im selben eingebauten Player wie Musik, mit ein paar Unterschieden
 
 - **15 s zurück / 30 s vor** anstelle von Zufall und Wiederholen, die für eine einzelne Folge nicht gelten.
 - **Wiedergabegeschwindigkeit** (0,75× bis 2×), neben dem Sleep-Timer.
-- Die **Fortsetzungsposition** wird alle ~10 Sekunden Wiedergabe und noch einmal beim Pausieren auf dem Server gespeichert, sodass das Schließen des Tabs — oder das Öffnen von Downtify auf einem anderen Gerät — die Folge nahe der Stelle fortsetzt, an der du aufgehört hast. Die Folgenliste einer Sendung zeigt bei allem Angefangenen einen Hinweis „Fortsetzen bei …“.
+- Die **Fortsetzungsposition** wird alle ~10 Sekunden Wiedergabe und noch einmal beim Pausieren auf dem Server gespeichert, sodass das Schließen des Tabs — oder das Öffnen von Castify auf einem anderen Gerät — die Folge nahe der Stelle fortsetzt, an der du aufgehört hast. Die Folgenliste einer Sendung zeigt bei allem Angefangenen einen Hinweis „Fortsetzen bei …“.
 
 Das Herz (markierte Songs) und „zum Album/Künstler gehen“ gelten nicht für Folgen und erscheinen bei einer nicht.
 
@@ -74,12 +74,12 @@ Die Folgendateien liegen weiterhin im selben Download-Volume, unter `Podcasts/<S
 
 ## Tags
 
-Downtify schreibt, was Podcast-Apps und Medienserver bei einer Folge ohnehin lesen: Titel, die Sendung als Album, den Autor der Sendung als Künstler, das Veröffentlichungsjahr, Folgen-/Staffelnummern, das eigene Artwork der Sendung (das größere aus dem Bild des Feeds und dem von iTunes, dieselbe Idee wie beim [Cover für Musik](download-settings.md#cover-art-resolution)) und die Folgenbeschreibung als Kommentar. Show Notes werden als reiner Text gespeichert — Downtify entfernt das HTML daraus, statt es darzustellen.
+Castify schreibt, was Podcast-Apps und Medienserver bei einer Folge ohnehin lesen: Titel, die Sendung als Album, den Autor der Sendung als Künstler, das Veröffentlichungsjahr, Folgen-/Staffelnummern, das eigene Artwork der Sendung (das größere aus dem Bild des Feeds und dem von iTunes, dieselbe Idee wie beim [Cover für Musik](download-settings.md#cover-art-resolution)) und die Folgenbeschreibung als Kommentar. Show Notes werden als reiner Text gespeichert — Castify entfernt das HTML daraus, statt es darzustellen.
 
 ## Gut zu wissen
 
 - **Keine Video-Podcasts.** Eine Folge, deren einziger Anhang eine Videodatei ist, wird komplett übersprungen; nur Audio wird unterstützt.
-- **Keine Kapitel.** Feeds mit Kapitelmarken bekommen diese in Downtify noch nicht.
+- **Keine Kapitel.** Feeds mit Kapitelmarken bekommen diese in Castify noch nicht.
 - **Nicht in Navidrome gespiegelt.** Anders als Playlists werden Podcast-Abonnements nicht in eine Navidrome-Bibliothek geschoben — Folgen sind einfache Dateien, die dein Medienserver ohnehin selbst sieht.
 - Das Beenden eines Abonnements (**⋯ → Abo beenden**) entfernt standardmäßig heruntergeladene Folgen; wähle **Abo beenden, Folgen behalten**, um die Dateien an Ort und Stelle zu lassen.
 

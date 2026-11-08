@@ -4,7 +4,7 @@ icon: lucide/play
 
 # Első lépések
 
-A Downtify egy saját szerveren futtatható webalkalmazás, amely zenét tölt le a Spotifyról — API-kulcs, fiók és Premium előfizetés nélkül. Minden egyetlen Docker-konténerben fut.
+A Castify egy saját szerveren futtatható webalkalmazás, amely zenét tölt le a Spotifyról — API-kulcs, fiók és Premium előfizetés nélkül. Minden egyetlen Docker-konténerben fut.
 
 ## Mire van szükséged
 
@@ -38,6 +38,6 @@ A Downtify egy saját szerveren futtatható webalkalmazás, amely zenét tölt l
 
 ## Következő lépések
 
-Amint a Downtify fut, nyisd meg a [http://localhost:8000](http://localhost:8000) címet a böngészőben. Illessz be egy Spotify-szám, -album vagy -lejátszási lista URL-jét a keresősávba, és kattints a **Letöltés** gombra.
+Amint a Castify fut, nyisd meg a [http://localhost:8000](http://localhost:8000) címet a böngészőben. Illessz be egy Spotify-szám, -album vagy -lejátszási lista URL-jét a keresősávba, és kattints a **Letöltés** gombra.
 
 A dokumentáció többi részéből megismerheted a [letöltési beállításokat](../features/download-settings.md), a [lejátszási lista figyelőt](../features/playlist-monitor.md), a [beépített lejátszót](../features/player.md) és még sok mást.

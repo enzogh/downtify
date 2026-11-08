@@ -67,7 +67,7 @@ const settings = ref({
     scan_after_download: true,
     scan_wait_seconds: 120,
     scan_poll_seconds: 30,
-    client_name: 'Downtify',
+    client_name: 'Castify',
     api_version: '1.16.1',
   },
   organize_by_artist: true,

@@ -4,7 +4,7 @@ icon: lucide/users
 
 # 사용자와 로그인
 
-Downtify를 쓰는 모든 사람은 **사용자 이름과 비밀번호**로 로그인하며, 사람마다 자기 계정을 가질 수 있습니다. 관리자는 **설정 → 사용자 관리**에서 계정을 관리하고 **설정 → 활동 로그**에서 모두가 무엇을 하는지 봅니다.
+Castify를 쓰는 모든 사람은 **사용자 이름과 비밀번호**로 로그인하며, 사람마다 자기 계정을 가질 수 있습니다. 관리자는 **설정 → 사용자 관리**에서 계정을 관리하고 **설정 → 활동 로그**에서 모두가 무엇을 하는지 봅니다.
 
 ## 처음 로그인하기
 
@@ -14,10 +14,10 @@ Downtify를 쓰는 모든 사람은 **사용자 이름과 비밀번호**로 로�
 |----------|----------|
 | `admin` | `downtify` |
 
-이 계정으로 로그인한 뒤 **설정 → 일반 → 계정**에서 **비밀번호를 바꾸세요**. Downtify를 아는 사람이라면 기본 비밀번호도 압니다. 바꾸기 전까지는 로그인 후 Downtify가 알려 주고 설정에 경고를 표시합니다.
+이 계정으로 로그인한 뒤 **설정 → 일반 → 계정**에서 **비밀번호를 바꾸세요**. Castify를 아는 사람이라면 기본 비밀번호도 압니다. 바꾸기 전까지는 로그인 후 Castify가 알려 주고 설정에 경고를 표시합니다.
 
 ::: warning 서버를 노출하기 전에 기본 비밀번호를 바꾸세요
-기본 비밀번호는 아무것도 보호하지 못합니다. 홈 네트워크 밖에서 Downtify에 접근할 수 있게 하기 전에 바꾸고, 그 경우 HTTPS를 사용하세요([리버스 프록시 뒤에서](mobile-apps.md#behind-a-reverse-proxy) 참고).
+기본 비밀번호는 아무것도 보호하지 못합니다. 홈 네트워크 밖에서 Castify에 접근할 수 있게 하기 전에 바꾸고, 그 경우 HTTPS를 사용하세요([리버스 프록시 뒤에서](mobile-apps.md#behind-a-reverse-proxy) 참고).
 :::
 
 ### 이전 버전에서 업그레이드하기
@@ -122,7 +122,7 @@ Downtify를 쓰는 모든 사람은 **사용자 이름과 비밀번호**로 로�
 
 ## OpenID Connect
 
-Downtify can add an optional **Continue with identity provider** button to the sign-in page and authenticate through an OpenID Connect provider such as Authelia, Authentik, Keycloak or Pocket ID. Local username/password sign-in stays available unless you disable it. The browser flow uses Authorization Code with PKCE; Downtify verifies the provider's signed ID token before creating its own session cookie.
+Castify can add an optional **Continue with identity provider** button to the sign-in page and authenticate through an OpenID Connect provider such as Authelia, Authentik, Keycloak or Pocket ID. Local username/password sign-in stays available unless you disable it. The browser flow uses Authorization Code with PKCE; Castify verifies the provider's signed ID token before creating its own session cookie.
 
 Set these variables on the server and register the callback URL shown below as an allowed redirect URI in your provider:
 
@@ -131,16 +131,16 @@ Set these variables on the server and register the callback URL shown below as a
 | `DOWNTIFY_OIDC_ISSUER` | Yes | | The exact issuer URL from the provider's discovery document. |
 | `DOWNTIFY_OIDC_CLIENT_ID` | Yes | | The registered client ID. |
 | `DOWNTIFY_OIDC_CLIENT_SECRET` | Yes | | The confidential client's secret. |
-| `DOWNTIFY_OIDC_REDIRECT_URI` | No | Derived from the request | Public callback URL, normally `https://music.example.com/api/auth/oidc/callback`. Set it explicitly when Downtify is behind a reverse proxy. |
+| `DOWNTIFY_OIDC_REDIRECT_URI` | No | Derived from the request | Public callback URL, normally `https://music.example.com/api/auth/oidc/callback`. Set it explicitly when Castify is behind a reverse proxy. |
 | `DOWNTIFY_OIDC_SCOPES` | No | `openid profile email` | Space-separated OIDC scopes. |
-| `DOWNTIFY_OIDC_USERNAME_CLAIM` | No | `preferred_username` | Claim used as the new Downtify username; falls back to `email`, then `sub`. |
+| `DOWNTIFY_OIDC_USERNAME_CLAIM` | No | `preferred_username` | Claim used as the new Castify username; falls back to `email`, then `sub`. |
 | `DOWNTIFY_OIDC_GROUPS_CLAIM` | No | `groups` | Claim containing a string or list of group names. Dotted paths such as `realm_access.roles` are supported. |
 | `DOWNTIFY_OIDC_ALLOWED_GROUPS` | No | _(empty)_ | Comma-separated groups allowed to sign in. Empty means any authenticated identity. |
-| `DOWNTIFY_OIDC_ADMIN_GROUPS` | No | _(empty)_ | Comma-separated groups whose members receive the Downtify admin role. Everyone else is a user. |
+| `DOWNTIFY_OIDC_ADMIN_GROUPS` | No | _(empty)_ | Comma-separated groups whose members receive the Castify admin role. Everyone else is a user. |
 
 For example, the provider's client needs the callback `https://music.example.com/api/auth/oidc/callback` and the scopes `openid profile email`. For a reverse proxy, also configure [`DOWNTIFY_TRUSTED_PROXIES`](../getting-started/environment-variables.md#mobile-apps-and-sign-in) or set the redirect URI explicitly.
 
-The first successful sign-in creates a Downtify account. Identity is keyed by the exact `issuer` and OIDC `sub`, not by a mutable username or email. An existing local account is **never** linked automatically by matching username or email; if a claimed username is already taken, Downtify adds a stable suffix. Admins can still manage local roles in **Settings → Users**, while a configured admin-group mapping is synchronized on every OIDC sign-in. If the mapped group change would remove the server's last admin, Downtify rejects that sign-in until another admin exists.
+The first successful sign-in creates a Castify account. Identity is keyed by the exact `issuer` and OIDC `sub`, not by a mutable username or email. An existing local account is **never** linked automatically by matching username or email; if a claimed username is already taken, Castify adds a stable suffix. Admins can still manage local roles in **Settings → Users**, while a configured admin-group mapping is synchronized on every OIDC sign-in. If the mapped group change would remove the server's last admin, Castify rejects that sign-in until another admin exists.
 
 To turn off username/password login for both the web page and the app's password-token endpoint, set `DOWNTIFY_DISABLE_LOCAL_LOGIN=true`. OIDC and code-based app pairing remain available. This does not revoke existing browser sessions or device tokens. It requires a complete OIDC configuration and is separate from `DOWNTIFY_DISABLE_AUTH`, which removes authentication entirely.
 
@@ -164,7 +164,7 @@ environment:
 
 그러면:
 
-- 로그인 페이지가 없습니다. Downtify를 여는 누구든 첫 번째 관리자로 사용합니다(새 서버에서는 `admin`).
+- 로그인 페이지가 없습니다. Castify를 여는 누구든 첫 번째 관리자로 사용합니다(새 서버에서는 `admin`).
 - 로그아웃 버튼, **설정 → 사용자 관리**, **설정 → 일반**의 **계정** 부분, **설정 → 앱 연동**의 **모든 기기에서 로그아웃**이 사라집니다.
 - 휴대폰은 여전히 (그 관리자에게) 연결할 수 있고, **설정 → 활동 로그**는 계속 어디서 무엇이 재생되는지 보여줍니다.
 - 테마, 언어, 그 밖의 **일반** 환경설정은 그 관리자의 것으로 유지됩니다.
@@ -183,7 +183,7 @@ environment:
 docker exec downtify python main.py auth-reset
 ```
 
-Docker 밖에서는 Downtify 폴더에서 `python main.py auth-reset`(또는 `uv run python main.py auth-reset`)을 실행하세요. 그런 다음 로그인해서 비밀번호를 바꾸세요.
+Docker 밖에서는 Castify 폴더에서 `python main.py auth-reset`(또는 `uv run python main.py auth-reset`)을 실행하세요. 그런 다음 로그인해서 비밀번호를 바꾸세요.
 
 ## 스크립트와 API
 

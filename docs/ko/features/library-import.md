@@ -14,7 +14,7 @@ icon: lucide/import
 | [TuneMyMusic](https://www.tunemymusic.com/) | |
 | [Exportify](https://github.com/watsonbox/exportify) | |
 
-Downtify는 특정 도구의 정확한 열 구조를 고정해 두지 않습니다. 대신 CSV의 머리글 행을 대소문자 구분 없이 알려진 별칭 집합(`Title` / `Track` / `Track Title` / `Track Name` / `Song` / …, `Artist` / `Artists` / `Artist Name` / `Artist Name(s)` / …, `Album` / `Album Name` / `Album Title` / …)과 비교하므로, 세 도구 중 어느 것의 내보내기 파일이든, 같은 열 이름을 쓴 직접 만든 CSV든 이름을 바꾸지 않고도 동작합니다.
+Castify는 특정 도구의 정확한 열 구조를 고정해 두지 않습니다. 대신 CSV의 머리글 행을 대소문자 구분 없이 알려진 별칭 집합(`Title` / `Track` / `Track Title` / `Track Name` / `Song` / …, `Artist` / `Artists` / `Artist Name` / `Artist Name(s)` / …, `Album` / `Album Name` / `Album Title` / …)과 비교하므로, 세 도구 중 어느 것의 내보내기 파일이든, 같은 열 이름을 쓴 직접 만든 CSV든 이름을 바꾸지 않고도 동작합니다.
 
 제목과 아티스트는 필수입니다. 앨범은 있으면 읽어서 트랙의 앨범 이름(대기열, 매칭, 파일 태그)으로 저장합니다. 일부 도구가 포함하는 다른 열(ISRC, Spotify 트랙 URI, 길이)은 무시합니다. 각 행은 자유 입력 검색과 같은 방식으로 YouTube Music을 통해 해석됩니다.
 
@@ -23,7 +23,7 @@ Downtify는 특정 도구의 정확한 열 구조를 고정해 두지 않습니�
 1. 홈 페이지의 검색창 아래에서 **CSV 가져오기 (Soundiiz, Exportify…)**를 클릭합니다.
 2. 내보낸 `.csv` 파일을 고릅니다.
 
-파일은 전부 브라우저에서 읽은 뒤 일반 텍스트로 서버에 전송되며, 다른 곳에는 업로드되지 않습니다. Downtify가 파일을 분석해 인식된 모든 행을 대기열에 넣고, 다른 일괄 다운로드와 똑같이 WebSocket으로 진행 상황이 전해지는 다운로드 대기열로 이동합니다.
+파일은 전부 브라우저에서 읽은 뒤 일반 텍스트로 서버에 전송되며, 다른 곳에는 업로드되지 않습니다. Castify가 파일을 분석해 인식된 모든 행을 대기열에 넣고, 다른 일괄 다운로드와 똑같이 WebSocket으로 진행 상황이 전해지는 다운로드 대기열로 이동합니다.
 
 가져온 묶음은 파일 이름(`.csv`를 뺀 이름)을 따르며, 다른 재생목록 다운로드와 마찬가지로 해당 설정이 켜져 있으면 [M3U 파일](m3u-export.md)이 만들어집니다.
 

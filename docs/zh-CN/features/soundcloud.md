@@ -5,7 +5,7 @@ icon: lucide/cloud
 
 # SoundCloud
 
-Downtify 支持两种 SoundCloud 用法：粘贴 **SoundCloud 曲目链接**下载指定曲目；也可以将 **SoundCloud** 添加为音频来源，在 Spotify、YouTube Music 或 Deezer 链接对应的歌曲无法从其他来源找到时，继续到 SoundCloud 搜索。两种方式都使用 [yt-dlp](https://github.com/yt-dlp/yt-dlp) 的 SoundCloud 支持，无需 SoundCloud 账号。
+Castify 支持两种 SoundCloud 用法：粘贴 **SoundCloud 曲目链接**下载指定曲目；也可以将 **SoundCloud** 添加为音频来源，在 Spotify、YouTube Music 或 Deezer 链接对应的歌曲无法从其他来源找到时，继续到 SoundCloud 搜索。两种方式都使用 [yt-dlp](https://github.com/yt-dlp/yt-dlp) 的 SoundCloud 支持，无需 SoundCloud 账号。
 
 ## 启用 SoundCloud
 
@@ -55,6 +55,6 @@ SoundCloud 链接指向特定曲目，启用 **SoundCloud** 来源时会直接�
 ## 限制
 
 - **音质**：SoundCloud 提供有损音频串流（通常为 128–160 kbps）。在[下载设置](download-settings.md)中选择 FLAC 或更高比特率会对其重新编码，但无法恢复串流中没有的信息。
-- **SoundCloud Go+ 曲目**：没有 Go+ 订阅时，SoundCloud 只提供这类曲目的 30 秒预览。Downtify 会拒绝预览，不会把它保存为完整歌曲；下载会提示 *only streams a 30-second preview on SoundCloud*。
+- **SoundCloud Go+ 曲目**：没有 Go+ 订阅时，SoundCloud 只提供这类曲目的 30 秒预览。Castify 会拒绝预览，不会把它保存为完整歌曲；下载会提示 *only streams a 30-second preview on SoundCloud*。
 - **地区限制**：上传者在服务器所在国家/地区屏蔽的曲目会像不可用视频一样下载失败。
 - **不支持监控**：SoundCloud 链接只对应一首曲目，没有可供[播放列表监控](playlist-monitor.md)的列表。

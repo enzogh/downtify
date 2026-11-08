@@ -4,7 +4,7 @@ icon: lucide/play
 
 # Erste Schritte
 
-Downtify ist eine selbst gehostete Web-App, die Musik von Spotify herunterlädt — ohne API-Schlüssel, ohne Konto, ohne Premium-Abo. Alles läuft in einem einzigen Docker-Container.
+Castify ist eine selbst gehostete Web-App, die Musik von Spotify herunterlädt — ohne API-Schlüssel, ohne Konto, ohne Premium-Abo. Alles läuft in einem einzigen Docker-Container.
 
 ## Was du brauchst
 
@@ -38,6 +38,6 @@ Downtify ist eine selbst gehostete Web-App, die Musik von Spotify herunterlädt 
 
 ## Nächste Schritte
 
-Sobald Downtify läuft, öffne [http://localhost:8000](http://localhost:8000) im Browser. Füge die URL eines Spotify-Titels, -Albums oder einer -Playlist in die Suchleiste ein und klicke auf **Herunterladen**.
+Sobald Castify läuft, öffne [http://localhost:8000](http://localhost:8000) im Browser. Füge die URL eines Spotify-Titels, -Albums oder einer -Playlist in die Suchleiste ein und klicke auf **Herunterladen**.
 
 Im Rest der Dokumentation erfährst du mehr über die [Download-Einstellungen](../features/download-settings.md), die [Playlist-Überwachung](../features/playlist-monitor.md), den [integrierten Player](../features/player.md) und vieles mehr.

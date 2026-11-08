@@ -4,7 +4,7 @@ icon: lucide/settings
 
 # Variables d’environnement
 
-Toutes les variables d’environnement sont facultatives. Downtify fonctionne tout de suite sans aucune d’elles.
+Toutes les variables d’environnement sont facultatives. Castify fonctionne tout de suite sans aucune d’elles.
 
 ## Essentielles
 
@@ -44,7 +44,7 @@ Voir [Applications mobiles](../features/mobile-apps.md) et [Utilisateurs et conn
 | `DOWNTIFY_OIDC_USERNAME_CLAIM` | `preferred_username` | Claim used for new account names, falling back to `email` and then `sub`. |
 | `DOWNTIFY_OIDC_GROUPS_CLAIM` | `groups` | Claim containing group names; dotted paths are supported. |
 | `DOWNTIFY_OIDC_ALLOWED_GROUPS` | _(empty)_ | Comma-separated group allowlist; unset means any authenticated provider identity may sign in. |
-| `DOWNTIFY_OIDC_ADMIN_GROUPS` | _(empty)_ | Comma-separated groups mapped to Downtify admins. Other OIDC users are normal users. |
+| `DOWNTIFY_OIDC_ADMIN_GROUPS` | _(empty)_ | Comma-separated groups mapped to Castify admins. Other OIDC users are normal users. |
 | `DOWNTIFY_TRUSTED_PROXIES` | _(non définie)_ | Adresses ou réseaux de votre proxy inverse, séparés par des virgules (par ex. `172.18.0.0/16,10.0.0.5`). Seules les requêtes issues de ceux-ci voient leurs en-têtes `X-Forwarded-For`, `X-Forwarded-Proto` et `X-Forwarded-Host` pris en compte — pour l’adresse client sur laquelle les tentatives de connexion et d’association sont limitées, l’indicateur secure du cookie de connexion et la vérification de même origine. Non définie : ces en-têtes sont ignorés. |
 | `DOWNTIFY_DISCOVERY` | `true` | `false` cesse d’annoncer le serveur sur le réseau local (mDNS, `_downtify._tcp`), ce que les applications utilisent pour le lister sous *Trouvés sur ce réseau*. Dans le réseau bridge de Docker, l’annonce n’atteint de toute façon pas le LAN — voir [Docker Compose](docker-compose.md#finding-the-server-from-the-apps). |
 | `DOWNTIFY_TRANSCODE_CACHE_MB` | `2048` | Taille maximale, en Mo, sous laquelle est maintenu le cache des copies transcodées (`/data/transcode_cache`) ; les copies lues le moins récemment partent en premier. |
@@ -60,7 +60,7 @@ Voir [Corbeille musicale](../features/music-trash.md). Désactivée sauf si l’
 
 | Variable | Défaut | Description |
 |----------|---------|-------------|
-| `DOWNTIFY_TRASH` | `false` | `true` active la corbeille musicale pour le dossier de téléchargements : retirer des morceaux les déplace dans une corbeille gardée 30 jours, et Downtify déplace lui-même les fichiers. Tant qu’elle est active, seuls les administrateurs retirent des morceaux. |
+| `DOWNTIFY_TRASH` | `false` | `true` active la corbeille musicale pour le dossier de téléchargements : retirer des morceaux les déplace dans une corbeille gardée 30 jours, et Castify déplace lui-même les fichiers. Tant qu’elle est active, seuls les administrateurs retirent des morceaux. |
 | `DOWNTIFY_TRASH_CONFIG` | _(non définie)_ | Chemin, dans le conteneur, d’un fichier JSON listant les dossiers couverts par la corbeille et où tourne son worker (`embedded` ou `external`). Prime sur `DOWNTIFY_TRASH`. Un fichier illisible empêche le serveur de démarrer. Voir [Le fichier de configuration](../features/music-trash.md#the-configuration-file). |
 
 ## Contrôle de santé
@@ -84,11 +84,11 @@ YouTube met périodiquement à l’épreuve les téléchargeurs automatisés. Ce
 |----------|---------|-------------|
 | `DOWNTIFY_FORCE_IPV4` | _(non définie)_ | Mettez `1` pour forcer yt-dlp à n’utiliser que l’IPv4. Utile quand votre hôte a une adresse IPv6 défaillante ou limitée. |
 | `DOWNTIFY_YT_SLEEP_REQUESTS` | _(non définie)_ | Secondes d'attente de yt-dlp entre ses requêtes à YouTube pendant un téléchargement. Non définie, les téléchargements ne sont pas ralentis — jusqu'à ce que YouTube réponde `429 Too Many Requests` ou « Sign in to confirm you're not a bot » : ce titre est réessayé une fois avec une pause de 1 s, et tous les téléchargements restent espacés pendant les 15 minutes suivantes. Indiquez un nombre pour toujours imposer une pause (`1` est l'ancien comportement, environ 7 s de plus par titre), ou `0` pour ne jamais en faire. Pour espacer des téléchargements entiers, utilisez plutôt **Settings → Downloads → Delay between downloads**. |
-| `DOWNTIFY_YT_PLAYER_CLIENTS` | `ios,android,web_embedded,mweb,web,tv` | Liste, séparée par des virgules, des clients de lecteur yt-dlp à essayer, dans l’ordre. La liste par défaut de Downtify privilégie déjà les clients qui fonctionnent sans runtime JavaScript. Ne la modifiez que si vous savez qu’un client précis est bloqué. |
+| `DOWNTIFY_YT_PLAYER_CLIENTS` | `ios,android,web_embedded,mweb,web,tv` | Liste, séparée par des virgules, des clients de lecteur yt-dlp à essayer, dans l’ordre. La liste par défaut de Castify privilégie déjà les clients qui fonctionnent sans runtime JavaScript. Ne la modifiez que si vous savez qu’un client précis est bloqué. |
 | `DOWNTIFY_LIVE_PLAYER_CLIENTS` | `web_embedded,android` | Clients YouTube interrogés en premier quand un titre non téléchargé commence à jouer (séparés par des virgules). Moins de clients répondent plus vite ; s'ils n'ont pas d'audio, tous les clients de `DOWNTIFY_YT_PLAYER_CLIENTS` sont interrogés. |
 | `DOWNTIFY_YT_PO_TOKEN` | _(non définie)_ | Jetons Proof-of-Origin pour yt-dlp, séparés par des virgules, chacun sous la forme `<client>.<context>+<token>` (par ex. `mweb.gvs+ABC123`). Nécessaires uniquement si YouTube se met à exiger des PO Tokens pour les clients que vous utilisez. |
 | `DOWNTIFY_POT_PROVIDER_URL` | _(non définie)_ | URL d'un [serveur de jetons PO bgutil](https://github.com/Brainicism/bgutil-ytdlp-pot-provider) (par ex. `http://bgutil:4416`, l'image `brainicism/bgutil-ytdlp-pot-provider`). yt-dlp obtient alors des jetons PO frais pour chaque téléchargement et chaque lecture, ce qui évite « Sign in to confirm you're not a bot » sur les IP de serveurs et de VPN, sans cookies. Le plugin est inclus dans l'image Docker. |
-| `DOWNTIFY_IP_ROTATE_URL` | _(non définie)_ | Adresse que Downtify appelle en `POST` pour obtenir une nouvelle IP de sortie quand YouTube bloque l'actuelle avec « Sign in to confirm you're not a bot » — par ex. `http://warp:8081/rotate`, servie par `contrib/warp-control` dans un conteneur Cloudflare WARP. Le téléchargement ou la lecture bloqué est réessayé sur la nouvelle IP (jusqu'à 3 nouvelles IP chacun, 30 par heure) : l'utilisateur ne voit pas l'erreur. Des téléchargements bloqués en même temps partagent une seule rotation. |
+| `DOWNTIFY_IP_ROTATE_URL` | _(non définie)_ | Adresse que Castify appelle en `POST` pour obtenir une nouvelle IP de sortie quand YouTube bloque l'actuelle avec « Sign in to confirm you're not a bot » — par ex. `http://warp:8081/rotate`, servie par `contrib/warp-control` dans un conteneur Cloudflare WARP. Le téléchargement ou la lecture bloqué est réessayé sur la nouvelle IP (jusqu'à 3 nouvelles IP chacun, 30 par heure) : l'utilisateur ne voit pas l'erreur. Des téléchargements bloqués en même temps partagent une seule rotation. |
 | `DOWNTIFY_IP_ROTATE_TOKEN` | _(non définie)_ | Envoyé en `Authorization: Bearer <jeton>` à `DOWNTIFY_IP_ROTATE_URL` (le `WARP_CONTROL_TOKEN` de `contrib/warp-control`). |
 | `DOWNTIFY_COOKIES_FILE` | _(non définie)_ | Chemin d’un `cookies.txt` au format Netscape **dans le conteneur**. Permet à yt-dlp de s’authentifier comme une vraie session de navigateur — nécessaire pour les titres explicites/soumis à une limite d’âge et chaque fois que YouTube impose une barrière de connexion. Prioritaire sur un fichier envoyé dans l’interface web, et rend cette section de l’interface en lecture seule. Voir [Cookies YouTube](../features/youtube-cookies.md). |
 | `DOWNTIFY_COOKIES_FROM_BROWSER` | _(non définie)_ | Nom du navigateur dont extraire les cookies (par ex. `chrome`, `firefox`). Exige que le magasin de cookies du navigateur soit accessible dans le conteneur ; c’est donc rarement utilisable avec Docker. |

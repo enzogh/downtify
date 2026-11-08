@@ -12,7 +12,7 @@ Ouvrez **Découvrir** dans la barre latérale (sur téléphone : **Plus → Déc
 
 **Trouver des titres**, dans le menu **⋯** d’un artiste suggéré par Découvrir, affiche ici les titres de cet artiste comme une recherche : Deezer est interrogé avec le nom de l’artiste, et seuls les titres de cet artiste précis — repérés par son identifiant Deezer, si bien qu’un homonyme ou un titre qui porte simplement ce nom est écarté — sont listés, jusqu’aux premières centaines.
 
-- Les **titres** sont diffusés en entier et se téléchargent comme n’importe quel résultat de recherche. Downtify retrouve le titre sur YouTube Music (avec YouTube en repli) d’après le titre, l’artiste et la durée. Cliquer sur le titre d’un morceau ouvre son album dans l’affichage en colonnes, le morceau étant mis en évidence.
+- Les **titres** sont diffusés en entier et se téléchargent comme n’importe quel résultat de recherche. Castify retrouve le titre sur YouTube Music (avec YouTube en repli) d’après le titre, l’artiste et la durée. Cliquer sur le titre d’un morceau ouvre son album dans l’affichage en colonnes, le morceau étant mis en évidence.
 - Les **albums** s’ouvrent sur leur artiste, avec cet album sélectionné. Le bouton de téléchargement sur la pochette met l’album entier en file d’attente.
 - Les **artistes** ouvrent l’affichage en colonnes sur cet artiste.
 
@@ -31,7 +31,7 @@ Sur grand écran, faites glisser le bord entre deux colonnes pour en élargir ou
 Sur téléphone, les colonnes sont côte à côte et vous glissez de l’une à l’autre. Choisir un album vous amène à ses titres.
 
 ::: info Pourquoi le nombre de titres apparaît un instant plus tard
-La liste de la discographie de Deezer n’indique pas le nombre de titres ; Downtify demande donc celui de chaque album séparément, quelques albums à la fois, en restant sous la limite de Deezer de 50 requêtes toutes les 5 secondes. Les nombres apparaissent pendant que vous regardez et sont conservés jusqu’au redémarrage de Downtify. Un album dont le nombre n’a pas pu être récupéré affiche `…`.
+La liste de la discographie de Deezer n’indique pas le nombre de titres ; Castify demande donc celui de chaque album séparément, quelques albums à la fois, en restant sous la limite de Deezer de 50 requêtes toutes les 5 secondes. Les nombres apparaissent pendant que vous regardez et sont conservés jusqu’au redémarrage de Castify. Un album dont le nombre n’a pas pu être récupéré affiche `…`.
 :::
 
 ## API

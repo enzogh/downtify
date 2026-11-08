@@ -4,7 +4,7 @@ icon: lucide/headphones
 
 # Player integrado
 
-O Downtify vem com um player web para você ouvir a música baixada sem um app separado. Pressione play em qualquer faixa, álbum, artista ou playlist da Biblioteca — ou em um download concluído na Fila — e o player começa.
+O Castify vem com um player web para você ouvir a música baixada sem um app separado. Pressione play em qualquer faixa, álbum, artista ou playlist da Biblioteca — ou em um download concluído na Fila — e o player começa.
 
 ## Barra do player
 
@@ -45,10 +45,10 @@ Prefere a capa e a fila sem as palavras? Desligue **Configurações → Geral �
 Tocando agora então abre em **A seguir**. Um link para `&panel=lyrics` de antes de você desligar também cai ali, em vez de numa aba vazia. O player nem pede a letra de uma faixa enquanto ela está oculta.
 
 ::: info Ocultar não é apagar
-Isso só muda o que o player mostra. Seus arquivos mantêm a letra que o Downtify embutiu neles, e os arquivos `.lrc` ao lado continuam no lugar, então servidores de mídia e outros players ainda os veem. Os downloads também continuam buscando letras — essa é a configuração separada **Baixar letras** em **Tags e letras** (veja [Letras](lyrics.md)).
+Isso só muda o que o player mostra. Seus arquivos mantêm a letra que o Castify embutiu neles, e os arquivos `.lrc` ao lado continuam no lugar, então servidores de mídia e outros players ainda os veem. Os downloads também continuam buscando letras — essa é a configuração separada **Baixar letras** em **Tags e letras** (veja [Letras](lyrics.md)).
 :::
 
-Como o tema e o equalizador, a escolha fica salva no navegador (`localStorage`), então vale por dispositivo e por navegador, não por servidor Downtify — você pode ocultar a letra no celular e mantê-la no computador.
+Como o tema e o equalizador, a escolha fica salva no navegador (`localStorage`), então vale por dispositivo e por navegador, não por servidor Castify — você pode ocultar a letra no celular e mantê-la no computador.
 
 ## Equalizador
 
@@ -60,9 +60,9 @@ Um equalizador gráfico de dez bandas, no painel **Equalizador** de Tocando agor
 - **Interruptor de ligar/desligar** e **Redefinir** (volta para Plano, pré-amplificador 0, desligado). Mover uma banda ou escolher uma predefinição também liga o equalizador.
 - A curva atrás dos controles é a resposta combinada de todas as bandas.
 
-Reforçar bandas empurraria música alta além do fundo de escala e a distorceria, então o Downtify reduz o volume automaticamente pelo maior reforço da curva — o painel diz quanto. Isso mantém o pico em 0 dB, de modo que uma predefinição reforçada remodela o som em vez de só deixá-lo mais alto. Subir o pré-amplificador acima de 0 dB tira essa margem de segurança, e o painel avisa que passagens altas podem distorcer.
+Reforçar bandas empurraria música alta além do fundo de escala e a distorceria, então o Castify reduz o volume automaticamente pelo maior reforço da curva — o painel diz quanto. Isso mantém o pico em 0 dB, de modo que uma predefinição reforçada remodela o som em vez de só deixá-lo mais alto. Subir o pré-amplificador acima de 0 dB tira essa margem de segurança, e o painel avisa que passagens altas podem distorcer.
 
-As configurações ficam salvas no navegador (`localStorage`) e valem para tudo o que você toca, em todas as abas, até você mudá-las. Valem por navegador, não por servidor Downtify.
+As configurações ficam salvas no navegador (`localStorage`) e valem para tudo o que você toca, em todas as abas, até você mudá-las. Valem por navegador, não por servidor Castify.
 
 ### Suporte de navegadores
 
@@ -86,7 +86,7 @@ O menu de cada faixa (o botão **⋯**, ou clique com o botão direito no comput
 
 As mesmas ações valem para uma seleção de várias faixas na Biblioteca.
 
-A fila, a faixa atual, a posição, o aleatório e a repetição são lembrados, então reabrir o Downtify retoma de onde você parou (filas com mais de 2000 faixas não são lembradas). Arquivos excluídos saem da fila automaticamente.
+A fila, a faixa atual, a posição, o aleatório e a repetição são lembrados, então reabrir o Castify retoma de onde você parou (filas com mais de 2000 faixas não são lembradas). Arquivos excluídos saem da fila automaticamente.
 
 ## Teclado e teclas de mídia
 

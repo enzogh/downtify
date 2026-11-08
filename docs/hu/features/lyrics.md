@@ -4,7 +4,7 @@ icon: lucide/mic-vocal
 
 # Dalszövegek
 
-A Downtify a szám letöltése közben keresi meg a dalszövegeket, és beágyazza őket a fájlba, valamint egy `.lrc` kísérőfájlt is készít, ha időzítettek.
+A Castify a szám letöltése közben keresi meg a dalszövegeket, és beágyazza őket a fájlba, valamint egy `.lrc` kísérőfájlt is készít, ha időzítettek.
 
 ## A dalszövegek bekapcsolása
 
@@ -12,7 +12,7 @@ A dalszövegek **alapértelmezetten be vannak kapcsolva**. Kikapcsolás: **Beál
 
 ## Szolgáltatók és tartalék sorrend
 
-A katalógusok különböznek: egy dal, amelyet az egyik szolgáltató nem ismer, gyakran megvan egy másiknál. A Downtify ezért rendezett szolgáltatólistát vezet, és egyenként próbálja őket, az első találatnál megállva.
+A katalógusok különböznek: egy dal, amelyet az egyik szolgáltató nem ismer, gyakran megvan egy másiknál. A Castify ezért rendezett szolgáltatólistát vezet, és egyenként próbálja őket, az első találatnál megállva.
 
 | Szolgáltató | Dalszövegek | Megjegyzések |
 |----------|--------|-------|
@@ -22,7 +22,7 @@ A katalógusok különböznek: egy dal, amelyet az egyik szolgáltató nem ismer
 A **Beállítások → Címkék és dalszövegek → Szolgáltatók** alatt a szolgáltatókat a kívánt sorrendbe húzhatod, vagy a nyilakat használhatod, és bármelyiket kikapcsolhatod. Legalább egy bekapcsolva marad; a dalszövegek keresésének teljes leállításához használd a **Dalszövegek letöltése** kapcsolót.
 
 ::: info És a Genius, a Musixmatch meg az AZLyrics?
-Nem érhetők el, és a Downtify már nem kínálja őket:
+Nem érhetők el, és a Castify már nem kínálja őket:
 
 - Az **AZLyrics** tiltja a dalszövegeinek harmadik fél általi felhasználását magán az oldalon.
 - A **Musixmatch** asztali API-ja üres tokent ad vissza, hacsak nincs olyan hitelesítő adatod, amelyet nem ad ki alkalmazásoknak.
@@ -33,7 +33,7 @@ A mentett beállítások, amelyek még megnevezik őket, tovább működnek: a n
 
 ## A semmit sem találó szolgáltatók kihagyása
 
-Egy keresés után a Downtify minden dalhoz feljegyzi, mely szolgáltatók válaszoltak és melyek jöttek vissza üresen, a `/data` alatti `downtify_library.db` fájlban.
+Egy keresés után a Castify minden dalhoz feljegyzi, mely szolgáltatók válaszoltak és melyek jöttek vissza üresen, a `/data` alatti `downtify_library.db` fájlban.
 
 Az a szolgáltató, amelynek nem volt semmi egy dalhoz, **30 napig** nem kérdezhető meg újra róla, hogy az újralétöltések és a nagy könyvtár-átfutások ne ismételjék ugyanazokat a sikertelen kereséseket. Ezután újra próbálja, mert a katalógusok bővülnek. Az a szolgáltató, amelynek *volt* dalszövege, soha nem marad ki, így egy újra letöltött fájl visszakapja.
 
@@ -48,7 +48,7 @@ Az a szolgáltató, amelynek nem volt semmi egy dalhoz, **30 napig** nem kérdez
 
 ## .lrc kísérőfájl
 
-Ha időzített dalszöveg áll rendelkezésre, a Downtify `.lrc` fájlt is mentet. Alapértelmezetten **a hang mellett** található, azonos alapnévvel. A **Beállítások → Címkék és dalszövegek** alatt ezt kikapcsolhatod, és helyette **dalszövegmappát** választhatsz (alapértelmezés: `/data/lyrics`). Ennek a mappának a `/downloads`, a slskd-fa és az összes további zenemappa **kívül** kell lennie — a hang relatív útvonala létrejön benne (`Előadó/Album/szám.lrc`). Azok a lejátszók, amelyek külső dalszöveget olvasnak (és a [beépített lejátszó](player.md#now-playing)), továbbra is megtalálják a kísérőfájlt. E beállítás módosítása és a **Szinkronizálás** futtatása egy további mappán a meglévő `.lrc` fájlokat az új helyre másolja; a forrásfájl törlődik, ha az a fa írható, és csak olvasható csatolásnál a helyén marad. Kísérőfájl akkor is íródik, ha a dalszöveg már be van ágyazva a címkékbe.
+Ha időzített dalszöveg áll rendelkezésre, a Castify `.lrc` fájlt is mentet. Alapértelmezetten **a hang mellett** található, azonos alapnévvel. A **Beállítások → Címkék és dalszövegek** alatt ezt kikapcsolhatod, és helyette **dalszövegmappát** választhatsz (alapértelmezés: `/data/lyrics`). Ennek a mappának a `/downloads`, a slskd-fa és az összes további zenemappa **kívül** kell lennie — a hang relatív útvonala létrejön benne (`Előadó/Album/szám.lrc`). Azok a lejátszók, amelyek külső dalszöveget olvasnak (és a [beépített lejátszó](player.md#now-playing)), továbbra is megtalálják a kísérőfájlt. E beállítás módosítása és a **Szinkronizálás** futtatása egy további mappán a meglévő `.lrc` fájlokat az új helyre másolja; a forrásfájl törlődik, ha az a fa írható, és csak olvasható csatolásnál a helyén marad. Kísérőfájl akkor is íródik, ha a dalszöveg már be van ágyazva a címkékbe.
 
 A szám törlése a Könyvtár oldalról a `.lrc` fájlt (a fájl mellettit és a dedikált mappában lévőt) is eltávolítja a hanggal együtt, így a dalszöveg soha nem marad árva fájlként.
 

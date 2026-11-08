@@ -16,9 +16,9 @@ Hover over the **E** (or let a screen reader read it) to see "Explicit".
 
 ## Where the mark comes from
 
-The service you download from decides it: Spotify, YouTube Music and Deezer each flag their explicit songs, and Downtify uses what the one you picked says. When Downtify downloads a song from YouTube Music, the mark describes the **video it actually downloads**: if the song is explicit on Spotify but Downtify matched a clean edit, the file is not marked, and if Spotify calls it clean but the match is explicit, it is.
+The service you download from decides it: Spotify, YouTube Music and Deezer each flag their explicit songs, and Castify uses what the one you picked says. When Castify downloads a song from YouTube Music, the mark describes the **video it actually downloads**: if the song is explicit on Spotify but Castify matched a clean edit, the file is not marked, and if Spotify calls it clean but the match is explicit, it is.
 
-A song the service doesn't flag gets no mark at all — which is not the same as being certified clean, and Downtify never writes a "clean" mark.
+A song the service doesn't flag gets no mark at all — which is not the same as being certified clean, and Castify never writes a "clean" mark.
 
 ## In the file
 
@@ -33,10 +33,10 @@ The mark is written into the file's tags, the way iTunes does it, so media serve
 Files you already had are read the same way: anything marked `1` (or the older `4`) by iTunes, MusicBrainz Picard or another tagger shows the **E** too, including songs from [extra folders](external-library.md).
 
 ::: info Songs downloaded before this version
-Files Downtify wrote before the marker existed have nothing in their tags, so they show no **E**, even when the song is explicit. Download the song again with [Replace audio](replace-audio.md) or from scratch to mark it. A file keeps its mark when [Upgrade library](library-upgrade.md) or Replace audio rewrites it: the mark is only ever added, never cleared.
+Files Castify wrote before the marker existed have nothing in their tags, so they show no **E**, even when the song is explicit. Download the song again with [Replace audio](replace-audio.md) or from scratch to mark it. A file keeps its mark when [Upgrade library](library-upgrade.md) or Replace audio rewrites it: the mark is only ever added, never cleared.
 :::
 
-The first time the Library loads after updating, Downtify reads every file's tags again to look for the mark, like it did when it learned to show codec and genre. On a big library on a slow disk that takes a moment, once.
+The first time the Library loads after updating, Castify reads every file's tags again to look for the mark, like it did when it learned to show codec and genre. On a big library on a slow disk that takes a moment, once.
 
 ## For app developers
 

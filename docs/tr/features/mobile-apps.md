@@ -4,10 +4,10 @@ icon: lucide/smartphone
 
 # Mobil uygulamalar
 
-Downtify telefonunuzdaki uygulamalara hizmet verebilir: kitaplığa göz atar ve doğrudan sunucunuzdan akıtırlar, çevrimdışı dinlemek için şarkıları telefonda tutarlar. Bir uygulamanın ihtiyaç duyduğu her şey **Ayarlar → Uygulamalar** içinde kurulur: telefonları eşleştirme ve sunucunun adı. Sunucuyu kimlerin kullanabileceği ise [Kullanıcılar ve oturum açma](users.md) sayfasındaki hesaplarla belirlenir.
+Castify telefonunuzdaki uygulamalara hizmet verebilir: kitaplığa göz atar ve doğrudan sunucunuzdan akıtırlar, çevrimdışı dinlemek için şarkıları telefonda tutarlar. Bir uygulamanın ihtiyaç duyduğu her şey **Ayarlar → Uygulamalar** içinde kurulur: telefonları eşleştirme ve sunucunun adı. Sunucuyu kimlerin kullanabileceği ise [Kullanıcılar ve oturum açma](users.md) sayfasındaki hesaplarla belirlenir.
 
 ::: warning Uygulama hâlâ geliştirme aşamasında
-**Ayarlar → Uygulamalar** *Deneysel* olarak işaretlidir. Bu sayfada anlatılan sunucu tarafı bitmiştir ve çalışır, ama **Android uygulamasının hiçbir sürümü henüz yayımlanmadı**; bu yüzden şimdilik kurulacak bir şey yok ve eşleştirme ile akışın ayrıntıları Downtify sürümleri arasında hâlâ değişebilir.
+**Ayarlar → Uygulamalar** *Deneysel* olarak işaretlidir. Bu sayfada anlatılan sunucu tarafı bitmiştir ve çalışır, ama **Android uygulamasının hiçbir sürümü henüz yayımlanmadı**; bu yüzden şimdilik kurulacak bir şey yok ve eşleştirme ile akışın ayrıntıları Castify sürümleri arasında hâlâ değişebilir.
 
 Uygulama [henriquesebastiao/downtify-android](https://github.com/henriquesebastiao/downtify-android) adresinde açık biçimde geliştirilir. Başka her şey aynı API üzerine kurulabilir — bkz. [mobil istemci sözleşmesi](../mobile-client-contract.md).
 :::
@@ -66,11 +66,11 @@ Uygulamalar bir şarkıyı bir Chromecast’e veya sesi kendi başına çeken ba
 
 ## Ters proxy arkasında
 
-Downtify nginx, Caddy, Traefik veya benzerinin arkasındaysa (HTTPS için ya da dışarıdan erişmek için):
+Castify nginx, Caddy, Traefik veya benzerinin arkasındaysa (HTTPS için ya da dışarıdan erişmek için):
 
 - **WebSocket’i geçirin.** `/api/ws` için `Upgrade`/`Connection` başlıklarının iletilmesi gerekir (Caddy ve Traefik bunu varsayılan olarak yapar; nginx için `proxy_set_header Upgrade $http_upgrade; proxy_set_header Connection "upgrade";` gerekir).
 - **Range isteklerini** değiştirmeden geçirin ve ses yanıtlarını arabelleğe almayın (nginx: `/api/v1/` ve `/downloads/` için `proxy_buffering off;`), yoksa sarma ve büyük dosyalar zarar görür.
-- **Downtify’a hangi proxy’ye güveneceğini söyleyin.** `DOWNTIFY_TRUSTED_PROXIES` değerini proxy’nin adresine ayarlayın (örn. `172.18.0.0/16`). Downtify ancak o zaman istemcinin adresi (hız sınırları, Eşleştirilmiş uygulamalar’daki “son görülme”) için `X-Forwarded-For`’u, oturum çerezini güvenli işaretlemek ve isteklerin nereden geldiğini denetlemek için `X-Forwarded-Proto`/`X-Forwarded-Host`’u kullanır. Bunlar olmadan o başlıklar yok sayılır — herkes gönderebilir.
+- **Castify’a hangi proxy’ye güveneceğini söyleyin.** `DOWNTIFY_TRUSTED_PROXIES` değerini proxy’nin adresine ayarlayın (örn. `172.18.0.0/16`). Castify ancak o zaman istemcinin adresi (hız sınırları, Eşleştirilmiş uygulamalar’daki “son görülme”) için `X-Forwarded-For`’u, oturum çerezini güvenli işaretlemek ve isteklerin nereden geldiğini denetlemek için `X-Forwarded-Proto`/`X-Forwarded-Host`’u kullanır. Bunlar olmadan o başlıklar yok sayılır — herkes gönderebilir.
 - Sunucuya dışarıdan erişilebiliyorsa **HTTPS kullanın**: parola ve uygulamaların anahtarları her istekle birlikte yol alır.
 
 ## Uygulama geliştiricileri için

@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you for helping make Downtify available in more languages! Downtify currently ships with **English**, **Spanish**, and **Brazilian Portuguese**.
+        Thank you for helping make Castify available in more languages! Castify currently ships with **English**, **Spanish**, and **Brazilian Portuguese**.
 
         If you would like to contribute a new translation yourself, please also check the contributing guide in the repository for instructions on adding locale files.
 

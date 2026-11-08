@@ -4,7 +4,7 @@ icon: lucide/image
 
 # Playlist cover art
 
-Downtify can save a playlist's own cover next to its [M3U file](m3u-export.md), so media servers and file browsers show the real artwork for the playlist instead of a generic icon.
+Castify can save a playlist's own cover next to its [M3U file](m3u-export.md), so media servers and file browsers show the real artwork for the playlist instead of a generic icon.
 
 On by default. Turn it off in **Settings → Downloads & files → Save playlist cover art**.
 
@@ -25,7 +25,7 @@ With *Organize by artist* or *Organize by album* on, tracks are spread across ar
 ```
 
 ::: info It needs the M3U
-With **Write M3U playlists** off, no cover is saved either: Downtify places the image by the M3U's path, so without one there is nowhere to put it. The setting is hidden while M3U writing is off.
+With **Write M3U playlists** off, no cover is saved either: Castify places the image by the M3U's path, so without one there is nowhere to put it. The setting is hidden while M3U writing is off.
 :::
 
 ## Sources and resolution
@@ -46,15 +46,15 @@ Both services serve JPEG for these URLs even when the original artwork was a PNG
 
 Failing to resolve or download the cover (a network error, a playlist with no artwork) is logged and skipped — it never holds up or fails the download itself.
 
-## In the Downtify interface
+## In the Castify interface
 
 A playlist that has its own artwork (downloaded with a Spotify or YouTube playlist) shows it everywhere the Library lists playlists — the grid, the playlist page, the sidebar and the player. Playlists without one, and playlists you create in the Library, show a mosaic of up to four distinct track covers: two side by side, three as a tall left tile plus two stacked on the right, four as a 2×2 grid. The same collage is written as `<playlist-name>.jpg` beside a manual playlist's M3U so Navidrome sees it too, and it is rebuilt whenever you add or remove songs.
 
-On a playlist you created, choose **Upload cover** to use your own JPEG, PNG or WebP image (up to 10 MiB). Downtify converts it to the `.jpg` sidecar beside the M3U, and shows it in the Library, on the playlist page and in the player's playlist context. Only the playlist owner and admins can upload or remove it. **Remove cover** restores the generated track mosaic.
+On a playlist you created, choose **Upload cover** to use your own JPEG, PNG or WebP image (up to 10 MiB). Castify converts it to the `.jpg` sidecar beside the M3U, and shows it in the Library, on the playlist page and in the player's playlist context. Only the playlist owner and admins can upload or remove it. **Remove cover** restores the generated track mosaic.
 
 ## Navidrome
 
-Nothing to configure: Navidrome resolves playlist artwork from a **sidecar image** — a file named after the playlist, in the same folder — which is exactly what Downtify writes. As long as Navidrome's music folder covers your downloads folder, the artwork appears on its next scan. No API call from Downtify is involved. See [slskd & Navidrome](slskd-navidrome.md#navidrome).
+Nothing to configure: Navidrome resolves playlist artwork from a **sidecar image** — a file named after the playlist, in the same folder — which is exactly what Castify writes. As long as Navidrome's music folder covers your downloads folder, the artwork appears on its next scan. No API call from Castify is involved. See [slskd & Navidrome](slskd-navidrome.md#navidrome).
 
 ## Cleanup
 

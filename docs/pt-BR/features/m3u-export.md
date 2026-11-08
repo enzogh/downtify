@@ -4,7 +4,7 @@ icon: lucide/list-music
 
 # Exportação M3U
 
-O Downtify gera automaticamente um arquivo de playlist `EXTM3U` padrão sempre que uma playlist do Spotify é baixada — manualmente ou pelo [Monitor de playlists](playlist-monitor.md).
+O Castify gera automaticamente um arquivo de playlist `EXTM3U` padrão sempre que uma playlist do Spotify é baixada — manualmente ou pelo [Monitor de playlists](playlist-monitor.md).
 
 ## Local do arquivo
 
@@ -19,7 +19,7 @@ As [músicas curtidas](liked-songs.md) também são gravadas em `Playlists/Downt
 
 ## Caminhos relativos
 
-Os caminhos das faixas dentro do M3U são gravados **relativos ao próprio arquivo M3U**, não como caminhos absolutos. Isso significa que o mesmo arquivo funciona tanto lido de dentro do contêiner do Downtify (`/downloads/…`) quanto de outro consumidor que monte a mesma biblioteca em outra raiz — por exemplo, o Jellyfin em `/nas/music/…`. Basta apontar seu servidor de mídia para o mesmo ponto de montagem da biblioteca e a playlist aparece como uma unidade.
+Os caminhos das faixas dentro do M3U são gravados **relativos ao próprio arquivo M3U**, não como caminhos absolutos. Isso significa que o mesmo arquivo funciona tanto lido de dentro do contêiner do Castify (`/downloads/…`) quanto de outro consumidor que monte a mesma biblioteca em outra raiz — por exemplo, o Jellyfin em `/nas/music/…`. Basta apontar seu servidor de mídia para o mesmo ponto de montagem da biblioteca e a playlist aparece como uma unidade.
 
 ## Ativando / desativando
 
@@ -27,7 +27,7 @@ A geração de M3U é controlada por **Configurações → Downloads e arquivos 
 
 ## Capa
 
-Logo abaixo dessa configuração, **Salvar a capa da playlist** (ativada por padrão) grava a imagem de capa da própria playlist ao lado do M3U, com o mesmo nome — antes das faixas, para que a pasta já se pareça com a playlist desde o início. O Downtify passa a mostrar essa arte para a playlist em vez de uma grade com as capas das faixas. Uma playlist que você cria na Biblioteca recebe um mosaico de até quatro capas de faixas, gravado do mesmo jeito. Veja [Capa das playlists](playlist-cover-art.md).
+Logo abaixo dessa configuração, **Salvar a capa da playlist** (ativada por padrão) grava a imagem de capa da própria playlist ao lado do M3U, com o mesmo nome — antes das faixas, para que a pasta já se pareça com a playlist desde o início. O Castify passa a mostrar essa arte para a playlist em vez de uma grade com as capas das faixas. Uma playlist que você cria na Biblioteca recebe um mosaico de até quatro capas de faixas, gravado do mesmo jeito. Veja [Capa das playlists](playlist-cover-art.md).
 
 ## Quando é gravado
 
@@ -61,7 +61,7 @@ O arquivo gerado usa:
 
 ## Playlists que você cria
 
-**Biblioteca → Playlists → Nova playlist** grava o mesmo tipo de M3U em `Playlists/`, com uma linha extra `#EXTDOWNTIFY:manual` para que o Downtify a distinga de uma playlist baixada do Spotify/YouTube. Você pode renomeá-la e adicionar ou remover músicas (inclusive de [pastas extras](external-library.md)). Excluir essa playlist, excluir uma faixa ou desmapear uma pasta extra atualiza o M3U; o áudio só é excluído quando você exclui a própria faixa ou uma playlist importada.
+**Biblioteca → Playlists → Nova playlist** grava o mesmo tipo de M3U em `Playlists/`, com uma linha extra `#EXTDOWNTIFY:manual` para que o Castify a distinga de uma playlist baixada do Spotify/YouTube. Você pode renomeá-la e adicionar ou remover músicas (inclusive de [pastas extras](external-library.md)). Excluir essa playlist, excluir uma faixa ou desmapear uma pasta extra atualiza o M3U; o áudio só é excluído quando você exclui a própria faixa ou uma playlist importada.
 
 ### Adicionando músicas a uma playlist
 

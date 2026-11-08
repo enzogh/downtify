@@ -4,7 +4,7 @@ icon: lucide/list-music
 
 # Export M3U
 
-Downtify génère automatiquement un fichier de playlist `EXTM3U` standard chaque fois qu’une playlist Spotify est téléchargée — manuellement ou via la [Surveillance de playlists](playlist-monitor.md).
+Castify génère automatiquement un fichier de playlist `EXTM3U` standard chaque fois qu’une playlist Spotify est téléchargée — manuellement ou via la [Surveillance de playlists](playlist-monitor.md).
 
 ## Emplacement du fichier
 
@@ -19,7 +19,7 @@ Les [titres likés](liked-songs.md) sont eux aussi écrits dans `Playlists/Downt
 
 ## Chemins relatifs
 
-Les chemins des titres dans le M3U sont écrits **relativement au fichier M3U lui-même**, et non en chemins absolus. Le même fichier fonctionne donc qu’il soit lu depuis le conteneur Downtify (`/downloads/…`) ou depuis un autre consommateur qui monte la même bibliothèque à une autre racine — par exemple Jellyfin sous `/nas/music/…`. Il suffit de pointer votre serveur multimédia sur le même point de montage de la bibliothèque, et la playlist apparaît comme un seul ensemble.
+Les chemins des titres dans le M3U sont écrits **relativement au fichier M3U lui-même**, et non en chemins absolus. Le même fichier fonctionne donc qu’il soit lu depuis le conteneur Castify (`/downloads/…`) ou depuis un autre consommateur qui monte la même bibliothèque à une autre racine — par exemple Jellyfin sous `/nas/music/…`. Il suffit de pointer votre serveur multimédia sur le même point de montage de la bibliothèque, et la playlist apparaît comme un seul ensemble.
 
 ## Activer / désactiver
 
@@ -27,7 +27,7 @@ La génération de M3U se règle dans **Paramètres → Téléchargements et fic
 
 ## Pochette
 
-Juste sous ce réglage, **Enregistrer la pochette de la playlist** (activé par défaut) écrit l’image de pochette de la playlist à côté de son M3U, sous le même nom — avant les titres, pour que le dossier ressemble à la playlist dès le départ. Downtify affiche alors cette image pour la playlist au lieu d’une grille de pochettes de ses titres. Une playlist que vous créez dans la Bibliothèque reçoit une mosaïque d’au plus quatre pochettes de titres, écrite de la même façon. Voir [Pochettes de playlists](playlist-cover-art.md).
+Juste sous ce réglage, **Enregistrer la pochette de la playlist** (activé par défaut) écrit l’image de pochette de la playlist à côté de son M3U, sous le même nom — avant les titres, pour que le dossier ressemble à la playlist dès le départ. Castify affiche alors cette image pour la playlist au lieu d’une grille de pochettes de ses titres. Une playlist que vous créez dans la Bibliothèque reçoit une mosaïque d’au plus quatre pochettes de titres, écrite de la même façon. Voir [Pochettes de playlists](playlist-cover-art.md).
 
 ## Quand il est écrit
 
@@ -61,7 +61,7 @@ Il est compatible avec Jellyfin, Navidrome, Plex, VLC, Kodi, Sonos et tout autre
 
 ## Playlists que vous créez
 
-**Bibliothèque → Playlists → Nouvelle playlist** écrit le même type de M3U sous `Playlists/`, avec une ligne supplémentaire `#EXTDOWNTIFY:manual` pour que Downtify la distingue d’une playlist Spotify/YouTube téléchargée. Vous pouvez la renommer, et ajouter ou retirer des titres (y compris ceux de [dossiers supplémentaires](external-library.md)). Supprimer cette playlist, supprimer un titre ou retirer un dossier supplémentaire met le M3U à jour ; l’audio n’est supprimé que lorsque vous supprimez le titre lui-même ou une playlist importée.
+**Bibliothèque → Playlists → Nouvelle playlist** écrit le même type de M3U sous `Playlists/`, avec une ligne supplémentaire `#EXTDOWNTIFY:manual` pour que Castify la distingue d’une playlist Spotify/YouTube téléchargée. Vous pouvez la renommer, et ajouter ou retirer des titres (y compris ceux de [dossiers supplémentaires](external-library.md)). Supprimer cette playlist, supprimer un titre ou retirer un dossier supplémentaire met le M3U à jour ; l’audio n’est supprimé que lorsque vous supprimez le titre lui-même ou une playlist importée.
 
 ### Ajouter des titres à une playlist
 

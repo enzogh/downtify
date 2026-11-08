@@ -6,6 +6,8 @@ Guidance for Claude Code when working in this repository. Read before editing.
 
 Self-hosted Spotify downloader. Resolves track/album/playlist metadata from the public `open.spotify.com/embed` endpoints (no Spotify Premium / Web API key needed), then pulls audio from YouTube via `yt-dlp`, transcodes with `ffmpeg`, and embeds cover art + ID3/Vorbis/MP4 metadata via `mutagen`. Ships a FastAPI backend + Vue 3 SPA, distributed as a Docker image.
 
+**Brand vs. identifiers**: the product is branded **Castify** (name + logo in the SPA, PWA, docs, README); "Downtify" is the former name. Everything technical keeps the old name on purpose so existing installs and apps keep working: the `downtify/` package, `DOWNTIFY_*` env vars, the Docker image/repo URLs, `/api/server/info` `product: 'Downtify'` (the Android app checks it), the `X-Downtify-Transcoded` header, `#EXTDOWNTIFY` M3U tags, localStorage keys and the `Downtify Liked Songs` playlist file. User-facing text says Castify. The logo source is `assets/icon-without-backgroud.svg` (`AppLogo.vue` / docs `Logo.vue` draw the same mark).
+
 Entry point: `main.py` (CLI flag `web` boots the FastAPI app on `DOWNTIFY_PORT`, default `8000`).
 
 ## Stack

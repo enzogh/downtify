@@ -4,7 +4,7 @@ export default {
   lang: 'tr',
   description:
     'Kendi sunucunuzda barındırabileceğiniz müzik indirici. Bir Spotify bağlantısı yapıştırın, etiketleri eksiksiz bir ses dosyası alın — API anahtarı yok, hesap yok, zahmet yok.',
-  titleSuffix: 'Downtify belgeleri',
+  titleSuffix: 'Castify belgeleri',
   containers: {
     info: 'Not',
     tip: 'İpucu',
@@ -19,7 +19,7 @@ export default {
     navigation: 'Gezinme',
     sidebar: 'Kenar çubuğu',
     documentation: 'Belgeler',
-    docsHome: 'Downtify belgeleri ana sayfası',
+    docsHome: 'Castify belgeleri ana sayfası',
     docsBadge: 'Belgeler',
     searchDocs: 'Belgelerde ara',
     search: 'Ara',
@@ -66,7 +66,6 @@ export default {
       'getting-started/environment-variables.md': 'Ortam değişkenleri',
       'features/index.md': 'Genel bakış',
       'features/charts.md': 'Müzik listeleri',
-      'features/similar.md': 'Benzerler',
       'features/finder.md': 'Bulucu',
       'features/download-settings.md': 'İndirme ayarları',
       'features/download-queue.md': 'İndirme kuyruğu',

@@ -20,7 +20,7 @@
       >
         <div class="flex h-16 shrink-0 items-center gap-2.5 px-5">
           <Logo :size="26" />
-          <span class="text-display text-[18px] font-bold">Downtify</span>
+          <span class="text-display text-[18px] font-bold">Castify</span>
           <button
             ref="closeButton"
             type="button"

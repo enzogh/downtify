@@ -72,12 +72,6 @@
 
       <div class="flex items-center justify-center gap-1 md:flex-1 md:gap-3">
         <UiIconButton
-          v-if="canSimilar"
-          icon="wand"
-          :label="t('similar.findSimilar')"
-          @click="goSimilar"
-        />
-        <UiIconButton
           icon="shuffle"
           :label="t('player.shuffle')"
           :active="player.shuffle.value"
@@ -188,7 +182,6 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useMediaQuery } from '@vueuse/core'
-import { useRouter } from 'vue-router'
 import AppIcon from '../ui/AppIcon.vue'
 import CoverArt from '../ui/CoverArt.vue'
 import EqBars from '../ui/EqBars.vue'
@@ -210,7 +203,6 @@ const player = usePlayer()
 const { showLyrics } = usePlayerPrefs()
 const nowPlaying = useNowPlaying()
 const { t } = useI18n()
-const router = useRouter()
 const library = useLibrary()
 const dm = useDownloadManager()
 const tracker = useProgressTracker()
@@ -226,20 +218,6 @@ const trackArtist = computed(
     t('common.unknownArtist')
 )
 const trackTitle = computed(() => track.value?.name || track.value?.title || '')
-
-const canSimilar = computed(() => {
-  if (track.value?.isPodcast) return false
-  const artist = (track.value?.artists || [])[0] || track.value?.artist || ''
-  const title = track.value?.name || track.value?.title || ''
-  return !!artist.trim() && !!title.trim()
-})
-
-function goSimilar() {
-  const artist = (track.value?.artists || [])[0] || track.value?.artist || ''
-  const title = track.value?.name || track.value?.title || ''
-  if (!artist.trim() || !title.trim()) return
-  router.push({ name: 'Similar', query: { artist, track: title } })
-}
 
 // A stream that isn't in the library yet can be queued from here; while
 // queued it spins instead of queueing a duplicate.

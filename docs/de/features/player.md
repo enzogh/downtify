@@ -4,7 +4,7 @@ icon: lucide/headphones
 
 # Eingebauter Player
 
-Downtify bringt einen Web-Player mit, damit du deine heruntergeladene Musik ohne separate App hören kannst. Drücke Play bei einem beliebigen Titel, Album, Künstler oder einer Playlist in der Bibliothek — oder bei einem fertigen Download in der Warteschlange — und der Player startet.
+Castify bringt einen Web-Player mit, damit du deine heruntergeladene Musik ohne separate App hören kannst. Drücke Play bei einem beliebigen Titel, Album, Künstler oder einer Playlist in der Bibliothek — oder bei einem fertigen Download in der Warteschlange — und der Player startet.
 
 ## Player-Leiste
 
@@ -45,10 +45,10 @@ Lieber das Artwork und die Warteschlange ohne die Worte? Schalte **Einstellungen
 Wiedergabe öffnet dann stattdessen auf **Als Nächstes**. Ein Link auf `&panel=lyrics` aus der Zeit vor dem Ausschalten landet ebenfalls dort, statt auf einem leeren Tab. Der Player fragt die Songtexte eines Titels gar nicht erst ab, solange sie ausgeblendet sind.
 
 ::: info Ausblenden ist nicht Löschen
-Das ändert nur, was der Player zeigt. Deine Dateien behalten die Songtexte, die Downtify darin eingebettet hat, und die `.lrc`-Dateien daneben bleiben an Ort und Stelle, sodass Medienserver und andere Player sie weiterhin sehen. Downloads holen ebenfalls weiter Songtexte — das ist die separate Einstellung **Songtexte herunterladen** unter **Tags und Songtexte** (siehe [Songtexte](lyrics.md)).
+Das ändert nur, was der Player zeigt. Deine Dateien behalten die Songtexte, die Castify darin eingebettet hat, und die `.lrc`-Dateien daneben bleiben an Ort und Stelle, sodass Medienserver und andere Player sie weiterhin sehen. Downloads holen ebenfalls weiter Songtexte — das ist die separate Einstellung **Songtexte herunterladen** unter **Tags und Songtexte** (siehe [Songtexte](lyrics.md)).
 :::
 
-Wie das Thema und der Equalizer wird die Wahl im Browser gespeichert (`localStorage`), gilt also pro Gerät und pro Browser, nicht pro Downtify-Server — du kannst die Songtexte am Handy ausblenden und am Desktop behalten.
+Wie das Thema und der Equalizer wird die Wahl im Browser gespeichert (`localStorage`), gilt also pro Gerät und pro Browser, nicht pro Castify-Server — du kannst die Songtexte am Handy ausblenden und am Desktop behalten.
 
 ## Equalizer
 
@@ -60,9 +60,9 @@ Ein grafischer Zehnband-Equalizer im Panel **Equalizer** von Wiedergabe (oder dr
 - **Ein-/Ausschalter** und **Zurücksetzen** (zurück auf Neutral, Vorverstärkung 0, aus). Ein Band zu bewegen oder eine Voreinstellung zu wählen schaltet den Equalizer ebenfalls ein.
 - Die Kurve hinter den Reglern ist die kombinierte Antwort aller Bänder.
 
-Angehobene Bänder würden laute Musik über Vollaussteuerung hinausdrücken und verzerren, daher senkt Downtify die Lautstärke automatisch um die höchste Anhebung der Kurve — das Panel nennt den Betrag. Das hält die Spitze bei 0 dB, sodass eine angehobene Voreinstellung den Klang umformt, statt ihn nur lauter zu machen. Eine Vorverstärkung über 0 dB nimmt diese Sicherheitsreserve weg, und das Panel warnt, dass laute Passagen verzerren können.
+Angehobene Bänder würden laute Musik über Vollaussteuerung hinausdrücken und verzerren, daher senkt Castify die Lautstärke automatisch um die höchste Anhebung der Kurve — das Panel nennt den Betrag. Das hält die Spitze bei 0 dB, sodass eine angehobene Voreinstellung den Klang umformt, statt ihn nur lauter zu machen. Eine Vorverstärkung über 0 dB nimmt diese Sicherheitsreserve weg, und das Panel warnt, dass laute Passagen verzerren können.
 
-Die Einstellungen werden im Browser gespeichert (`localStorage`) und gelten für alles, was du spielst, in jedem Tab, bis du sie änderst. Sie gelten pro Browser, nicht pro Downtify-Server.
+Die Einstellungen werden im Browser gespeichert (`localStorage`) und gelten für alles, was du spielst, in jedem Tab, bis du sie änderst. Sie gelten pro Browser, nicht pro Castify-Server.
 
 ### Browser-Unterstützung
 
@@ -86,7 +86,7 @@ Das Menü jedes Titels (die Schaltfläche **⋯**, oder Rechtsklick am Desktop) 
 
 Dieselben Aktionen gelten für eine Mehrfachauswahl in der Bibliothek.
 
-Warteschlange, aktueller Titel, seine Position, Zufall und Wiederholen werden gemerkt, sodass das erneute Öffnen von Downtify dort fortsetzt, wo du aufgehört hast (Warteschlangen mit mehr als 2000 Titeln werden nicht gemerkt). Gelöschte Dateien fallen automatisch aus der Warteschlange.
+Warteschlange, aktueller Titel, seine Position, Zufall und Wiederholen werden gemerkt, sodass das erneute Öffnen von Castify dort fortsetzt, wo du aufgehört hast (Warteschlangen mit mehr als 2000 Titeln werden nicht gemerkt). Gelöschte Dateien fallen automatisch aus der Warteschlange.
 
 ## Tastatur und Medientasten
 

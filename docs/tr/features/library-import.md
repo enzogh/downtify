@@ -14,7 +14,7 @@ Kitaplığınızı başka bir hizmetten zaten dışa aktardınız mı? Şarkıla
 | [TuneMyMusic](https://www.tunemymusic.com/) | |
 | [Exportify](https://github.com/watsonbox/exportify) | |
 
-Downtify hiçbir aracın tam sütun şemasını sabit olarak kodlamaz. Bunun yerine CSV’nin başlık satırını büyük/küçük harfe bakmadan bilinen takma adlarla eşleştirir (`Title` / `Track` / `Track Title` / `Track Name` / `Song` / …, `Artist` / `Artists` / `Artist Name` / `Artist Name(s)` / … ve `Album` / `Album Name` / `Album Title` / …); böylece üçünden herhangi birinin dışa aktarımı — ya da aynı sütun adlarını kullanan elle hazırlanmış bir CSV — hiçbir şeyi yeniden adlandırmadan çalışır.
+Castify hiçbir aracın tam sütun şemasını sabit olarak kodlamaz. Bunun yerine CSV’nin başlık satırını büyük/küçük harfe bakmadan bilinen takma adlarla eşleştirir (`Title` / `Track` / `Track Title` / `Track Name` / `Song` / …, `Artist` / `Artists` / `Artist Name` / `Artist Name(s)` / … ve `Album` / `Album Name` / `Album Title` / …); böylece üçünden herhangi birinin dışa aktarımı — ya da aynı sütun adlarını kullanan elle hazırlanmış bir CSV — hiçbir şeyi yeniden adlandırmadan çalışır.
 
 Başlık ve sanatçı zorunludur. Albüm varsa okunur ve parçanın albüm adı olarak saklanır (Kuyruk, eşleştirme ve dosya etiketleri). Bazı dışa aktarıcıların eklediği diğer sütunlar (ISRC, Spotify parça URI’si, süre) yok sayılır. Her satır, serbest metin araması gibi YouTube Music üzerinden çözümlenir.
 
@@ -23,7 +23,7 @@ Başlık ve sanatçı zorunludur. Albüm varsa okunur ve parçanın albüm adı 
 1. Ana sayfada arama kutusunun altındaki **CSV içe aktar (Soundiiz, Exportify…)**’a tıklayın.
 2. Dışa aktardığınız `.csv` dosyasını seçin.
 
-Dosya tamamen tarayıcınızda okunur ve sunucuya düz metin olarak gönderilir — başka hiçbir yere yüklenmez. Downtify onu ayrıştırır, tanınan her satırı kuyruğa alır ve ilerlemenin diğer tüm toplu indirmeler gibi WebSocket üzerinden aktığı İndirme Kuyruğu’na gelirsiniz.
+Dosya tamamen tarayıcınızda okunur ve sunucuya düz metin olarak gönderilir — başka hiçbir yere yüklenmez. Castify onu ayrıştırır, tanınan her satırı kuyruğa alır ve ilerlemenin diğer tüm toplu indirmeler gibi WebSocket üzerinden aktığı İndirme Kuyruğu’na gelirsiniz.
 
 İçe aktarılan toplu iş dosyanın adını alır (`.csv` olmadan adı) ve diğer çalma listesi indirmeleri gibi, bu ayar açıksa bir [M3U dosyası](m3u-export.md) alır.
 

@@ -4,7 +4,7 @@ export default {
   lang: 'es',
   description:
     'Descargador de música autoalojado. Pega un enlace de Spotify y obtén un archivo de audio perfectamente etiquetado — sin claves de API, sin cuenta, sin complicaciones.',
-  titleSuffix: 'Documentación de Downtify',
+  titleSuffix: 'Documentación de Castify',
   containers: {
     info: 'Nota',
     tip: 'Consejo',
@@ -19,7 +19,7 @@ export default {
     navigation: 'Navegación',
     sidebar: 'Barra lateral',
     documentation: 'Documentación',
-    docsHome: 'Inicio de la documentación de Downtify',
+    docsHome: 'Inicio de la documentación de Castify',
     docsBadge: 'Docs',
     searchDocs: 'Buscar en la documentación',
     search: 'Buscar',
@@ -66,7 +66,6 @@ export default {
       'getting-started/environment-variables.md': 'Variables de entorno',
       'features/index.md': 'Resumen',
       'features/charts.md': 'Listas de éxitos',
-      'features/similar.md': 'Similares',
       'features/finder.md': 'Buscador',
       'features/download-settings.md': 'Ajustes de descarga',
       'features/download-queue.md': 'Cola de descargas',

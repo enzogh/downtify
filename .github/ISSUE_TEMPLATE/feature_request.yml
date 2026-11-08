@@ -1,12 +1,12 @@
 name: Feature Request
-description: Suggest a new feature or improvement for Downtify
+description: Suggest a new feature or improvement for Castify
 labels: ["enhancement", "needs triage"]
 projects: ["henriquesebastiao/24"]
 body:
   - type: markdown
     attributes:
       value: |
-        Have an idea that would make Downtify better? We'd love to hear it! Please describe your request in as much detail as possible.
+        Have an idea that would make Castify better? We'd love to hear it! Please describe your request in as much detail as possible.
 
   - type: textarea
     id: problem
@@ -37,7 +37,7 @@ body:
     id: area
     attributes:
       label: Feature Area
-      description: Which part of Downtify does this feature relate to?
+      description: Which part of Castify does this feature relate to?
       options:
         - Download pipeline (tracks / albums / playlists)
         - Playlist Monitor (auto-download new songs)

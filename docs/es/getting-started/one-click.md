@@ -4,7 +4,7 @@ icon: lucide/mouse-pointer-click
 
 # Instalación con un clic
 
-Downtify está disponible en las tiendas de aplicaciones de las plataformas de servidor doméstico más populares. Sin línea de comandos.
+Castify está disponible en las tiendas de aplicaciones de las plataformas de servidor doméstico más populares. Sin línea de comandos.
 
 ## Plataformas compatibles
 
@@ -14,11 +14,11 @@ Downtify está disponible en las tiendas de aplicaciones de las plataformas de s
 | **CasaOS** | [casaos.zimaspace.com](https://casaos.zimaspace.com/) |
 | **HomeDock OS** | [homedock.cloud/apps/downtify](https://www.homedock.cloud/apps/downtify/) |
 
-Cada plataforma se encarga automáticamente de la imagen de Docker, los volúmenes y la política de reinicio. Tras la instalación, abre Downtify desde el panel de tu plataforma — el puerto predeterminado es el **8000**.
+Cada plataforma se encarga automáticamente de la imagen de Docker, los volúmenes y la política de reinicio. Tras la instalación, abre Castify desde el panel de tu plataforma — el puerto predeterminado es el **8000**.
 
 ## Actualización
 
-Las actualizaciones se gestionan desde la tienda de aplicaciones de tu plataforma. Abre la ficha de Downtify y pulsa **Update** cuando haya una versión nueva. Tu biblioteca de música y tus ajustes se conservan automáticamente.
+Las actualizaciones se gestionan desde la tienda de aplicaciones de tu plataforma. Abre la ficha de Castify y pulsa **Update** cuando haya una versión nueva. Tu biblioteca de música y tus ajustes se conservan automáticamente.
 
 ## Configuración personalizada
 

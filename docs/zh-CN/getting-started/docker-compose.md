@@ -4,7 +4,7 @@ icon: lucide/file-code
 
 # Docker Compose
 
-对于需要长期运行的家庭服务器，推荐使用 Docker Compose 部署 Downtify。这样更便于更新、备份和调整配置。
+对于需要长期运行的家庭服务器，推荐使用 Docker Compose 部署 Castify。这样更便于更新、备份和调整配置。
 
 ## 最简配置
 
@@ -36,7 +36,7 @@ docker compose up -d
 
 ## 与 slskd（Soulseek）搭配使用
 
-如需将 [slskd 用作音频来源](../features/slskd-navidrome.md)，也要把 slskd 的下载目录挂载到 Downtify 中，并确保使用的是 slskd 容器实际写入的**同一个主机目录**：
+如需将 [slskd 用作音频来源](../features/slskd-navidrome.md)，也要把 slskd 的下载目录挂载到 Castify 中，并确保使用的是 slskd 容器实际写入的**同一个主机目录**：
 
 ```yaml
 services:
@@ -63,7 +63,7 @@ services:
 
 ## 让应用发现服务器
 
-[移动应用](../features/mobile-apps.md#finding-the-server-on-your-network)通过 mDNS 列出网络中的 Downtify 服务器。在 Docker 默认的 bridge 网络中，广播不会离开 Docker，因此手机无法发现服务器。若要让服务器出现在列表中，请将容器设为使用主机网络。此时 `ports:` 映射不再生效，Downtify 会直接监听 `DOWNTIFY_PORT`：
+[移动应用](../features/mobile-apps.md#finding-the-server-on-your-network)通过 mDNS 列出网络中的 Castify 服务器。在 Docker 默认的 bridge 网络中，广播不会离开 Docker，因此手机无法发现服务器。若要让服务器出现在列表中，请将容器设为使用主机网络。此时 `ports:` 映射不再生效，Castify 会直接监听 `DOWNTIFY_PORT`：
 
 ```yaml
 services:

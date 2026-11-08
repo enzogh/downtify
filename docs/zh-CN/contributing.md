@@ -12,7 +12,7 @@ icon: lucide/hand-heart
 
 报告错误时，请提供：
 
-- Downtify 版本
+- Castify 版本
 - 安装方式（Docker run、Docker Compose、Umbrel 等）
 - 重现步骤
 - 预期结果与实际结果
@@ -106,7 +106,7 @@ downtify/
 
 ## 翻译
 
-Downtify 有两部分可供翻译，你可以任选其一，也可以都参与：
+Castify 有两部分可供翻译，你可以任选其一，也可以都参与：
 
 | 翻译内容 | 位置 | 指南 |
 |---------------|-------|-------|
@@ -133,4 +133,4 @@ npm test                                        # 检查翻译页面的结构
 - 提交前运行 `uv run pytest`。
 - 向 `main` 分支提交 Pull Request。
 
-如果 Downtify 对你有帮助，欢迎在 GitHub 上点星支持项目。
+如果 Castify 对你有帮助，欢迎在 GitHub 上点星支持项目。

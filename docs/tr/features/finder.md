@@ -12,7 +12,7 @@ Kenar çubuğundan **Keşfet**’i açın (telefonda: **Daha fazla → Keşfet**
 
 Keşfet’in önerdiği bir sanatçının **⋯** menüsündeki **Şarkı bul**, o sanatçının şarkılarını burada bir arama olarak gösterir: Deezer’da sanatçının adı aranır ve yalnızca tam o sanatçıya ait şarkılar — Deezer kimliğiyle eşleştirilir, yani aynı adı taşıyan başka biri ya da yalnızca bu adı taşıyan bir şarkı dışarıda kalır — ilk birkaç yüze kadar listelenir.
 
-- **Şarkılar** tam olarak akıtılır ve herhangi bir arama sonucu gibi indirilir. Downtify şarkıyı başlık, sanatçı ve süreye göre YouTube Music’te (olmazsa YouTube’da) eşleştirir. Bir şarkının başlığına tıklamak albümünü sütun görünümünde, şarkı vurgulanmış olarak açar.
+- **Şarkılar** tam olarak akıtılır ve herhangi bir arama sonucu gibi indirilir. Castify şarkıyı başlık, sanatçı ve süreye göre YouTube Music’te (olmazsa YouTube’da) eşleştirir. Bir şarkının başlığına tıklamak albümünü sütun görünümünde, şarkı vurgulanmış olarak açar.
 - **Albümler** sanatçıları üzerinde, o albüm seçili olarak açılır. Kapaktaki indirme düğmesi albümün tamamını sıraya alır.
 - **Sanatçılar** sütun görünümünü o sanatçıda açar.
 
@@ -31,7 +31,7 @@ Geniş ekranda, bir sütunu genişletmek ya da daraltmak için iki sütun arası
 Telefonda sütunlar yan yana durur ve aralarında kaydırırsınız. Bir albüm seçmek parçalarına kaydırır.
 
 ::: info Parça sayıları neden biraz sonra görünür
-Deezer’ın diskografi listesinde parça sayısı yoktur; bu yüzden Downtify her albümün sayısını ayrı ayrı, bir seferde birkaç albüm olacak şekilde ve Deezer’ın 5 saniyede 50 istek sınırının altında kalarak ister. Sayılar siz bakarken görünür ve Downtify yeniden başlatılana kadar hatırlanır. Sayısı alınamayan bir albümde `…` görünür.
+Deezer’ın diskografi listesinde parça sayısı yoktur; bu yüzden Castify her albümün sayısını ayrı ayrı, bir seferde birkaç albüm olacak şekilde ve Deezer’ın 5 saniyede 50 istek sınırının altında kalarak ister. Sayılar siz bakarken görünür ve Castify yeniden başlatılana kadar hatırlanır. Sayısı alınamayan bir albümde `…` görünür.
 :::
 
 ## API

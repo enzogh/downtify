@@ -12,7 +12,7 @@ Abre **Descubrir** en la barra lateral (en el móvil: **Más → Descubrir**): e
 
 **Buscar canciones**, en el menú **⋯** de un artista que sugiere Descubrir, muestra aquí las canciones de ese artista como una búsqueda: se busca en Deezer el nombre del artista y solo se listan las canciones de ese mismo artista — identificadas por su id de Deezer, de modo que un homónimo o una canción que solo se llame así quedan fuera —, hasta las primeras centenas.
 
-- Las **canciones** se reproducen enteras en streaming y se descargan como cualquier resultado de búsqueda. Downtify localiza la canción en YouTube Music (con YouTube como alternativa) por título, artista y duración. Hacer clic en el título de una canción abre su álbum en la vista de columnas, con la canción resaltada.
+- Las **canciones** se reproducen enteras en streaming y se descargan como cualquier resultado de búsqueda. Castify localiza la canción en YouTube Music (con YouTube como alternativa) por título, artista y duración. Hacer clic en el título de una canción abre su álbum en la vista de columnas, con la canción resaltada.
 - Los **álbumes** se abren en su artista, con ese álbum seleccionado. El botón de descarga de la portada pone en cola el álbum entero.
 - Los **artistas** abren la vista de columnas en ese artista.
 
@@ -31,7 +31,7 @@ En pantallas anchas, arrastra el borde entre dos columnas para ensanchar o estre
 En el móvil, las columnas están una al lado de otra y se desliza entre ellas. Elegir un álbum desliza hasta sus canciones.
 
 ::: info Por qué el número de canciones aparece un momento después
-El listado de discografía de Deezer no incluye el número de canciones, así que Downtify pide el de cada álbum por separado, unos pocos álbumes a la vez, manteniéndose por debajo del límite de Deezer de 50 peticiones cada 5 segundos. Los números aparecen mientras miras y se recuerdan hasta que Downtify se reinicia. Un álbum cuyo número no pudo obtenerse muestra `…`.
+El listado de discografía de Deezer no incluye el número de canciones, así que Castify pide el de cada álbum por separado, unos pocos álbumes a la vez, manteniéndose por debajo del límite de Deezer de 50 peticiones cada 5 segundos. Los números aparecen mientras miras y se recuerdan hasta que Castify se reinicia. Un álbum cuyo número no pudo obtenerse muestra `…`.
 :::
 
 ## API

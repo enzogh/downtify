@@ -4,7 +4,7 @@ icon: lucide/file-code
 
 # Docker Compose
 
-Docker Compose es la forma recomendada de ejecutar Downtify en servidores domésticos permanentes. Facilita las actualizaciones, las copias de seguridad y los cambios de configuración.
+Docker Compose es la forma recomendada de ejecutar Castify en servidores domésticos permanentes. Facilita las actualizaciones, las copias de seguridad y los cambios de configuración.
 
 ## Configuración mínima
 
@@ -36,7 +36,7 @@ Abre **[http://localhost:8000](http://localhost:8000)**.
 
 ## Con slskd (Soulseek)
 
-Para usar [slskd como fuente de audio](../features/slskd-navidrome.md), monta también en Downtify la carpeta de descargas de slskd — la **misma carpeta del host** en la que escribe tu contenedor de slskd:
+Para usar [slskd como fuente de audio](../features/slskd-navidrome.md), monta también en Castify la carpeta de descargas de slskd — la **misma carpeta del host** en la que escribe tu contenedor de slskd:
 
 ```yaml
 services:
@@ -63,7 +63,7 @@ Para que la Biblioteca reconozca una colección que ya tienes en el host, [mónt
 
 ## Encontrar el servidor desde las apps
 
-Las [apps móviles](../features/mobile-apps.md#finding-the-server-on-your-network) listan los servidores Downtify de tu red mediante mDNS. En la red bridge predeterminada de Docker ese anuncio nunca sale de Docker, así que los teléfonos no lo ven. Para que aparezca, ejecuta el contenedor en la red del host — la asignación `ports:` deja de aplicarse y Downtify escucha directamente en `DOWNTIFY_PORT`:
+Las [apps móviles](../features/mobile-apps.md#finding-the-server-on-your-network) listan los servidores Castify de tu red mediante mDNS. En la red bridge predeterminada de Docker ese anuncio nunca sale de Docker, así que los teléfonos no lo ven. Para que aparezca, ejecuta el contenedor en la red del host — la asignación `ports:` deja de aplicarse y Castify escucha directamente en `DOWNTIFY_PORT`:
 
 ```yaml
 services:

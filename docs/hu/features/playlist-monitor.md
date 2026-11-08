@@ -21,14 +21,14 @@ A figyelések azoké, akik létrehozták őket: minden fiók a saját lejátszá
 
 ## Hogyan működik
 
-A Downtify egy háttérfeladatot futtat 60 másodpercenként. Minden átfésüléskor ellenőrzi, hogy minden engedélyezett figyelés esedékes-e vizsgálatra (a beállított intervalluma alapján). Amikor egy *lejátszási lista* esedékes, a Downtify:
+A Castify egy háttérfeladatot futtat 60 másodpercenként. Minden átfésüléskor ellenőrzi, hogy minden engedélyezett figyelés esedékes-e vizsgálatra (a beállított intervalluma alapján). Amikor egy *lejátszási lista* esedékes, a Castify:
 
 1. Lekéri a teljes számlistát a Spotifyról, a Deezerről vagy a YouTube Musicról
 2. Összeveti a már letöltött számok halmazával
 3. Letölti az új számokat ugyanazzal a folyamattal, mint egy kézi letöltést
 4. Frissíti a lejátszási lista M3U-fájlját (ha az M3U-generálás be van kapcsolva)
 
-Az első ellenőrzés, amely a figyelés hozzáadásakor azonnal elindul, letölt mindent, ami már a listán van; a későbbiek csak a közben hozzáadottat töltik le. A „már letöltött” egy kis SQLite-adatbázisban (`downtify_monitor.db` a `/data` alatt) van nyilvántartva, nem a letöltési mappa vizsgálatával — így egy letöltött fájl áthelyezése a lemez máshová (a saját könyvtárszerkezetedbe, másik meghajtóra, bárhová) **nem** készteti a Downtifyt arra, hogy hiányzónak higgye, és a következő ellenőrzéskor újra letöltse.
+Az első ellenőrzés, amely a figyelés hozzáadásakor azonnal elindul, letölt mindent, ami már a listán van; a későbbiek csak a közben hozzáadottat töltik le. A „már letöltött” egy kis SQLite-adatbázisban (`downtify_monitor.db` a `/data` alatt) van nyilvántartva, nem a letöltési mappa vizsgálatával — így egy letöltött fájl áthelyezése a lemez máshová (a saját könyvtárszerkezetedbe, másik meghajtóra, bárhová) **nem** készteti a Castifyt arra, hogy hiányzónak higgye, és a következő ellenőrzéskor újra letöltse.
 
 Egy külön átfésülés óránként fut, és ellenőrzi, hogy minden letöltött szám fájlja még megvan-e. A valóban törölt fájlokat (szemben az áthelyezettekkel) ekkor elfelejti, így a szám újra letölthetővé válik — a figyelés következő ellenőrzésekor az óránkénti átfésülés után, nem azonnal.
 
@@ -54,16 +54,16 @@ A nyilvános Deezer-lejátszási listák ugyanúgy figyelhetők, mint a többi: 
 
 ## YouTube Music-lejátszási listák
 
-Használj YouTube Music-lejátszási listát olyan dalokhoz, amelyek nincsenek a Spotifyon: remixek, élő szettek, feldolgozások, promóciós csatornák feltöltései. Minden szám **a lejátszási listában lévő pontos videóról** töltődik le. A Downtify nem keresi meg újra, így azt kapod, amit a listához adtál.
+Használj YouTube Music-lejátszási listát olyan dalokhoz, amelyek nincsenek a Spotifyon: remixek, élő szettek, feldolgozások, promóciós csatornák feltöltései. Minden szám **a lejátszási listában lévő pontos videóról** töltődik le. A Castify nem keresi meg újra, így azt kapod, amit a listához adtál.
 
 - **Minden szám lekérődik**, bármilyen hosszú is a lista. A törölt vagy privát videók kimaradnak.
-- **A YouTube Music által szürkített dalok is letöltődnek.** Az átalakítók és importálók (Soundiiz, TuneMyMusic és hasonlók) által készített listák gyakran egyszerű YouTube-feltöltésekként sorolják fel a dalokat, amelyeket a YouTube Music elérhetetlennek mutat, és nem ad dalazonosítót. A Downtify a bejegyzés bélyegképéből találja meg a videót, és úgy tölti le, mint bármelyiket, így egy ilyen lista nem lesz üres. Egy valóban törölt vagy privátra állított videó nem tölthető le: ha a YouTube Music így jelöli, kimarad, ha pedig csak bélyegképet ad, a szám sikertelenként jelenik meg a sorban.
-- **Az előadó és a cím a videó címéből jön.** Sok lejátszásilista-bejegyzés a feltöltő csatornának tulajdonított feltöltés (pl. `MrSuicideSheep`), a valódi jóváírás pedig a címben van, mint a `Bronze Whale - Patterns`. Minden olyan esetén, ami nem katalóguskiadvány, a Downtify az `Előadó - Cím` részt szétválasztja a fájlnévbe és a címkékbe. Elhagyja az olyan utótagokat is, mint az `(Official Video)` vagy a `[Lyrics]`. A kötőjel utáni, verziót megnevező rész (`Yellow - Live at Glastonbury`) a címben marad. A katalógusszámok (hivatalos hang, vagy bármi, ami albumhoz van sorolva) megtartják a YouTube Music saját előadóját és címét.
+- **A YouTube Music által szürkített dalok is letöltődnek.** Az átalakítók és importálók (Soundiiz, TuneMyMusic és hasonlók) által készített listák gyakran egyszerű YouTube-feltöltésekként sorolják fel a dalokat, amelyeket a YouTube Music elérhetetlennek mutat, és nem ad dalazonosítót. A Castify a bejegyzés bélyegképéből találja meg a videót, és úgy tölti le, mint bármelyiket, így egy ilyen lista nem lesz üres. Egy valóban törölt vagy privátra állított videó nem tölthető le: ha a YouTube Music így jelöli, kimarad, ha pedig csak bélyegképet ad, a szám sikertelenként jelenik meg a sorban.
+- **Az előadó és a cím a videó címéből jön.** Sok lejátszásilista-bejegyzés a feltöltő csatornának tulajdonított feltöltés (pl. `MrSuicideSheep`), a valódi jóváírás pedig a címben van, mint a `Bronze Whale - Patterns`. Minden olyan esetén, ami nem katalóguskiadvány, a Castify az `Előadó - Cím` részt szétválasztja a fájlnévbe és a címkékbe. Elhagyja az olyan utótagokat is, mint az `(Official Video)` vagy a `[Lyrics]`. A kötőjel utáni, verziót megnevező rész (`Yellow - Live at Glastonbury`) a címben marad. A katalógusszámok (hivatalos hang, vagy bármi, ami albumhoz van sorolva) megtartják a YouTube Music saját előadóját és címét.
 - **Nem minden `list=` hivatkozás lejátszási lista.** Egy album `OLAK5uy_…` hivatkozása továbbra is albumként töltődik le. Egy `watch?v=…&list=…` hivatkozás az az egy dal, amely éppen szólt. Egy rádiókeverék (`list=RD…`) nem rendelkezik rögzített számlistával, és nem figyelhető.
 
 ## Előadófigyelés
 
-Ahelyett, hogy előadónként lejátszási listát építenél, illessz be egy előadóhivatkozást, és a Downtify követi a teljes katalógusát. Adj hozzá egyet a Figyelő oldal **Előadók** füléről — illeszd be az URL-t, válassz intervallumot, kattints az **Előadó figyelése** gombra. Az előadófigyelések számok száma helyett kiadványszámot mutatnak.
+Ahelyett, hogy előadónként lejátszási listát építenél, illessz be egy előadóhivatkozást, és a Castify követi a teljes katalógusát. Adj hozzá egyet a Figyelő oldal **Előadók** füléről — illeszd be az URL-t, válassz intervallumot, kattints az **Előadó figyelése** gombra. Az előadófigyelések számok száma helyett kiadványszámot mutatnak.
 
 Elfogadott URL-ek:
 
@@ -72,10 +72,10 @@ Elfogadott URL-ek:
 
 A handle a figyelés hozzáadásakor feloldódik az előadó csatornájára, így ugyanaz az előadó handle-lel és csatorna-URL-lel beillesztve egy figyelésként ismerődik fel. Az a handle, amely nem YouTube Music-előadóhoz tartozik, elutasításra kerül.
 
-Minden átfésüléskor a Downtify felsorolja az előadó diszkográfiáját, összeveti a már feldolgozott kiadványokkal, és letölti minden új kiadvány minden számát. Egy állandósult állapotú átfésülés egyetlen kérésbe kerül — a számlistákat csak azokhoz a kiadványokhoz kéri le, amelyeket még nem látott.
+Minden átfésüléskor a Castify felsorolja az előadó diszkográfiáját, összeveti a már feldolgozott kiadványokkal, és letölti minden új kiadvány minden számát. Egy állandósult állapotú átfésülés egyetlen kérésbe kerül — a számlistákat csak azokhoz a kiadványokhoz kéri le, amelyeket még nem látott.
 
 ::: info Miért a YouTube Musicból jön a diszkográfia
-A Spotify nyilvános embedje megadja egy előadó nevét és a legnépszerűbb számainak előnézetét, de a diszkográfiáját **nem** — ennek olvasásához Spotify API-hitelesítő adatok kellenének, amelyeket a Downtify szándékosan nem használ. Így egy Spotify-előadóhivatkozás a nevére oldódik fel, és ugyanazzal az előadóval egyeztetődik a YouTube Musicon, ahonnan a hang is jön. Az előny: minden kiadvány, amelyet a Downtify lát, olyan, amelyet ténylegesen le is tud tölteni. A kompromisszum: a hivatkozás a pontosan ilyen nevű YouTube Music-előadót követi (a kis- és nagybetűktől és az írásjelektől eltekintve), több azonos nevű esetén a YouTube Music legjobb találatát. Gyakori névnél ellenőrizd, hogy a figyelés az az előadó-e, akit szántál, és ha nem, illeszd be közvetlenül a YouTube Music-előadó URL-jét. Egy Spotify-előadót, akinek pontos nevét egyetlen YouTube Music-előadó sem viseli, csak így lehet hozzáadni: a Downtify nem találgat.
+A Spotify nyilvános embedje megadja egy előadó nevét és a legnépszerűbb számainak előnézetét, de a diszkográfiáját **nem** — ennek olvasásához Spotify API-hitelesítő adatok kellenének, amelyeket a Castify szándékosan nem használ. Így egy Spotify-előadóhivatkozás a nevére oldódik fel, és ugyanazzal az előadóval egyeztetődik a YouTube Musicon, ahonnan a hang is jön. Az előny: minden kiadvány, amelyet a Castify lát, olyan, amelyet ténylegesen le is tud tölteni. A kompromisszum: a hivatkozás a pontosan ilyen nevű YouTube Music-előadót követi (a kis- és nagybetűktől és az írásjelektől eltekintve), több azonos nevű esetén a YouTube Music legjobb találatát. Gyakori névnél ellenőrizd, hogy a figyelés az az előadó-e, akit szántál, és ha nem, illeszd be közvetlenül a YouTube Music-előadó URL-jét. Egy Spotify-előadót, akinek pontos nevét egyetlen YouTube Music-előadó sem viseli, csak így lehet hozzáadni: a Castify nem találgat.
 :::
 
 ::: warning Az első átfésülés a teljes régi katalógust letölti
@@ -211,7 +211,7 @@ Alapértelmezetten egy naponta (vagy hetente / 2 hetente / havonta) ellenőrzöt
 
 ## Számonkénti metaadat-gazdagítás
 
-A Spotify lejátszási lista embed bejegyzéseiből hiányzik a megjelenés éve, és a számonkénti albumborító helyett a lejátszási lista borítóját használják. A Downtify minden új számot külön újra lekér, hogy letöltés előtt megkapja a helyes borítót és évet — ha a számonkénti lekérés meghiúsul, a lejátszásilista-szintű adatokra esik vissza. A YouTube Music-lejátszási lista bejegyzései kihagyják ezt a lépést: mindegyik már hordozza a saját videója metaadatait.
+A Spotify lejátszási lista embed bejegyzéseiből hiányzik a megjelenés éve, és a számonkénti albumborító helyett a lejátszási lista borítóját használják. A Castify minden új számot külön újra lekér, hogy letöltés előtt megkapja a helyes borítót és évet — ha a számonkénti lekérés meghiúsul, a lejátszásilista-szintű adatokra esik vissza. A YouTube Music-lejátszási lista bejegyzései kihagyják ezt a lépést: mindegyik már hordozza a saját videója metaadatait.
 
 ## M3U-integráció
 
@@ -223,7 +223,7 @@ Ha a [Lejátszási lista borítójának mentése](playlist-cover-art.md) be van 
 
 ## Mi történik a listát elhagyó dalokkal
 
-Az élő lejátszási listák (a Spotify *Top 50*-e, a *Discover Weekly*, szerkesztőségi toplisták) hetente változnak. A Downtify a figyelést **új zene forrásaként** kezeli, soha nem olyasmiként, ami azt szabályozza, mit tartasz meg:
+Az élő lejátszási listák (a Spotify *Top 50*-e, a *Discover Weekly*, szerkesztőségi toplisták) hetente változnak. A Castify a figyelést **új zene forrásaként** kezeli, soha nem olyasmiként, ami azt szabályozza, mit tartasz meg:
 
 - **A letöltött hangfájlokat egy figyelés soha nem törli.** Sem akkor, ha egy szám elhagyja a listát, sem ha minden általad figyelt listát elhagy, sem ha maga a lista zsugorodik, sem ha a **Figyelés leállítása** gombot nyomod.
 - **Csak a lejátszási lista követi a lejátszási listát.** Minden átfésüléskor az [M3U-fájl](m3u-export.md) újraíródik a lista aktuális számaiból, az aktuális sorrendben, így egy kiesett szám eltűnik az M3U-ból. A fájlja a mappában marad, és a könyvtáradban is, kereshetően és lejátszhatóan — a Navidrome-on, Jellyfinen vagy bármin keresztül is, ami ugyanarra a mappára mutat.
@@ -232,7 +232,7 @@ Az élő lejátszási listák (a Spotify *Top 50*-e, a *Discover Weekly*, szerke
 Ettől egy toplista használható felfedezési feeddé válik: új dalok érkeznek automatikusan, és amit hátrahagynak, az könyvtáradként gyűlik.
 
 ```
-Top 50 - USA        →  new song appears   →  Downtify downloads it
+Top 50 - USA        →  new song appears   →  Castify downloads it
                     →  song drops out     →  M3U updated, file kept
 ```
 
@@ -244,7 +244,7 @@ Ha egy nem kívánt számot ki akarsz venni a listából, és minden ellenőrzé
 A **Figyelés leállítása** (a figyelés ⋯ menüjében) csak a figyelést felejti el: a lemezen semmi nem változik. A **Törlés** egy lejátszási listán a **Könyvtár** oldalon a romboló — eltávolítja a lista számait, az M3U-ját és a katalógusbejegyzését.
 :::
 
-Ha egy fájl tényleg eltűnik — kivitted a letöltési mappából, vagy kézzel törölted —, egy óránkénti átfésülés észreveszi, és elfelejti a Downtify róla vezetett nyilvántartását, így egy még listázott szám figyelésének következő ellenőrzése újra letölti. Egy csak a letöltési mappán *belül áthelyezett* fájl továbbra is megtalálható, és nem töltődik le újra.
+Ha egy fájl tényleg eltűnik — kivitted a letöltési mappából, vagy kézzel törölted —, egy óránkénti átfésülés észreveszi, és elfelejti a Castify róla vezetett nyilvántartását, így egy még listázott szám figyelésének következő ellenőrzése újra letölti. Egy csak a letöltési mappán *belül áthelyezett* fájl továbbra is megtalálható, és nem töltődik le újra.
 
 ## Tárolás
 

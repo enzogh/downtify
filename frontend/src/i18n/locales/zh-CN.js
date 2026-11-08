@@ -153,7 +153,6 @@ export default {
     serverHint:
       '对所有账户、浏览器和 Android 客户端生效。启用前请等待外部任务完成。除已下载的歌曲外，手机仍需连接服务器。',
     empty: '可访问的音乐库中没有匹配歌曲。',
-    similar: '根据音乐库已保存的标签查找相似歌曲，不访问外部服务。',
   },
   playlistFavorites: {
     title: '收藏的播放列表',
@@ -238,7 +237,7 @@ export default {
     search: '搜索“{query}”',
     website: '官方网站',
     failed: '无法在商店中查找。',
-    note: 'Bandcamp 会将销售收入的大部分支付给艺人。此处仅提供普通链接，Downtify 不销售商品，也不从中获利。',
+    note: 'Bandcamp 会将销售收入的大部分支付给艺人。此处仅提供普通链接，Castify 不销售商品，也不从中获利。',
   },
   playlistSearch: {
     placeholder: '搜索此播放列表',
@@ -282,7 +281,6 @@ export default {
     discover: '发现',
     podcasts: '播客',
     charts: '排行榜',
-    similar: '相似歌曲',
     settings: '设置',
     more: '更多',
     playlists: '播放列表',
@@ -359,7 +357,7 @@ export default {
       '搜索 YouTube Music，或粘贴 Spotify 或 YouTube Music 的歌曲、专辑、播放列表链接。',
     step2Title: '下载音乐',
     step2Body:
-      'Downtify 获取音频，并为每个文件写入标题、艺人、专辑、封面和歌词。',
+      'Castify 获取音频，并为每个文件写入标题、艺人、专辑、封面和歌词。',
     step3Title: '随时收听',
     step3Body:
       '在此播放，使用播放列表监控保持同步，或让 Jellyfin、Plex、Navidrome 访问你的音乐库。',
@@ -392,7 +390,7 @@ export default {
     typeSingle: '单曲',
     typeEp: 'EP',
     unsupportedLink:
-      'Downtify 无法下载此链接。请粘贴 Spotify 歌曲、专辑或播放列表链接，YouTube Music 链接或 SoundCloud 歌曲链接。',
+      'Castify 无法下载此链接。请粘贴 Spotify 歌曲、专辑或播放列表链接，YouTube Music 链接或 SoundCloud 歌曲链接。',
     tipSearchTitle: '按名称搜索',
     tipSearchBody: '输入艺人、专辑或歌曲名，搜索结果来自 YouTube Music。',
     tipSpotifyTitle: '粘贴 Spotify 链接',
@@ -407,28 +405,6 @@ export default {
     failed: '无法加载排行榜',
     empty: '排行榜暂无内容',
     playlist: '播放列表',
-  },
-  similar: {
-    title: '相似歌曲',
-    subtitle: '从 YouTube Music 查找与你指定歌曲相似的音乐。',
-    artist: '艺人',
-    artistPlaceholder: 'Cher',
-    track: '歌曲',
-    trackPlaceholder: 'Believe',
-    searchButton: '查找相似歌曲',
-    resultsFor: '与 {artist} 的“{track}”相似',
-    resultsForArtist: '与 {artist} 相似',
-    resultsForTrack: '与“{track}”相似',
-    failed: '无法查找相似歌曲',
-    noResults: '未找到相似歌曲',
-    noResultsHint: '请检查拼写，YouTube 对歌曲名称较为敏感。',
-    findSimilar: '查找相似歌曲',
-    noDownloadMatch: '未找到“{name}”的可下载版本',
-    resolveFailed: '无法查找此歌曲的下载来源',
-    tipSimilarTitle: '从一首歌曲开始',
-    tipSimilarBody: '输入艺人或歌曲名，YouTube 会推荐适合接着播放的音乐。',
-    tipDownloadTitle: '完整收听',
-    tipDownloadBody: '每项结果均可在播放器中完整播放，喜欢的歌曲可以下载。',
   },
   stream: { failed: '无法流式播放“{name}”。' },
   finder: {
@@ -538,8 +514,7 @@ export default {
     },
     pausedTitle: '下载已暂停',
     pausedBody: '恢复之前不会开始新的下载。',
-    pausedKept:
-      '等待中的歌曲会保留在队列中，重启或更新 Downtify 后也不会丢失。',
+    pausedKept: '等待中的歌曲会保留在队列中，重启或更新 Castify 后也不会丢失。',
     emptyTitle: '队列为空',
     emptyBody: '搜索音乐或粘贴链接，下载任务会显示在这里。',
     emptyAction: '查找音乐',
@@ -611,7 +586,7 @@ export default {
     noMatchesHint: '请尝试其他筛选条件。',
     clearFilters: '清除筛选',
     loadFailed: '无法加载音乐库',
-    loadFailedHint: '请确认 Downtify 正在运行后重试。',
+    loadFailedHint: '请确认 Castify 正在运行后重试。',
     maybeDeleted: '可能已被删除或重命名。',
     backToLibrary: '返回音乐库',
     selectAll: '全选',
@@ -653,7 +628,7 @@ export default {
     replaceAudio: '使用已验证的 Deemix 录音',
     replaceAudioHint:
       '精确匹配艺人、标题和专辑，音乐保留在 Deemix 文件夹中。匹配有歧义时不修改原文件。此扫描会替换音频，而非重写标签。',
-    deleteOriginals: '导入后移除旧的 Downtify 音频',
+    deleteOriginals: '导入后移除旧的 Castify 音频',
     deleteOriginalsHint:
       '仅在播放列表、喜欢记录和播放引用更新后，才移除每个已验证的原文件。不移除外部文件及附属文件。',
     replacementProgress:
@@ -664,7 +639,7 @@ export default {
     title: '升级音乐库',
     subtitle: '改善已下载的音乐，无需重新下载。',
     intro:
-      'Downtify 会检查音乐库中的每首歌曲，修复旧版本遗留的小尺寸封面、缺失歌词和不完整标签。',
+      'Castify 会检查音乐库中的每首歌曲，修复旧版本遗留的小尺寸封面、缺失歌词和不完整标签。',
     audioNote:
       '不会替换音频，仅更新封面、歌词和标签。从错误来源下载的歌曲保持原样，请删除后重新下载。',
     safeNote:
@@ -693,7 +668,7 @@ export default {
     lyricsHint: '通过已启用的歌词服务查找无歌词歌曲，并写入找到的歌词。',
     metadata: '刷新标签',
     metadataHint:
-      '从 Spotify 补充专辑、专辑艺人、发行日期和曲目编号。仅适用于 Downtify 仍保留 Spotify 曲目关联的歌曲。',
+      '从 Spotify 补充专辑、专辑艺人、发行日期和曲目编号。仅适用于 Castify 仍保留 Spotify 曲目关联的歌曲。',
     tracksAffected: { one: '{count} 首歌曲', other: '{count} 首歌曲' },
     options: '选项',
     artworkMin: '升级小于此尺寸的封面',
@@ -706,7 +681,7 @@ export default {
     preferYoutube: '优先 YouTube Music',
     recheck: '重复检查间隔',
     recheckHint:
-      '刚检查过的歌曲将在下次扫描时跳过。更新 Downtify 后会重新检查全部歌曲。',
+      '刚检查过的歌曲将在下次扫描时跳过。更新 Castify 后会重新检查全部歌曲。',
     recheckDays: { one: '{count} 天', other: '{count} 天' },
     recheckNever: '每次检查全部歌曲',
     start: '开始升级',
@@ -764,7 +739,7 @@ export default {
     estimatedNote:
       '{date} 之前的大小根据音乐库中现存歌曲的日期估算，不包含之后已删除的歌曲。',
     allEstimatedNote:
-      '从现在起，Downtify 每小时记录音乐库大小。此前的数据根据现存歌曲的日期估算。',
+      '从现在起，Castify 每小时记录音乐库大小。此前的数据根据现存歌曲的日期估算。',
     addedPerDay: '每日新增',
     addedPerWeek: '每周新增',
     sourcesTitle: '按来源统计',
@@ -797,17 +772,17 @@ export default {
     perWeek: '每周',
     downloadedBySource: '按来源下载 · {size}',
     noDownloads: '此期间没有下载。',
-    logEmptyNote: '暂无下载统计，Downtify 从此版本起开始记录。',
+    logEmptyNote: '暂无下载统计，Castify 从此版本起开始记录。',
     logSinceNote: '下载统计起始于 {date}。',
     cleanupTitle: '可清理内容',
-    cleanupHint: 'Downtify 检测到的冗余或残留存储内容，不会在此直接删除。',
+    cleanupHint: 'Castify 检测到的冗余或残留存储内容，不会在此直接删除。',
     duplicatesTitle: '重复歌曲',
     duplicatesHint:
       '{exact} 项为相同文件的重复副本，{likely} 项可能是来自不同来源的同一歌曲。显示的大小为仅保留最大副本时可释放的空间。',
     duplicateKind: { exact: '相同文件', likely: '可能是同一歌曲' },
     workingTitle: 'slskd 工作副本',
     workingHint:
-      'Downtify 复制到音乐库后，仍留在 slskd 文件夹中的 Soulseek 传输文件。',
+      'Castify 复制到音乐库后，仍留在 slskd 文件夹中的 Soulseek 传输文件。',
     workingInPlace:
       'slskd 文件保留在原位置，因此 slskd 文件夹也是音乐库的一部分。',
     leftoversTitle: '残留临时文件',
@@ -815,7 +790,7 @@ export default {
     orphansTitle: '孤立附属文件',
     orphansHint: '对应歌曲已不存在的歌词文件和专辑封面。',
     foldersTitle: '文件夹',
-    foldersHint: '按类型统计 Downtify 写入的文件夹中的全部内容。',
+    foldersHint: '按类型统计 Castify 写入的文件夹中的全部内容。',
     rescan: '重新扫描',
     scanFailed: '无法扫描文件夹。',
     scanning: '正在扫描文件夹…',
@@ -932,7 +907,7 @@ export default {
       unavailable: '此播放列表的诊断信息不可用。',
       items: {
         spotify_tracks: 'Spotify 曲目',
-        downloaded: 'Downtify 已下载',
+        downloaded: 'Castify 已下载',
         physical_files: '找到的文件',
         track_index: 'TrackIndex 映射',
         monitor_history: 'Monitor 历史记录',
@@ -1235,9 +1210,9 @@ export default {
     tileSharedHint: '{size}，也用于其他监控，仅存储一份',
     tileFailing: '持续失败',
     unknownNote: {
-      one: '{count} 首歌曲是在 Downtify 开始记录歌曲加入监控的方式之前添加的。',
+      one: '{count} 首歌曲是在 Castify 开始记录歌曲加入监控的方式之前添加的。',
       other:
-        '{count} 首歌曲是在 Downtify 开始记录歌曲加入监控的方式之前添加的。',
+        '{count} 首歌曲是在 Castify 开始记录歌曲加入监控的方式之前添加的。',
     },
     missingNote: {
       one: '此监控记录的 {count} 首歌曲已不在磁盘上。',
@@ -1344,7 +1319,7 @@ export default {
     detach: '解除来源关联',
     detachTitle: '解除“{name}”与来源的关联？',
     detachBody:
-      '之后可以添加和移除歌曲。现有歌曲保持不变，但 Downtify 将停止与 Spotify 或 YouTube Music 同步，并移除相关监控（如果存在）。',
+      '之后可以添加和移除歌曲。现有歌曲保持不变，但 Castify 将停止与 Spotify 或 YouTube Music 同步，并移除相关监控（如果存在）。',
     detached: '现在可以编辑“{name}”',
     by: '由 {owner} 创建',
     sharedWithCount: {
@@ -1362,7 +1337,7 @@ export default {
   settings: {
     apps: '应用',
     title: '设置',
-    subtitle: '设置 Downtify 查找、下载音乐和写入标签的方式。',
+    subtitle: '设置 Castify 查找、下载音乐和写入标签的方式。',
     sections: '分类',
     general: '常规',
     sources: '音频来源',
@@ -1425,7 +1400,7 @@ export default {
       '将音频、封面和歌词保留在共享的 Deemix 文件夹中，不改写其标签。请在服务器配置私有 ARL 文件，不要粘贴到此处。',
     deemixUrl: 'Deemix 服务器地址',
     deemixRemote: 'Deemix 内的下载文件夹',
-    deemixLocal: 'Downtify 中对应的同一文件夹（支持只读）',
+    deemixLocal: 'Castify 中对应的同一文件夹（支持只读）',
     deemixQuality: '音频质量',
     slskdTitle: 'slskd',
     slskdFormats: '格式优先级',
@@ -1448,7 +1423,7 @@ export default {
     slskdUrl: '服务器地址',
     slskdKey: 'API 密钥',
     slskdFolder: 'slskd 下载文件夹',
-    slskdFolderHint: '填写 Downtify 容器内的路径，而非宿主机路径。',
+    slskdFolderHint: '填写 Castify 容器内的路径，而非宿主机路径。',
     slskdTimeout: '总超时',
     slskdQueuedTimeout: '排队超时',
     slskdInPlace: '将文件保留在 slskd 文件夹中',
@@ -1535,7 +1510,7 @@ export default {
     lyricsNeteaseHint: '曲库丰富，通常提供时间轴歌词',
     navidromeTitle: 'Navidrome',
     navidromeHint:
-      '将下载的播放列表同步到 Navidrome，其音乐文件夹必须包含 Downtify 的下载目录。',
+      '将下载的播放列表同步到 Navidrome，其音乐文件夹必须包含 Castify 的下载目录。',
     navidromeEnabled: '使用 Navidrome',
     navidromeEnabledHint: '需要服务器地址、用户名和密码。',
     navidromeUrl: '服务器地址',
@@ -1543,19 +1518,19 @@ export default {
     navidromePassword: '密码',
     navidromeAdminUser: '管理员用户名',
     navidromeAdminPassword: '管理员密码',
-    navidromeAdminHint: '可选，让 Downtify 发起音乐库扫描，使新歌曲更快显示。',
+    navidromeAdminHint: '可选，让 Castify 发起音乐库扫描，使新歌曲更快显示。',
     test: {
       connection_not_deemix: '服务器不是兼容的 Deemix 实例。',
       quality_unavailable: 'Deezer 账户无法获取所选音质。',
       button: '测试连接',
       testing: '正在测试…',
       needFields: '请先填写上方字段。',
-      requestFailed: '无法执行测试，请确认仍可连接 Downtify。',
+      requestFailed: '无法执行测试，请确认仍可连接 Castify。',
       connected: '已连接到 {server}。',
       unknown: '测试返回意外结果（{code}）。',
       config_missing: '请先填写必填字段。',
       connection_unreachable:
-        '无法连接 {url}。请检查地址，并确认服务器正在运行且 Downtify 可以访问。',
+        '无法连接 {url}。请检查地址，并确认服务器正在运行且 Castify 可以访问。',
       connection_timeout: '{url} 未及时响应。',
       connection_bad_url: '地址无效，请以 http:// 或 https:// 开头。',
       connection_tls:
@@ -1570,9 +1545,9 @@ export default {
       auth_api_error: 'Navidrome 返回：{detail}',
       soulseek_ok: 'slskd 已登录 Soulseek。',
       soulseek_offline: 'slskd 尚未登录 Soulseek，登录前无法搜索到内容。',
-      folder_ok: 'Downtify 可以读取 {detail}。',
+      folder_ok: 'Castify 可以读取 {detail}。',
       folder_missing:
-        'Downtify 无法读取 {detail}。该路径必须指向挂载到此容器中的 slskd 下载文件夹。',
+        'Castify 无法读取 {detail}。该路径必须指向挂载到此容器中的 slskd 下载文件夹。',
       scan_ok: '此账户可以发起音乐库扫描。',
       scan_not_admin:
         '此账户无法发起音乐库扫描，Navidrome 仅允许管理员执行。请填写管理员用户名和密码，以便新歌曲更快显示。',
@@ -1593,7 +1568,7 @@ export default {
       '将提取的封面保存在磁盘上，加快音乐库加载，但会占用额外空间。',
     reconcile: '修复音乐库路径',
     reconcileHint:
-      '在 Downtify 外移动或重命名了文件？此操作会更新记录的路径，并在已启用时重写 M3U 和 Navidrome 播放列表。',
+      '在 Castify 外移动或重命名了文件？此操作会更新记录的路径，并在已启用时重写 M3U 和 Navidrome 播放列表。',
     reconcileButton: '修复路径',
     reconcilePaths: {
       one: '已更新 {count} 个路径。',
@@ -1614,7 +1589,7 @@ export default {
     externalLibraryHint:
       '添加你已有的音频文件夹，文件保留在原位置。同步会读取标签，在缺失时获取歌词和封面，并归入匹配的艺人；与下载后的补全操作一致。使用 Docker 时，请挂载宿主机文件夹并填写容器内的路径。',
     externalLibraryFolder: '文件夹',
-    externalLibraryFolderHint: '填写 Downtify 容器内的路径，而非宿主机路径。',
+    externalLibraryFolderHint: '填写 Castify 容器内的路径，而非宿主机路径。',
     externalLibraryPlaceholder: '/music/collection',
     externalLibraryAdd: '添加文件夹',
     externalLibraryRemove: '移除文件夹',
@@ -1661,7 +1636,7 @@ export default {
     version: '版本 {version}',
     upToDate: '已是最新版本',
     source: '源代码',
-    sourceHint: 'Downtify 是开源软件。',
+    sourceHint: 'Castify 是开源软件。',
     docs: '文档',
     docsHint: '部署、设置和 API 参考。',
     openDocs: '打开文档',
@@ -1673,7 +1648,7 @@ export default {
     networkHint: '此服务器的访问方式，仅管理员可见。',
     experimental: '实验功能',
     experimentalHint:
-      '移动应用仍在开发中。Android 应用尚未发布，配对和流媒体机制仍可能随 Downtify 版本变化。',
+      '移动应用仍在开发中。Android 应用尚未发布，配对和流媒体机制仍可能随 Castify 版本变化。',
   },
   shortcuts: {
     title: '键盘快捷键',
@@ -1696,7 +1671,7 @@ export default {
     help: '显示快捷键',
   },
   auth: {
-    signInTitle: '登录 Downtify',
+    signInTitle: '登录 Castify',
     signInBody: '使用用户名和密码登录。',
     signInBodyOidcOnly: '使用身份提供方登录。',
     username: '用户名',
@@ -1708,7 +1683,7 @@ export default {
     wrongPassword: '用户名或密码错误',
     tooMany: '尝试次数过多，请等待几分钟后重试。',
     forgotHint: '忘记管理员密码？请在服务器上运行“python main.py auth-reset”。',
-    noticeTitle: 'Downtify 现已支持用户账户',
+    noticeTitle: 'Castify 现已支持用户账户',
     noticeBody:
       '现在所有人都需使用用户名和密码登录。管理员可在“设置 → 用户”中添加其他账户。请使用以下凭据登录：',
     noticeKeptPassword: '你之前设置的密码',
@@ -1717,7 +1692,7 @@ export default {
   },
   apps: {
     serverGroup: '此服务器',
-    serverGroupHint: 'Downtify 应用看到的服务器信息。',
+    serverGroupHint: 'Castify 应用看到的服务器信息。',
     serverName: '服务器名称',
     serverNameHint: '显示在应用中，以及在局域网发现服务器时。',
     serverId: '服务器 ID {id}',
@@ -1738,7 +1713,7 @@ export default {
     signOutEverywhereButton: '退出所有设备',
     signOutEverywhereTitle: '退出所有设备？',
     pairTitle: '配对手机',
-    pairBody: '在 Downtify 应用中选择“扫码”，将摄像头对准此处。',
+    pairBody: '在 Castify 应用中选择“扫码”，将摄像头对准此处。',
     qrLabel: '配对二维码',
     orTypeCode: '或输入此代码',
     expiresIn: '{time} 后过期',
@@ -1752,7 +1727,7 @@ export default {
     signOutEverywhereHint:
       '取消你所有应用的配对，并退出你已登录的所有浏览器，包括当前浏览器。',
     signOutEverywhereBody: '已配对的应用需重新配对，所有浏览器也需重新登录。',
-    androidGroup: 'Downtify Android 版',
+    androidGroup: 'Castify Android 版',
     androidHint: '直接从此服务器浏览和播放音乐库的应用。',
     androidBody:
       '应用通过扫描本页的二维码完成配对。之后可浏览音乐库、以原音质或更省流量的音质播放、下载歌曲到手机供离线收听，以及投放到 Chromecast。本页中的配对、服务器名称和已配对应用等服务器端功能均已可用。',
@@ -1782,7 +1757,7 @@ export default {
   },
   port: {
     label: '端口',
-    hint: 'Downtify 的监听端口。服务器启动时生效，也可点击“保存并重启”立即应用。',
+    hint: 'Castify 的监听端口。服务器启动时生效，也可点击“保存并重启”立即应用。',
     locked: '由服务器上的 {source} 指定，移除该设置后才能在此选择端口。',
     save: '保存',
     saveRestart: '保存并重启',
@@ -1791,15 +1766,15 @@ export default {
     saved: '端口 {port} 已保存，将于下次启动生效',
     invalid: '请输入 {min} 至 {max} 的端口',
     dockerWarning:
-      'Downtify 正在 Docker 中运行：请将端口映射改为相同端口（ports: NEW:NEW）并重新创建容器，或使用 network_mode: host，否则 Downtify 将无法访问。设置 DOWNTIFY_PORT 会恢复旧端口。',
+      'Castify 正在 Docker 中运行：请将端口映射改为相同端口（ports: NEW:NEW）并重新创建容器，或使用 network_mode: host，否则 Castify 将无法访问。设置 DOWNTIFY_PORT 会恢复旧端口。',
     proxyWarning:
-      '你正通过其他地址（反向代理或端口映射）访问 Downtify，也需要将其目标改为新端口。',
+      '你正通过其他地址（反向代理或端口映射）访问 Castify，也需要将其目标改为新端口。',
     confirmTitle: '在端口 {port} 上重启？',
     confirmBody: '进行中的下载将停止，所有网页和应用会重新连接到新端口。',
     restartingTitle: '正在端口 {port} 上重启',
-    restartingBody: '正在等待 Downtify 恢复，此页面会自动打开新地址。',
-    unreachable: 'Downtify 尚未在新端口响应，请尝试新地址或检查服务器日志。',
-    openNew: 'Downtify 正在重启，请通过新地址打开：',
+    restartingBody: '正在等待 Castify 恢复，此页面会自动打开新地址。',
+    unreachable: 'Castify 尚未在新端口响应，请尝试新地址或检查服务器日志。',
+    openNew: 'Castify 正在重启，请通过新地址打开：',
   },
   account: {
     title: '账户',
@@ -1823,7 +1798,7 @@ export default {
     needsAdmin: '仅管理员可执行此操作',
     defaultPasswordTitle: '修改默认密码',
     defaultPasswordBody:
-      '{name} 正在使用默认密码登录，熟悉 Downtify 的人都可能知道该密码。请在“设置 → 常规”中修改。',
+      '{name} 正在使用默认密码登录，熟悉 Castify 的人都可能知道该密码。请在“设置 → 常规”中修改。',
     later: '稍后',
     changePassword: '修改密码',
   },
@@ -2006,7 +1981,7 @@ export default {
     kicker: '播客',
     notFound: '此节目已取消订阅',
     noEpisodesTitle: '暂无单集',
-    noEpisodesBody: 'Downtify 会按计划检查此订阅源。',
+    noEpisodesBody: 'Castify 会按计划检查此订阅源。',
     download: '下载单集',
     downloadFailed: '无法下载此单集',
     played: '已播放',

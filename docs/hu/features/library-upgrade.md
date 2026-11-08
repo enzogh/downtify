@@ -4,7 +4,7 @@ icon: lucide/wand-sparkles
 
 # Könyvtár feljavítása
 
-Az idők során felépült könyvtár azt hordozza, amit a Downtify adott verziója egy szám letöltésekor tudott: a legkisebb borítót, amelyet egy forrás kínált, dalszöveg nélkül, album vagy év nélküli címkékkel. A **Könyvtár feljavítása** megnézi, mi van már a lemezen, és csak azt javítja, ami le van maradva — újbóli letöltés nélkül, és kézzel rendezendő semmivel.
+Az idők során felépült könyvtár azt hordozza, amit a Castify adott verziója egy szám letöltésekor tudott: a legkisebb borítót, amelyet egy forrás kínált, dalszöveg nélkül, album vagy év nélküli címkékkel. A **Könyvtár feljavítása** megnézi, mi van már a lemezen, és csak azt javítja, ami le van maradva — újbóli letöltés nélkül, és kézzel rendezendő semmivel.
 
 Nyisd meg a **Könyvtár → Könyvtár feljavítása** oldalról.
 
@@ -14,7 +14,7 @@ Az alapértelmezett mód **borítókat, dalszövegeket és címkéket** ír újr
 
 ## Hogyan működik
 
-1. **Beolvasás.** A Downtify beolvas minden könyvtári számot, és kategóriánként jelzi, mi van lemaradva. Semmi nem íródik ki.
+1. **Beolvasás.** A Castify beolvas minden könyvtári számot, és kategóriánként jelzi, mi van lemaradva. Semmi nem íródik ki.
 2. **Választás.** Minden kategória, amelyhez a beolvasás talált valamit, a számok számával és egy kapcsolóval szerepel. Vedd ki a jelölést, amit nem akarsz.
 3. **Feljavítás.** A kiválasztott számok egy sorba kerülnek, amelyet egyesével dolgoz fel. Szüneteltetheted, folytathatod vagy leállíthatod, és túléli az újraindítást.
 
@@ -32,7 +32,7 @@ Egy szám akkor számít lemaradottnak, ha:
 - **sem** beágyazott dalszövege, **sem** `.lrc` kísérőfájlja nincs (a fájl mellett vagy a Beállítások dalszövegmappájában);
 - a címkéiből hiányzik az **album**, az **albumelőadó**, az **év** vagy a **számsorszám**.
 
-A **Címkék frissítése** csak olyan számokra működik, amelyekhez a Downtifynak még megvan a Spotify-számazonosítója — azokra, amelyeket Spotify-hivatkozásból töltött le, és a [számindexben](library-catalog.md#what-gets-stored) tart. A többi szám sorba kerül, de _Nincs tennivaló_ eredménnyel jön vissza.
+A **Címkék frissítése** csak olyan számokra működik, amelyekhez a Castifynak még megvan a Spotify-számazonosítója — azokra, amelyeket Spotify-hivatkozásból töltött le, és a [számindexben](library-catalog.md#what-gets-stored) tart. A többi szám sorba kerül, de _Nincs tennivaló_ eredménnyel jön vissza.
 
 ## Beállítások
 
@@ -40,7 +40,7 @@ A **Címkék frissítése** csak olyan számokra működik, amelyekhez a Downtif
 
 `300px` · `500px` · **`600px`** · `1000px` · `1200px`
 
-Az ennél a méretnél nagyobb vagy ekkora borítókat békén hagyja. A Downtify csak olyan borítót ír ki, amely **szigorúan nagyobb** a fájlban lévőnél, így egy feljavítás kétszeri futtatása soha nem ír újra semmit feleslegesen.
+Az ennél a méretnél nagyobb vagy ekkora borítókat békén hagyja. A Castify csak olyan borítót ír ki, amely **szigorúan nagyobb** a fájlban lévőnél, így egy feljavítás kétszeri futtatása soha nem ír újra semmit feleslegesen.
 
 Honnan jönnek a méretek:
 
@@ -67,11 +67,11 @@ Miután egy számot megnéztek, a következő beolvasás ennyi ideig kihagyja, �
 
 A memória **számonként és kategóriánként** van vezetve, ami a részleges futásokat működtetni képes: 16 000 szám borítóinak javítása semmit nem mond arról, hogy valaha keresték-e a dalszövegeiket, így egy későbbi dalszöveg-futás továbbra is mindet figyelembe veszi. A beolvasás azokat a kategóriákat is rögzíti, amelyeket megvizsgált, és amelyeknél nem talált tennivalót — a megnézés és semmi találása is ellenőrzés, mint bármi más.
 
-A Downtify minden számhoz és kategóriához megjegyzi: mikor ellenőrizték, melyik Downtify-verzió ellenőrizte, és — borítóknál — a legnagyobb talált borítót és azt, honnan jött. Hogy mely dalszöveg-szolgáltatóktól kérdeztek már, azt külön tárolja, dalonként és szolgáltatónként (lásd: [Dalszövegek](lyrics.md)).
+A Castify minden számhoz és kategóriához megjegyzi: mikor ellenőrizték, melyik Castify-verzió ellenőrizte, és — borítóknál — a legnagyobb talált borítót és azt, honnan jött. Hogy mely dalszöveg-szolgáltatóktól kérdeztek már, azt külön tárolja, dalonként és szolgáltatónként (lásd: [Dalszövegek](lyrics.md)).
 
 Két dolog mindig felülírja:
 
-- egy **újabb Downtify-verzió** mindent újra ellenőriz, mert jobban tud egyeztetni vagy címkézni, mint az előző;
+- egy **újabb Castify-verzió** mindent újra ellenőriz, mert jobban tud egyeztetni vagy címkézni, mint az előző;
 - a **Mindig minden számot ellenőrizzen** választása figyelmen kívül hagyja a memóriát az adott beolvasásnál.
 
 Amikor egy beolvasás azért nem talál tennivalót, _mert_ mindent nemrég ellenőriztek, ezt megmondja, és felajánlja az újrafuttatást a memória nélkül, ahelyett hogy megmagyarázatlan „nincs mit feljavítani” üzenettel hagyna.
@@ -82,7 +82,7 @@ Az előrehaladás panel a sorból elkészült számokat, egy hozzávetőleges ad
 
 A **Szünet** a folyamatban lévő szám után megáll, és megtartja a sort. A **Leállítás** eldobja a többit; a már feljavított számok feljavítva maradnak. Elhagyhatod az oldalt — a futás megy tovább, és bármely másik megnyitott lap követi.
 
-A sor a `/data/downtify_library.db` fájlban él, így **a Downtify (vagy a konténer) újraindítása futás közben ott folytatja**, ahol abbahagyta. Az a szám, amely folyamatban volt, amikor a folyamat leállt, visszakerül a sorba.
+A sor a `/data/downtify_library.db` fájlban él, így **a Castify (vagy a konténer) újraindítása futás közben ott folytatja**, ahol abbahagyta. Az a szám, amely folyamatban volt, amikor a folyamat leállt, visszakerül a sorba.
 
 ## Semmi nem vész el, ha egy feljavítás hibázik
 
@@ -94,7 +94,7 @@ Az eredeti **módosítási idő megmarad**, így egy könyvtár feljavítása ne
 
 Egy feljavítás helyben írja újra a címkéket, ezért a csak olvasható fájlrendszeren lévő számokat **kihagyja**, magyarázattal, még mielőtt metaadatot, borítót vagy dalszöveget keresne. Lejátszhatók maradnak, és a listáikban is; a fájljaik és a csatolási jogosultságaik változatlanok. Egy kihagyott csak olvasható számot nem jegyez meg sikeresen ellenőrzöttként, így újra figyelembe vehető, ha a mappája később írhatóvá válik. A váratlan jogosultsági, lemezterület- és I/O-hibák továbbra is hibaként jelennek meg.
 
-Ez eltér a [meglévő mappák gazdagításától](external-library.md), amely a borítókat és dalszövegeket külön, a Downtify adatmappájában tarthatja a védett hangfájlok újraírása nélkül.
+Ez eltér a [meglévő mappák gazdagításától](external-library.md), amely a borítókat és dalszövegeket külön, a Castify adatmappájában tarthatja a védett hangfájlok újraírása nélkül.
 
 ## Miért nem cseréli a hangot
 
@@ -104,14 +104,14 @@ A szokásos címkefeljavítások nem cserélik a hangot. Az alábbi külön mód
 
 A [Deemix-forrás](deemix.md) engedélyezése és tesztelése után a **Könyvtár feljavítása** a beolvasás előtt két független kapcsolót kínál:
 
-- **Use verified Deemix recordings**: beolvassa az eredeti Downtify-letöltéseket, az egyik előnyben részesített külső gyűjtemény által elfedett másolatokat is. Pontosan egyezteti az előadót, a teljes címet/verziót és az albumot; elutasítja a félreérthető katalóguseredményeket. A régi klip hossza nem szolgál egy helyes katalógusfelvétel elutasítására. Ellenőrzi a letöltött címkéket, a katalógus hosszát, a választott minőséget és a teljes FFmpeg-dekódolást.
-- **Remove old Downtify audio after import**: ezen felül a közzététel után eltávolít minden változatlan eredetit. Alapértelmezetten ki van kapcsolva. Az eredetik megtartása is frissíti a lejátszási listákat és a kedvenceket a Deemix-felvételre.
+- **Use verified Deemix recordings**: beolvassa az eredeti Castify-letöltéseket, az egyik előnyben részesített külső gyűjtemény által elfedett másolatokat is. Pontosan egyezteti az előadót, a teljes címet/verziót és az albumot; elutasítja a félreérthető katalóguseredményeket. A régi klip hossza nem szolgál egy helyes katalógusfelvétel elutasítására. Ellenőrzi a letöltött címkéket, a katalógus hosszát, a választott minőséget és a teljes FFmpeg-dekódolást.
+- **Remove old Castify audio after import**: ezen felül a közzététel után eltávolít minden változatlan eredetit. Alapértelmezetten ki van kapcsolva. Az eredetik megtartása is frissíti a lejátszási listákat és a kedvenceket a Deemix-felvételre.
 
-Ez a beolvasás borító-/dalszöveg-/címkefeladatok helyett egy **hang** kategóriát hoz létre. A kimeneti fájlok, a borító, az albumelrendezés és a natív dalszövegek a Deemix tulajdonában vannak. A Downtify helyben olvassa őket. A meglévő natív vagy beágyazott dalszövegek megmaradnak; csak a hiányzó dalszövegek pótolhatók egy írható, dedikált dalszövegmappában, a hang újraírása nélkül. A magasabb minőségű veszteségmentes eredeti megmarad, ha a Deemix MP3-ra van állítva.
+Ez a beolvasás borító-/dalszöveg-/címkefeladatok helyett egy **hang** kategóriát hoz létre. A kimeneti fájlok, a borító, az albumelrendezés és a natív dalszövegek a Deemix tulajdonában vannak. A Castify helyben olvassa őket. A meglévő natív vagy beágyazott dalszövegek megmaradnak; csak a hiányzó dalszövegek pótolhatók egy írható, dedikált dalszövegmappában, a hang újraírása nélkül. A magasabb minőségű veszteségmentes eredeti megmarad, ha a Deemix MP3-ra van állítva.
 
 A közzététel kötegenként egyszer történik. Az M3U-megjegyzések, a kézi jelölők és a számsorrend megmaradnak, majd a katalógusútvonalak, a lejátszásilista-tagságok, minden felhasználó kedvelései, a tulajdonlás és az elrejtett számok szabályai egyetlen SQLite-tranzakcióban költöznek. A régi fájlok gyorsítótárazott Navidrome-azonosítói érvénytelenné válnak egy friss natív keresésért. A már kiadott mobilazonosítók és a régi lejátszási URL-ek csak olvasható aliasokat tartanak a regisztrált cseréhez; a módosítások soha nem használják ezeket az URL-aliasokat.
 
-A könyvtáradatbázisban lévő tartós visszaigazolások rögzítik a forrás/cél SHA-256-értékeit és a közzététel állapotát. A források megmaradnak, amíg a csere és a hivatkozások ellenőrzése meg nem történik. Egy megváltozott vagy hiányzó csatolás, szerkesztett fájl, külső csak olvasható lejátszási lista-hivatkozás, aktív lejátszás vagy sikertelen katalógus-közzététel látható indokkal megállítja a takarítást. A szünet/folytatás és az újraindítás újrahasználja a visszaigazolásokat. Nincs általános duplikátum-átfésülés vagy kor alapú takarítás: csak a Downtify letöltési mappájában lévő ellenőrzött eredetik jöhetnek szóba. A kézi Deemix-/slskd-letöltések, a külső eredetik, a könyvtárak és a kísérőfájlok soha nem törlődnek. Miután egy eredetit eltávolítottak, a konténer visszaállítása nem állítja vissza azt a fájlt; szükség esetén állítsd vissza a saját tároló-biztonsági mentésedből.
+A könyvtáradatbázisban lévő tartós visszaigazolások rögzítik a forrás/cél SHA-256-értékeit és a közzététel állapotát. A források megmaradnak, amíg a csere és a hivatkozások ellenőrzése meg nem történik. Egy megváltozott vagy hiányzó csatolás, szerkesztett fájl, külső csak olvasható lejátszási lista-hivatkozás, aktív lejátszás vagy sikertelen katalógus-közzététel látható indokkal megállítja a takarítást. A szünet/folytatás és az újraindítás újrahasználja a visszaigazolásokat. Nincs általános duplikátum-átfésülés vagy kor alapú takarítás: csak a Castify letöltési mappájában lévő ellenőrzött eredetik jöhetnek szóba. A kézi Deemix-/slskd-letöltések, a külső eredetik, a könyvtárak és a kísérőfájlok soha nem törlődnek. Miután egy eredetit eltávolítottak, a konténer visszaállítása nem állítja vissza azt a fájlt; szükség esetén állítsd vissza a saját tároló-biztonsági mentésedből.
 
 Azoknak a NAS-felhasználóknak, akiknél a csatolási nevek eltérnek a Docker-útvonalaktól, egy adminisztrátor beállíthatja a `DOWNTIFY_DEEMIX_M3U_ROOT` értéket egy konténeraliasra, amely a Deemix gyökerére mutat. A relatív M3U-útvonalak ezt az aliast használják (például a `/music/existing` útvonalra leképezett `/Download`). Az opcionális `DOWNTIFY_LIBRARY_READY_MARKERS` jelölőútvonalak és várt szöveg JSON-objektuma, amelyet az előkészítés és a takarítás előtt ellenőriz. Egy hiányzó jelölő biztonsági okból hibával végződik. Az alapértelmezett módhoz egyik változó sem szükséges.
 

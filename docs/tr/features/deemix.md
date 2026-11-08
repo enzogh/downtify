@@ -15,7 +15,7 @@ gerektirir. Abonelik sağlamaz ya da bir aboneliği aşmaz.
 Deemix’in normal oturum başına giriş modunu koruyun. Korumasız bir sunucuda tek
 kullanıcı modunu etkinleştirmeyin: bağlantı uç noktası paylaşılan ARL’yi döndürür.
 
-Deezer ARL’nizi içeren özel bir dosyayı Downtify’a bağlayın; yalnızca
+Deezer ARL’nizi içeren özel bir dosyayı Castify’a bağlayın; yalnızca
 hizmet hesabı okuyabilsin ve `DOWNTIFY_DEEMIX_ARL_FILE` değerini bu yola ayarlayın.
 ARL yalnızca bir çerez oturumu açılırken okunur. Ayarlarda hiç saklanmaz, tarayıcıya
 döndürülmez, günlüğe yazılmaz. Parola gibi davranın; onu sorunlarda ya da sohbette değil,
@@ -27,11 +27,11 @@ Bağlantı testi indirme kuyruğa almaz.
 | ----------------------------- | ------------------------------------------------------------------ |
 | Sunucu URL’si                 | Deemix’in iç adresi, ör. `http://deemix:6595`                      |
 | Deemix içindeki indirme klasörü | Genellikle `/downloads`                                          |
-| Downtify içindeki aynı klasör | Paylaşılan bind mount, ör. `/deemix`; salt okunur desteklenir      |
+| Castify içindeki aynı klasör | Paylaşılan bind mount, ör. `/deemix`; salt okunur desteklenir      |
 | Kalite                        | MP3 128, MP3 320 veya FLAC; desteklenmeyen haklar açıkça başarısız olur |
 
 Paylaşılan klasör, kaydedildiğinde harici kitaplık klasörü olarak kaydedilir.
-Dosyalar Deemix’in sanatçı/albüm düzeninde orada kalır. Downtify biçimlerini,
+Dosyalar Deemix’in sanatçı/albüm düzeninde orada kalır. Castify biçimlerini,
 etiketlerini, kapak resimlerini ve `.lrc` yan dosyalarını yeniden yazmadan korur.
 Gömülü sözler ve aynı adlı `.lrc` dosyaları oynatıcı tarafından okunur.
 Bu entegrasyon hiçbir ses ya da sözü silmez, taşımaz veya üretmez.

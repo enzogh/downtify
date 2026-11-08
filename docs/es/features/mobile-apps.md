@@ -4,10 +4,10 @@ icon: lucide/smartphone
 
 # Apps móviles
 
-Downtify puede dar servicio a apps en tu teléfono: navegan por la biblioteca y la reproducen en streaming directamente desde tu servidor, y guardan canciones en el teléfono para escucharlas sin conexión. Todo lo que necesita una app se configura en **Ajustes → Apps**: la vinculación de teléfonos y el nombre del servidor. Quién puede usar el servidor lo deciden las cuentas de [Usuarios e inicio de sesión](users.md).
+Castify puede dar servicio a apps en tu teléfono: navegan por la biblioteca y la reproducen en streaming directamente desde tu servidor, y guardan canciones en el teléfono para escucharlas sin conexión. Todo lo que necesita una app se configura en **Ajustes → Apps**: la vinculación de teléfonos y el nombre del servidor. Quién puede usar el servidor lo deciden las cuentas de [Usuarios e inicio de sesión](users.md).
 
 ::: warning La app sigue en desarrollo
-**Ajustes → Apps** está marcado como *Experimental*. La parte del servidor descrita en esta página está terminada y funciona, pero **todavía no se ha publicado ninguna versión de la app Android**, así que por ahora no hay nada que instalar, y los detalles de la vinculación y el streaming aún pueden cambiar entre versiones de Downtify.
+**Ajustes → Apps** está marcado como *Experimental*. La parte del servidor descrita en esta página está terminada y funciona, pero **todavía no se ha publicado ninguna versión de la app Android**, así que por ahora no hay nada que instalar, y los detalles de la vinculación y el streaming aún pueden cambiar entre versiones de Castify.
 
 La app se desarrolla en abierto en [henriquesebastiao/downtify-android](https://github.com/henriquesebastiao/downtify-android). Cualquier otra cosa puede construirse sobre la misma API — consulta el [contrato del cliente móvil](../mobile-client-contract.md).
 :::
@@ -66,11 +66,11 @@ Las apps pueden enviar una canción a un Chromecast u otro reproductor que obtie
 
 ## Detrás de un proxy inverso
 
-Si Downtify está detrás de nginx, Caddy, Traefik o similar (para HTTPS, o para acceder desde fuera):
+Si Castify está detrás de nginx, Caddy, Traefik o similar (para HTTPS, o para acceder desde fuera):
 
 - **Deja pasar el WebSocket.** `/api/ws` necesita que se reenvíen las cabeceras `Upgrade`/`Connection` (Caddy y Traefik lo hacen por defecto; nginx necesita `proxy_set_header Upgrade $http_upgrade; proxy_set_header Connection "upgrade";`).
 - **Deja pasar las peticiones Range** sin cambios y no pongas en búfer las respuestas de audio (nginx: `proxy_buffering off;` para `/api/v1/` y `/downloads/`), o buscar dentro de la canción y los archivos grandes se resienten.
-- **Dile a Downtify en qué proxy confiar.** Define `DOWNTIFY_TRUSTED_PROXIES` con la dirección del proxy (p. ej. `172.18.0.0/16`). Solo entonces usa Downtify `X-Forwarded-For` para la dirección del cliente (límites de intentos, «visto por última vez» en Apps vinculadas) y `X-Forwarded-Proto`/`X-Forwarded-Host` para marcar la cookie de sesión como segura y comprobar de dónde vienen las peticiones. Sin ello, esas cabeceras se ignoran — cualquiera podría enviarlas.
+- **Dile a Castify en qué proxy confiar.** Define `DOWNTIFY_TRUSTED_PROXIES` con la dirección del proxy (p. ej. `172.18.0.0/16`). Solo entonces usa Castify `X-Forwarded-For` para la dirección del cliente (límites de intentos, «visto por última vez» en Apps vinculadas) y `X-Forwarded-Proto`/`X-Forwarded-Host` para marcar la cookie de sesión como segura y comprobar de dónde vienen las peticiones. Sin ello, esas cabeceras se ignoran — cualquiera podría enviarlas.
 - **Usa HTTPS** cuando el servidor sea accesible desde fuera: la contraseña y las claves de las apps viajan en cada petición.
 
 ## Para desarrolladores de apps

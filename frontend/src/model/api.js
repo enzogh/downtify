@@ -1,4 +1,4 @@
-// HTTP + WebSocket client for the Downtify backend.
+// HTTP + WebSocket client for the Castify backend.
 import axios from 'axios'
 import config from '/src/config.js'
 

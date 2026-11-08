@@ -1,6 +1,6 @@
 ---
 layout: home
-title: Downtify
+title: Castify
 titleTemplate: Saját szerveren futtatható zeneletöltő
 description: Saját szerveren futtatható zeneletöltő. Illessz be egy Spotify-linket, és kapj egy tökéletesen címkézett hangfájlt — API-kulcs, fiók és macera nélkül.
 icon: lucide/house
@@ -72,7 +72,7 @@ quickStart:
 
 ## Hogyan működik valójában
 
-A Spotify hivatalos API-ja Premium előfizetéshez köti a letöltéseket. A Downtify az oldalajtót használja — beolvassa a metaadatokat, amelyeket a Spotify úgyis kitesz a nyilvános beágyazási oldalaira, a YouTube Musicot kéri a legközelebbi hangért, a fájlt átadja a `yt-dlp`-nek és az `ffmpeg`-nek, a megfelelő címkéket pedig a `mutagen`-nel írja. A teljes folyamat egyetlen Docker-konténerben él.
+A Spotify hivatalos API-ja Premium előfizetéshez köti a letöltéseket. A Castify az oldalajtót használja — beolvassa a metaadatokat, amelyeket a Spotify úgyis kitesz a nyilvános beágyazási oldalaira, a YouTube Musicot kéri a legközelebbi hangért, a fájlt átadja a `yt-dlp`-nek és az `ffmpeg`-nek, a megfelelő címkéket pedig a `mutagen`-nel írja. A teljes folyamat egyetlen Docker-konténerben él.
 
 <HomePipeline :steps="$frontmatter.pipeline" />
 

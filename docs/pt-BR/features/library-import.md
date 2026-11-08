@@ -14,7 +14,7 @@ Já exportou sua biblioteca de outro serviço? Importe o CSV e coloque todas as 
 | [TuneMyMusic](https://www.tunemymusic.com/) | |
 | [Exportify](https://github.com/watsonbox/exportify) | |
 
-O Downtify não fixa o esquema exato de colunas de nenhuma ferramenta. Em vez disso, compara a linha de cabeçalho do CSV, sem diferenciar maiúsculas de minúsculas, com um conjunto de apelidos conhecidos (`Title` / `Track` / `Track Title` / `Track Name` / `Song` / …, `Artist` / `Artists` / `Artist Name` / `Artist Name(s)` / … e `Album` / `Album Name` / `Album Title` / …), então exportações de qualquer uma das três — ou de um CSV feito à mão com os mesmos nomes de coluna — funcionam sem renomear nada.
+O Castify não fixa o esquema exato de colunas de nenhuma ferramenta. Em vez disso, compara a linha de cabeçalho do CSV, sem diferenciar maiúsculas de minúsculas, com um conjunto de apelidos conhecidos (`Title` / `Track` / `Track Title` / `Track Name` / `Song` / …, `Artist` / `Artists` / `Artist Name` / `Artist Name(s)` / … e `Album` / `Album Name` / `Album Title` / …), então exportações de qualquer uma das três — ou de um CSV feito à mão com os mesmos nomes de coluna — funcionam sem renomear nada.
 
 Título e artista são obrigatórios. O álbum é lido quando existe e guardado como o nome do álbum da faixa (Fila, correspondência e tags do arquivo). Outras colunas que alguns exportadores incluem (ISRC, URI de faixa do Spotify, duração) são ignoradas. Cada linha é resolvida do mesmo jeito que uma busca por texto, pelo YouTube Music.
 
@@ -23,7 +23,7 @@ Título e artista são obrigatórios. O álbum é lido quando existe e guardado 
 1. Na página inicial, clique em **Importe um CSV (Soundiiz, Exportify…)**, abaixo da caixa de busca.
 2. Escolha o arquivo `.csv` exportado.
 
-O arquivo é lido inteiramente no seu navegador e enviado ao servidor como texto simples — nunca é enviado a nenhum outro lugar. O Downtify o interpreta, coloca na fila todas as linhas reconhecidas e você cai na Fila de downloads, onde o progresso chega por WebSocket exatamente como em qualquer outro download em lote.
+O arquivo é lido inteiramente no seu navegador e enviado ao servidor como texto simples — nunca é enviado a nenhum outro lugar. O Castify o interpreta, coloca na fila todas as linhas reconhecidas e você cai na Fila de downloads, onde o progresso chega por WebSocket exatamente como em qualquer outro download em lote.
 
 O lote importado recebe o nome do arquivo (o nome sem `.csv`) e, como qualquer outro download de playlist, ganha um [arquivo M3U](m3u-export.md) se essa configuração estiver ativada.
 

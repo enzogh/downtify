@@ -4,7 +4,7 @@ export default {
   lang: 'el',
   description:
     'Λήψη μουσικής που φιλοξενείς μόνος σου. Επικόλλησε έναν σύνδεσμο Spotify και πάρε ένα άψογα επισημασμένο αρχείο ήχου — χωρίς κλειδιά API, χωρίς λογαριασμό, χωρίς κόπο.',
-  titleSuffix: 'Τεκμηρίωση Downtify',
+  titleSuffix: 'Τεκμηρίωση Castify',
   containers: {
     info: 'Σημείωση',
     tip: 'Συμβουλή',
@@ -19,7 +19,7 @@ export default {
     navigation: 'Πλοήγηση',
     sidebar: 'Πλαϊνή στήλη',
     documentation: 'Τεκμηρίωση',
-    docsHome: 'Αρχική της τεκμηρίωσης του Downtify',
+    docsHome: 'Αρχική της τεκμηρίωσης του Castify',
     docsBadge: 'Docs',
     searchDocs: 'Αναζήτηση στην τεκμηρίωση',
     search: 'Αναζήτηση',
@@ -67,7 +67,6 @@ export default {
       'getting-started/environment-variables.md': 'Μεταβλητές περιβάλλοντος',
       'features/index.md': 'Επισκόπηση',
       'features/charts.md': 'Λίστες επιτυχιών',
-      'features/similar.md': 'Παρόμοια',
       'features/finder.md': 'Αναζήτηση μουσικής',
       'features/download-settings.md': 'Ρυθμίσεις λήψης',
       'features/download-queue.md': 'Ουρά λήψεων',

@@ -11,7 +11,7 @@ No account or API key is needed: the suggestions come from [Deezer](https://www.
 ## How the suggestions are picked
 
 1. **Your artists are weighed.** Every artist in your library counts for something, and counts more for each of these, most to least:
-    - how often you **listen** to them in Downtify's player (recent listening counts more than listening months ago),
+    - how often you **listen** to them in Castify's player (recent listening counts more than listening months ago),
     - how many of their songs you have **liked**,
     - how many of their songs are **in your library**.
 

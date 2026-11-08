@@ -4,13 +4,13 @@ icon: lucide/languages
 
 # Internationalisation
 
-Downtify est traduit à deux endroits indépendants : l’**application** (son interface) et cette **documentation**. La langue par défaut des deux est l’**anglais**, avec neuf autres langues incluses d’office.
+Castify est traduit à deux endroits indépendants : l’**application** (son interface) et cette **documentation**. La langue par défaut des deux est l’**anglais**, avec neuf autres langues incluses d’office.
 
 ## Changer de langue
 
 ### L’application
 
-Allez dans **Paramètres → Langue** et choisissez votre langue préférée. Le choix est enregistré dans le `localStorage` du navigateur et appliqué instantanément sans recharger la page. La page l’indique aussi au serveur (l’entrée `ui_language` de `settings.json`, voir [`POST /api/settings/update`](../api-reference.md#post-apisettingsupdate)), à chaque chargement et à chaque changement, pour que le travail qui s’exécute sans navigateur connaisse votre langue - la bio d’un artiste, récupérée en arrière-plan quand l’un de ses morceaux finit de se télécharger, arrive dans cette langue (voir [Quand un téléchargement se termine](artist-images.md#when-a-download-finishes)). Rien à faire de votre côté : si vous aviez choisi une langue avant que cela existe, elle est reprise à la prochaine ouverture de Downtify. Avec plusieurs navigateurs réglés sur des langues différentes, le dernier qui a chargé ou changé la langue l’emporte.
+Allez dans **Paramètres → Langue** et choisissez votre langue préférée. Le choix est enregistré dans le `localStorage` du navigateur et appliqué instantanément sans recharger la page. La page l’indique aussi au serveur (l’entrée `ui_language` de `settings.json`, voir [`POST /api/settings/update`](../api-reference.md#post-apisettingsupdate)), à chaque chargement et à chaque changement, pour que le travail qui s’exécute sans navigateur connaisse votre langue - la bio d’un artiste, récupérée en arrière-plan quand l’un de ses morceaux finit de se télécharger, arrive dans cette langue (voir [Quand un téléchargement se termine](artist-images.md#when-a-download-finishes)). Rien à faire de votre côté : si vous aviez choisi une langue avant que cela existe, elle est reprise à la prochaine ouverture de Castify. Avec plusieurs navigateurs réglés sur des langues différentes, le dernier qui a chargé ou changé la langue l’emporte.
 
 ### La documentation
 

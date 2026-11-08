@@ -4,7 +4,7 @@ icon: lucide/heart-handshake
 
 # Support the Artist
 
-Downtify downloads music from YouTube. When you find something you love, **Support the artist** shows where to buy it, so the money reaches the people who made it.
+Castify downloads music from YouTube. When you find something you love, **Support the artist** shows where to buy it, so the money reaches the people who made it.
 
 ## Where to find it
 
@@ -31,7 +31,7 @@ The iTunes Store link opens the store of your country, taken from the browser's 
 Bandcamp and Qobuz have no public way to look something up, so their links are searches for the artist and the title (or the album, or the artist alone): check the result is the right release before you buy.
 
 ::: info Plain links
-Downtify doesn't sell anything and doesn't earn from these links. To fill in the dialog it makes one request to Apple's public iTunes Search API, with the artist and title only, and remembers the answer while the server runs. Nothing else leaves your server until you open a link.
+Castify doesn't sell anything and doesn't earn from these links. To fill in the dialog it makes one request to Apple's public iTunes Search API, with the artist and title only, and remembers the answer while the server runs. Nothing else leaves your server until you open a link.
 :::
 
 ## In the apps

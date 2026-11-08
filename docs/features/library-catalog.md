@@ -4,7 +4,7 @@ icon: lucide/library
 
 # Library catalog & path sync
 
-Downtify keeps a small **catalog** of the files under `/downloads` (the slskd folder, when [slskd files are left in place](slskd-navidrome.md#leave-files-in-place), and [extra folders](external-library.md) you add in Settings) so the Library page, player, M3U export, Navidrome sync and duplicate detection stay consistent when files move or playlists grow.
+Castify keeps a small **catalog** of the files under `/downloads` (the slskd folder, when [slskd files are left in place](slskd-navidrome.md#leave-files-in-place), and [extra folders](external-library.md) you add in Settings) so the Library page, player, M3U export, Navidrome sync and duplicate detection stay consistent when files move or playlists grow.
 
 ## What gets stored
 
@@ -26,14 +26,14 @@ Files are matched across moves by a **content key** — a hash of the file's nam
 
 ### Cache cover art on disk
 
-When enabled, Downtify keeps extracted cover images under `/data/cover_cache`, so the Library and player don't re-read tags for every thumbnail. Safe to turn off anytime; it only costs disk space.
+When enabled, Castify keeps extracted cover images under `/data/cover_cache`, so the Library and player don't re-read tags for every thumbnail. Safe to turn off anytime; it only costs disk space.
 
 ### Fix library paths
 
-Use this after you **move or rename files on disk** outside Downtify, or delete them by hand.
+Use this after you **move or rename files on disk** outside Castify, or delete them by hand.
 
 1. Open **Settings → Library → Fix library paths**.
-2. Downtify scans the library folders and:
+2. Castify scans the library folders and:
     - **updates paths** in the track index and playlist catalog when a file is no longer where it was but the same file (same content key) is found elsewhere;
     - **removes stale entries** for files that no longer exist;
     - **indexes** older entries that were stored before content keys existed;
@@ -44,7 +44,7 @@ It only runs when you press the button (or call `POST /api/library/reconcile`) �
 
 ### Existing music folders
 
-To play a collection that Downtify did not download, add the folders in **Settings → Library** and press **Sync folders**. Files stay on disk; tags are read and artists are matched. See [Existing music folders](external-library.md).
+To play a collection that Castify did not download, add the folders in **Settings → Library** and press **Sync folders**. Files stay on disk; tags are read and artists are matched. See [Existing music folders](external-library.md).
 
 ::: warning
 Rewriting a playlist deletes library files whose tags clearly don't match the Spotify track they're registered for — see [slskd & Navidrome](slskd-navidrome.md#playlist-sync).
@@ -59,7 +59,7 @@ Deleting tracks from the **Library** page already cleans up the catalog and rewr
 The Library page has four tabs — **Albums**, **Artists**, **Playlists** and **Tracks**:
 
 - **Albums, artists and playlists** show as a cover grid or a compact list (the toggle is remembered), with a text filter and sorting by recently added, name, artist, year or number of tracks. Albums and artists are built from each file's tags (album artist, album, year), so they don't depend on how files are organized on disk. A compilation — album artist `Various Artists`, with the compilation flag — stays one album under Albums, while its tracks are on their own artists' pages. A track tagged `Various Artists` without that flag (as older versions tagged any song with several artists, a duo like `Zé Neto & Cristiano` included) is grouped by its first artist instead. A track without an album tag appears under Tracks and its artist, not under Albums.
-- **Artists** lists every artist a track belongs to — its album artist, or for a compilation (or a file with no album artist) its first artist. Such an artist's page also has the tracks they are a guest on, labelled **Guest**; their Albums tab only shows albums of their own (it's hidden when there are none). A name that is only ever credited next to someone else gets no page of its own: tags can name a duo's members one by one (`Henrique; Juliano`, as YouTube Music credits some duos and older Downtify versions wrote them), and a page for each member would be an artist that doesn't exist. **Various Artists** isn't listed: a compilation's tracks are on their artists' pages, and the album itself stays under Albums.
+- **Artists** lists every artist a track belongs to — its album artist, or for a compilation (or a file with no album artist) its first artist. Such an artist's page also has the tracks they are a guest on, labelled **Guest**; their Albums tab only shows albums of their own (it's hidden when there are none). A name that is only ever credited next to someone else gets no page of its own: tags can name a duo's members one by one (`Henrique; Juliano`, as YouTube Music credits some duos and older Castify versions wrote them), and a page for each member would be an artist that doesn't exist. **Various Artists** isn't listed: a compilation's tracks are on their artists' pages, and the album itself stays under Albums.
 - Wherever a track shows its artists — track lists, the Now playing screen, Finder and top-song rows — each name links to that artist's Library page, or to a search for them when the Library has no page for them. On those rows the album name links to that album in the Library too, or to a search for it when the Library doesn't have it. Discover and its Finder never send you to Search: there, an artist or album the Library doesn't have is plain text. The artists come from the file's `ARTISTS` tag (see [Several artists and compilations](file-organization.md#several-artists-and-compilations)), so a name like *Earth, Wind & Fire* is never split on its comma; a file without that tag has its artist text split on `;`, ` / ` or `, `, unless that text is also the file's album artist, or the names it splits into make up the album artist (`Henrique; Juliano` on an album by `Henrique, Juliano`) - then it's one name.
 - **Playlists** are the downloaded playlists with an [M3U file](m3u-export.md), playlists you create with **New playlist** (editable), plus tracked [playlist downloads](slskd-navidrome.md#playlist-downloads) that don't have an M3U yet. Imported Spotify/YouTube playlists stay read-only until you [detach](#detach-an-imported-playlist) them. Playlists other people [share with you](users.md#sharing-playlists) are listed under the grid, apart from your own. Once you have [liked](liked-songs.md) a song, *Liked songs* is listed first. A playlist you created uses a mosaic of up to four track covers; imported playlists keep the artwork saved with the M3U.
 - **Tracks** is a sortable table (title, album, format, date added, length) with a text filter, a format filter, and checkboxes — click one, then Shift-click another to select a range. Sort it by clicking a column heading, or with the **Sort by** menu above the table (the only way on a phone, where the headings are hidden): recently added or oldest first, title, artist or album A–Z or Z–A, longest or shortest first. The choice is remembered.
@@ -81,8 +81,8 @@ Next to it, filters narrow the list. Each shows how many songs it holds, and app
 | **All** | Every downloaded song of the playlist |
 | **Missing** | Songs of the source playlist that aren't in the library yet (Spotify playlist downloads), with their download state — looked up on Spotify when you pick it |
 | **Failed** | The missing songs whose download failed, each with a retry button — once **Missing** has been looked up |
-| **YouTube Music**, **Soulseek (slskd)**, **Deemix**… | The songs that source fetched. Downtify remembers it for songs downloaded from now on; older ones count as **Unknown source**, except slskd files left in place and songs from your own folders |
-| **Not in Navidrome** | With [Navidrome sync](slskd-navidrome.md) on, the songs Downtify hasn't matched to a Navidrome song yet |
+| **YouTube Music**, **Soulseek (slskd)**, **Deemix**… | The songs that source fetched. Castify remembers it for songs downloaded from now on; older ones count as **Unknown source**, except slskd files left in place and songs from your own folders |
+| **Not in Navidrome** | With [Navidrome sync](slskd-navidrome.md) on, the songs Castify hasn't matched to a Navidrome song yet |
 
 The search and a filter work together, and the number of songs shown appears under them. Each song keeps its number in the playlist, and sorting, playing and each song's menu work on what is shown.
 
@@ -90,11 +90,11 @@ Downloaded Spotify playlists also have a **Playlist diagnostics** panel. Choose 
 
 ### Detach an imported playlist
 
-A playlist imported from a Spotify or YouTube Music link can't be edited, because Downtify keeps it in step with its source. To tidy one up — drop a song that doesn't belong, add one that does — open it and choose **Detach from source**. It becomes a playlist like the ones you create: its songs and owner stay as they are, and you get **Add songs**, **Rename** and removing songs. In exchange the link to its source is cut: it is no longer updated from Spotify or YouTube Music, its [Playlist Monitor](playlist-monitor.md) watch (if it had one) is removed, and its "missing songs" tracking goes. Songs already downloaded are never touched, and its artwork stays until your first edit, when a mosaic of its songs replaces it. Detaching can't be undone from the app; downloading the link again makes a new imported playlist.
+A playlist imported from a Spotify or YouTube Music link can't be edited, because Castify keeps it in step with its source. To tidy one up — drop a song that doesn't belong, add one that does — open it and choose **Detach from source**. It becomes a playlist like the ones you create: its songs and owner stay as they are, and you get **Add songs**, **Rename** and removing songs. In exchange the link to its source is cut: it is no longer updated from Spotify or YouTube Music, its [Playlist Monitor](playlist-monitor.md) watch (if it had one) is removed, and its "missing songs" tracking goes. Songs already downloaded are never touched, and its artwork stays until your first edit, when a mosaic of its songs replaces it. Detaching can't be undone from the app; downloading the link again makes a new imported playlist.
 
 Every account sees the same library: what an admin [hides from users](users.md#hiding-from-users) is left out for them, and an admin sees it all with a crossed-out eye on what is hidden. Admins hide and show from the `…` menu of a song, album or artist, or from the selection bar in **Tracks**.
 
-**Download as ZIP** saves the selected tracks to the device you're browsing from as a single ZIP, keeping their folder layout — handy when Downtify runs on a home server and you want a batch of tracks locally. Combine it with **Select all** to take everything the current filter shows. The archive is built while it downloads, so nothing is written to the server's disk, and it's capped at 2000 tracks per download.
+**Download as ZIP** saves the selected tracks to the device you're browsing from as a single ZIP, keeping their folder layout — handy when Castify runs on a home server and you want a batch of tracks locally. Combine it with **Select all** to take everything the current filter shows. The archive is built while it downloads, so nothing is written to the server's disk, and it's capped at 2000 tracks per download.
 
 ## API
 

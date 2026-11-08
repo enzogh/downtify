@@ -4,7 +4,7 @@ icon: lucide/image
 
 # Playlist-Cover
 
-Downtify kann das eigene Cover einer Playlist neben ihrer [M3U-Datei](m3u-export.md) speichern, damit Medienserver und Dateimanager das echte Artwork der Playlist statt eines generischen Symbols anzeigen.
+Castify kann das eigene Cover einer Playlist neben ihrer [M3U-Datei](m3u-export.md) speichern, damit Medienserver und Dateimanager das echte Artwork der Playlist statt eines generischen Symbols anzeigen.
 
 Standardmäßig an. Ausschalten unter **Einstellungen → Downloads und Dateien → Playlist-Cover speichern**.
 
@@ -25,7 +25,7 @@ Sind *Nach Künstler sortieren* oder *Nach Album sortieren* aktiv, verteilen sic
 ```
 
 ::: info Es braucht die M3U
-Ist **M3U-Playlists erstellen** aus, wird auch kein Cover gespeichert: Downtify legt das Bild anhand des M3U-Pfads ab, ohne M3U gibt es keinen Ort dafür. Die Einstellung ist ausgeblendet, solange das Schreiben von M3U aus ist.
+Ist **M3U-Playlists erstellen** aus, wird auch kein Cover gespeichert: Castify legt das Bild anhand des M3U-Pfads ab, ohne M3U gibt es keinen Ort dafür. Die Einstellung ist ausgeblendet, solange das Schreiben von M3U aus ist.
 :::
 
 ## Quellen und Auflösung
@@ -46,13 +46,13 @@ Beide Dienste liefern für diese URLs JPEG, auch wenn das Original-Artwork ein P
 
 Schlägt das Auflösen oder Herunterladen des Covers fehl (Netzwerkfehler, Playlist ohne Artwork), wird das protokolliert und übersprungen — der Download selbst wird dadurch nie aufgehalten oder zum Scheitern gebracht.
 
-## In der Downtify-Oberfläche
+## In der Castify-Oberfläche
 
 Eine Playlist mit eigenem Artwork (heruntergeladen mit einer Spotify- oder YouTube-Playlist) zeigt es überall, wo die Bibliothek Playlists auflistet — im Raster, auf der Playlist-Seite, in der Seitenleiste und im Player. Playlists ohne eigenes Artwork sowie in der Bibliothek angelegte Playlists zeigen ein Mosaik aus bis zu vier verschiedenen Titel-Covern: zwei nebeneinander, drei als hohe Kachel links plus zwei gestapelte rechts, vier als 2×2-Raster. Dieselbe Collage wird als `<Playlist-Name>.jpg` neben der M3U einer manuellen Playlist geschrieben, damit auch Navidrome sie sieht, und neu erstellt, sobald du Songs hinzufügst oder entfernst.
 
 ## Navidrome
 
-Nichts zu konfigurieren: Navidrome ermittelt das Playlist-Artwork aus einem **Sidecar-Bild** — einer nach der Playlist benannten Datei im selben Ordner —, und genau das schreibt Downtify. Solange der Musikordner von Navidrome deinen Download-Ordner abdeckt, erscheint das Artwork beim nächsten Scan. Ein API-Aufruf von Downtify ist nicht beteiligt. Siehe [slskd und Navidrome](slskd-navidrome.md#navidrome).
+Nichts zu konfigurieren: Navidrome ermittelt das Playlist-Artwork aus einem **Sidecar-Bild** — einer nach der Playlist benannten Datei im selben Ordner —, und genau das schreibt Castify. Solange der Musikordner von Navidrome deinen Download-Ordner abdeckt, erscheint das Artwork beim nächsten Scan. Ein API-Aufruf von Castify ist nicht beteiligt. Siehe [slskd und Navidrome](slskd-navidrome.md#navidrome).
 
 ## Aufräumen
 

@@ -2,7 +2,7 @@
 
 Runs inside the WARP container (e.g. ``caomingjun/warp``) next to
 ``warp-svc`` and answers one call: ``POST /rotate`` reconnects WARP,
-which gives a new exit IP in a few seconds. Downtify calls it
+which gives a new exit IP in a few seconds. Castify calls it
 (``DOWNTIFY_IP_ROTATE_URL``) when YouTube flags the current IP with
 "Sign in to confirm you're not a bot".
 

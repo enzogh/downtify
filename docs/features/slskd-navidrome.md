@@ -30,12 +30,12 @@ Songs downloaded from the search bar use the result's title, artist and duration
 
 ### Setup
 
-1. Run slskd and create an API key for Downtify (see slskd's documentation).
-2. Mount slskd's download folder into the Downtify container — the same host folder slskd writes to. See [Docker Compose → With slskd](../getting-started/docker-compose.md#with-slskd-soulseek).
+1. Run slskd and create an API key for Castify (see slskd's documentation).
+2. Mount slskd's download folder into the Castify container — the same host folder slskd writes to. See [Docker Compose → With slskd](../getting-started/docker-compose.md#with-slskd-soulseek).
 3. In **Settings → slskd (Soulseek)**, enable slskd and fill in:
     - **slskd URL** — e.g. `http://slskd:5030` when both containers share a Docker network.
     - **API key**.
-    - **Download folder** — the path *inside the Downtify container* where that folder is mounted (default `/slskd`), not the host path.
+    - **Download folder** — the path *inside the Castify container* where that folder is mounted (default `/slskd`), not the host path.
 
 Saving is rejected with an error message if slskd is enabled without a URL or API key.
 
@@ -47,29 +47,29 @@ Press **Test connection** under the fields to check them before you save — it 
 |--------|---------------|
 | **Connected to slskd 0.21.4.** | The address is right and the API key was accepted |
 | **slskd is logged in to Soulseek.** / **isn't logged in** | Whether slskd itself is signed in to the Soulseek network. If it isn't, searches find nothing until it is — a warning, since the settings themselves are right |
-| **Downtify can read `/slskd`.** / **can't read** | Whether the download folder above exists inside *this* container and is readable. The usual cause of a warning is a folder that isn't mounted — see [Setup](#setup) |
+| **Castify can read `/slskd`.** / **can't read** | Whether the download folder above exists inside *this* container and is readable. The usual cause of a warning is a folder that isn't mounted — see [Setup](#setup) |
 | **slskd rejected the API key.** | The server answered, but not to this key |
-| **Can't reach … / didn't answer in time.** | Wrong address or port, the server is down, or it isn't reachable from the Downtify container |
+| **Can't reach … / didn't answer in time.** | Wrong address or port, the server is down, or it isn't reachable from the Castify container |
 | **Doesn't look like slskd.** | Something answered, but not slskd — often a wrong port, or a base path missing from the address |
-| **The HTTPS certificate isn't trusted.** | Use `http://` on your own network, or a certificate from a trusted authority; Downtify doesn't skip certificate checks |
+| **The HTTPS certificate isn't trusted.** | Use `http://` on your own network, or a certificate from a trusted authority; Castify doesn't skip certificate checks |
 
 Editing any field clears the last result, since it no longer describes what is in the form. The button stays disabled until both the address and the key are filled in.
 
 ### How a track is matched
 
-Downtify searches slskd with the track's title and artist and ranks the results by how well the file name and duration match the track. By default, match score comes first; the configured format order only breaks ties. The default order is MP3, then FLAC, and results reporting a bitrate below 256 kbps are skipped. It tries up to five candidates total, one after another. When a transfer finishes, Downtify checks the file's tags and duration against the track before keeping it.
+Castify searches slskd with the track's title and artist and ranks the results by how well the file name and duration match the track. By default, match score comes first; the configured format order only breaks ties. The default order is MP3, then FLAC, and results reporting a bitrate below 256 kbps are skipped. It tries up to five candidates total, one after another. When a transfer finishes, Castify checks the file's tags and duration against the track before keeping it.
 
 In **Settings → Audio source → slskd**, set **Format priority** to a comma-separated list such as `flac, mp3`. Turn on **Strict format priority** to try each format as a separate tier in that order; matches are still ranked by score within a tier. **Candidate attempts** then applies per format, so `5` tries up to five FLAC files before moving on to up to five MP3 files. In strict mode, **Minimum lossy bitrate** rejects lossy files below the threshold and files that don't report a bitrate; FLAC is exempt.
 
-By default, formats not in the list remain eligible as a final catch-all tier. Turn on **Only allow listed formats** to reject those results instead. This whitelist also works with strict priority disabled, where the normal score-first selection remains unchanged. If all acceptable slskd candidates fail or are exhausted, Downtify continues to the next configured audio source.
+By default, formats not in the list remain eligible as a final catch-all tier. Turn on **Only allow listed formats** to reject those results instead. This whitelist also works with strict priority disabled, where the normal score-first selection remains unchanged. If all acceptable slskd candidates fail or are exhausted, Castify continues to the next configured audio source.
 
 For example, `flac, mp3` with strict priority and the whitelist enabled, a minimum lossy bitrate of `320`, and five candidate attempts per format tries FLAC first, then MP3 at 320 kbps or higher. If neither tier succeeds, the next configured provider is tried.
 
-If nothing acceptable turns up, the transfer doesn't finish within **Total timeout**, or it sits queued on the remote peer without progress for longer than **Queued timeout**, Downtify moves on to the next audio source.
+If nothing acceptable turns up, the transfer doesn't finish within **Total timeout**, or it sits queued on the remote peer without progress for longer than **Queued timeout**, Castify moves on to the next audio source.
 
 **Polling and resource use.**
 
-Downtify polls every 5 seconds while the requested transfer exists, and every 60 seconds when it is absent from slskd. An idle transfer can therefore take up to 60 seconds to appear in the queue progress. Timeouts still bound the wait, and cancellation is checked during the idle sleep without additional network requests.
+Castify polls every 5 seconds while the requested transfer exists, and every 60 seconds when it is absent from slskd. An idle transfer can therefore take up to 60 seconds to appear in the queue progress. Timeouts still bound the wait, and cancellation is checked during the idle sleep without additional network requests.
 
 - `DOWNTIFY_POLL_INTERVAL` (default `5`): active interval in seconds (1–30). When unset, the existing `poll_interval_seconds` setting is honored.
 - `DOWNTIFY_POLL_IDLE_INTERVAL` (default `60`): interval when no matching transfer exists, in seconds (1–60).
@@ -78,14 +78,14 @@ Downtify polls every 5 seconds while the requested transfer exists, and every 60
 
 Predictable file locations are probed every tick; throttling affects only recursive fallback searches, including renamed files. The final fallback scan, tag matching, rejected/failed transfer handling and provider fallback remain in place. Backoff does not multiply the existing attempt/time budget. Invalid environment values use the defaults and out-of-range values are bounded.
 
-`httpx` and `httpcore` request logs are restricted to WARNING. `uvicorn.access` is WARNING too, except with `--log-level DEBUG`. Downtify's own progress and failure logs remain available. Counting request log lines is not a reliable measure of HTTP traffic once INFO logs are suppressed: use the slskd-side access log or a counting test client when comparing request rates.
+`httpx` and `httpcore` request logs are restricted to WARNING. `uvicorn.access` is WARNING too, except with `--log-level DEBUG`. Castify's own progress and failure logs remain available. Counting request log lines is not a reliable measure of HTTP traffic once INFO logs are suppressed: use the slskd-side access log or a counting test client when comparing request rates.
 
 ### Leave files in place
 
-With **Leave slskd files in place** on (the default), the downloaded file stays in the slskd folder: Downtify writes the metadata, cover art and lyrics into it there and registers it in the library under a `slskd/…` path. The Library, player and M3U files use that path, and it's served through `/media/slskd/…`.
+With **Leave slskd files in place** on (the default), the downloaded file stays in the slskd folder: Castify writes the metadata, cover art and lyrics into it there and registers it in the library under a `slskd/…` path. The Library, player and M3U files use that path, and it's served through `/media/slskd/…`.
 
 Turn it off to copy the file next to your other downloads instead, following your filename template and [file organization](file-organization.md) settings.
-After the copy is tagged and verified as readable audio, Downtify removes the original from the configured slskd source folder. If copying, tagging or verification fails, the source is kept and the download reports an error. If removing the source fails, the imported library file remains successful and Downtify logs a warning with both paths. When the source and destination are the same file, or the source is outside the configured folder, it is not removed. Existing leftovers and failed cleanups are counted as [slskd working copies](storage-usage.md#the-library-not-its-working-copies).
+After the copy is tagged and verified as readable audio, Castify removes the original from the configured slskd source folder. If copying, tagging or verification fails, the source is kept and the download reports an error. If removing the source fails, the imported library file remains successful and Castify logs a warning with both paths. When the source and destination are the same file, or the source is outside the configured folder, it is not removed. Existing leftovers and failed cleanups are counted as [slskd working copies](storage-usage.md#the-library-not-its-working-copies).
 
 ::: info
 slskd files keep their original format — they aren't transcoded to the format chosen in Settings.
@@ -95,9 +95,9 @@ slskd files keep their original format — they aren't transcoded to the format 
 
 ### Setup
 
-1. Make sure Navidrome's music folder includes Downtify's downloads folder (and the slskd folder, if you leave slskd files in place). Navidrome can only add tracks to a playlist once it has scanned them.
+1. Make sure Navidrome's music folder includes Castify's downloads folder (and the slskd folder, if you leave slskd files in place). Navidrome can only add tracks to a playlist once it has scanned them.
 2. In **Settings → Navidrome**, enable Navidrome and enter its URL, username and password.
-3. Optionally, add an **admin** username and password. Downtify then asks Navidrome to scan the library before matching new tracks, instead of waiting for Navidrome's own scheduled scan.
+3. Optionally, add an **admin** username and password. Castify then asks Navidrome to scan the library before matching new tracks, instead of waiting for Navidrome's own scheduled scan.
 
 ### Testing the connection
 
@@ -107,25 +107,25 @@ Press **Test connection** under the fields to check them before you save — it 
 |--------|---------------|
 | **Connected to navidrome 0.53.3.** | The address is right and the username and password were accepted |
 | **This account can start library scans.** | The account used for scans is an admin. That is the admin username you filled in, or the normal one when you left it empty |
-| **This account can't start library scans.** | Navidrome only lets admins start a scan, and it doesn't say so when Downtify tries — new songs simply show up late. Fill in an admin username and password |
+| **This account can't start library scans.** | Navidrome only lets admins start a scan, and it doesn't say so when Castify tries — new songs simply show up late. Fill in an admin username and password |
 | **The admin account isn't an admin.** | The admin login you entered works but belongs to a normal user |
 | **Navidrome rejected the admin username or password.** | The scan account's login is wrong; the main login is reported separately |
 | **Navidrome rejected the username or password.** | The server answered, but not to this login |
-| **Can't reach … / didn't answer in time.** | Wrong address or port, the server is down, or it isn't reachable from the Downtify container |
+| **Can't reach … / didn't answer in time.** | Wrong address or port, the server is down, or it isn't reachable from the Castify container |
 | **Doesn't look like Navidrome.** | Something answered, but not the Subsonic API — often a wrong port, or a base URL that is missing from the address |
-| **The HTTPS certificate isn't trusted.** | Use `http://` on your own network, or a certificate from a trusted authority; Downtify doesn't skip certificate checks |
+| **The HTTPS certificate isn't trusted.** | Use `http://` on your own network, or a certificate from a trusted authority; Castify doesn't skip certificate checks |
 
 The scan rights are only looked up — testing never starts a scan. Editing any field clears the last result, and the button stays disabled until the address, username and password are filled in.
 
 ::: info Nothing is sent back to the page
-The answer carries only what was found — a version, a path, a status — never your password or the request Downtify made.
+The answer carries only what was found — a version, a path, a status — never your password or the request Castify made.
 :::
 
 ### Playlist sync
 
 Mirroring is configured by admins (Settings → Navidrome); regular accounts cannot create mirrors, though their downloads are mirrored like anyone else’s once the integration is on.
 
-With **Create playlists in Navidrome** on, Downtify creates (or updates) a Navidrome playlist with the same name after:
+With **Create playlists in Navidrome** on, Castify creates (or updates) a Navidrome playlist with the same name after:
 
 - a Spotify playlist download finishes,
 - a [Playlist Monitor](playlist-monitor.md) sweep adds tracks,
@@ -134,16 +134,16 @@ With **Create playlists in Navidrome** on, Downtify creates (or updates) a Navid
 Tracks are matched to Navidrome songs by path first, then by tags. **Make Navidrome playlists public** controls the playlist's visibility in Navidrome.
 
 ::: warning Files whose tags don't match the playlist are deleted
-When a playlist is refreshed (after deletes, **Fix library paths**, or **Download missing** on an already complete playlist), a library file registered for a Spotify track is **deleted from disk** if its embedded title/artist clearly don't match that track — Downtify treats it as a wrong download. Keep this in mind if you edit tags by hand.
+When a playlist is refreshed (after deletes, **Fix library paths**, or **Download missing** on an already complete playlist), a library file registered for a Spotify track is **deleted from disk** if its embedded title/artist clearly don't match that track — Castify treats it as a wrong download. Keep this in mind if you edit tags by hand.
 :::
 
 ### Playlist cover art
 
-Nothing to set up: with [Save playlist cover art](playlist-cover-art.md) on, Navidrome picks up the `.jpg` Downtify writes next to the playlist's M3U as a **sidecar image** — its own way of resolving playlist artwork — as long as its music folder covers that file. Downtify makes no API call for it.
+Nothing to set up: with [Save playlist cover art](playlist-cover-art.md) on, Navidrome picks up the `.jpg` Castify writes next to the playlist's M3U as a **sidecar image** — its own way of resolving playlist artwork — as long as its music folder covers that file. Castify makes no API call for it.
 
 ## Playlist downloads
 
-The **Library** page lists the Spotify playlists you've downloaded through Downtify under **Playlist downloads**. Expand it to see, for each playlist, how many tracks are in your library against the current Spotify track list. From there you can:
+The **Library** page lists the Spotify playlists you've downloaded through Castify under **Playlist downloads**. Expand it to see, for each playlist, how many tracks are in your library against the current Spotify track list. From there you can:
 
 - **Download missing** — queue only the tracks not in your library yet.
 - **Play** the tracks already downloaded.

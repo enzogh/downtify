@@ -4,7 +4,7 @@ icon: lucide/image
 
 # Capa das playlists
 
-O Downtify pode salvar a capa da própria playlist ao lado do seu [arquivo M3U](m3u-export.md), para que servidores de mídia e gerenciadores de arquivos mostrem a arte real da playlist em vez de um ícone genérico.
+O Castify pode salvar a capa da própria playlist ao lado do seu [arquivo M3U](m3u-export.md), para que servidores de mídia e gerenciadores de arquivos mostrem a arte real da playlist em vez de um ícone genérico.
 
 Ativado por padrão. Desative em **Configurações → Downloads e arquivos → Salvar a capa da playlist**.
 
@@ -25,7 +25,7 @@ Com *Organizar por artista* ou *Organizar por álbum* ativado, as faixas ficam e
 ```
 
 ::: info Precisa do M3U
-Com **Gerar playlists M3U** desativado, nenhuma capa é salva também: o Downtify posiciona a imagem pelo caminho do M3U, então sem ele não há onde colocá-la. A configuração fica oculta enquanto a gravação de M3U está desativada.
+Com **Gerar playlists M3U** desativado, nenhuma capa é salva também: o Castify posiciona a imagem pelo caminho do M3U, então sem ele não há onde colocá-la. A configuração fica oculta enquanto a gravação de M3U está desativada.
 :::
 
 ## Fontes e resolução
@@ -46,13 +46,13 @@ Os dois serviços entregam JPEG para essas URLs mesmo quando a arte original era
 
 Falhar em resolver ou baixar a capa (um erro de rede, uma playlist sem arte) é registrado em log e ignorado — nunca atrasa nem faz falhar o próprio download.
 
-## Na interface do Downtify
+## Na interface do Castify
 
 Uma playlist que tem arte própria (baixada com uma playlist do Spotify ou do YouTube) a mostra em todo lugar onde a Biblioteca lista playlists — a grade, a página da playlist, a barra lateral e o player. Playlists sem uma, e playlists que você cria na Biblioteca, mostram um mosaico de até quatro capas de faixas distintas: duas lado a lado, três como um bloco alto à esquerda e dois empilhados à direita, quatro em uma grade 2×2. A mesma colagem é gravada como `<nome-da-playlist>.jpg` ao lado do M3U de uma playlist manual, para que o Navidrome também a veja, e é refeita sempre que você adiciona ou remove músicas.
 
 ## Navidrome
 
-Nada a configurar: o Navidrome resolve a arte das playlists a partir de uma **imagem auxiliar** — um arquivo com o nome da playlist, na mesma pasta — que é exatamente o que o Downtify grava. Desde que a pasta de música do Navidrome inclua a sua pasta de downloads, a arte aparece na próxima varredura dele. Nenhuma chamada de API do Downtify está envolvida. Veja [slskd e Navidrome](slskd-navidrome.md#navidrome).
+Nada a configurar: o Navidrome resolve a arte das playlists a partir de uma **imagem auxiliar** — um arquivo com o nome da playlist, na mesma pasta — que é exatamente o que o Castify grava. Desde que a pasta de música do Navidrome inclua a sua pasta de downloads, a arte aparece na próxima varredura dele. Nenhuma chamada de API do Castify está envolvida. Veja [slskd e Navidrome](slskd-navidrome.md#navidrome).
 
 ## Limpeza
 

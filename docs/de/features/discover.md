@@ -11,7 +11,7 @@ Weder ein Konto noch ein API-Schlüssel ist nötig: Die Vorschläge stammen aus 
 ## Wie die Vorschläge ausgewählt werden
 
 1. **Deine Künstler werden gewichtet.** Jeder Künstler in deiner Bibliothek zählt etwas, und zählt für jeden dieser Punkte mehr, vom wichtigsten zum unwichtigsten:
-    - wie oft du ihn im Player von Downtify **hörst** (Gehörtes aus jüngster Zeit zählt mehr als Monate altes),
+    - wie oft du ihn im Player von Castify **hörst** (Gehörtes aus jüngster Zeit zählt mehr als Monate altes),
     - wie viele seiner Songs du **mit „Gefällt mir“ markiert** hast,
     - wie viele seiner Songs **in deiner Bibliothek** sind.
 

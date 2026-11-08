@@ -4,7 +4,7 @@ icon: lucide/file-code
 
 # Docker Compose
 
-Docker Compose is the recommended way to run Downtify for persistent home-server setups. It makes updates, backups and configuration changes easy.
+Docker Compose is the recommended way to run Castify for persistent home-server setups. It makes updates, backups and configuration changes easy.
 
 ## Minimal setup
 
@@ -36,7 +36,7 @@ Open **[http://localhost:8000](http://localhost:8000)**.
 
 ## With slskd (Soulseek)
 
-To use [slskd as an audio source](../features/slskd-navidrome.md), mount slskd's download folder into Downtify too — the **same host folder** your slskd container writes to:
+To use [slskd as an audio source](../features/slskd-navidrome.md), mount slskd's download folder into Castify too — the **same host folder** your slskd container writes to:
 
 ```yaml
 services:
@@ -63,7 +63,7 @@ To have the Library pick up a collection you already keep on the host, [mount it
 
 ## Finding the server from the apps
 
-The [mobile apps](../features/mobile-apps.md#finding-the-server-on-your-network) list Downtify servers on your network through mDNS. In Docker's default bridge network that announcement never leaves Docker, so phones don't see it. To have it listed, run the container on the host's network — the `ports:` mapping then no longer applies, and Downtify listens on `DOWNTIFY_PORT` directly:
+The [mobile apps](../features/mobile-apps.md#finding-the-server-on-your-network) list Castify servers on your network through mDNS. In Docker's default bridge network that announcement never leaves Docker, so phones don't see it. To have it listed, run the container on the host's network — the `ports:` mapping then no longer applies, and Castify listens on `DOWNTIFY_PORT` directly:
 
 ```yaml
 services:

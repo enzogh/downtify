@@ -4,7 +4,7 @@ icon: lucide/heart
 
 # Canciones que me gustan
 
-Toca el corazón de una canción para marcarla como favorita. En cuanto una canción te gusta, Downtify mantiene una playlist **Canciones que me gustan** con todas las que has marcado, de modo que tus favoritas quedan a un clic — en Downtify y en cualquier servidor multimedia apuntado a tu biblioteca.
+Toca el corazón de una canción para marcarla como favorita. En cuanto una canción te gusta, Castify mantiene una playlist **Canciones que me gustan** con todas las que has marcado, de modo que tus favoritas quedan a un clic — en Castify y en cualquier servidor multimedia apuntado a tu biblioteca.
 
 No hay nada que activar.
 
@@ -51,16 +51,16 @@ Un «me gusta» sigue al archivo al que se dio:
 
 | Qué le pasa al archivo | Qué le pasa al «me gusta» |
 |--------------------------|--------------------------|
-| Eliminas la canción en Downtify | El «me gusta» se va con ella y la playlist se reescribe |
+| Eliminas la canción en Castify | El «me gusta» se va con ella y la playlist se reescribe |
 | La mueves y ejecutas [Corregir rutas de la biblioteca](library-catalog.md#fix-library-paths) | El «me gusta» sigue al archivo a su nuevo lugar |
-| Desaparece fuera de Downtify (una unidad desmontada, un borrado manual) | El «me gusta» se conserva, pero la canción queda fuera de la playlist hasta que vuelva |
+| Desaparece fuera de Castify (una unidad desmontada, un borrado manual) | El «me gusta» se conserva, pero la canción queda fuera de la playlist hasta que vuelva |
 
 Conservar el «me gusta» de un archivo ausente significa que una unidad desconectada no te cuesta tus corazones. Si borraste archivos a mano y quieres que se vayan también los «me gusta», usa **Quitar todos los «me gusta»**, o quita la marca a las canciones antes de borrarlas.
 
 ## Conviene saber
 
 - Los «me gusta» se guardan en la base de datos de la biblioteca (`downtify_library.db`, en tu volumen `/data`), no en los archivos de audio. No se escribe nada en las etiquetas de la canción.
-- Downtify no crea la playlist en [Navidrome](slskd-navidrome.md). Es un archivo M3U sencillo, así que lo que un servidor multimedia haga con él depende de cómo lea ese servidor los archivos M3U.
+- Castify no crea la playlist en [Navidrome](slskd-navidrome.md). Es un archivo M3U sencillo, así que lo que un servidor multimedia haga con él depende de cómo lea ese servidor los archivos M3U.
 - El [archivo de la playlist](m3u-export.md) se escribe incluso con *Escribir playlists M3U* desactivado en los ajustes de descarga: la playlist es el objetivo de la función.
 
 ## API

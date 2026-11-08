@@ -4,7 +4,7 @@ icon: lucide/download
 
 # Güncelleme bildirimleri
 
-Downtify, kendi [GitHub Releases sayfasını](https://github.com/henriquesebastiao/downtify/releases) saatte bir kontrol eder. Daha yeni bir sürüm çıktığında her sayfada kenar çubuğunun altında bir bildirim görünür — telefonlarda **Daha fazla** sekmesinde bir nokta ve sayfasının en üstünde bir satır — ayrıca **Ayarlar → Hakkında** içinde:
+Castify, kendi [GitHub Releases sayfasını](https://github.com/henriquesebastiao/downtify/releases) saatte bir kontrol eder. Daha yeni bir sürüm çıktığında her sayfada kenar çubuğunun altında bir bildirim görünür — telefonlarda **Daha fazla** sekmesinde bir nokta ve sayfasının en üstünde bir satır — ayrıca **Ayarlar → Hakkında** içinde:
 
 > ✦ 3.0.1 güncellemesi mevcut
 
@@ -18,11 +18,11 @@ Bu sürümü GitHub’da açmak için üzerine tıklayın.
 
 ## GitHub’a ulaşılamazsa
 
-Başarısız bir kontrol (çevrimdışı ana makine, GitHub istek sınırı) günlüğe yazılır ve bir sonraki saatlik turda yeniden denenir — varsa önceki sonuç o zamana kadar geçerli kalır. Kontrol, Downtify’ın yaptığı başka hiçbir şeyi engellemez; bunun için kullanıcıya gösterilen bir hata yoktur.
+Başarısız bir kontrol (çevrimdışı ana makine, GitHub istek sınırı) günlüğe yazılır ve bir sonraki saatlik turda yeniden denenir — varsa önceki sonuç o zamana kadar geçerli kalır. Kontrol, Castify’ın yaptığı başka hiçbir şeyi engellemez; bunun için kullanıcıya gösterilen bir hata yoktur.
 
 ## Hiçbir şey otomatik indirilmez
 
-Bu yalnızca yeni bir sürüm olduğunu *söyler* — Downtify kendini güncellemez. Gerçekten güncellemek için yeni imajı çekin ve kapsayıcıyı yeniden oluşturun:
+Bu yalnızca yeni bir sürüm olduğunu *söyler* — Castify kendini güncellemez. Gerçekten güncellemek için yeni imajı çekin ve kapsayıcıyı yeniden oluşturun:
 
 ```bash
 docker compose pull

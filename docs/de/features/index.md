@@ -4,14 +4,13 @@ icon: lucide/sparkles
 
 # Funktionen
 
-Downtify deckt alles ab, was du brauchst, um aus Spotify eine lokale Musikbibliothek aufzubauen und zu pflegen.
+Castify deckt alles ab, was du brauchst, um aus Spotify eine lokale Musikbibliothek aufzubauen und zu pflegen.
 
 ## Überblick
 
 | Funktion | Was sie tut |
 |---------|-------------|
 | [Charts](charts.md) | Die globale Hitliste von Deezer durchstöbern und herunterladen, was gerade angesagt ist |
-| [Ähnliche Titel](similar.md) | Nenne einen Künstler oder Titel; YouTube Music antwortet mit ähnlichen Titeln, die sich vollständig abspielen und herunterladen lassen, ohne Schlüssel |
 | [Finder](finder.md) | Bei Deezer suchen und dann einen Künstler, seine Alben und die Titel jedes Albums in Spalten durchblättern |
 | [Download-Einstellungen](download-settings.md) | Format (MP3/FLAC/M4A/OGG/OPUS), Bitrate, parallele Downloads und Pause zwischen Downloads wählen |
 | [Download-Warteschlange](download-queue.md) | Downloads pausieren, bevor du Einstellungen änderst oder aktualisierst: laufende laufen zu Ende, keine neuen starten, und wartende Titel überstehen einen Neustart |
@@ -28,12 +27,12 @@ Downtify deckt alles ab, was du brauchst, um aus Spotify eine lokale Musikbiblio
 | [Benutzer und Anmeldung](users.md) | Anmeldung mit Benutzername und Passwort (`admin` / `downtify` auf einem neuen Server), Admin- und normale Benutzerkonten, Einstellungen pro Benutzer und ein Aktivitätsprotokoll von Anmeldungen und dem, was jeder hört |
 | [Explicit-Kennzeichnung](explicit-marker.md) | Das „E“ neben Songs mit expliziten Texten — in der Suche, der Bibliothek und im Player — und in den Tags der Datei |
 | [Audio ersetzen](replace-audio.md) | Falscher Song oder falsche Version? Wähle die richtige auf YouTube Music oder YouTube; die Datei behält Namen, Tags und Playlists |
-| [Servereinstellungen](server.md) | Der Port, auf dem Downtify lauscht, in den Einstellungen änderbar (Admins), auf Wunsch mit sofortigem Neustart |
+| [Servereinstellungen](server.md) | Der Port, auf dem Castify lauscht, in den Einstellungen änderbar (Admins), auf Wunsch mit sofortigem Neustart |
 | [Mobile Apps](mobile-apps.md) | Handy-Apps per QR-Code koppeln und die Bibliothek an sie streamen (original oder transkodiert) |
 | [Entdecken](discover.md) | Künstler, Alben und Playlists, die du noch nicht hast, vorgeschlagen anhand von Bibliothek, Likes und Hörverhalten; ausblenden, was du nicht willst |
 | [slskd und Navidrome](slskd-navidrome.md) | Über slskd von Soulseek herunterladen, Playlists in Navidrome spiegeln und Playlist-Downloads verfolgen |
-| [Bibliothekskatalog und Pfadabgleich](library-catalog.md) | Wie Downtify Bibliotheksdateien und Playlists verfolgt, in der Bibliothek angelegte Playlists und das Reparieren von Pfaden nach dem Verschieben von Dateien |
-| [Vorhandene Musikordner](external-library.md) | Downtify auf Ordner mit vorhandenem Audio richten; die Synchronisierung liest Tags, ordnet Künstler zu und überspringt Songs, die schon in der Bibliothek sind |
+| [Bibliothekskatalog und Pfadabgleich](library-catalog.md) | Wie Castify Bibliotheksdateien und Playlists verfolgt, in der Bibliothek angelegte Playlists und das Reparieren von Pfaden nach dem Verschieben von Dateien |
+| [Vorhandene Musikordner](external-library.md) | Castify auf Ordner mit vorhandenem Audio richten; die Synchronisierung liest Tags, ordnet Künstler zu und überspringt Songs, die schon in der Bibliothek sind |
 | [Bibliothek verbessern](library-upgrade.md) | Bereits heruntergeladene Musik scannen und kleine Cover, fehlende Songtexte und unvollständige Tags reparieren |
 | [Speicher und Nutzung](storage-usage.md) | Sieh, wie groß die Bibliothek ist und wie schnell sie wächst, aus welcher Quelle jeder Teil stammt, wie Downloads endeten und wie viel Platz Duplikate, slskd-Kopien und Reste belegen |
 | [M3U-Export](m3u-export.md) | Automatisch erzeugte Playlist-Dateien für Jellyfin, Navidrome, Plex und jede Medien-App |
@@ -48,7 +47,7 @@ Downtify deckt alles ab, was du brauchst, um aus Spotify eine lokale Musikbiblio
 
 ## Eingabearten
 
-Downtify akzeptiert in der Suchleiste mehrere Eingabearten:
+Castify akzeptiert in der Suchleiste mehrere Eingabearten:
 
 | Eingabe | Beispiel |
 |-------|---------|

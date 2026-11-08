@@ -4,7 +4,7 @@ icon: lucide/download
 
 # Installation
 
-The quickest way to run Downtify is with a single `docker run` command. No Python, Node.js or other system dependencies needed on the host — everything is bundled inside the image.
+The quickest way to run Castify is with a single `docker run` command. No Python, Node.js or other system dependencies needed on the host — everything is bundled inside the image.
 
 ## Prerequisites
 
@@ -37,7 +37,7 @@ Both volumes persist across container restarts and upgrades. The `/downloads` vo
 
 ## Custom port
 
-To expose Downtify on a different host port, change the left side of `-p`:
+To expose Castify on a different host port, change the left side of `-p`:
 
 ```bash
 docker run -d \

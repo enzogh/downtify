@@ -31,7 +31,7 @@ Disponible para formatos con pérdidas (MP3, M4A, OGG, OPUS). FLAC ignora este a
 El audio descargado se codifica al bitrate que elijas, en todos los formatos con pérdidas. Si el audio que sirve YouTube ya tiene el códec de destino a más o menos ese bitrate (p. ej. su flujo AAC de ~128 kbps para **M4A @ 128**), se conserva tal cual en lugar de recodificarse, ya que recodificar solo perdería calidad.
 
 ::: info Un bitrate más alto no añade calidad
-El audio de YouTube llega como mucho a **128–160 kbps** (AAC u Opus), y Downtify siempre descarga el mejor flujo disponible. Codificarlo a 256 o 320 kbps da archivos más grandes que conservan fielmente esa fuente, pero no pueden recuperar detalle que la fuente nunca tuvo. Elige un bitrate más bajo si el tamaño de los archivos te importa más.
+El audio de YouTube llega como mucho a **128–160 kbps** (AAC u Opus), y Castify siempre descarga el mejor flujo disponible. Codificarlo a 256 o 320 kbps da archivos más grandes que conservan fielmente esa fuente, pero no pueden recuperar detalle que la fuente nunca tuvo. Elige un bitrate más bajo si el tamaño de los archivos te importa más.
 :::
 
 ## Plantilla del nombre de archivo
@@ -86,7 +86,7 @@ El límite se aplica a toda descarga por lotes — descargas de playlists/álbum
 
 ## Pausa entre descargas
 
-Hace que Downtify espere un número configurable de segundos al terminar una canción antes de empezar la siguiente, en lugar de lanzar las peticiones seguidas.
+Hace que Castify espere un número configurable de segundos al terminar una canción antes de empezar la siguiente, en lugar de lanzar las peticiones seguidas.
 
 | Valor | Comportamiento |
 |-------|-----------|
@@ -103,7 +103,7 @@ La misma idea, pero para las **[Carpetas de música existentes](external-library
 
 ## Descargar portadas
 
-Controla si Downtify incrusta la portada del álbum. Activado por defecto. Desactívalo para omitir por completo la búsqueda de portadas — el resto de etiquetas (título, artista, álbum, año, letra) se incrustan con normalidad, pero los archivos pesan menos y se descargan algo más rápido, ya que nunca se pide ni se escribe la imagen de portada.
+Controla si Castify incrusta la portada del álbum. Activado por defecto. Desactívalo para omitir por completo la búsqueda de portadas — el resto de etiquetas (título, artista, álbum, año, letra) se incrustan con normalidad, pero los archivos pesan menos y se descargan algo más rápido, ya que nunca se pide ni se escribe la imagen de portada.
 
 Desactivarlo también omite la escritura del `cover.jpg` independiente que produce la opción *Organizar por álbum* (consulta [Organización de archivos](file-organization.md)), y el [reproductor](player.md) y la biblioteca no mostrarán portada en las canciones descargadas así (en su lugar, el icono de nota musical).
 
@@ -111,33 +111,33 @@ Ese `cover.jpg` lo comparten todas las canciones de la carpeta del álbum. Borra
 
 ## Resolución de la portada
 
-Solo importa cuando **Descargar portadas** (arriba) está activado. Fija el tamaño objetivo (ancho y alto, en píxeles) que Downtify pide para la portada incrustada procedente de **YouTube Music** o **Deezer**. Elige un valor predefinido (300, 600, 800, 1000, 1200) o arrastra el control deslizante de **300 a 1200**; el valor actual en píxeles aparece a su lado. Por defecto es 600.
+Solo importa cuando **Descargar portadas** (arriba) está activado. Fija el tamaño objetivo (ancho y alto, en píxeles) que Castify pide para la portada incrustada procedente de **YouTube Music** o **Deezer**. Elige un valor predefinido (300, 600, 800, 1000, 1200) o arrastra el control deslizante de **300 a 1200**; el valor actual en píxeles aparece a su lado. Por defecto es 600.
 
-Es útil al alimentar tu biblioteca a un servidor multimedia como Plex, que muestra portadas con más resolución de la que Downtify incrusta por defecto.
+Es útil al alimentar tu biblioteca a un servidor multimedia como Plex, que muestra portadas con más resolución de la que Castify incrusta por defecto.
 
 Las dos fuentes aplican el ajuste de forma distinta, ya que solo una de ellas puede redimensionarse realmente bajo demanda:
 
 - Las miniaturas de **YouTube Music** se pueden redimensionar editando su URL — comprobado contra el CDN real, los valores altos devuelven de verdad más detalle (no solo ampliación) en la mayoría de portadas, hasta la resolución de la propia imagen de origen.
-- **Deezer** solo ofrece cuatro tamaños fijos para la portada de cualquier canción, álbum, artista o playlist (56, 250, 500 y 1000 px) — no hay tamaño intermedio que pedir. Downtify elige el menor de esos cuatro que aún sea al menos tan grande como el valor configurado (pedir 300 px da la de 500 px, ya que no existe un tamaño exacto de 300 px); pedir más de 1000 px también da la de 1000 px, la mayor de Deezer.
+- **Deezer** solo ofrece cuatro tamaños fijos para la portada de cualquier canción, álbum, artista o playlist (56, 250, 500 y 1000 px) — no hay tamaño intermedio que pedir. Castify elige el menor de esos cuatro que aún sea al menos tan grande como el valor configurado (pedir 300 px da la de 500 px, ya que no existe un tamaño exacto de 300 px); pedir más de 1000 px también da la de 1000 px, la mayor de Deezer.
 
 ::: info Las portadas procedentes de Spotify no se ven afectadas
-Downtify ya incrusta la **mayor** portada que ofrece la API de embed pública de Spotify para canciones/álbumes/playlists resueltos por Spotify — no hay un tamaño mayor que pedir. Este ajuste solo eleva el techo para las canciones resueltas por YouTube Music (búsqueda de texto libre, URL de YouTube y cualquier canción de Spotify reasignada a YouTube Music para el audio en sí) o por Deezer (un enlace de Deezer pegado, o una canción de las [Listas de éxitos](charts.md)).
+Castify ya incrusta la **mayor** portada que ofrece la API de embed pública de Spotify para canciones/álbumes/playlists resueltos por Spotify — no hay un tamaño mayor que pedir. Este ajuste solo eleva el techo para las canciones resueltas por YouTube Music (búsqueda de texto libre, URL de YouTube y cualquier canción de Spotify reasignada a YouTube Music para el audio en sí) o por Deezer (un enlace de Deezer pegado, o una canción de las [Listas de éxitos](charts.md)).
 :::
 
 Cambiar este valor en Ajustes surte efecto de inmediato, incluso en la página de búsqueda abierta en ese momento — no obliga a volver a descargar nada que ya esté en disco.
 
 ## Sobrescribir archivos existentes
 
-Activado por defecto, como el comportamiento histórico de Downtify: toda descarga pasa por el pipeline (obtención del audio, etiquetado, portada, letra) y sobrescribe lo que ya haya en la ruta de salida calculada.
+Activado por defecto, como el comportamiento histórico de Castify: toda descarga pasa por el pipeline (obtención del audio, etiquetado, portada, letra) y sobrescribe lo que ya haya en la ruta de salida calculada.
 
 ### Qué significa realmente «de nuevo»
 
-Activado, una nueva descarga es una **ejecución completamente nueva**, no una reparación del archivo existente. Downtify no mira lo que ya tienes: busca en tus [fuentes de audio](#audio-provider) en el orden configurado — así que, si slskd es la primera, se prueba slskd primero, no solo como alternativa —, obtiene el audio de la que responda y escribe sobre él las etiquetas, la portada y la letra de hoy.
+Activado, una nueva descarga es una **ejecución completamente nueva**, no una reparación del archivo existente. Castify no mira lo que ya tienes: busca en tus [fuentes de audio](#audio-provider) en el orden configurado — así que, si slskd es la primera, se prueba slskd primero, no solo como alternativa —, obtiene el audio de la que responda y escribe sobre él las etiquetas, la portada y la letra de hoy.
 
 Eso tiene una consecuencia que conviene conocer antes de volver a descargar una biblioteca grande:
 
 ::: warning Un formato distinto deja atrás el archivo antiguo
-El archivo nuevo se escribe en la ruta que produce la [plantilla del nombre de archivo](#output-filename-template), con la extensión del audio **nuevo**. Downtify sobrescribe el archivo antiguo solo cuando ambos terminan con la misma extensión.
+El archivo nuevo se escribe en la ruta que produce la [plantilla del nombre de archivo](#output-filename-template), con la extensión del audio **nuevo**. Castify sobrescribe el archivo antiguo solo cuando ambos terminan con la misma extensión.
 
 Así, volver a descargar `Artista - Canción.mp3` cuando slskd responde con un FLAC te da **ambos**: `Artista - Canción.mp3` (el antiguo, intacto) y `Artista - Canción.flac`. Con [Dejar los archivos de slskd en su sitio](slskd-navidrome.md#leave-files-in-place) activado — lo predeterminado —, el archivo de slskd ni siquiera se copia a tu carpeta de descargas, así que el antiguo se queda exactamente donde estaba y el nuevo vive en `slskd/`.
 
@@ -146,13 +146,13 @@ No se pierde nada, pero obtienes duplicados. Para reemplazar de verdad un archiv
 
 ### La portada viene de Spotify o YouTube Music, no del archivo
 
-Cualquier arte que lleve el audio descargado — incluida una portada de alta resolución incrustada en un archivo de slskd — se **descarta y se sustituye** durante el etiquetado. Downtify siempre incrusta la portada que obtiene para la canción de Spotify o YouTube Music, a la [resolución de la portada](#cover-art-resolution) que configuraste (600 px por defecto). Lo mismo vale para el título, los artistas, el álbum y el resto de etiquetas: las etiquetas propias de la fuente no se conservan.
+Cualquier arte que lleve el audio descargado — incluida una portada de alta resolución incrustada en un archivo de slskd — se **descarta y se sustituye** durante el etiquetado. Castify siempre incrusta la portada que obtiene para la canción de Spotify o YouTube Music, a la [resolución de la portada](#cover-art-resolution) que configuraste (600 px por defecto). Lo mismo vale para el título, los artistas, el álbum y el resto de etiquetas: las etiquetas propias de la fuente no se conservan.
 
 Si lo que quieres son portadas más grandes en archivos que ya tienes, volver a descargar es el camino largo. [Mejorar biblioteca](library-upgrade.md) hace justo eso — compara la portada incrustada de cada archivo con la de Spotify, iTunes y YouTube Music, escribe la más grande, completa letras y etiquetas que faltan y nunca toca el audio.
 
 Desactívalo para no descargar nunca una canción que ya está en disco. Importa sobre todo al descargar una playlist, importar una [biblioteca por CSV](library-import.md) o dejar que el [Monitor de playlists](playlist-monitor.md) sincronice playlists que comparten canciones entre sí o con canciones que ya están en tu biblioteca — con la opción activada, cada uno de esos duplicados se descarga otra vez.
 
-Desactivada, Downtify busca la canción **en cualquier parte de la carpeta de descargas**, no solo donde iría la nueva descarga:
+Desactivada, Castify busca la canción **en cualquier parte de la carpeta de descargas**, no solo donde iría la nueva descarga:
 
 - la raíz de la biblioteca (descargas de canciones sueltas),
 - la carpeta de cualquier playlist (descargas de playlists, importaciones por CSV, Monitor de playlists),
@@ -172,17 +172,17 @@ Cuando se omite una canción:
 
 ## Proveedor de audio
 
-El proveedor de audio por defecto es **YouTube Music**. Downtify usa [`ytmusicapi`](https://ytmusicapi.readthedocs.io/) para buscar la mejor coincidencia comparando la duración de la canción. Cuando YouTube Music no tiene una coincidencia aceptable, o solo una cuya duración se aleja mucho (probablemente otra grabación), Downtify recurre automáticamente a buscar en YouTube estándar — consulta [Cómo funciona](../how-it-works.md#fallback-to-standard-youtube).
+El proveedor de audio por defecto es **YouTube Music**. Castify usa [`ytmusicapi`](https://ytmusicapi.readthedocs.io/) para buscar la mejor coincidencia comparando la duración de la canción. Cuando YouTube Music no tiene una coincidencia aceptable, o solo una cuya duración se aleja mucho (probablemente otra grabación), Castify recurre automáticamente a buscar en YouTube estándar — consulta [Cómo funciona](../how-it-works.md#fallback-to-standard-youtube).
 
 **Ajustes → Fuentes de audio** también puede usar solo **YouTube** estándar, o **slskd** (Soulseek), como lista ordenada de alternativas — consulta [slskd y Navidrome](slskd-navidrome.md#audio-sources-and-fallback-order).
 
 ### Forzar una fuente de audio concreta
 
-Si Downtify elige el vídeo equivocado de YouTube Music (p. ej. una versión cover en lugar del original), puedes sustituirlo por canción:
+Si Castify elige el vídeo equivocado de YouTube Music (p. ej. una versión cover en lugar del original), puedes sustituirlo por canción:
 
 **Opción A — pega directamente una URL de YouTube Music**
 
-Pega `https://music.youtube.com/watch?v=…` (o una URL normal `youtube.com/watch?v=…`) en la barra de búsqueda y pulsa descargar. Downtify obtiene el audio de ese vídeo exacto.
+Pega `https://music.youtube.com/watch?v=…` (o una URL normal `youtube.com/watch?v=…`) en la barra de búsqueda y pulsa descargar. Castify obtiene el audio de ese vídeo exacto.
 
 ::: info
 Al descargar mediante una URL de YouTube, los metadatos (título, artista, portada) vienen de YouTube y no de Spotify. Para etiquetas limpias, usa la Opción B.
@@ -194,11 +194,11 @@ Al descargar mediante una URL de YouTube, los metadatos (título, artista, porta
 2. Pega una URL de YouTube o YouTube Music en el campo que aparece.
 3. Pulsa **Enter** o haz clic en **Aplicar**.
 
-Downtify vuelve a descargar la canción usando ese vídeo exacto y conserva todos los metadatos de Spotify (título, artista, álbum, portada, letra).
+Castify vuelve a descargar la canción usando ese vídeo exacto y conserva todos los metadatos de Spotify (título, artista, álbum, portada, letra).
 
 ## Metadatos incrustados
 
-Downtify incrusta las siguientes etiquetas en cada archivo descargado, sea cual sea el formato:
+Castify incrusta las siguientes etiquetas en cada archivo descargado, sea cual sea el formato:
 
 | Etiqueta | Fuente |
 |-----|--------|

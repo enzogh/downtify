@@ -4,7 +4,7 @@ icon: lucide/cookie
 
 # Cookies do YouTube
 
-O Downtify busca o áudio no YouTube. Na maior parte do tempo isso funciona de forma anônima — mas nem sempre:
+O Castify busca o áudio no YouTube. Na maior parte do tempo isso funciona de forma anônima — mas nem sempre:
 
 - **Faixas explícitas / com restrição de idade.** O YouTube só as entrega a uma conta de adulto conectada. Sem cookies, o download falha.
 - **Desafios anti-bot.** Em IPs de datacenter (VPS, algumas VPNs), o YouTube periodicamente responde com "Faça login para confirmar que você não é um robô" em vez de áudio.
@@ -15,7 +15,7 @@ Fornecer um `cookies.txt` resolve os dois: o yt-dlp passa a falar com o YouTube 
 
 1. Instale uma extensão de exportação de cookies: [Get cookies.txt LOCALLY](https://chrome.google.com/webstore/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc) (Chrome/Edge) ou [cookies.txt](https://addons.mozilla.org/en-US/firefox/addon/cookies-txt/) (Firefox)
 2. Abra o `youtube.com` **conectado à sua conta Google** e exporte os cookies desse site — o arquivo precisa estar no formato **Netscape**
-3. No Downtify, abra **Configurações** (⚙️) → **Cookies do YouTube** → **Enviar cookies.txt**
+3. No Castify, abra **Configurações** (⚙️) → **Cookies do YouTube** → **Enviar cookies.txt**
 
 O arquivo é validado no envio — um arquivo que não seja um cookie jar Netscape é recusado na hora, em vez de quebrar em silêncio todos os downloads seguintes. Se ele não contiver cookies de `youtube.com` ou `google.com`, você recebe um aviso, pois isso geralmente significa que foi exportado da aba errada.
 
@@ -27,7 +27,7 @@ Enviar pela interface web não exige bind mounts, caminhos de arquivo nem shell 
 
 ## Onde fica guardado
 
-O arquivo enviado é gravado como `cookies.txt` dentro do diretório de dados do Downtify (`/data` por padrão) — o mesmo volume que guarda o `settings.json` e o banco de dados do Monitor de playlists. Por isso ele **sobrevive às atualizações do contêiner**: baixar uma nova imagem e recriar o contêiner mantém seus cookies, desde que `/data` continue sendo um volume nomeado ou um bind mount.
+O arquivo enviado é gravado como `cookies.txt` dentro do diretório de dados do Castify (`/data` por padrão) — o mesmo volume que guarda o `settings.json` e o banco de dados do Monitor de playlists. Por isso ele **sobrevive às atualizações do contêiner**: baixar uma nova imagem e recriar o contêiner mantém seus cookies, desde que `/data` continue sendo um volume nomeado ou um bind mount.
 
 ## Usando uma variável de ambiente
 
@@ -42,7 +42,7 @@ services:
       - DOWNTIFY_COOKIES_FILE=/cookies.txt
 ```
 
-Quando ela está definida, a tela de configurações mostra a seção de cookies bloqueada e recusa envios e exclusões — a instalação é dona dessa configuração, e o Downtify não deve sobrescrever um arquivo que não gerencia. Remova a variável (e recrie o contêiner) para gerenciar os cookies pela interface web.
+Quando ela está definida, a tela de configurações mostra a seção de cookies bloqueada e recusa envios e exclusões — a instalação é dona dessa configuração, e o Castify não deve sobrescrever um arquivo que não gerencia. Remova a variável (e recrie o contêiner) para gerenciar os cookies pela interface web.
 
 `DOWNTIFY_COOKIES_FROM_BROWSER` lê os cookies direto de um perfil de navegador, mas isso exige que o armazenamento de cookies do navegador esteja acessível *dentro* do contêiner, então raramente é utilizável no Docker.
 
@@ -53,5 +53,5 @@ Quando ela está definida, a tela de configurações mostra a seção de cookies
 - Algumas regiões exigem verificação completa de identidade na conta Google antes de o YouTube entregar qualquer conteúdo com restrição de idade. Estar conectado nem sempre basta.
 
 ::: warning Trate o arquivo como uma senha
-Um `cookies.txt` contém tokens de sessão ativos da sua conta Google. Qualquer pessoa que consiga lê-lo pode agir como você no YouTube. O Downtify o guarda com permissões só para o dono onde o sistema de arquivos permite e nunca expõe o conteúdo pela API — apenas se há um configurado, seu tamanho e quando mudou. Use uma conta Google descartável se preferir não arriscar a principal.
+Um `cookies.txt` contém tokens de sessão ativos da sua conta Google. Qualquer pessoa que consiga lê-lo pode agir como você no YouTube. O Castify o guarda com permissões só para o dono onde o sistema de arquivos permite e nunca expõe o conteúdo pela API — apenas se há um configurado, seu tamanho e quando mudou. Use uma conta Google descartável se preferir não arriscar a principal.
 :::

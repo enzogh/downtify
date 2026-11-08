@@ -4,7 +4,7 @@ icon: lucide/library
 
 # Kitaplık kataloğu ve yol eşitleme
 
-Downtify, `/downloads` altındaki dosyaların (slskd klasörü — [slskd dosyaları yerinde bırakıldığında](slskd-navidrome.md#leave-files-in-place) — ve Ayarlar’da eklediğiniz [ek klasörler](external-library.md)) küçük bir **kataloğunu** tutar; böylece dosyalar taşındığında ya da çalma listeleri büyüdüğünde Kitaplık sayfası, oynatıcı, M3U dışa aktarma, Navidrome eşitleme ve yinelenen algılama tutarlı kalır.
+Castify, `/downloads` altındaki dosyaların (slskd klasörü — [slskd dosyaları yerinde bırakıldığında](slskd-navidrome.md#leave-files-in-place) — ve Ayarlar’da eklediğiniz [ek klasörler](external-library.md)) küçük bir **kataloğunu** tutar; böylece dosyalar taşındığında ya da çalma listeleri büyüdüğünde Kitaplık sayfası, oynatıcı, M3U dışa aktarma, Navidrome eşitleme ve yinelenen algılama tutarlı kalır.
 
 ## Neler saklanır
 
@@ -26,14 +26,14 @@ Dosyalar taşımalar boyunca bir **içerik anahtarıyla** eşleştirilir — dos
 
 ### Kapakları diskte önbelleğe al
 
-Açıkken Downtify çıkarılmış kapak görsellerini `/data/cover_cache` altında tutar; böylece Kitaplık ve oynatıcı her küçük resim için etiketleri yeniden okumaz. İstediğiniz zaman kapatılabilir; yalnızca disk alanına mal olur.
+Açıkken Castify çıkarılmış kapak görsellerini `/data/cover_cache` altında tutar; böylece Kitaplık ve oynatıcı her küçük resim için etiketleri yeniden okumaz. İstediğiniz zaman kapatılabilir; yalnızca disk alanına mal olur.
 
 ### Kitaplık yollarını düzelt
 
-Downtify dışında **diskte dosyaları taşıdıktan veya yeniden adlandırdıktan** ya da elle sildikten sonra kullanın.
+Castify dışında **diskte dosyaları taşıdıktan veya yeniden adlandırdıktan** ya da elle sildikten sonra kullanın.
 
 1. **Ayarlar → Kitaplık → Kitaplık yollarını düzelt**’i açın.
-2. Downtify kitaplık klasörlerini tarar ve:
+2. Castify kitaplık klasörlerini tarar ve:
     - bir dosya artık eskiden olduğu yerde değilken aynı dosya (aynı içerik anahtarı) başka yerde bulunursa parça dizininde ve çalma listesi kataloğunda **yolları günceller**;
     - artık var olmayan dosyaların **eskimiş girdilerini kaldırır**;
     - içerik anahtarları var olmadan önce saklanmış eski girdileri **dizinler**;
@@ -44,7 +44,7 @@ Yalnızca düğmeye bastığınızda (ya da `POST /api/library/reconcile` çağ�
 
 ### Mevcut müzik klasörleri
 
-Downtify’ın indirmediği bir koleksiyonu çalmak için klasörleri **Ayarlar → Kitaplık**’a ekleyin ve **Klasörleri eşitle**’ye basın. Dosyalar diskte kalır; etiketler okunur ve sanatçılar eşleştirilir. Bkz. [Mevcut müzik klasörleri](external-library.md).
+Castify’ın indirmediği bir koleksiyonu çalmak için klasörleri **Ayarlar → Kitaplık**’a ekleyin ve **Klasörleri eşitle**’ye basın. Dosyalar diskte kalır; etiketler okunur ve sanatçılar eşleştirilir. Bkz. [Mevcut müzik klasörleri](external-library.md).
 
 ::: warning
 Bir çalma listesini yeniden yazmak, etiketleri kayıtlı oldukları Spotify parçasıyla açıkça uyuşmayan kitaplık dosyalarını siler — bkz. [slskd ve Navidrome](slskd-navidrome.md#playlist-sync).
@@ -59,7 +59,7 @@ Bir çalma listesini yeniden yazmak, etiketleri kayıtlı oldukları Spotify par
 Kitaplık sayfasında dört sekme vardır — **Albümler**, **Sanatçılar**, **Çalma listeleri** ve **Parçalar**:
 
 - **Albümler, sanatçılar ve çalma listeleri** kapak ızgarası veya kompakt liste olarak gösterilir (geçiş hatırlanır); metin süzgeci ve yakınlarda eklenen, ad, sanatçı, yıl veya parça sayısına göre sıralama vardır. Albümler ve sanatçılar her dosyanın etiketlerinden (albüm sanatçısı, albüm, yıl) oluşturulur; yani dosyaların diskte nasıl düzenlendiğine bağlı değildir. Bir derleme — albüm sanatçısı `Various Artists` ve derleme işareti olan — Albümler'de tek bir albüm olarak kalır, parçaları ise sanatçılarının sayfalarında yer alır. Bu işaret olmadan `Various Artists` etiketli bir parça (eski sürümler birden çok sanatçılı her şarkıyı böyle etiketlerdi, `Zé Neto & Cristiano` gibi bir ikili de dahil) bunun yerine ilk sanatçısına göre gruplanır. Albüm etiketi olmayan bir parça Albümler’de değil, Parçalar’da ve sanatçısının altında görünür.
-- **Sanatçılar**, bir parçanın ait olduğu her sanatçıyı listeler — parçanın albüm sanatçısını, bir derlemede (ya da albüm sanatçısı olmayan bir dosyada) ilk sanatçısını. Böyle bir sanatçının sayfasında konuk olduğu parçalar da **Konuk** etiketiyle yer alır; Albümler sekmesi yalnızca kendi albümlerini gösterir (hiç yoksa gizlenir). Her zaman yalnızca başka birinin yanında geçen bir ad kendi sayfasını almaz: etiketler bir ikilinin üyelerini tek tek adlandırabilir (`Henrique; Juliano`, YouTube Music'in bazı ikilileri gösterdiği ve Downtify'ın eski sürümlerinin yazdığı gibi), ve her üye için bir sayfa var olmayan bir sanatçı olurdu. **Various Artists** listelenmez: bir derlemenin parçaları sanatçılarının sayfalarındadır, albümün kendisi ise Albümler'de kalır.
+- **Sanatçılar**, bir parçanın ait olduğu her sanatçıyı listeler — parçanın albüm sanatçısını, bir derlemede (ya da albüm sanatçısı olmayan bir dosyada) ilk sanatçısını. Böyle bir sanatçının sayfasında konuk olduğu parçalar da **Konuk** etiketiyle yer alır; Albümler sekmesi yalnızca kendi albümlerini gösterir (hiç yoksa gizlenir). Her zaman yalnızca başka birinin yanında geçen bir ad kendi sayfasını almaz: etiketler bir ikilinin üyelerini tek tek adlandırabilir (`Henrique; Juliano`, YouTube Music'in bazı ikilileri gösterdiği ve Castify'ın eski sürümlerinin yazdığı gibi), ve her üye için bir sayfa var olmayan bir sanatçı olurdu. **Various Artists** listelenmez: bir derlemenin parçaları sanatçılarının sayfalarındadır, albümün kendisi ise Albümler'de kalır.
 - Bir parçanın sanatçılarını gösterdiği her yerde — parça listeleri, Şimdi çalıyor ekranı, Finder ve popüler şarkı satırları — her ad, sanatçının Kitaplık sayfasına ya da Kitaplık'ta sayfası yoksa onun için bir aramaya götürür. Bu satırlarda albüm adı da Kitaplık'taki albüme ya da Kitaplık'ta yoksa onun için bir aramaya götürür. Keşfet ve onun Finder'ı sizi asla Arama'ya göndermez: orada Kitaplık'ta olmayan bir sanatçı veya albüm düz metindir. Sanatçılar dosyanın `ARTISTS` etiketinden gelir (bkz. [Birden çok sanatçı ve derlemeler](file-organization.md#several-artists-and-compilations)); bu yüzden *Earth, Wind & Fire* gibi bir ad virgülünden asla bölünmez. Bu etiketi olmayan bir dosyanın sanatçı metni `;`, ` / ` veya `, ` üzerinden bölünür; ancak bu metin aynı zamanda dosyanın albüm sanatçısıysa ya da bölünen adlar albüm sanatçısını oluşturuyorsa (`Henrique, Juliano` albümündeki `Henrique; Juliano`) tek bir addır.
 - **Çalma listeleri**, bir [M3U dosyası](m3u-export.md) olan indirilmiş çalma listeleri, **Yeni çalma listesi** ile oluşturduğunuz (düzenlenebilir) çalma listeleri ve henüz M3U’su olmayan izlenen [çalma listesi indirmeleridir](slskd-navidrome.md#playlist-downloads). İçe aktarılan Spotify/YouTube çalma listeleri, onları [ayırana](#detach-an-imported-playlist) kadar salt okunur kalır. Başkalarının [sizinle paylaştığı](users.md#sharing-playlists) çalma listeleri ızgaranın altında, sizinkilerden ayrı listelenir. Bir şarkıyı [beğendikten](liked-songs.md) sonra *Beğenilen şarkılar* en başta listelenir. Sizin oluşturduğunuz bir çalma listesi en fazla dört parça kapağından oluşan bir mozaik kullanır; içe aktarılanlar M3U ile birlikte kaydedilen görseli korur.
 - **Parçalar**, metin süzgeci, biçim süzgeci ve onay kutuları olan sıralanabilir bir tablodur (başlık, albüm, biçim, eklenme tarihi, uzunluk) — birine tıklayın, sonra bir aralık seçmek için Shift ile başka birine tıklayın. Bir sütun başlığına tıklayarak ya da tablonun üstündeki **Sırala** menüsüyle sıralayın (başlıkların gizli olduğu telefonda tek yol): yakınlarda eklenen veya en eski önce, başlık, sanatçı veya albüm A–Z ya da Z–A, en uzun veya en kısa önce. Seçim hatırlanır.
@@ -79,18 +79,18 @@ Yanındaki filtreler listeyi daraltır. Her biri kaç şarkı içerdiğini göst
 | **Tümü** | Listenin indirilen tüm şarkıları |
 | **Eksik** | Kaynak listede olup henüz kitaplıkta olmayan şarkılar (Spotify listesi indirmeleri), indirme durumlarıyla — filtreyi seçtiğinde Spotify’da aranır |
 | **Başarısız** | İndirmesi başarısız olan eksik şarkılar, her biri tekrar deneme düğmesiyle — **Eksik** sorgulandıktan sonra |
-| **YouTube Music**, **Soulseek (slskd)**, **Deemix**… | O kaynağın getirdiği şarkılar. Downtify bunu bundan sonra indirilen şarkılar için hatırlar; eskiler **Bilinmeyen kaynak** sayılır, yerinde bırakılan slskd dosyaları ve kendi klasörlerindeki şarkılar hariç |
-| **Navidrome’da yok** | [Navidrome eşitlemesi](slskd-navidrome.md) açıkken Downtify’ın henüz bir Navidrome şarkısıyla eşleştiremediği şarkılar |
+| **YouTube Music**, **Soulseek (slskd)**, **Deemix**… | O kaynağın getirdiği şarkılar. Castify bunu bundan sonra indirilen şarkılar için hatırlar; eskiler **Bilinmeyen kaynak** sayılır, yerinde bırakılan slskd dosyaları ve kendi klasörlerindeki şarkılar hariç |
+| **Navidrome’da yok** | [Navidrome eşitlemesi](slskd-navidrome.md) açıkken Castify’ın henüz bir Navidrome şarkısıyla eşleştiremediği şarkılar |
 
 Arama ve bir filtre birlikte çalışır, gösterilen şarkı sayısı da altlarında görünür. Her şarkı listedeki numarasını korur; sıralama, çalma ve her şarkının menüsü gösterilenler üzerinde çalışır.
 
 ### İçe aktarılan bir çalma listesini ayırma
 
-Bir Spotify veya YouTube Music bağlantısından içe aktarılan bir çalma listesi düzenlenemez, çünkü Downtify onu kaynağıyla eşzamanlı tutar. Birini toparlamak için — ait olmayan bir şarkıyı atmak, ait olan birini eklemek — açın ve **Kaynaktan ayır**’ı seçin. Oluşturduklarınız gibi bir çalma listesi olur: şarkıları ve sahibi olduğu gibi kalır ve **Şarkı ekle**, **Yeniden adlandır** ve şarkı kaldırma elde edersiniz. Karşılığında kaynağıyla bağ kesilir: artık Spotify veya YouTube Music’ten güncellenmez, [Çalma Listesi İzleyici](playlist-monitor.md) izlemesi (varsa) kaldırılır ve “eksik şarkılar” takibi gider. Zaten indirilmiş şarkılara asla dokunulmaz ve görseli ilk düzenlemenize kadar kalır; o zaman şarkılarının bir mozaiği onun yerine geçer. Ayırma uygulamadan geri alınamaz; bağlantıyı yeniden indirmek yeni bir içe aktarılmış çalma listesi oluşturur.
+Bir Spotify veya YouTube Music bağlantısından içe aktarılan bir çalma listesi düzenlenemez, çünkü Castify onu kaynağıyla eşzamanlı tutar. Birini toparlamak için — ait olmayan bir şarkıyı atmak, ait olan birini eklemek — açın ve **Kaynaktan ayır**’ı seçin. Oluşturduklarınız gibi bir çalma listesi olur: şarkıları ve sahibi olduğu gibi kalır ve **Şarkı ekle**, **Yeniden adlandır** ve şarkı kaldırma elde edersiniz. Karşılığında kaynağıyla bağ kesilir: artık Spotify veya YouTube Music’ten güncellenmez, [Çalma Listesi İzleyici](playlist-monitor.md) izlemesi (varsa) kaldırılır ve “eksik şarkılar” takibi gider. Zaten indirilmiş şarkılara asla dokunulmaz ve görseli ilk düzenlemenize kadar kalır; o zaman şarkılarının bir mozaiği onun yerine geçer. Ayırma uygulamadan geri alınamaz; bağlantıyı yeniden indirmek yeni bir içe aktarılmış çalma listesi oluşturur.
 
 Her hesap aynı kitaplığı görür: bir yöneticinin [kullanıcılardan gizlediği](users.md#hiding-from-users) onlar için dışarıda kalır ve bir yönetici her şeyi, gizli olanın üstünde çizili bir gözle görür. Yöneticiler bir şarkının, albümün veya sanatçının `…` menüsünden ya da **Parçalar** içindeki seçim çubuğundan gizler ve gösterir.
 
-**ZIP olarak indir**, seçili parçaları göz attığınız cihaza, klasör düzenini koruyarak tek bir ZIP olarak kaydeder — Downtify bir ev sunucusunda çalışırken ve bir grup parçayı yerelde istediğinizde kullanışlıdır. Geçerli süzgecin gösterdiği her şeyi almak için **Tümünü seç** ile birleştirin. Arşiv indirilirken oluşturulur; yani sunucunun diskine hiçbir şey yazılmaz ve indirme başına 2000 parçayla sınırlıdır.
+**ZIP olarak indir**, seçili parçaları göz attığınız cihaza, klasör düzenini koruyarak tek bir ZIP olarak kaydeder — Castify bir ev sunucusunda çalışırken ve bir grup parçayı yerelde istediğinizde kullanışlıdır. Geçerli süzgecin gösterdiği her şeyi almak için **Tümünü seç** ile birleştirin. Arşiv indirilirken oluşturulur; yani sunucunun diskine hiçbir şey yazılmaz ve indirme başına 2000 parçayla sınırlıdır.
 
 ## API
 

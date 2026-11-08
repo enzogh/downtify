@@ -15,7 +15,7 @@ Error: ERROR: [youtube] <id>: Sign in to confirm your age.
 This video may be inappropriate for some users.
 ```
 
-**원인** — YouTube는 연령 제한(선정적) 트랙을 로그인한 성인 계정에만 제공합니다. Downtify는 기본적으로 익명으로 내려받으므로 YouTube가 거부합니다.
+**원인** — YouTube는 연령 제한(선정적) 트랙을 로그인한 성인 계정에만 제공합니다. Castify는 기본적으로 익명으로 내려받으므로 YouTube가 거부합니다.
 
 **해결** — YouTube 쿠키를 제공하세요: **설정**(⚙️) → **YouTube 쿠키** → **cookies.txt 업로드**. 파일을 내보내는 방법은 [YouTube 쿠키](features/youtube-cookies.md)를 참고하세요.
 
@@ -36,7 +36,7 @@ This video may be inappropriate for some users.
 
 ## Windows / Docker Desktop의 cookies.txt가 인식되지 않음
 
-**증상** — `DOWNTIFY_COOKIES_FILE`을 설정했는데 Downtify가 쿠키가 없는 것처럼 동작합니다.
+**증상** — `DOWNTIFY_COOKIES_FILE`을 설정했는데 Castify가 쿠키가 없는 것처럼 동작합니다.
 
 **원인** — 경로가 *컨테이너* 경로입니다. `C:\Users\me\cookies.txt` 같은 Windows 경로는 컨테이너 안에서 아무 의미가 없으며, 변수가 가리키려면 먼저 파일을 바인드 마운트해야 합니다.
 
@@ -57,7 +57,7 @@ environment:
 
 ## 컨테이너를 업데이트한 뒤 업로드한 쿠키가 사라짐
 
-업로드한 파일은 Downtify의 데이터 디렉터리(`/data`)에 있습니다. 이 디렉터리가 이름 있는 볼륨이나 바인드 마운트가 아니면, 컨테이너를 다시 만들 때 그 안의 모든 것(설정과 재생목록 모니터 데이터베이스 포함)이 사라집니다.
+업로드한 파일은 Castify의 데이터 디렉터리(`/data`)에 있습니다. 이 디렉터리가 이름 있는 볼륨이나 바인드 마운트가 아니면, 컨테이너를 다시 만들 때 그 안의 모든 것(설정과 재생목록 모니터 데이터베이스 포함)이 사라집니다.
 
 ```yaml
 volumes:
@@ -67,13 +67,13 @@ volumes:
 
 ## 업로드할 때 "cookies.txt is invalid"
 
-Downtify는 업로드할 때 파일을 검증합니다. **Netscape** 쿠키 저장소 형식이어야 합니다. 한 줄에 쿠키 하나, 필드는 탭으로 구분하고, 필요하면 `#` 주석을 둘 수 있습니다. JSON 내보내기, 스프레드시트, 복사한 `Cookie:` 헤더는 거부됩니다.
+Castify는 업로드할 때 파일을 검증합니다. **Netscape** 쿠키 저장소 형식이어야 합니다. 한 줄에 쿠키 하나, 필드는 탭으로 구분하고, 필요하면 `#` 주석을 둘 수 있습니다. JSON 내보내기, 스프레드시트, 복사한 `Cookie:` 헤더는 거부됩니다.
 
 Netscape 형식으로 내보내는 브라우저 확장 프로그램을 사용하고([YouTube 쿠키](features/youtube-cookies.md) 참고), 탭이 `youtube.com`에 있을 때 내보내세요.
 
 ## 재생목록이 이미 있는 트랙을 다시 내려받음
 
-Downtify는 자동으로 내려받은 모든 트랙을 데이터베이스에 기록하므로, 파일을 디스크의 다른 곳으로 옮겨도 다시 내려받지 않습니다. 트랙은 매시간 점검에서 파일이 다운로드 디렉터리에서 실제로 사라진 것을 확인한 뒤에만 다시 내려받습니다. [재생목록 모니터](features/playlist-monitor.md#how-it-works)를 참고하세요.
+Castify는 자동으로 내려받은 모든 트랙을 데이터베이스에 기록하므로, 파일을 디스크의 다른 곳으로 옮겨도 다시 내려받지 않습니다. 트랙은 매시간 점검에서 파일이 다운로드 디렉터리에서 실제로 사라진 것을 확인한 뒤에만 다시 내려받습니다. [재생목록 모니터](features/playlist-monitor.md#how-it-works)를 참고하세요.
 
 재시작할 때마다 파일이 사라진다면 `/downloads` 볼륨이 영구 저장되지 않는 것입니다. 위와 같은 해결책을 적용하세요.
 
@@ -85,12 +85,12 @@ YouTube Music도 일반 YouTube도 매처의 검사를 통과하는 결과를 �
 
 ## 내려받은 오디오의 메타데이터나 커버가 잘못됨
 
-Downtify는 Spotify에서 메타데이터를 가져오고 YouTube Music에서 오디오를 매칭합니다. 어긋남은 보통 매칭이 커버, 리믹스, 라이브 버전에 걸렸다는 뜻입니다. 검색 결과 대신 Spotify **앨범** 링크로 내려받으면 매처가 활용할 정보(트랙 번호, 앨범, 발매 유형)가 훨씬 많아집니다.
+Castify는 Spotify에서 메타데이터를 가져오고 YouTube Music에서 오디오를 매칭합니다. 어긋남은 보통 매칭이 커버, 리믹스, 라이브 버전에 걸렸다는 뜻입니다. 검색 결과 대신 Spotify **앨범** 링크로 내려받으면 매처가 활용할 정보(트랙 번호, 앨범, 발매 유형)가 훨씬 많아집니다.
 
 ## 아직도 해결되지 않나요?
 
 [github.com/henriquesebastiao/downtify/issues](https://github.com/henriquesebastiao/downtify/issues)에 다음을 담아 이슈를 열어 주세요.
 
-- Downtify 버전(사이드바 하단과 **설정 → 정보**에 표시됨),
+- Castify 버전(사이드바 하단과 **설정 → 정보**에 표시됨),
 - 실패 시점 전후의 컨테이너 로그(`docker compose logs downtify`),
 - 쿠키 설정 여부.

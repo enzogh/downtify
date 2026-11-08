@@ -4,7 +4,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Use this space for anything that does not fit a specific category — tips, community chat, integrations, or anything Downtify-related.
+        Use this space for anything that does not fit a specific category — tips, community chat, integrations, or anything Castify-related.
 
   - type: textarea
     id: content

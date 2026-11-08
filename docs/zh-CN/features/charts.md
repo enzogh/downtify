@@ -10,7 +10,7 @@ icon: lucide/trending-up
 
 从侧边栏（手机上从 **More** 菜单）打开 **Charts**。四个标签页展示同一榜单中的不同类型：**Tracks**、**Albums**、**Artists** 和 **Playlists**。
 
-- **Tracks**：按排名排列的曲目列表。点击歌曲或其所在行，可在下载前通过内置播放器从 YouTube 完整试听。点击下载时，Downtify 会像处理搜索结果一样，在 YouTube Music（必要时回退到普通 YouTube）上按标题、艺人和时长查找最匹配的音频，使用与其他下载相同的[匹配流程](../how-it-works.md)。歌曲下载后，该行会改为播放媒体库中的本地文件。
+- **Tracks**：按排名排列的曲目列表。点击歌曲或其所在行，可在下载前通过内置播放器从 YouTube 完整试听。点击下载时，Castify 会像处理搜索结果一样，在 YouTube Music（必要时回退到普通 YouTube）上按标题、艺人和时长查找最匹配的音频，使用与其他下载相同的[匹配流程](../how-it-works.md)。歌曲下载后，该行会改为播放媒体库中的本地文件。
 - **Albums**、**Artists** 和 **Playlists**：封面网格。点击项目后会解析链接（[`GET /api/url/resolve`](../api-reference.md#get-apiurlresolve)），与将 Deezer 链接粘贴到搜索框的处理方式相同；加载曲目列表后即可选择并下载。
 
 ## 为什么歌曲能直接从排行榜下载和完整播放，而专辑、艺人和播放列表要先打开页面

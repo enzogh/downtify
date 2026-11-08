@@ -4,14 +4,13 @@ icon: lucide/sparkles
 
 # Features
 
-Downtify covers everything you need to build and maintain a local music library from Spotify.
+Castify covers everything you need to build and maintain a local music library from Spotify.
 
 ## Overview
 
 | Feature | What it does |
 |---------|-------------|
 | [Charts](charts.md) | Browse Deezer's global chart and download whatever is trending |
-| [Similar](similar.md) | Name an artist or a track; YouTube Music answers with similar tracks that play in full and download, no key needed |
 | [Finder](finder.md) | Search Deezer, then browse an artist, their albums and any album's tracks in columns |
 | [Download Settings](download-settings.md) | Choose format (MP3/FLAC/M4A/OGG/OPUS), bitrate, parallel downloads and delay between downloads |
 | [Download Queue](download-queue.md) | Pause downloads before changing settings or updating: running ones finish, nothing new starts, and the waiting songs survive a restart |
@@ -28,12 +27,12 @@ Downtify covers everything you need to build and maintain a local music library 
 | [Users & Sign-in](users.md) | Username and password sign-in (`admin` / `downtify` on a new server), admin and normal user accounts, per-user preferences, and an activity log of sign-ins and what everyone plays |
 | [Explicit Marker](explicit-marker.md) | The "E" next to songs with explicit lyrics - in search, the Library and the player - and in the file's tags |
 | [Replace Audio](replace-audio.md) | Wrong song or version? Pick the right one on YouTube Music or YouTube; the file keeps its name, tags and playlists |
-| [Server Settings](server.md) | The port Downtify listens on, changed from Settings (admins), with a restart right away if you like |
+| [Server Settings](server.md) | The port Castify listens on, changed from Settings (admins), with a restart right away if you like |
 | [Mobile Apps](mobile-apps.md) | Pair phone apps by QR code and stream the library to them (original or transcoded) |
 | [Discover](discover.md) | Artists, albums and playlists you don't have yet, suggested from your library, likes and listening; hide the ones you don't want |
 | [slskd & Navidrome](slskd-navidrome.md) | Download from Soulseek through slskd, mirror playlists into Navidrome, and track playlist downloads |
-| [Library catalog & path sync](library-catalog.md) | How Downtify tracks library files and playlists, playlists you create in the Library, and fixing paths after moving files |
-| [Existing music folders](external-library.md) | Point Downtify at folders of audio you already have; Sync reads tags, matches artists and skips songs already in the library |
+| [Library catalog & path sync](library-catalog.md) | How Castify tracks library files and playlists, playlists you create in the Library, and fixing paths after moving files |
+| [Existing music folders](external-library.md) | Point Castify at folders of audio you already have; Sync reads tags, matches artists and skips songs already in the library |
 | [Upgrade library](library-upgrade.md) | Scan music you already downloaded and repair small covers, missing lyrics and incomplete tags |
 | [Storage & Usage](storage-usage.md) | See how big the library is and how fast it grows, which source each part came from, how downloads ended, and what duplicates, slskd copies and leftovers take up |
 | [M3U Export](m3u-export.md) | Auto-generated playlist files for Jellyfin, Navidrome, Plex and any media app |
@@ -48,7 +47,7 @@ Downtify covers everything you need to build and maintain a local music library 
 
 ## Input types
 
-Downtify accepts several input types in the search bar:
+Castify accepts several input types in the search bar:
 
 | Input | Example |
 |-------|---------|

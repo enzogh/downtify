@@ -4,13 +4,13 @@ icon: lucide/languages
 
 # 国际化
 
-Downtify 的翻译分为两个相互独立的部分：**应用**（界面）和本文档。两者的默认语言均为**英语**。应用和文档分别维护可用语言列表；两者目前都支持简体中文。
+Castify 的翻译分为两个相互独立的部分：**应用**（界面）和本文档。两者的默认语言均为**英语**。应用和文档分别维护可用语言列表；两者目前都支持简体中文。
 
 ## 切换语言
 
 ### 应用
 
-前往 **Settings → Language**，选择所需语言。选项保存在浏览器的 `localStorage` 中，无需重新加载页面即可立即生效。每次加载页面或更改语言时，页面也会将所选语言告知服务器（`settings.json` 中的 `ui_language` 条目，参见 [`POST /api/settings/update`](../api-reference.md#post-apisettingsupdate)），以便无浏览器参与的后台任务也能使用对应语言。例如，某首曲目下载完成后后台获取的艺人简介会使用该语言（参见[下载完成时](artist-images.md#when-a-download-finishes)）。无需额外操作：如果你在此功能推出前就选好了语言，下次打开 Downtify 时会自动读取。多个浏览器设置了不同语言时，以最近加载页面或更改语言的浏览器为准。
+前往 **Settings → Language**，选择所需语言。选项保存在浏览器的 `localStorage` 中，无需重新加载页面即可立即生效。每次加载页面或更改语言时，页面也会将所选语言告知服务器（`settings.json` 中的 `ui_language` 条目，参见 [`POST /api/settings/update`](../api-reference.md#post-apisettingsupdate)），以便无浏览器参与的后台任务也能使用对应语言。例如，某首曲目下载完成后后台获取的艺人简介会使用该语言（参见[下载完成时](artist-images.md#when-a-download-finishes)）。无需额外操作：如果你在此功能推出前就选好了语言，下次打开 Castify 时会自动读取。多个浏览器设置了不同语言时，以最近加载页面或更改语言的浏览器为准。
 
 ### 文档
 

@@ -4,7 +4,7 @@ icon: lucide/settings
 
 # Променливи на средата
 
-Всички променливи на средата са незадължителни. Downtify работи наготово без нито една от тях.
+Всички променливи на средата са незадължителни. Castify работи наготово без нито една от тях.
 
 ## Основни
 
@@ -44,7 +44,7 @@ environment:
 | `DOWNTIFY_OIDC_USERNAME_CLAIM` | `preferred_username` | Claim used for new account names, falling back to `email` and then `sub`. |
 | `DOWNTIFY_OIDC_GROUPS_CLAIM` | `groups` | Claim containing group names; dotted paths are supported. |
 | `DOWNTIFY_OIDC_ALLOWED_GROUPS` | _(empty)_ | Comma-separated group allowlist; unset means any authenticated provider identity may sign in. |
-| `DOWNTIFY_OIDC_ADMIN_GROUPS` | _(empty)_ | Comma-separated groups mapped to Downtify admins. Other OIDC users are normal users. |
+| `DOWNTIFY_OIDC_ADMIN_GROUPS` | _(empty)_ | Comma-separated groups mapped to Castify admins. Other OIDC users are normal users. |
 | `DOWNTIFY_TRUSTED_PROXIES` | _(не е зададена)_ | Адреси или мрежи на вашия обратен прокси, разделени със запетая (напр. `172.18.0.0/16,10.0.0.5`). Само на заявките от тях се вярва за хедърите `X-Forwarded-For`, `X-Forwarded-Proto` и `X-Forwarded-Host` — за адреса на клиента, по който се ограничават опитите за вход и сдвояване, за secure флага на бисквитката за вход и за проверката за същия сайт. Незададена: тези хедъри се игнорират. |
 | `DOWNTIFY_DISCOVERY` | `true` | `false` спира обявяването на сървъра в локалната мрежа (mDNS, `_downtify._tcp`), което приложенията ползват, за да го изброят под *Намерени в тази мрежа*. В bridge мрежата на Docker обявяването така или иначе не стига до LAN — вижте [Docker Compose](docker-compose.md#finding-the-server-from-the-apps). |
 | `DOWNTIFY_TRANSCODE_CACHE_MB` | `2048` | Най-големият размер, в MB, под който се държи кешът на прекодираните копия (`/data/transcode_cache`); най-отдавна пускани копия излизат първи. |
@@ -60,7 +60,7 @@ OIDC is optional. Configure the issuer, client ID and secret together; partial c
 
 | Променлива | По подразбиране | Описание |
 |----------|---------|-------------|
-| `DOWNTIFY_TRASH` | `false` | `true` включва кошчето за музика за папката за изтегляния: премахнатите песни отиват в кошче, което се пази 30 дни, а Downtify сам мести файловете. Докато е включено, само администратори премахват песни. |
+| `DOWNTIFY_TRASH` | `false` | `true` включва кошчето за музика за папката за изтегляния: премахнатите песни отиват в кошче, което се пази 30 дни, а Castify сам мести файловете. Докато е включено, само администратори премахват песни. |
 | `DOWNTIFY_TRASH_CONFIG` | _(не е зададена)_ | Път (в контейнера) до JSON файл с папките, които кошчето покрива, и къде работи неговият worker (`embedded` или `external`). Има предимство пред `DOWNTIFY_TRASH`. Файл, който не може да се прочете, спира сървъра при старт. Виж [Конфигурационният файл](../features/music-trash.md#the-configuration-file). |
 
 ## Проверка на състоянието
@@ -84,7 +84,7 @@ YouTube периодично предизвиква автоматизирани
 |----------|---------|-------------|
 | `DOWNTIFY_FORCE_IPV4` | _(не е зададена)_ | Задайте `1`, за да принудите yt-dlp да ползва само IPv4. Полезно, когато хостът ви има счупен или ограничен по честота IPv6 адрес. |
 | `DOWNTIFY_YT_SLEEP_REQUESTS` | _(unset)_ | Seconds yt-dlp waits between its requests to YouTube during a download. Unset, downloads aren't paced — until YouTube answers `429 Too Many Requests`: that song is retried once with a 1 s pause, and every download stays paced for the next 15 minutes. Set a number to force a pause always (`1` is the old behaviour, about 7 s slower per song), or `0` to never pause. To space out whole downloads instead, use **Settings → Downloads → Delay between downloads**. |
-| `DOWNTIFY_YT_PLAYER_CLIENTS` | `ios,android,web_embedded,mweb,web,tv` | Списък, разделен със запетая, на клиентите на плейъра на yt-dlp, които да се пробват, по ред. Списъкът по подразбиране на Downtify вече предпочита клиенти, които работят без JavaScript среда. Сменяйте го само ако знаете, че конкретен клиент е блокиран. |
+| `DOWNTIFY_YT_PLAYER_CLIENTS` | `ios,android,web_embedded,mweb,web,tv` | Списък, разделен със запетая, на клиентите на плейъра на yt-dlp, които да се пробват, по ред. Списъкът по подразбиране на Castify вече предпочита клиенти, които работят без JavaScript среда. Сменяйте го само ако знаете, че конкретен клиент е блокиран. |
 | `DOWNTIFY_YT_PO_TOKEN` | _(не е зададена)_ | Токени Proof-of-Origin за yt-dlp, разделени със запетая, всеки във формата `<client>.<context>+<token>` (напр. `mweb.gvs+ABC123`). Нужни са само ако YouTube започне да изисква PO Tokens за клиентите, които ползвате. |
 | `DOWNTIFY_COOKIES_FILE` | _(не е зададена)_ | Път до `cookies.txt` във формат Netscape **вътре в контейнера**. Позволява на yt-dlp да се удостоверява като истинска сесия на браузър — нужно за експлицитни/с възрастово ограничение песни и винаги когато YouTube налага стена за вход. Има предимство пред файл, качен в уеб интерфейса, и прави тази секция на интерфейса само за четене. Вижте [Бисквитки за YouTube](../features/youtube-cookies.md). |
 | `DOWNTIFY_COOKIES_FROM_BROWSER` | _(не е зададена)_ | Име на браузъра, от който да се извадят бисквитките (напр. `chrome`, `firefox`). Изисква хранилището на бисквитки на браузъра да е достъпно вътре в контейнера, така че рядко е използваемо в Docker. |

@@ -4,10 +4,10 @@ icon: lucide/smartphone
 
 # Applications mobiles
 
-Downtify peut servir des applications sur votre téléphone : elles parcourent la bibliothèque et la diffusent directement depuis votre serveur, et gardent des morceaux sur le téléphone pour l’écoute hors ligne. Tout ce dont une application a besoin se règle dans **Paramètres → Applications** : l’association des téléphones et le nom du serveur. Qui peut utiliser le serveur est défini par les comptes de [Utilisateurs et connexion](users.md).
+Castify peut servir des applications sur votre téléphone : elles parcourent la bibliothèque et la diffusent directement depuis votre serveur, et gardent des morceaux sur le téléphone pour l’écoute hors ligne. Tout ce dont une application a besoin se règle dans **Paramètres → Applications** : l’association des téléphones et le nom du serveur. Qui peut utiliser le serveur est défini par les comptes de [Utilisateurs et connexion](users.md).
 
 ::: warning L’application est encore en développement
-**Paramètres → Applications** est marqué *Expérimental*. La partie serveur décrite sur cette page est terminée et fonctionne, mais **aucune version de l’application Android n’a encore été publiée** ; il n’y a donc rien à installer pour l’instant, et les détails de l’association et de la diffusion peuvent encore changer d’une version de Downtify à l’autre.
+**Paramètres → Applications** est marqué *Expérimental*. La partie serveur décrite sur cette page est terminée et fonctionne, mais **aucune version de l’application Android n’a encore été publiée** ; il n’y a donc rien à installer pour l’instant, et les détails de l’association et de la diffusion peuvent encore changer d’une version de Castify à l’autre.
 
 L’application est développée en ouvert sur [henriquesebastiao/downtify-android](https://github.com/henriquesebastiao/downtify-android). Tout autre client peut être construit sur la même API — voir le [contrat du client mobile](../mobile-client-contract.md).
 :::
@@ -66,11 +66,11 @@ Les applications peuvent envoyer un morceau vers un Chromecast ou un autre lecte
 
 ## Derrière un proxy inverse
 
-Si Downtify se trouve derrière nginx, Caddy, Traefik ou équivalent (pour le HTTPS, ou pour y accéder de l’extérieur) :
+Si Castify se trouve derrière nginx, Caddy, Traefik ou équivalent (pour le HTTPS, ou pour y accéder de l’extérieur) :
 
 - **Laissez passer le WebSocket.** `/api/ws` exige que les en-têtes `Upgrade`/`Connection` soient transmis (Caddy et Traefik le font par défaut ; nginx a besoin de `proxy_set_header Upgrade $http_upgrade; proxy_set_header Connection "upgrade";`).
 - **Laissez passer les requêtes Range** telles quelles et ne mettez pas les réponses audio en mémoire tampon (nginx : `proxy_buffering off;` pour `/api/v1/` et `/downloads/`), sinon la recherche dans les morceaux et les gros fichiers en pâtissent.
-- **Indiquez à Downtify quel proxy croire.** Définissez `DOWNTIFY_TRUSTED_PROXIES` sur l’adresse du proxy (par ex. `172.18.0.0/16`). Seulement alors Downtify utilise `X-Forwarded-For` pour l’adresse du client (limites de tentatives, « dernière vue » dans Applications associées) et `X-Forwarded-Proto`/`X-Forwarded-Host` pour marquer le cookie de connexion comme sécurisé et vérifier d’où viennent les requêtes. Sans cela, ces en-têtes sont ignorés — n’importe qui pourrait les envoyer.
+- **Indiquez à Castify quel proxy croire.** Définissez `DOWNTIFY_TRUSTED_PROXIES` sur l’adresse du proxy (par ex. `172.18.0.0/16`). Seulement alors Castify utilise `X-Forwarded-For` pour l’adresse du client (limites de tentatives, « dernière vue » dans Applications associées) et `X-Forwarded-Proto`/`X-Forwarded-Host` pour marquer le cookie de connexion comme sécurisé et vérifier d’où viennent les requêtes. Sans cela, ces en-têtes sont ignorés — n’importe qui pourrait les envoyer.
 - **Utilisez le HTTPS** quand le serveur est accessible de l’extérieur : le mot de passe et les clés des applications circulent à chaque requête.
 
 ## Pour les développeurs d’applications

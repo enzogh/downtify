@@ -161,7 +161,7 @@ describe('groupArtists', () => {
   })
 
   it('reads an act split into its members as its album artist', () => {
-    // How an older Downtify tagged a YouTube Music duo credited as its
+    // How an older Castify tagged a YouTube Music duo credited as its
     // members: one act, named as its album is - no page per member.
     const row = {
       file: 'Mica, Tomas/Mica, Tomas - Tide Line.mp3',
@@ -461,7 +461,7 @@ describe('itemTrackCount', () => {
 })
 
 describe('isVariousArtists', () => {
-  it('spots the album artist Downtify writes for a compilation', () => {
+  it('spots the album artist Castify writes for a compilation', () => {
     expect(isVariousArtists('Various Artists')).toBe(true)
     expect(isVariousArtists(' various artists ')).toBe(true)
     expect(isVariousArtists('Various')).toBe(true)

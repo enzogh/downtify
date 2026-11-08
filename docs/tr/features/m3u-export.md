@@ -4,7 +4,7 @@ icon: lucide/list-music
 
 # M3U dışa aktarma
 
-Downtify, bir Spotify çalma listesi indirildiğinde — elle ya da [Çalma Listesi İzleyici](playlist-monitor.md) ile — standart bir `EXTM3U` çalma listesi dosyasını otomatik olarak üretir.
+Castify, bir Spotify çalma listesi indirildiğinde — elle ya da [Çalma Listesi İzleyici](playlist-monitor.md) ile — standart bir `EXTM3U` çalma listesi dosyasını otomatik olarak üretir.
 
 ## Dosya konumu
 
@@ -19,7 +19,7 @@ Downtify, bir Spotify çalma listesi indirildiğinde — elle ya da [Çalma List
 
 ## Göreli yollar
 
-M3U içindeki parça yolları mutlak yollar olarak değil, **M3U dosyasının kendisine göre göreli** yazılır. Bu, aynı dosyanın hem Downtify kapsayıcısı içinden (`/downloads/…`) hem de aynı kitaplığı farklı bir kökte bağlayan başka bir tüketiciden — örneğin `/nas/music/…` altındaki Jellyfin — okunsa da çalışması demektir. Medya sunucunuzu aynı kitaplık bağlantı noktasına yöneltmeniz yeter; çalma listesi tek bir bütün olarak görünür.
+M3U içindeki parça yolları mutlak yollar olarak değil, **M3U dosyasının kendisine göre göreli** yazılır. Bu, aynı dosyanın hem Castify kapsayıcısı içinden (`/downloads/…`) hem de aynı kitaplığı farklı bir kökte bağlayan başka bir tüketiciden — örneğin `/nas/music/…` altındaki Jellyfin — okunsa da çalışması demektir. Medya sunucunuzu aynı kitaplık bağlantı noktasına yöneltmeniz yeter; çalma listesi tek bir bütün olarak görünür.
 
 ## Açma / kapatma
 
@@ -27,7 +27,7 @@ M3U üretimi **Ayarlar → İndirmeler ve dosyalar → M3U çalma listeleri yaz*
 
 ## Kapak resmi
 
-Bu ayarın hemen altındaki **Çalma listesi kapağını kaydet** (varsayılan olarak açık), çalma listesinin kendi kapak resmini M3U’sunun yanına aynı adla yazar — parçalardan önce, böylece klasör en baştan çalma listesi gibi görünür. Downtify de çalma listesi için parça kapaklarından oluşan bir ızgara yerine bu resmi gösterir. Kitaplıkta oluşturduğunuz bir çalma listesi, aynı şekilde yazılan en fazla dört parça kapağından oluşan bir mozaik alır. [Çalma listesi kapakları](playlist-cover-art.md) sayfasına bakın.
+Bu ayarın hemen altındaki **Çalma listesi kapağını kaydet** (varsayılan olarak açık), çalma listesinin kendi kapak resmini M3U’sunun yanına aynı adla yazar — parçalardan önce, böylece klasör en baştan çalma listesi gibi görünür. Castify de çalma listesi için parça kapaklarından oluşan bir ızgara yerine bu resmi gösterir. Kitaplıkta oluşturduğunuz bir çalma listesi, aynı şekilde yazılan en fazla dört parça kapağından oluşan bir mozaik alır. [Çalma listesi kapakları](playlist-cover-art.md) sayfasına bakın.
 
 ## Ne zaman yazılır
 
@@ -61,7 +61,7 @@ Jellyfin, Navidrome, Plex, VLC, Kodi, Sonos ve standart M3U çalma listelerini o
 
 ## Kendi oluşturduğunuz çalma listeleri
 
-**Kitaplık → Çalma listeleri → Yeni çalma listesi**, `Playlists/` altına aynı türde bir M3U yazar; Downtify’ın onu indirilmiş bir Spotify/YouTube çalma listesinden ayırt edebilmesi için fazladan bir `#EXTDOWNTIFY:manual` satırı eklenir. Yeniden adlandırabilir, şarkı ekleyip çıkarabilirsiniz ([ek klasörlerdeki](external-library.md) şarkılar dahil). Bu çalma listesini silmek, bir parçayı silmek veya bir ek klasörün eşlemesini kaldırmak M3U’yu günceller; ses yalnızca parçanın kendisini ya da içe aktarılmış bir çalma listesini sildiğinizde silinir.
+**Kitaplık → Çalma listeleri → Yeni çalma listesi**, `Playlists/` altına aynı türde bir M3U yazar; Castify’ın onu indirilmiş bir Spotify/YouTube çalma listesinden ayırt edebilmesi için fazladan bir `#EXTDOWNTIFY:manual` satırı eklenir. Yeniden adlandırabilir, şarkı ekleyip çıkarabilirsiniz ([ek klasörlerdeki](external-library.md) şarkılar dahil). Bu çalma listesini silmek, bir parçayı silmek veya bir ek klasörün eşlemesini kaldırmak M3U’yu günceller; ses yalnızca parçanın kendisini ya da içe aktarılmış bir çalma listesini sildiğinizde silinir.
 
 ### Bir çalma listesine şarkı ekleme
 

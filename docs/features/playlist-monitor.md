@@ -21,14 +21,14 @@ Watches belong to whoever created them: each account follows its own playlists a
 
 ## How it works
 
-Downtify keeps a background task running every 60 seconds. On each sweep it checks every enabled watch to see if it is due for inspection (based on its configured interval). When a *playlist* is due, Downtify:
+Castify keeps a background task running every 60 seconds. On each sweep it checks every enabled watch to see if it is due for inspection (based on its configured interval). When a *playlist* is due, Castify:
 
 1. Fetches the full track list from Spotify, Deezer or YouTube Music
 2. Compares it against the set of tracks already downloaded
 3. Downloads any new tracks using the same pipeline as a manual download
 4. Updates the M3U file for the playlist (if M3U generation is enabled)
 
-The first check, which starts as soon as you add the watch, downloads everything already in the playlist; later checks download only what was added since. "Already downloaded" is tracked in a small SQLite database (`downtify_monitor.db` under `/data`), not by checking the downloads folder — so moving a downloaded file elsewhere on disk (into your own library layout, another drive, wherever) does **not** make Downtify think it's missing and re-download it on the next check.
+The first check, which starts as soon as you add the watch, downloads everything already in the playlist; later checks download only what was added since. "Already downloaded" is tracked in a small SQLite database (`downtify_monitor.db` under `/data`), not by checking the downloads folder — so moving a downloaded file elsewhere on disk (into your own library layout, another drive, wherever) does **not** make Castify think it's missing and re-download it on the next check.
 
 A separate sweep runs every hour and checks whether each downloaded track's file is still there. Genuinely deleted files (as opposed to ones you moved) are forgotten at that point, so the track becomes eligible for download again — on the next watch check after that hourly sweep, not instantly.
 
@@ -54,16 +54,16 @@ Public Deezer playlists are watched like any other: paste the link on the **Play
 
 ## YouTube Music playlists
 
-Use a YouTube Music playlist for songs that aren't on Spotify: remixes, live sets, covers, uploads by promo channels. Each track is downloaded from **the exact video in the playlist**. Downtify doesn't search for it again, so what you get is what you added to the playlist.
+Use a YouTube Music playlist for songs that aren't on Spotify: remixes, live sets, covers, uploads by promo channels. Each track is downloaded from **the exact video in the playlist**. Castify doesn't search for it again, so what you get is what you added to the playlist.
 
 - **All tracks are fetched**, however long the playlist is. Deleted or private videos are skipped.
-- **Songs YouTube Music greys out are still downloaded.** Playlists made by converters and importers (Soundiiz, TuneMyMusic and the like) often list songs as plain YouTube uploads that YouTube Music shows as unavailable and gives no song id. Downtify finds the video from the entry's thumbnail and downloads it like any other, so such a playlist doesn't come out empty. A video that has really been deleted or made private can't be downloaded: when YouTube Music flags it as such it is skipped, and when it gives nothing but a thumbnail the track shows as failed in the queue.
-- **Artist and title come from the video title.** Many playlist entries are uploads credited to the channel that posted them (e.g. `MrSuicideSheep`), and the real credit is in the title, like `Bronze Whale - Patterns`. For anything that isn't a catalogue release, Downtify splits `Artist - Title` into the file name and tags. It also drops suffixes like `(Official Video)` or `[Lyrics]`. A part after the dash that names a version (`Yellow - Live at Glastonbury`) stays in the title. Catalogue tracks (official audio, or anything filed under an album) keep YouTube Music's own artist and title.
+- **Songs YouTube Music greys out are still downloaded.** Playlists made by converters and importers (Soundiiz, TuneMyMusic and the like) often list songs as plain YouTube uploads that YouTube Music shows as unavailable and gives no song id. Castify finds the video from the entry's thumbnail and downloads it like any other, so such a playlist doesn't come out empty. A video that has really been deleted or made private can't be downloaded: when YouTube Music flags it as such it is skipped, and when it gives nothing but a thumbnail the track shows as failed in the queue.
+- **Artist and title come from the video title.** Many playlist entries are uploads credited to the channel that posted them (e.g. `MrSuicideSheep`), and the real credit is in the title, like `Bronze Whale - Patterns`. For anything that isn't a catalogue release, Castify splits `Artist - Title` into the file name and tags. It also drops suffixes like `(Official Video)` or `[Lyrics]`. A part after the dash that names a version (`Yellow - Live at Glastonbury`) stays in the title. Catalogue tracks (official audio, or anything filed under an album) keep YouTube Music's own artist and title.
 - **Not every `list=` link is a playlist.** An album's `OLAK5uy_…` link is still downloaded as an album. A `watch?v=…&list=…` link is the one song that was playing. A radio mix (`list=RD…`) has no fixed track list and can't be watched.
 
 ## Artist Watch
 
-Instead of building a playlist per artist, paste an artist link and Downtify follows their whole catalogue. Add one from the **Artists** tab of the Monitor page — paste the URL, pick an interval, click **Watch artist**. Artist watches show a release count instead of a track count.
+Instead of building a playlist per artist, paste an artist link and Castify follows their whole catalogue. Add one from the **Artists** tab of the Monitor page — paste the URL, pick an interval, click **Watch artist**. Artist watches show a release count instead of a track count.
 
 Accepted URLs:
 
@@ -72,10 +72,10 @@ Accepted URLs:
 
 A handle is resolved to the artist's channel when you add the watch, so the same artist pasted by handle and by channel URL is recognized as one watch. A handle that doesn't belong to a YouTube Music artist is rejected.
 
-On each sweep Downtify lists the artist's discography, compares it against the releases it has already processed, and downloads every track of anything new. A steady-state sweep costs a single request — tracklists are only fetched for releases it hasn't seen before.
+On each sweep Castify lists the artist's discography, compares it against the releases it has already processed, and downloads every track of anything new. A steady-state sweep costs a single request — tracklists are only fetched for releases it hasn't seen before.
 
 ::: info Why the discography comes from YouTube Music
-Spotify's public embed exposes an artist's name and a top-tracks preview, but **not** their discography — reading that would need Spotify API credentials, which Downtify deliberately doesn't use. So a Spotify artist link is resolved to its name and matched to the same artist on YouTube Music, which is also where the audio is fetched from. The upside: every release Downtify can see is one it can actually download. The trade-off: the link follows the YouTube Music artist with exactly that name (case and punctuation aside), YouTube Music's best match when several share it. For a common name, check that the watch is the artist you meant, and paste the YouTube Music artist URL directly if it isn't. A Spotify artist whose exact name no YouTube Music artist has can only be added that way: Downtify doesn't guess.
+Spotify's public embed exposes an artist's name and a top-tracks preview, but **not** their discography — reading that would need Spotify API credentials, which Castify deliberately doesn't use. So a Spotify artist link is resolved to its name and matched to the same artist on YouTube Music, which is also where the audio is fetched from. The upside: every release Castify can see is one it can actually download. The trade-off: the link follows the YouTube Music artist with exactly that name (case and punctuation aside), YouTube Music's best match when several share it. For a common name, check that the watch is the artist you meant, and paste the YouTube Music artist URL directly if it isn't. A Spotify artist whose exact name no YouTube Music artist has can only be added that way: Castify doesn't guess.
 :::
 
 ::: warning The first sweep downloads the whole back catalogue
@@ -211,7 +211,7 @@ By default, a playlist checked every day (or week / 2 weeks / month) syncs at wh
 
 ## Per-track metadata enrichment
 
-Spotify playlist embed entries are missing the release year and use the playlist cover art instead of the per-track album cover. Downtify re-fetches each new track individually to get the correct cover and year before downloading — falling back to the playlist-level data if the per-track fetch fails. YouTube Music playlist entries skip this step: each one already carries its own video's metadata.
+Spotify playlist embed entries are missing the release year and use the playlist cover art instead of the per-track album cover. Castify re-fetches each new track individually to get the correct cover and year before downloading — falling back to the playlist-level data if the per-track fetch fails. YouTube Music playlist entries skip this step: each one already carries its own video's metadata.
 
 ## M3U integration
 
@@ -223,7 +223,7 @@ With [Save playlist cover art](playlist-cover-art.md) on, the cover is fetched o
 
 ## What happens to songs that leave a playlist
 
-Live playlists (Spotify's *Top 50*, *Discover Weekly*, editorial charts) change every week. Downtify treats a watch as a **source of new music**, never as something that governs what you keep:
+Live playlists (Spotify's *Top 50*, *Discover Weekly*, editorial charts) change every week. Castify treats a watch as a **source of new music**, never as something that governs what you keep:
 
 - **Downloaded audio files are never deleted by a watch.** Not when a track leaves the playlist, not when it leaves every playlist you watch, not when the playlist itself shrinks, and not when you press **Stop watching**.
 - **Only the playlist follows the playlist.** On each sweep the [M3U file](m3u-export.md) is rewritten from the playlist's current tracks, in its current order, so a track that dropped out disappears from the M3U. Its file stays in the folder, and stays in your library, searchable and playable — including through Navidrome, Jellyfin or anything else pointed at the same folder.
@@ -232,7 +232,7 @@ Live playlists (Spotify's *Top 50*, *Discover Weekly*, editorial charts) change 
 That makes a chart playlist usable as a discovery feed: new songs arrive automatically, and what they leave behind accumulates as your library.
 
 ```
-Top 50 - USA        →  new song appears   →  Downtify downloads it
+Top 50 - USA        →  new song appears   →  Castify downloads it
                     →  song drops out     →  M3U updated, file kept
 ```
 
@@ -244,7 +244,7 @@ To take a song you don't want out of the playlist, and keep it out on every swee
 **Stop watching** (in the watch's ⋯ menu) only forgets the watch: nothing on disk changes. **Delete** on a playlist in the **Library** page is the destructive one — it removes that playlist's tracks, its M3U and its catalog entry.
 :::
 
-If a file does disappear — you moved it out of the downloads folder, or deleted it by hand — an hourly sweep notices and forgets Downtify's record of it, so the next check of a watch that still lists the track downloads it again. A file merely *moved* inside the downloads folder is still found and is not re-downloaded.
+If a file does disappear — you moved it out of the downloads folder, or deleted it by hand — an hourly sweep notices and forgets Castify's record of it, so the next check of a watch that still lists the track downloads it again. A file merely *moved* inside the downloads folder is still found and is not re-downloaded.
 
 ## Storage
 
@@ -256,13 +256,13 @@ Monitor state is stored in a SQLite database at `/data/downtify_monitor.db`. The
 - Each track a watch added (`watch_events`): when, the file, which audio provider fetched it, whether the watch downloaded it or found it already in the library, and whether it came with the watch's first check. These rows keep the watch's id, name and owner as they were, and outlive the watch: stopping or retargeting a watch keeps them, so its songs still say where they came from
 - The tracks each watch keeps failing to download (`watch_failures`), until one succeeds, leaves the playlist or the watch is retargeted
 
-Databases created before Artist Watch are migrated automatically on startup; existing rows keep working as playlist watches. Tracks recorded before Downtify kept the history above are added to it once, on the first start, with an unknown outcome (**Before tracking**) — the ones from a watch's first day counted as its first check.
+Databases created before Artist Watch are migrated automatically on startup; existing rows keep working as playlist watches. Tracks recorded before Castify kept the history above are added to it once, on the first start, with an unknown outcome (**Before tracking**) — the ones from a watch's first day counted as its first check.
 
 ## Activity and storage per watch
 
 The Monitor page and each watch's own page (**Activity and songs** in a watch's **⋯** menu, or a click on its **Activity**) tell which watches make your library grow — handy with many watches, or to find out why a generated mix brought in songs you didn't expect.
 
-**What counts as activity.** Only songs a watch actually added count: the ones it downloaded. Songs it found already in your library (another watch, or a download of your own, had them) are counted apart as **Already in library**, and so is the backfill of its first check, when it downloads whatever the playlist already had. So a static playlist reads as idle even though its first check downloaded 300 songs, and a mix that adds 15 songs a week reads as 15 a week. Tracks recorded before Downtify kept this history count as added, and the page says how many of them there are.
+**What counts as activity.** Only songs a watch actually added count: the ones it downloaded. Songs it found already in your library (another watch, or a download of your own, had them) are counted apart as **Already in library**, and so is the backfill of its first check, when it downloads whatever the playlist already had. So a static playlist reads as idle even though its first check downloaded 300 songs, and a mix that adds 15 songs a week reads as 15 a week. Tracks recorded before Castify kept this history count as added, and the page says how many of them there are.
 
 Over the chosen period (7, 30 or 90 days, remembered in the browser) a watch shows:
 

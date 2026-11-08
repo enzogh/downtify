@@ -4,14 +4,13 @@ icon: lucide/sparkles
 
 # 功能
 
-Downtify 提供构建和维护本地音乐库所需的各种功能。
+Castify 提供构建和维护本地音乐库所需的各种功能。
 
 ## 功能概览
 
 | 功能 | 说明 |
 |---------|-------------|
 | [排行榜](charts.md) | 浏览 Deezer 全球排行榜，下载当前热门内容 |
-| [相似歌曲](similar.md) | 输入艺人或歌曲名称，通过 YouTube Music 查找可完整播放和下载的相似歌曲，无需密钥 |
 | [查找](finder.md) | 搜索 Deezer，并按艺人、专辑和曲目分栏浏览 |
 | [下载设置](download-settings.md) | 选择格式（MP3/FLAC/M4A/OGG/OPUS）、比特率、并行下载数和下载间隔 |
 | [下载队列](download-queue.md) | 更改设置或更新前暂停下载；正在运行的任务会完成，等待中的歌曲会保留，重启后可继续 |
@@ -23,16 +22,16 @@ Downtify 提供构建和维护本地音乐库所需的各种功能。
 | [导入媒体库（CSV）](library-import.md) | 导入 Soundiiz、TuneMyMusic 或 Exportify 导出的媒体库，并将曲目加入队列 |
 | [内置播放器](player.md) | 在浏览器中播放媒体库，支持队列管理、同步歌词、睡眠定时器、键盘和媒体按键 |
 | [音量标准化](playback-normalization.md) | 根据管理员发起的响度测量，让歌曲播放音量更接近；不会修改音频文件 |
-| [已点赞歌曲](liked-songs.md) | 点赞歌曲后，Downtify 会自动生成包含所有已点赞歌曲的播放列表 |
+| [已点赞歌曲](liked-songs.md) | 点赞歌曲后，Castify 会自动生成包含所有已点赞歌曲的播放列表 |
 | [播客](podcasts.md) | 通过 RSS feed、Spotify 链接或名称订阅节目；新剧集会自动下载并写入标签 |
 | [用户与登录](users.md) | 用户名密码登录（新服务器默认 `admin` / `downtify`）、管理员和普通用户账号、个人偏好设置，以及登录和播放活动日志 |
 | [显式内容标记](explicit-marker.md) | 在搜索、媒体库和播放器中显示带显式歌词歌曲的“E”标记，并写入文件标签 |
 | [替换音频](replace-audio.md) | 歌曲或版本不正确时，在 YouTube Music 或 YouTube 上选择正确音频；文件名、标签和播放列表保持不变 |
-| [服务器设置](server.md) | 由管理员在设置中更改 Downtify 监听端口，并可选择立即重启 |
+| [服务器设置](server.md) | 由管理员在设置中更改 Castify 监听端口，并可选择立即重启 |
 | [移动应用](mobile-apps.md) | 通过二维码配对手机应用，并向其传输原始或转码后的媒体库音频 |
 | [发现](discover.md) | 根据媒体库、点赞和收听记录推荐尚未收藏的艺人、专辑和播放列表；可隐藏不感兴趣的内容 |
 | [slskd 与 Navidrome](slskd-navidrome.md) | 通过 slskd 从 Soulseek 下载、将播放列表同步到 Navidrome，并跟踪播放列表下载 |
-| [媒体库目录与路径同步](library-catalog.md) | 了解 Downtify 如何跟踪媒体库文件和播放列表，以及如何创建媒体库播放列表、移动文件后修复路径 |
+| [媒体库目录与路径同步](library-catalog.md) | 了解 Castify 如何跟踪媒体库文件和播放列表，以及如何创建媒体库播放列表、移动文件后修复路径 |
 | [现有音乐文件夹](external-library.md) | 指定已有音频文件夹；同步时读取标签、匹配艺人并跳过媒体库中已有的歌曲 |
 | [升级媒体库](library-upgrade.md) | 扫描已下载的音乐，修复低分辨率封面、缺失歌词和不完整标签 |
 | [存储空间与用量](storage-usage.md) | 查看媒体库大小和增长速度、各部分来源、下载结果，以及重复文件、slskd 副本和残留文件的占用 |
@@ -48,7 +47,7 @@ Downtify 提供构建和维护本地音乐库所需的各种功能。
 
 ## 支持的输入类型
 
-Downtify 的搜索栏支持以下输入：
+Castify 的搜索栏支持以下输入：
 
 | 输入 | 示例 |
 |-------|---------|

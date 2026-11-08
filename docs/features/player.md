@@ -4,7 +4,7 @@ icon: lucide/headphones
 
 # Built-in Player
 
-Downtify ships with a web player so you can listen to your downloaded music without a separate app. Hit play on any track, album, artist or playlist in the Library — or on a finished download in the Queue — and the player starts.
+Castify ships with a web player so you can listen to your downloaded music without a separate app. Hit play on any track, album, artist or playlist in the Library — or on a finished download in the Queue — and the player starts.
 
 ## Player bar
 
@@ -32,6 +32,8 @@ Four panels sit next to the cover on wide screens, or replace it on phones:
 - **Details** — title, artist, album, track number, year, length, format, size, date added and file path.
 - **Equalizer** — shape the sound with ten frequency bands; see [Equalizer](#equalizer).
 
+When the song changes, Now playing doesn't jump: the new cover fades in over the old one, the blurred background follows, and the title and lyrics slide out and back in. While Now playing is open, the lyrics of the next three library songs in **Up next** load ahead of time, so a song's lyrics are on screen as soon as it starts. Streamed songs and podcast episodes have no saved lyrics and are skipped. With the system's *reduce motion* setting on, the change is instant.
+
 Now playing is part of the page address (`?np=1`, plus `&panel=lyrics|queue|details|equalizer`), so the browser's Back button closes it and a reload keeps it open.
 
 ## Hiding the lyrics
@@ -45,10 +47,10 @@ Prefer the artwork and the queue without the words? Turn off **Settings → Gene
 Now playing then opens on **Up next** instead. A link to `&panel=lyrics` from before you turned it off lands there too, rather than on an empty tab. The player doesn't ask for a track's lyrics at all while they're hidden.
 
 ::: info Hiding is not deleting
-This only changes what the player shows. Your files keep the lyrics Downtify embedded in them, and the `.lrc` files next to them stay in place, so media servers and other players still see them. Downloads keep fetching lyrics too — that's the separate **Download lyrics** setting under **Tags & lyrics** (see [Lyrics](lyrics.md)).
+This only changes what the player shows. Your files keep the lyrics Castify embedded in them, and the `.lrc` files next to them stay in place, so media servers and other players still see them. Downloads keep fetching lyrics too — that's the separate **Download lyrics** setting under **Tags & lyrics** (see [Lyrics](lyrics.md)).
 :::
 
-Like the theme and the equalizer, the choice is saved in the browser (`localStorage`), so it is per device and per browser, not per Downtify server — you can hide the lyrics on a phone and keep them on a desktop.
+Like the theme and the equalizer, the choice is saved in the browser (`localStorage`), so it is per device and per browser, not per Castify server — you can hide the lyrics on a phone and keep them on a desktop.
 
 ## Equalizer
 
@@ -60,9 +62,9 @@ A ten-band graphic equalizer, in the **Equalizer** panel of Now playing (or pres
 - **On/off switch** and **Reset** (back to Flat, preamp 0, off). Moving a band or picking a preset also switches the equalizer on.
 - The curve behind the sliders is the combined response of all bands.
 
-Boosting bands would push loud music past full scale and distort it, so Downtify automatically lowers the volume by the curve's highest boost — the panel says by how much. That keeps the peak at 0 dB, so a boosted preset reshapes the sound rather than just making it louder. Raising the preamp above 0 dB removes that safety margin, and the panel warns that loud passages may distort.
+Boosting bands would push loud music past full scale and distort it, so Castify automatically lowers the volume by the curve's highest boost — the panel says by how much. That keeps the peak at 0 dB, so a boosted preset reshapes the sound rather than just making it louder. Raising the preamp above 0 dB removes that safety margin, and the panel warns that loud passages may distort.
 
-The settings are saved in the browser (`localStorage`) and apply to everything you play, in every tab, until you change them. They're per browser, not per Downtify server.
+The settings are saved in the browser (`localStorage`) and apply to everything you play, in every tab, until you change them. They're per browser, not per Castify server.
 
 ### Browser support
 
@@ -86,7 +88,7 @@ Every track's menu (the **⋯** button, or right-click on desktop) has:
 
 The same actions apply to a multi-track selection in the Library.
 
-The queue, the current track, its position, shuffle and repeat are remembered, so reopening Downtify resumes where you left off (queues of more than 2000 tracks aren't remembered). Deleted files drop out of the queue automatically.
+The queue, the current track, its position, shuffle and repeat are remembered, so reopening Castify resumes where you left off (queues of more than 2000 tracks aren't remembered). Deleted files drop out of the queue automatically.
 
 **Autoplay** (Settings → General, or the switch at the top of **Up next**; on by default, saved per device) keeps the music going when the queue runs out. As soon as something plays, Up next lists ten songs like the last ones in the queue, under **Recommended · Autoplay**, right after it. Click one to play it now. When the queue reaches its last track they join it, and the next suggestions are fetched from its new end. Songs you haven't downloaded stream, and the next one is prepared ahead like any other streamed track, so playback carries on without a pause. With repeat on they stay listed but don't join the queue until you turn repeat off. Autoplay doesn't run for podcasts or in library-only mode.
 

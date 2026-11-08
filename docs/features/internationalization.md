@@ -4,13 +4,13 @@ icon: lucide/languages
 
 # Internationalization
 
-Downtify is translated in two independent places: the **app** (its interface) and this **documentation**. The app opens in **French** for everyone until they pick another language; the documentation's default is **English**. The app and documentation have their own language lists; Simplified Chinese is available in both.
+Castify is translated in two independent places: the **app** (its interface) and this **documentation**. The app opens in **French** for everyone until they pick another language; the documentation's default is **English**. The app and documentation have their own language lists; Simplified Chinese is available in both.
 
 ## Switching language
 
 ### The app
 
-The app opens in French. To use another language, go to **Settings → Language** and pick it. Browsers and accounts that still had English saved from when it was the default are switched to French once; English picked after that stays. The choice is saved in the browser's `localStorage` and applied instantly without a page reload. The page also tells the server (the `ui_language` entry of `settings.json`, see [`POST /api/settings/update`](../api-reference.md#post-apisettingsupdate)), on every load and whenever you change it, so work that runs without a browser knows your language - an artist's bio, fetched in the background when one of their tracks finishes downloading, comes in it (see [When a download finishes](artist-images.md#when-a-download-finishes)). Nothing to do on your side: if you chose a language before this existed, it is picked up the next time you open Downtify. With several browsers set to different languages, the last one that loaded or changed it wins.
+The app opens in French. To use another language, go to **Settings → Language** and pick it. Browsers and accounts that still had English saved from when it was the default are switched to French once; English picked after that stays. The choice is saved in the browser's `localStorage` and applied instantly without a page reload. The page also tells the server (the `ui_language` entry of `settings.json`, see [`POST /api/settings/update`](../api-reference.md#post-apisettingsupdate)), on every load and whenever you change it, so work that runs without a browser knows your language - an artist's bio, fetched in the background when one of their tracks finishes downloading, comes in it (see [When a download finishes](artist-images.md#when-a-download-finishes)). Nothing to do on your side: if you chose a language before this existed, it is picked up the next time you open Castify. With several browsers set to different languages, the last one that loaded or changed it wins.
 
 ### The documentation
 

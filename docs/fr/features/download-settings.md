@@ -31,7 +31,7 @@ Disponible pour les formats avec perte (MP3, M4A, OGG, OPUS). Le FLAC ignore ce 
 L’audio téléchargé est encodé au débit choisi, pour tous les formats avec perte. Si l’audio servi par YouTube a déjà le codec cible à peu près à ce débit (par ex. son flux AAC d’environ 128 kbps pour **M4A @ 128**), il est conservé tel quel au lieu d’être ré-encodé, puisqu’un ré-encodage ne ferait que perdre en qualité.
 
 ::: info Un débit plus élevé n’ajoute pas de qualité
-L’audio de YouTube plafonne à environ **128–160 kbps** (AAC ou Opus), et Downtify télécharge toujours le meilleur flux disponible. L’encoder à 256 ou 320 kbps donne des fichiers plus gros qui préservent fidèlement cette source, mais ne peut pas restituer des détails que la source n’a jamais eus. Choisissez un débit plus bas si la taille des fichiers compte davantage pour vous.
+L’audio de YouTube plafonne à environ **128–160 kbps** (AAC ou Opus), et Castify télécharge toujours le meilleur flux disponible. L’encoder à 256 ou 320 kbps donne des fichiers plus gros qui préservent fidèlement cette source, mais ne peut pas restituer des détails que la source n’a jamais eus. Choisissez un débit plus bas si la taille des fichiers compte davantage pour vous.
 :::
 
 ## Modèle de nom de fichier
@@ -86,7 +86,7 @@ La limite s’applique à tout téléchargement par lot — téléchargements de
 
 ## Pause entre téléchargements
 
-Fait attendre Downtify un nombre de secondes configurable après avoir terminé un morceau avant de commencer le suivant, au lieu d’enchaîner les requêtes.
+Fait attendre Castify un nombre de secondes configurable après avoir terminé un morceau avant de commencer le suivant, au lieu d’enchaîner les requêtes.
 
 | Valeur | Comportement |
 |-------|-----------|
@@ -103,7 +103,7 @@ Même idée, mais pour les **[Dossiers de musique existants](external-library.md
 
 ## Télécharger les pochettes
 
-Contrôle si Downtify intègre la pochette de l’album. Activé par défaut. Désactivez-le pour ignorer entièrement la récupération des pochettes — tous les autres tags (titre, artiste, album, année, paroles) sont toujours intégrés normalement, mais les fichiers sont plus petits et se téléchargent un peu plus vite puisque l’image de pochette n’est jamais demandée ni écrite.
+Contrôle si Castify intègre la pochette de l’album. Activé par défaut. Désactivez-le pour ignorer entièrement la récupération des pochettes — tous les autres tags (titre, artiste, album, année, paroles) sont toujours intégrés normalement, mais les fichiers sont plus petits et se téléchargent un peu plus vite puisque l’image de pochette n’est jamais demandée ni écrite.
 
 Le désactiver évite aussi d’écrire le `cover.jpg` autonome que produit l’option *Classer par album* (voir [Organisation des fichiers](file-organization.md)), et le [lecteur](player.md) comme la bibliothèque n’afficheront aucune image pour les morceaux téléchargés ainsi (l’icône de note de musique à la place).
 
@@ -111,33 +111,33 @@ Ce `cover.jpg` est partagé par tous les morceaux du dossier de l’album. Suppr
 
 ## Résolution des pochettes
 
-Utile seulement quand **Télécharger les pochettes** (ci-dessus) est activé. Définit la taille cible (largeur et hauteur, en pixels) que Downtify demande pour la pochette intégrée provenant de **YouTube Music** ou de **Deezer**. Choisissez une valeur prédéfinie (300, 600, 800, 1000, 1200) ou faites glisser le curseur de **300 à 1200** ; la valeur actuelle en pixels s’affiche à côté. La valeur par défaut est 600.
+Utile seulement quand **Télécharger les pochettes** (ci-dessus) est activé. Définit la taille cible (largeur et hauteur, en pixels) que Castify demande pour la pochette intégrée provenant de **YouTube Music** ou de **Deezer**. Choisissez une valeur prédéfinie (300, 600, 800, 1000, 1200) ou faites glisser le curseur de **300 à 1200** ; la valeur actuelle en pixels s’affiche à côté. La valeur par défaut est 600.
 
-C’est utile pour alimenter un serveur multimédia comme Plex, qui affiche les pochettes dans une résolution supérieure à celle que Downtify intègre par défaut.
+C’est utile pour alimenter un serveur multimédia comme Plex, qui affiche les pochettes dans une résolution supérieure à celle que Castify intègre par défaut.
 
 Les deux sources appliquent le réglage différemment, puisqu’une seule d’entre elles peut réellement être redimensionnée à la demande :
 
 - Les miniatures de **YouTube Music** peuvent être redimensionnées en modifiant leur URL — vérifié sur le CDN réel, les valeurs élevées renvoient vraiment plus de détail (pas seulement un agrandissement) pour la plupart des pochettes, jusqu’à la résolution de l’image source elle-même.
-- **Deezer** ne propose que quatre tailles fixes pour la pochette de tout morceau, album, artiste ou playlist (56, 250, 500 et 1000 px) — il n’y a pas de taille intermédiaire à demander. Downtify choisit la plus petite de ces quatre qui soit encore au moins aussi grande que la valeur configurée (demander 300 px donne celle de 500 px, faute de taille exacte de 300 px) ; demander plus de 1000 px donne aussi celle de 1000 px, la plus grande de Deezer.
+- **Deezer** ne propose que quatre tailles fixes pour la pochette de tout morceau, album, artiste ou playlist (56, 250, 500 et 1000 px) — il n’y a pas de taille intermédiaire à demander. Castify choisit la plus petite de ces quatre qui soit encore au moins aussi grande que la valeur configurée (demander 300 px donne celle de 500 px, faute de taille exacte de 300 px) ; demander plus de 1000 px donne aussi celle de 1000 px, la plus grande de Deezer.
 
 ::: info Les pochettes issues de Spotify ne sont pas concernées
-Downtify intègre déjà la **plus grande** pochette que l’API d’intégration publique de Spotify propose pour les morceaux/albums/playlists résolus par Spotify — il n’y a pas de taille supérieure à demander. Ce réglage ne relève le plafond que pour les morceaux résolus par YouTube Music (recherche en texte libre, URL YouTube, et tout morceau Spotify rapproché de YouTube Music pour l’audio proprement dit) ou par Deezer (un lien Deezer collé, ou un morceau des [Classements](charts.md)).
+Castify intègre déjà la **plus grande** pochette que l’API d’intégration publique de Spotify propose pour les morceaux/albums/playlists résolus par Spotify — il n’y a pas de taille supérieure à demander. Ce réglage ne relève le plafond que pour les morceaux résolus par YouTube Music (recherche en texte libre, URL YouTube, et tout morceau Spotify rapproché de YouTube Music pour l’audio proprement dit) ou par Deezer (un lien Deezer collé, ou un morceau des [Classements](charts.md)).
 :::
 
 Modifier cette valeur dans les Paramètres prend effet immédiatement, y compris pour la page de recherche actuellement ouverte — cela n’oblige pas à retélécharger quoi que ce soit déjà présent sur le disque.
 
 ## Écraser les fichiers existants
 
-Activé par défaut, conformément au comportement historique de Downtify : chaque téléchargement passe par le pipeline (récupération de l’audio, tags, pochette, paroles) et écrase tout fichier déjà présent au chemin de sortie calculé.
+Activé par défaut, conformément au comportement historique de Castify : chaque téléchargement passe par le pipeline (récupération de l’audio, tags, pochette, paroles) et écrase tout fichier déjà présent au chemin de sortie calculé.
 
 ### Ce que « à nouveau » signifie vraiment
 
-Activé, un nouveau téléchargement est une **exécution entièrement neuve**, pas une réparation du fichier existant. Downtify ne regarde pas ce que vous avez déjà : il interroge vos [sources audio](#audio-provider) dans l’ordre configuré — donc si slskd est en premier, slskd est essayé en premier, pas seulement en repli —, récupère l’audio de la source qui répond et y écrit les tags, la pochette et les paroles du jour.
+Activé, un nouveau téléchargement est une **exécution entièrement neuve**, pas une réparation du fichier existant. Castify ne regarde pas ce que vous avez déjà : il interroge vos [sources audio](#audio-provider) dans l’ordre configuré — donc si slskd est en premier, slskd est essayé en premier, pas seulement en repli —, récupère l’audio de la source qui répond et y écrit les tags, la pochette et les paroles du jour.
 
 Cela a une conséquence à connaître avant de retélécharger une grande bibliothèque :
 
 ::: warning Un format différent laisse l’ancien fichier derrière
-Le nouveau fichier est écrit au chemin que produit le [modèle de nom de fichier](#output-filename-template), avec l’extension du **nouvel** audio. Downtify n’écrase l’ancien fichier que si les deux ont la même extension.
+Le nouveau fichier est écrit au chemin que produit le [modèle de nom de fichier](#output-filename-template), avec l’extension du **nouvel** audio. Castify n’écrase l’ancien fichier que si les deux ont la même extension.
 
 Ainsi, retélécharger `Artiste - Morceau.mp3` quand slskd répond avec un FLAC vous donne **les deux** : `Artiste - Morceau.mp3` (l’ancien, intact) et `Artiste - Morceau.flac`. Avec [Laisser les fichiers slskd en place](slskd-navidrome.md#leave-files-in-place) activé — le réglage par défaut —, le fichier slskd n’est même pas copié dans votre dossier de téléchargements : l’ancien reste exactement où il était et le nouveau se trouve sous `slskd/`.
 
@@ -146,13 +146,13 @@ Rien n’est perdu, mais vous obtenez des doublons. Pour vraiment remplacer un f
 
 ### La pochette vient de Spotify ou de YouTube Music, pas du fichier
 
-Toute image que porte l’audio téléchargé — y compris une pochette haute résolution intégrée dans un fichier slskd — est **écartée et remplacée** lors du tagging. Downtify intègre toujours la pochette qu’il récupère pour le morceau auprès de Spotify ou de YouTube Music, à la [résolution des pochettes](#cover-art-resolution) que vous avez configurée (600 px par défaut). Il en va de même pour le titre, les artistes, l’album et le reste des tags : les tags propres à la source ne sont pas conservés.
+Toute image que porte l’audio téléchargé — y compris une pochette haute résolution intégrée dans un fichier slskd — est **écartée et remplacée** lors du tagging. Castify intègre toujours la pochette qu’il récupère pour le morceau auprès de Spotify ou de YouTube Music, à la [résolution des pochettes](#cover-art-resolution) que vous avez configurée (600 px par défaut). Il en va de même pour le titre, les artistes, l’album et le reste des tags : les tags propres à la source ne sont pas conservés.
 
 Si ce que vous voulez, ce sont de plus grandes pochettes sur des fichiers que vous avez déjà, retélécharger est le chemin le plus long. [Améliorer la bibliothèque](library-upgrade.md) fait exactement cela — elle compare la pochette intégrée de chaque fichier à celles de Spotify, iTunes et YouTube Music, écrit la plus grande, complète les paroles et tags manquants, et ne touche jamais à l’audio.
 
 Désactivez-le pour ne jamais télécharger un morceau déjà présent sur le disque. C’est surtout utile pour télécharger une playlist, importer une [bibliothèque CSV](library-import.md) ou laisser le [Suivi de playlists](playlist-monitor.md) synchroniser des playlists qui partagent des morceaux entre elles ou avec des morceaux déjà dans votre bibliothèque — option activée, chacun de ces doublons est retéléchargé.
 
-Désactivée, Downtify cherche le morceau **n’importe où dans le dossier de téléchargements**, pas seulement là où irait le nouveau téléchargement :
+Désactivée, Castify cherche le morceau **n’importe où dans le dossier de téléchargements**, pas seulement là où irait le nouveau téléchargement :
 
 - la racine de la bibliothèque (téléchargements de morceaux seuls),
 - le dossier de n’importe quelle playlist (téléchargements de playlists, imports CSV, Suivi de playlists),
@@ -172,17 +172,17 @@ Quand un morceau est ignoré :
 
 ## Fournisseur audio
 
-Le fournisseur audio par défaut est **YouTube Music**. Downtify utilise [`ytmusicapi`](https://ytmusicapi.readthedocs.io/) pour chercher la meilleure correspondance en comparant la durée du morceau. Quand YouTube Music n’a pas de correspondance acceptable, ou seulement une dont la durée est très différente (probablement un autre enregistrement), Downtify se rabat automatiquement sur une recherche sur YouTube standard — voir [Comment ça marche](../how-it-works.md#fallback-to-standard-youtube).
+Le fournisseur audio par défaut est **YouTube Music**. Castify utilise [`ytmusicapi`](https://ytmusicapi.readthedocs.io/) pour chercher la meilleure correspondance en comparant la durée du morceau. Quand YouTube Music n’a pas de correspondance acceptable, ou seulement une dont la durée est très différente (probablement un autre enregistrement), Castify se rabat automatiquement sur une recherche sur YouTube standard — voir [Comment ça marche](../how-it-works.md#fallback-to-standard-youtube).
 
 **Paramètres → Sources audio** peut aussi n’utiliser que **YouTube** standard, ou **slskd** (Soulseek), comme liste de repli ordonnée — voir [slskd et Navidrome](slskd-navidrome.md#audio-sources-and-fallback-order).
 
 ### Forcer une source audio précise
 
-Si Downtify choisit la mauvaise vidéo YouTube Music (par ex. une reprise au lieu de l’original), vous pouvez la remplacer morceau par morceau :
+Si Castify choisit la mauvaise vidéo YouTube Music (par ex. une reprise au lieu de l’original), vous pouvez la remplacer morceau par morceau :
 
 **Option A — collez directement une URL YouTube Music**
 
-Collez `https://music.youtube.com/watch?v=…` (ou une URL ordinaire `youtube.com/watch?v=…`) dans la barre de recherche et lancez le téléchargement. Downtify récupère l’audio de cette vidéo précise.
+Collez `https://music.youtube.com/watch?v=…` (ou une URL ordinaire `youtube.com/watch?v=…`) dans la barre de recherche et lancez le téléchargement. Castify récupère l’audio de cette vidéo précise.
 
 ::: info
 Lors d’un téléchargement par URL YouTube, les métadonnées (titre, artiste, pochette) viennent de YouTube plutôt que de Spotify. Pour des tags propres, utilisez l’Option B.
@@ -194,11 +194,11 @@ Lors d’un téléchargement par URL YouTube, les métadonnées (titre, artiste,
 2. Collez une URL YouTube ou YouTube Music dans le champ qui apparaît.
 3. Appuyez sur **Entrée** ou cliquez sur **Appliquer**.
 
-Downtify retélécharge le morceau avec cette vidéo précise tout en conservant toutes les métadonnées Spotify (titre, artiste, album, pochette, paroles).
+Castify retélécharge le morceau avec cette vidéo précise tout en conservant toutes les métadonnées Spotify (titre, artiste, album, pochette, paroles).
 
 ## Métadonnées intégrées
 
-Downtify intègre les tags suivants dans chaque fichier téléchargé, quel que soit le format :
+Castify intègre les tags suivants dans chaque fichier téléchargé, quel que soit le format :
 
 | Tag | Source |
 |-----|--------|

@@ -4,7 +4,7 @@ icon: lucide/headphones
 
 # Lecteur intégré
 
-Downtify inclut un lecteur web pour écouter votre musique téléchargée sans application séparée. Appuyez sur lecture sur n’importe quel morceau, album, artiste ou playlist de la Bibliothèque — ou sur un téléchargement terminé de la File — et le lecteur démarre.
+Castify inclut un lecteur web pour écouter votre musique téléchargée sans application séparée. Appuyez sur lecture sur n’importe quel morceau, album, artiste ou playlist de la Bibliothèque — ou sur un téléchargement terminé de la File — et le lecteur démarre.
 
 ## Barre du lecteur
 
@@ -45,10 +45,10 @@ Vous préférez la pochette et la file sans les mots ? Désactivez **Paramètres
 Lecture en cours s’ouvre alors sur **À suivre**. Un lien vers `&panel=lyrics` datant d’avant la désactivation y atterrit aussi, plutôt que sur un onglet vide. Le lecteur ne demande même pas les paroles d’un morceau tant qu’elles sont masquées.
 
 ::: info Masquer n’est pas supprimer
-Cela ne change que ce que le lecteur affiche. Vos fichiers gardent les paroles que Downtify y a intégrées, et les fichiers `.lrc` à côté restent en place, si bien que les serveurs multimédias et les autres lecteurs les voient toujours. Les téléchargements continuent aussi à récupérer les paroles — c’est le réglage séparé **Télécharger les paroles** sous **Tags et paroles** (voir [Paroles](lyrics.md)).
+Cela ne change que ce que le lecteur affiche. Vos fichiers gardent les paroles que Castify y a intégrées, et les fichiers `.lrc` à côté restent en place, si bien que les serveurs multimédias et les autres lecteurs les voient toujours. Les téléchargements continuent aussi à récupérer les paroles — c’est le réglage séparé **Télécharger les paroles** sous **Tags et paroles** (voir [Paroles](lyrics.md)).
 :::
 
-Comme le thème et l’égaliseur, le choix est enregistré dans le navigateur (`localStorage`), donc par appareil et par navigateur, pas par serveur Downtify — vous pouvez masquer les paroles sur un téléphone et les garder sur un ordinateur.
+Comme le thème et l’égaliseur, le choix est enregistré dans le navigateur (`localStorage`), donc par appareil et par navigateur, pas par serveur Castify — vous pouvez masquer les paroles sur un téléphone et les garder sur un ordinateur.
 
 ## Égaliseur
 
@@ -60,9 +60,9 @@ Un égaliseur graphique à dix bandes, dans le panneau **Égaliseur** de Lecture
 - **Interrupteur** et **Réinitialiser** (retour à Neutre, préampli 0, désactivé). Déplacer une bande ou choisir un préréglage active aussi l’égaliseur.
 - La courbe derrière les curseurs est la réponse combinée de toutes les bandes.
 
-Renforcer des bandes pousserait la musique forte au-delà de la pleine échelle et la distordrait ; Downtify baisse donc automatiquement le volume du plus grand renforcement de la courbe — le panneau indique de combien. Cela maintient le pic à 0 dB, si bien qu’un préréglage renforcé remodèle le son au lieu de simplement le rendre plus fort. Monter le préampli au-dessus de 0 dB supprime cette marge de sécurité, et le panneau avertit que les passages forts peuvent distordre.
+Renforcer des bandes pousserait la musique forte au-delà de la pleine échelle et la distordrait ; Castify baisse donc automatiquement le volume du plus grand renforcement de la courbe — le panneau indique de combien. Cela maintient le pic à 0 dB, si bien qu’un préréglage renforcé remodèle le son au lieu de simplement le rendre plus fort. Monter le préampli au-dessus de 0 dB supprime cette marge de sécurité, et le panneau avertit que les passages forts peuvent distordre.
 
-Les réglages sont enregistrés dans le navigateur (`localStorage`) et s’appliquent à tout ce que vous écoutez, dans tous les onglets, jusqu’à ce que vous les changiez. Ils sont par navigateur, pas par serveur Downtify.
+Les réglages sont enregistrés dans le navigateur (`localStorage`) et s’appliquent à tout ce que vous écoutez, dans tous les onglets, jusqu’à ce que vous les changiez. Ils sont par navigateur, pas par serveur Castify.
 
 ### Compatibilité des navigateurs
 
@@ -86,7 +86,7 @@ Le menu de chaque morceau (le bouton **⋯**, ou clic droit sur ordinateur) prop
 
 Les mêmes actions s’appliquent à une sélection de plusieurs morceaux dans la Bibliothèque.
 
-La file, le morceau actuel, sa position, l’aléatoire et la répétition sont mémorisés, si bien que rouvrir Downtify reprend là où vous vous étiez arrêté (les files de plus de 2000 morceaux ne sont pas mémorisées). Les fichiers supprimés sortent automatiquement de la file.
+La file, le morceau actuel, sa position, l’aléatoire et la répétition sont mémorisés, si bien que rouvrir Castify reprend là où vous vous étiez arrêté (les files de plus de 2000 morceaux ne sont pas mémorisées). Les fichiers supprimés sortent automatiquement de la file.
 
 ## Clavier et touches multimédias
 

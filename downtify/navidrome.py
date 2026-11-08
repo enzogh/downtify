@@ -416,8 +416,8 @@ def _effective_navidrome_settings(settings: dict[str, Any]) -> dict[str, Any]:
         'scan_wait_seconds': scan_wait_seconds,
         'scan_poll_seconds': scan_poll_seconds,
         'scan_retry_seconds': scan_retry_seconds,
-        'client_name': str(raw.get('client_name') or 'Downtify').strip()
-        or 'Downtify',
+        'client_name': str(raw.get('client_name') or 'Castify').strip()
+        or 'Castify',
         'api_version': str(raw.get('api_version') or '1.16.1').strip()
         or '1.16.1',
     }
@@ -432,7 +432,7 @@ class NavidromeClient:
         self.password = str(cfg.get('password') or '')
         self.admin_username = str(cfg.get('admin_username') or '')
         self.admin_password = str(cfg.get('admin_password') or '')
-        self.client_name = str(cfg.get('client_name') or 'Downtify')
+        self.client_name = str(cfg.get('client_name') or 'Castify')
         self.api_version = str(cfg.get('api_version') or '1.16.1')
         self.scan_poll_seconds = int(cfg.get('scan_poll_seconds') or 5)
         self.timeout = 30
@@ -968,7 +968,7 @@ def sync_playlist_to_navidrome(  # noqa: PLR0914
     *,
     navidrome_index: Optional[NavidromeIndex] = None,
     download_dir: Optional[Path] = None,
-    comment: str = 'Synced from Spotify via Downtify',
+    comment: str = 'Synced from Spotify via Castify',
     trigger_scan: Optional[bool] = None,
     delete_tag_mismatches: Optional[TagMismatchDeleteContext] = None,
 ) -> Optional[PlaylistSyncResult]:

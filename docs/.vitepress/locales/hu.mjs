@@ -4,7 +4,7 @@ export default {
   lang: 'hu',
   description:
     'Saját szerveren futtatható zeneletöltő. Illessz be egy Spotify-linket, és kapj egy tökéletesen címkézett hangfájlt — API-kulcs, fiók és macera nélkül.',
-  titleSuffix: 'Downtify dokumentáció',
+  titleSuffix: 'Castify dokumentáció',
   containers: {
     info: 'Megjegyzés',
     tip: 'Tipp',
@@ -19,7 +19,7 @@ export default {
     navigation: 'Navigáció',
     sidebar: 'Oldalsáv',
     documentation: 'Dokumentáció',
-    docsHome: 'A Downtify dokumentáció kezdőlapja',
+    docsHome: 'A Castify dokumentáció kezdőlapja',
     docsBadge: 'Docs',
     searchDocs: 'Keresés a dokumentációban',
     search: 'Keresés',
@@ -66,7 +66,6 @@ export default {
       'getting-started/environment-variables.md': 'Környezeti változók',
       'features/index.md': 'Áttekintés',
       'features/charts.md': 'Toplisták',
-      'features/similar.md': 'Hasonlók',
       'features/finder.md': 'Kereső',
       'features/download-settings.md': 'Letöltési beállítások',
       'features/download-queue.md': 'Letöltési sor',

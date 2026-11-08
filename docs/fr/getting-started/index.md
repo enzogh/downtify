@@ -4,7 +4,7 @@ icon: lucide/play
 
 # Premiers pas
 
-Downtify est une application web auto-hébergée qui télécharge de la musique depuis Spotify — sans clé d’API, sans compte, sans abonnement Premium. Tout tourne dans un seul conteneur Docker.
+Castify est une application web auto-hébergée qui télécharge de la musique depuis Spotify — sans clé d’API, sans compte, sans abonnement Premium. Tout tourne dans un seul conteneur Docker.
 
 ## Ce qu’il vous faut
 
@@ -38,6 +38,6 @@ Downtify est une application web auto-hébergée qui télécharge de la musique 
 
 ## Étapes suivantes
 
-Une fois Downtify lancé, ouvrez [http://localhost:8000](http://localhost:8000) dans votre navigateur. Collez l’URL d’un titre, d’un album ou d’une playlist Spotify dans la barre de recherche et cliquez sur **Télécharger**.
+Une fois Castify lancé, ouvrez [http://localhost:8000](http://localhost:8000) dans votre navigateur. Collez l’URL d’un titre, d’un album ou d’une playlist Spotify dans la barre de recherche et cliquez sur **Télécharger**.
 
 Parcourez le reste de la documentation pour découvrir les [réglages de téléchargement](../features/download-settings.md), la [surveillance de playlists](../features/playlist-monitor.md), le [lecteur intégré](../features/player.md) et bien plus.

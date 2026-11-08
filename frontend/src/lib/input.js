@@ -86,7 +86,7 @@ function youtubeKind(text) {
  * Classify the search box contents:
  * - `{ type: 'empty' }`
  * - `{ type: 'link', source: 'spotify' | 'youtube' | 'deezer' | 'soundcloud',
- *   kind, url }` for links Downtify can download (`kind`: track, album,
+ *   kind, url }` for links Castify can download (`kind`: track, album,
  *   playlist, artist; a SoundCloud link is always a track)
  * - `{ type: 'unsupported', source, kind }` for other links
  * - `{ type: 'search', query }` for everything else

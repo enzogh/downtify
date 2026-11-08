@@ -9,7 +9,7 @@
       :title="ui.docsHome"
     >
       <Logo :size="28" />
-      <span class="text-display text-[19px] font-bold">Downtify</span>
+      <span class="text-display text-[19px] font-bold">Castify</span>
       <span
         class="rounded-full border border-line-3 px-2 py-0.5 text-[11px] font-semibold text-muted"
         >{{ ui.docsBadge }}</span

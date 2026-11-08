@@ -4,7 +4,7 @@ icon: lucide/wand-sparkles
 
 # Mejorar biblioteca
 
-Una biblioteca formada con el tiempo arrastra lo que cada versión de Downtify podía hacer cuando se descargó una canción: la portada más pequeña que ofrecía una fuente, sin letra, etiquetas sin álbum ni año. **Mejorar biblioteca** mira lo que ya está en disco y repara solo lo que va atrasado — sin volver a descargar y sin nada que arreglar a mano.
+Una biblioteca formada con el tiempo arrastra lo que cada versión de Castify podía hacer cuando se descargó una canción: la portada más pequeña que ofrecía una fuente, sin letra, etiquetas sin álbum ni año. **Mejorar biblioteca** mira lo que ya está en disco y repara solo lo que va atrasado — sin volver a descargar y sin nada que arreglar a mano.
 
 Ábrelo desde **Biblioteca → Mejorar biblioteca**.
 
@@ -14,7 +14,7 @@ El modo predeterminado reescribe **portadas, letras y etiquetas**. La [sustituci
 
 ## Cómo funciona
 
-1. **Escaneo.** Downtify lee todas las canciones de la biblioteca e informa de lo que va atrasado, por categoría. No se escribe nada.
+1. **Escaneo.** Castify lee todas las canciones de la biblioteca e informa de lo que va atrasado, por categoría. No se escribe nada.
 2. **Elegir.** Cada categoría para la que el escaneo encontró algo se lista con su número de canciones y un interruptor. Desmarca lo que no quieras.
 3. **Mejorar.** Las canciones elegidas entran en una cola que se recorre de una en una. Puedes pausar, reanudar o detenerla, y sobrevive a un reinicio.
 
@@ -32,7 +32,7 @@ Una canción cuenta como atrasada cuando:
 - no tiene **ni** letra incrustada **ni** archivo `.lrc` (junto al archivo o en la carpeta de letras de Ajustes);
 - falta **álbum**, **artista del álbum**, **año** o **número de canción** en sus etiquetas.
 
-**Actualizar etiquetas** solo funciona para canciones de las que Downtify aún tiene el ID de canción de Spotify — las que descargó de un enlace de Spotify, guardadas en el [índice de canciones](library-catalog.md#what-gets-stored). Las demás canciones entran en la cola pero vuelven como _Nada que hacer_.
+**Actualizar etiquetas** solo funciona para canciones de las que Castify aún tiene el ID de canción de Spotify — las que descargó de un enlace de Spotify, guardadas en el [índice de canciones](library-catalog.md#what-gets-stored). Las demás canciones entran en la cola pero vuelven como _Nada que hacer_.
 
 ## Opciones
 
@@ -40,7 +40,7 @@ Una canción cuenta como atrasada cuando:
 
 `300px` · `500px` · **`600px`** · `1000px` · `1200px`
 
-Las portadas de este tamaño o mayores se dejan en paz. Downtify solo escribe una portada **estrictamente mayor** que la que ya está en el archivo, así que ejecutar una mejora dos veces nunca reescribe nada en vano.
+Las portadas de este tamaño o mayores se dejan en paz. Castify solo escribe una portada **estrictamente mayor** que la que ya está en el archivo, así que ejecutar una mejora dos veces nunca reescribe nada en vano.
 
 De dónde vienen los tamaños:
 
@@ -67,11 +67,11 @@ Tras mirar una canción, el siguiente escaneo la salta durante este tiempo, para
 
 La memoria se guarda **por canción y por categoría**, lo que hace funcionar las ejecuciones parciales: reparar solo las portadas de 16.000 canciones no dice nada de si alguien buscó alguna vez sus letras, así que una ejecución de letras posterior sigue considerándolas todas. Un escaneo también registra las categorías que examinó y para las que no encontró nada que hacer — mirar y no encontrar nada es una comprobación como cualquier otra.
 
-Downtify recuerda, por cada canción y categoría: cuándo se comprobó, la versión de Downtify que la comprobó y — para portadas — la mayor portada encontrada y de dónde vino. Qué proveedores de letras ya se consultaron se guarda aparte, por canción y proveedor (consulta [Letras](lyrics.md)).
+Castify recuerda, por cada canción y categoría: cuándo se comprobó, la versión de Castify que la comprobó y — para portadas — la mayor portada encontrada y de dónde vino. Qué proveedores de letras ya se consultaron se guarda aparte, por canción y proveedor (consulta [Letras](lyrics.md)).
 
 Dos cosas siempre la anulan:
 
-- una **versión más nueva de Downtify** revisa todo de nuevo, ya que puede asociar o etiquetar mejor que la anterior;
+- una **versión más nueva de Castify** revisa todo de nuevo, ya que puede asociar o etiquetar mejor que la anterior;
 - elegir **Revisar siempre todas las canciones** ignora la memoria en ese escaneo.
 
 Cuando un escaneo no encuentra nada que hacer _porque_ todo se comprobó hace poco, lo dice y se ofrece a ejecutarse otra vez sin la memoria, en lugar de dejarte con un «nada que mejorar» sin explicación.
@@ -82,7 +82,7 @@ El panel de progreso muestra las canciones hechas de la cola, una cifra aproxima
 
 **Pausar** se detiene tras la canción en curso y conserva la cola. **Detener** descarta el resto; las canciones ya mejoradas siguen mejoradas. Puedes salir de la página — la ejecución sigue, y cualquier otra pestaña abierta la sigue.
 
-La cola vive en `/data/downtify_library.db`, así que **reiniciar Downtify (o el contenedor) a mitad de ejecución la retoma** donde se quedó. Una canción que estaba en curso cuando el proceso murió vuelve a la cola.
+La cola vive en `/data/downtify_library.db`, así que **reiniciar Castify (o el contenedor) a mitad de ejecución la retoma** donde se quedó. Una canción que estaba en curso cuando el proceso murió vuelve a la cola.
 
 ## No se pierde nada si una mejora falla
 
@@ -94,7 +94,7 @@ Se **conserva la fecha de modificación original**, así que mejorar una bibliot
 
 Una mejora reescribe etiquetas en el sitio, así que las canciones de un sistema de archivos de solo lectura se **omiten**, con una explicación, antes de buscar metadatos, portadas o letras. Siguen siendo reproducibles y están en sus playlists; sus archivos y permisos de montaje no cambian. Una canción de solo lectura omitida no se recuerda como comprobada con éxito, así que puede considerarse de nuevo si su carpeta pasa a ser escribible. Los errores inesperados de permisos, espacio en disco y E/S siguen apareciendo como fallos.
 
-Esto difiere del [enriquecimiento de carpetas existentes](external-library.md), que puede guardar portadas y letras por separado en la carpeta de datos de Downtify sin reescribir archivos de audio protegidos.
+Esto difiere del [enriquecimiento de carpetas existentes](external-library.md), que puede guardar portadas y letras por separado en la carpeta de datos de Castify sin reescribir archivos de audio protegidos.
 
 ## Por qué no se reemplaza el audio
 
@@ -104,14 +104,14 @@ Las mejoras ordinarias de etiquetas no reemplazan el audio. El modo aparte de ab
 
 Tras activar y probar la [fuente Deemix](deemix.md), **Mejorar biblioteca** ofrece dos interruptores independientes antes de escanear:
 
-- **Use verified Deemix recordings**: escanea las descargas originales de Downtify, incluidas las copias ocultas por una colección externa preferida. Asocia exactamente artista, título/versión completo y álbum; rechaza resultados ambiguos del catálogo. La duración del clip antiguo no se usa para rechazar una grabación correcta del catálogo. Verifica las etiquetas descargadas, la duración del catálogo, la calidad elegida y la decodificación completa con FFmpeg.
-- **Remove old Downtify audio after import**: además, elimina cada original sin cambios tras la publicación. Está desactivado por defecto. Conservar los originales aun así actualiza playlists y favoritos a la grabación de Deemix.
+- **Use verified Deemix recordings**: escanea las descargas originales de Castify, incluidas las copias ocultas por una colección externa preferida. Asocia exactamente artista, título/versión completo y álbum; rechaza resultados ambiguos del catálogo. La duración del clip antiguo no se usa para rechazar una grabación correcta del catálogo. Verifica las etiquetas descargadas, la duración del catálogo, la calidad elegida y la decodificación completa con FFmpeg.
+- **Remove old Castify audio after import**: además, elimina cada original sin cambios tras la publicación. Está desactivado por defecto. Conservar los originales aun así actualiza playlists y favoritos a la grabación de Deemix.
 
-Este escaneo produce una categoría de **audio** en lugar de tareas de portada/letra/etiquetas. Deemix es dueño de los archivos de salida, la portada, el diseño de álbumes y las letras nativas. Downtify los lee en el sitio. Las letras nativas o incrustadas existentes se conservan; solo las letras ausentes pueden complementarse en una carpeta de letras dedicada y escribible, sin reescribir el audio. Un original sin pérdidas de mayor calidad se conserva cuando Deemix está configurado para MP3.
+Este escaneo produce una categoría de **audio** en lugar de tareas de portada/letra/etiquetas. Deemix es dueño de los archivos de salida, la portada, el diseño de álbumes y las letras nativas. Castify los lee en el sitio. Las letras nativas o incrustadas existentes se conservan; solo las letras ausentes pueden complementarse en una carpeta de letras dedicada y escribible, sin reescribir el audio. Un original sin pérdidas de mayor calidad se conserva cuando Deemix está configurado para MP3.
 
 La publicación ocurre una vez por lote. Los comentarios del M3U, los marcadores manuales y el orden de las canciones se conservan; luego las rutas del catálogo, las pertenencias a playlists, los «me gusta» de todos los usuarios, la propiedad y las reglas de canciones ocultas se mueven en una sola transacción SQLite. Los ids de Navidrome en caché de los archivos antiguos se invalidan para una nueva búsqueda nativa. Los ids móviles ya emitidos y las URL de reproducción antiguas conservan alias de solo lectura hacia el reemplazo registrado; las mutaciones nunca usan esos alias de URL.
 
-Recibos duraderos en la base de datos de la biblioteca registran los valores SHA-256 de origen/destino y el estado de la publicación. Los orígenes permanecen hasta que el reemplazo y las referencias se verifican. Un montaje cambiado o ausente, un archivo editado, una referencia externa de solo lectura en una playlist, una reproducción activa o un fallo en la publicación del catálogo detienen la limpieza con un motivo visible. Pausar/reanudar y reiniciar reutilizan los recibos. No hay barrido general de duplicados ni limpieza por antigüedad: solo son elegibles los originales verificados en la carpeta de descargas de Downtify. Las descargas manuales de Deemix/slskd, los originales externos, los directorios y los sidecars nunca se borran. Una vez eliminado un original, revertir el contenedor no restaura ese archivo; restáuralo desde tu copia de seguridad de almacenamiento si hace falta.
+Recibos duraderos en la base de datos de la biblioteca registran los valores SHA-256 de origen/destino y el estado de la publicación. Los orígenes permanecen hasta que el reemplazo y las referencias se verifican. Un montaje cambiado o ausente, un archivo editado, una referencia externa de solo lectura en una playlist, una reproducción activa o un fallo en la publicación del catálogo detienen la limpieza con un motivo visible. Pausar/reanudar y reiniciar reutilizan los recibos. No hay barrido general de duplicados ni limpieza por antigüedad: solo son elegibles los originales verificados en la carpeta de descargas de Castify. Las descargas manuales de Deemix/slskd, los originales externos, los directorios y los sidecars nunca se borran. Una vez eliminado un original, revertir el contenedor no restaura ese archivo; restáuralo desde tu copia de seguridad de almacenamiento si hace falta.
 
 Para consumidores de NAS cuyos nombres de montaje difieren de las rutas de Docker, un administrador puede definir `DOWNTIFY_DEEMIX_M3U_ROOT` con un alias del contenedor que resuelva a la raíz de Deemix. Las rutas relativas del M3U usan ese alias (por ejemplo `/Download` asignado a `/music/existing`). El opcional `DOWNTIFY_LIBRARY_READY_MARKERS` es un objeto JSON de rutas de marcadores y el texto esperado, comprobado antes de la preparación y de la limpieza. Un marcador ausente falla por seguridad. Ninguna de las variables es necesaria para el modo predeterminado.
 

@@ -16,9 +16,9 @@ Açık sözlü bir şarkı — çocuklara uygun olmayan bir dil — Spotify’da
 
 ## İşaret nereden gelir
 
-İndirdiğiniz hizmet karar verir: Spotify, YouTube Music ve Deezer açık içerikli şarkılarını ayrı ayrı işaretler ve Downtify seçtiğinizin söylediğini kullanır. Downtify bir şarkıyı YouTube Music’ten indirdiğinde işaret, **gerçekte indirdiği videoyu** tanımlar: şarkı Spotify’da açık içerikliyse ama Downtify temiz bir versiyonla eşleştiyse dosya işaretlenmez; Spotify temiz diyorsa ama eşleşme açık içerikliyse işaretlenir.
+İndirdiğiniz hizmet karar verir: Spotify, YouTube Music ve Deezer açık içerikli şarkılarını ayrı ayrı işaretler ve Castify seçtiğinizin söylediğini kullanır. Castify bir şarkıyı YouTube Music’ten indirdiğinde işaret, **gerçekte indirdiği videoyu** tanımlar: şarkı Spotify’da açık içerikliyse ama Castify temiz bir versiyonla eşleştiyse dosya işaretlenmez; Spotify temiz diyorsa ama eşleşme açık içerikliyse işaretlenir.
 
-Hizmetin işaretlemediği bir şarkı hiç işaret almaz — bu temiz olduğunun onaylanması demek değildir ve Downtify hiçbir zaman “temiz” işareti yazmaz.
+Hizmetin işaretlemediği bir şarkı hiç işaret almaz — bu temiz olduğunun onaylanması demek değildir ve Castify hiçbir zaman “temiz” işareti yazmaz.
 
 ## Dosyada
 
@@ -33,10 +33,10 @@ Hizmetin işaretlemediği bir şarkı hiç işaret almaz — bu temiz olduğunun
 Önceden sahip olduğunuz dosyalar da aynı şekilde okunur: iTunes, MusicBrainz Picard veya başka bir etiketleyicinin `1` (ya da eski `4`) ile işaretlediği her şey de **E**’yi gösterir; [ek klasörlerdeki](external-library.md) şarkılar dahil.
 
 ::: info Bu sürümden önce indirilen şarkılar
-Downtify’ın işaret var olmadan önce yazdığı dosyaların etiketlerinde hiçbir şey yoktur, bu yüzden şarkı açık içerikli olsa bile **E** göstermezler. İşaretlemek için şarkıyı [Sesi değiştir](replace-audio.md) ile ya da baştan yeniden indirin. Bir dosya, [Kitaplığı iyileştir](library-upgrade.md) veya Sesi değiştir onu yeniden yazdığında işaretini korur: işaret yalnızca eklenir, hiç silinmez.
+Castify’ın işaret var olmadan önce yazdığı dosyaların etiketlerinde hiçbir şey yoktur, bu yüzden şarkı açık içerikli olsa bile **E** göstermezler. İşaretlemek için şarkıyı [Sesi değiştir](replace-audio.md) ile ya da baştan yeniden indirin. Bir dosya, [Kitaplığı iyileştir](library-upgrade.md) veya Sesi değiştir onu yeniden yazdığında işaretini korur: işaret yalnızca eklenir, hiç silinmez.
 :::
 
-Güncellemeden sonra Kitaplık ilk kez yüklendiğinde Downtify, kodek ve türü göstermeyi öğrendiği zamanki gibi, işareti aramak için her dosyanın etiketlerini yeniden okur. Yavaş bir diskteki büyük bir kitaplıkta bu bir kez, kısa bir süre alır.
+Güncellemeden sonra Kitaplık ilk kez yüklendiğinde Castify, kodek ve türü göstermeyi öğrendiği zamanki gibi, işareti aramak için her dosyanın etiketlerini yeniden okur. Yavaş bir diskteki büyük bir kitaplıkta bu bir kez, kısa bir süre alır.
 
 ## Uygulama geliştiricileri için
 

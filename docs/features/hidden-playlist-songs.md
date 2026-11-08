@@ -18,7 +18,7 @@ From then on:
 - **It is not missing any more.** **Download missing** skips it, and the playlist can be complete without it.
 - **Downloading the playlist again from its link** keeps hidden songs out of the playlist.
 
-The original playlist on Spotify or YouTube Music isn't changed: Downtify reads them without an account and can't edit them.
+The original playlist on Spotify or YouTube Music isn't changed: Castify reads them without an account and can't edit them.
 
 Only the playlist's owner (or an admin) hides songs. People it is [shared with](users.md#sharing-playlists) see the playlist as the owner keeps it. A playlist has to keep at least one song: to get rid of all of them, delete the playlist.
 

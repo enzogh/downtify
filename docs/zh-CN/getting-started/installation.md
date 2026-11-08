@@ -4,7 +4,7 @@ icon: lucide/download
 
 # 安装
 
-运行 Downtify 最快的方法是执行一条 `docker run` 命令。主机无需安装 Python、Node.js 或其他系统依赖，所需组件都已打包在镜像中。
+运行 Castify 最快的方法是执行一条 `docker run` 命令。主机无需安装 Python、Node.js 或其他系统依赖，所需组件都已打包在镜像中。
 
 ## 前提条件
 
@@ -37,7 +37,7 @@ docker run -d \
 
 ## 自定义端口
 
-如需通过其他主机端口访问 Downtify，请修改 `-p` 参数左侧的端口：
+如需通过其他主机端口访问 Castify，请修改 `-p` 参数左侧的端口：
 
 ```bash
 docker run -d \

@@ -22,7 +22,7 @@ Bunlardan birini **Podcast ekle** kutusuna yapıştırın ya da aramak için bir
 | Bir programın adı (serbest metin) | iTunes podcast dizininde aranır |
 
 ::: info Spotify’a özel programlar indirilemez
-Yalnızca Spotify’da bulunan (herkese açık beslemesi olmayan) bir program öyle olarak bildirilir — Downtify tahmin yürütmez ya da başka bir şeye yönelmez. Özel olduğunu varsaymadan önce kontrol etmek için programı adıyla arayın.
+Yalnızca Spotify’da bulunan (herkese açık beslemesi olmayan) bir program öyle olarak bildirilir — Castify tahmin yürütmez ya da başka bir şeye yönelmez. Özel olduğunu varsaymadan önce kontrol etmek için programı adıyla arayın.
 :::
 
 Onaylamadan önce şunları seçersiniz:
@@ -62,7 +62,7 @@ Bölümler müzikle aynı yerleşik oynatıcıda çalar; yalnızca bir podcast b
 
 - Tek bir bölüm için geçerli olmayan karıştır ve tekrarla yerine **15 sn geri / 30 sn ileri**.
 - Uyku zamanlayıcısının yanında **oynatma hızı** (0,75× – 2×).
-- **Devam konumu** her ~10 saniyelik oynatmada ve duraklattığınızda bir kez daha sunucuya kaydedilir; böylece sekmeyi kapatmak — ya da Downtify’ı başka bir cihazda açmak — bölümü bıraktığınız yere yakın yerden sürdürür. Bir programın bölüm listesi, yarıda kalan her şey için “… konumundan devam et” ipucu gösterir.
+- **Devam konumu** her ~10 saniyelik oynatmada ve duraklattığınızda bir kez daha sunucuya kaydedilir; böylece sekmeyi kapatmak — ya da Castify’ı başka bir cihazda açmak — bölümü bıraktığınız yere yakın yerden sürdürür. Bir programın bölüm listesi, yarıda kalan her şey için “… konumundan devam et” ipucu gösterir.
 
 Kalp (beğenilen şarkılar) ve “albüme/sanatçıya git” bölümler için geçerli değildir ve birinde görünmez.
 
@@ -74,12 +74,12 @@ Bölüm dosyaları yine aynı indirme birimi altında, `Podcasts/<Program>/<tari
 
 ## Etiketler
 
-Downtify, podcast uygulamalarının ve medya sunucularının bir bölüm için zaten okuduğunu yazar: başlık, albüm olarak program, sanatçı olarak programın yazarı, yayın yılı, bölüm/sezon numaraları, programın kendi görseli (beslemenin kendi görseli ile iTunes’unkinden büyük olanı; [müzik kapakları](download-settings.md#cover-art-resolution) ile aynı fikir) ve yorum olarak bölüm açıklaması. Program notları düz metin olarak saklanır — Downtify HTML’i işlemek yerine ayıklar.
+Castify, podcast uygulamalarının ve medya sunucularının bir bölüm için zaten okuduğunu yazar: başlık, albüm olarak program, sanatçı olarak programın yazarı, yayın yılı, bölüm/sezon numaraları, programın kendi görseli (beslemenin kendi görseli ile iTunes’unkinden büyük olanı; [müzik kapakları](download-settings.md#cover-art-resolution) ile aynı fikir) ve yorum olarak bölüm açıklaması. Program notları düz metin olarak saklanır — Castify HTML’i işlemek yerine ayıklar.
 
 ## Bilmekte fayda var
 
 - **Video podcastleri yok.** Tek eki bir video dosyası olan bir bölüm tamamen atlanır; yalnızca ses desteklenir.
-- **Bölüm işaretleri (chapters) yok.** Bölüm işaretleri içeren beslemelerde bunlar Downtify’da henüz yoktur.
+- **Bölüm işaretleri (chapters) yok.** Bölüm işaretleri içeren beslemelerde bunlar Castify’da henüz yoktur.
 - **Navidrome’a yansıtılmaz.** Çalma listelerinden farklı olarak podcast abonelikleri bir Navidrome kitaplığına itilmez — bölümler, medya sunucunuzun zaten kendi başına gördüğü düz dosyalardır.
 - Aboneliği iptal etmek (**⋯ → Aboneliği iptal et**) varsayılan olarak indirilmiş bölümleri kaldırır; dosyaları yerinde bırakmak için **Aboneliği iptal et, indirilen bölümleri sakla**’yı seçin.
 

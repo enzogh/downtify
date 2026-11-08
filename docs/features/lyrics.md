@@ -4,7 +4,7 @@ icon: lucide/mic-vocal
 
 # Lyrics
 
-Downtify looks lyrics up while a track downloads and embeds them in the file, plus a `.lrc` sidecar when they're time-synced.
+Castify looks lyrics up while a track downloads and embeds them in the file, plus a `.lrc` sidecar when they're time-synced.
 
 ## Enabling lyrics
 
@@ -12,7 +12,7 @@ Lyrics are **enabled by default**. Turn them off in **Settings → Tags & lyrics
 
 ## Providers and fallback order
 
-Catalogues differ: a song one provider has never heard of is often on another. Downtify therefore keeps an ordered list of providers and tries them one at a time, stopping at the first that has something.
+Catalogues differ: a song one provider has never heard of is often on another. Castify therefore keeps an ordered list of providers and tries them one at a time, stopping at the first that has something.
 
 | Provider | Lyrics | Notes |
 |----------|--------|-------|
@@ -22,7 +22,7 @@ Catalogues differ: a song one provider has never heard of is often on another. D
 In **Settings → Tags & lyrics → Providers** you can drag the providers into the order you prefer, or use the arrows, and switch any of them off. At least one stays on; to stop looking lyrics up entirely, use the **Download lyrics** switch.
 
 ::: info What about Genius, Musixmatch and AZLyrics?
-They aren't available, and Downtify no longer offers them:
+They aren't available, and Castify no longer offers them:
 
 - **AZLyrics** forbids third-party use of its lyrics in the page itself.
 - **Musixmatch**'s desktop API answers with an empty token unless you have credentials it doesn't hand out to applications.
@@ -33,7 +33,7 @@ Saved settings that still name them keep working: the names are ignored, and a l
 
 ## Skipping providers that had nothing
 
-After a lookup, Downtify records for each song which providers answered and which came back empty, in `downtify_library.db` under `/data`.
+After a lookup, Castify records for each song which providers answered and which came back empty, in `downtify_library.db` under `/data`.
 
 A provider that had nothing for a song isn't asked about it again for **30 days**, so re-downloads and large library passes don't repeat the same failed lookups. After that it's tried again, since catalogues grow. A provider that *did* have lyrics is never skipped, so a re-downloaded file gets them back.
 
@@ -48,7 +48,7 @@ A provider that had nothing for a song isn't asked about it again for **30 days*
 
 ## Sidecar .lrc file
 
-When synced lyrics are available, Downtify also saves a `.lrc` file. By default it sits **next to the audio** with the same base name. In **Settings → Tags & lyrics** you can turn that off and pick a **lyrics folder** instead (default `/data/lyrics`). That folder must be **outside** `/downloads`, the slskd tree, and any extra music folders — the audio's relative path is recreated under it (`Artist/Album/track.lrc`). Media players that read external lyrics (and the [built-in player](player.md#now-playing)) still pick the sidecar up. Changing this setting and running **Sync** on an extra folder copies existing `.lrc` files to the new location; the source file is removed when that tree is writable, and left in place on a read-only mount. A sidecar is written even if lyrics are already embedded in the tags.
+When synced lyrics are available, Castify also saves a `.lrc` file. By default it sits **next to the audio** with the same base name. In **Settings → Tags & lyrics** you can turn that off and pick a **lyrics folder** instead (default `/data/lyrics`). That folder must be **outside** `/downloads`, the slskd tree, and any extra music folders — the audio's relative path is recreated under it (`Artist/Album/track.lrc`). Media players that read external lyrics (and the [built-in player](player.md#now-playing)) still pick the sidecar up. Changing this setting and running **Sync** on an extra folder copies existing `.lrc` files to the new location; the source file is removed when that tree is writable, and left in place on a read-only mount. A sidecar is written even if lyrics are already embedded in the tags.
 
 Deleting the track from the Library page removes the `.lrc` (beside the file and in the dedicated folder) along with the audio, so lyrics never linger as an orphaned file.
 

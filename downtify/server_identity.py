@@ -41,7 +41,7 @@ def _default_name() -> str:
         name = socket.gethostname().strip()
     except OSError:
         name = ''
-    return (name or 'Downtify')[:MAX_NAME_LENGTH]
+    return (name or 'Castify')[:MAX_NAME_LENGTH]
 
 
 def clean_name(value: Any) -> str:

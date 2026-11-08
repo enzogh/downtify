@@ -4,13 +4,13 @@ body:
   - type: markdown
     attributes:
       value: |
-        Show off how you are using Downtify! Share your setup, automation scripts, integrations, or anything cool you have built around it.
+        Show off how you are using Castify! Share your setup, automation scripts, integrations, or anything cool you have built around it.
 
   - type: textarea
     id: showcase
     attributes:
       label: What Are You Sharing?
-      description: Describe what you built or how you use Downtify. Include context so others can understand and reproduce your setup.
+      description: Describe what you built or how you use Castify. Include context so others can understand and reproduce your setup.
     validations:
       required: true
 

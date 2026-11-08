@@ -1,6 +1,6 @@
 ---
 layout: home
-title: Downtify
+title: Castify
 titleTemplate: Selbst gehosteter Musik-Downloader
 description: Selbst gehosteter Musik-Downloader. Spotify-Link einfügen, perfekt getaggte Audiodatei erhalten — ohne API-Schlüssel, ohne Konto, ohne Aufwand.
 icon: lucide/house
@@ -72,7 +72,7 @@ quickStart:
 
 ## Wie es wirklich funktioniert
 
-Spotifys offizielle API knüpft Downloads an ein Premium-Abo. Downtify nimmt stattdessen die Seitentür — es liest die Metadaten, die Spotify ohnehin auf seinen öffentlichen Einbettungsseiten preisgibt, fragt YouTube Music nach dem passendsten Audio, übergibt die Datei an `yt-dlp` und `ffmpeg` und schreibt mit `mutagen` die richtigen Tags. Die gesamte Pipeline steckt in einem einzigen Docker-Container.
+Spotifys offizielle API knüpft Downloads an ein Premium-Abo. Castify nimmt stattdessen die Seitentür — es liest die Metadaten, die Spotify ohnehin auf seinen öffentlichen Einbettungsseiten preisgibt, fragt YouTube Music nach dem passendsten Audio, übergibt die Datei an `yt-dlp` und `ffmpeg` und schreibt mit `mutagen` die richtigen Tags. Die gesamte Pipeline steckt in einem einzigen Docker-Container.
 
 <HomePipeline :steps="$frontmatter.pipeline" />
 

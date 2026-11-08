@@ -4,7 +4,7 @@ icon: lucide/mouse-pointer-click
 
 # Installation en un clic
 
-Downtify est disponible dans les boutiques d’applications des plateformes de serveur domestique les plus répandues. Pas de ligne de commande.
+Castify est disponible dans les boutiques d’applications des plateformes de serveur domestique les plus répandues. Pas de ligne de commande.
 
 ## Plateformes prises en charge
 
@@ -14,11 +14,11 @@ Downtify est disponible dans les boutiques d’applications des plateformes de s
 | **CasaOS** | [casaos.zimaspace.com](https://casaos.zimaspace.com/) |
 | **HomeDock OS** | [homedock.cloud/apps/downtify](https://www.homedock.cloud/apps/downtify/) |
 
-Chaque plateforme gère automatiquement l’image Docker, les volumes et la politique de redémarrage. Une fois l’installation terminée, ouvrez Downtify depuis le tableau de bord de votre plateforme — le port par défaut est le **8000**.
+Chaque plateforme gère automatiquement l’image Docker, les volumes et la politique de redémarrage. Une fois l’installation terminée, ouvrez Castify depuis le tableau de bord de votre plateforme — le port par défaut est le **8000**.
 
 ## Mise à jour
 
-Les mises à jour passent par la boutique d’applications de votre plateforme. Ouvrez la fiche de Downtify et cliquez sur **Update** quand une nouvelle version est disponible. Votre bibliothèque musicale et vos réglages sont conservés automatiquement.
+Les mises à jour passent par la boutique d’applications de votre plateforme. Ouvrez la fiche de Castify et cliquez sur **Update** quand une nouvelle version est disponible. Votre bibliothèque musicale et vos réglages sont conservés automatiquement.
 
 ## Configuration personnalisée
 

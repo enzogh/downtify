@@ -11,7 +11,7 @@ No hace falta cuenta ni clave de API: las sugerencias salen de la lista pública
 ## Cómo se eligen las sugerencias
 
 1. **Se pondera a tus artistas.** Cada artista de tu biblioteca cuenta algo, y cuenta más por cada uno de estos puntos, de mayor a menor:
-    - cuántas veces los **escuchas** en el reproductor de Downtify (lo escuchado recientemente pesa más que lo de hace meses),
+    - cuántas veces los **escuchas** en el reproductor de Castify (lo escuchado recientemente pesa más que lo de hace meses),
     - cuántas de sus canciones te **gustan**,
     - cuántas de sus canciones están **en tu biblioteca**.
 

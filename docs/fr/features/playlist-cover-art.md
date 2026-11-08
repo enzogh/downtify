@@ -4,7 +4,7 @@ icon: lucide/image
 
 # Pochettes de playlists
 
-Downtify peut enregistrer la pochette propre à une playlist à côté de son [fichier M3U](m3u-export.md), afin que les serveurs multimédias et les navigateurs de fichiers affichent le vrai visuel de la playlist plutôt qu’une icône générique.
+Castify peut enregistrer la pochette propre à une playlist à côté de son [fichier M3U](m3u-export.md), afin que les serveurs multimédias et les navigateurs de fichiers affichent le vrai visuel de la playlist plutôt qu’une icône générique.
 
 Activé par défaut. Désactivez-le dans **Paramètres → Téléchargements et fichiers → Enregistrer la pochette de la playlist**.
 
@@ -25,7 +25,7 @@ Avec *Classer par artiste* ou *Classer par album* activé, les titres sont répa
 ```
 
 ::: info Il faut le M3U
-Avec **Écrire des playlists M3U** désactivé, aucune pochette n’est enregistrée non plus : Downtify place l’image d’après le chemin du M3U ; sans lui, il n’y a nulle part où la mettre. Le réglage est masqué tant que l’écriture de M3U est désactivée.
+Avec **Écrire des playlists M3U** désactivé, aucune pochette n’est enregistrée non plus : Castify place l’image d’après le chemin du M3U ; sans lui, il n’y a nulle part où la mettre. Le réglage est masqué tant que l’écriture de M3U est désactivée.
 :::
 
 ## Sources et résolution
@@ -46,13 +46,13 @@ Les deux services servent du JPEG pour ces URL même lorsque l’image d’origi
 
 Un échec de résolution ou de téléchargement de la pochette (erreur réseau, playlist sans visuel) est consigné et ignoré — il ne retarde ni ne fait échouer jamais le téléchargement lui-même.
 
-## Dans l’interface de Downtify
+## Dans l’interface de Castify
 
 Une playlist qui a son propre visuel (téléchargée avec une playlist Spotify ou YouTube) l’affiche partout où la Bibliothèque liste les playlists — la grille, la page de la playlist, la barre latérale et le lecteur. Les playlists qui n’en ont pas, et celles que vous créez dans la Bibliothèque, affichent une mosaïque d’au plus quatre pochettes de titres distinctes : deux côte à côte, trois sous forme d’une grande tuile à gauche et de deux tuiles empilées à droite, quatre en grille 2×2. Le même collage est écrit sous le nom `<nom-de-la-playlist>.jpg` à côté du M3U d’une playlist manuelle pour que Navidrome le voie aussi, et il est refait à chaque ajout ou retrait de titres.
 
 ## Navidrome
 
-Rien à configurer : Navidrome résout le visuel des playlists à partir d’une **image annexe** — un fichier portant le nom de la playlist, dans le même dossier — ce qui est exactement ce que Downtify écrit. Tant que le dossier de musique de Navidrome couvre votre dossier de téléchargements, le visuel apparaît à son prochain scan. Aucun appel d’API de Downtify n’est impliqué. Voir [slskd et Navidrome](slskd-navidrome.md#navidrome).
+Rien à configurer : Navidrome résout le visuel des playlists à partir d’une **image annexe** — un fichier portant le nom de la playlist, dans le même dossier — ce qui est exactement ce que Castify écrit. Tant que le dossier de musique de Navidrome couvre votre dossier de téléchargements, le visuel apparaît à son prochain scan. Aucun appel d’API de Castify n’est impliqué. Voir [slskd et Navidrome](slskd-navidrome.md#navidrome).
 
 ## Nettoyage
 

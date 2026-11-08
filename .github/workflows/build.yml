@@ -36,7 +36,7 @@ jobs:
             type=org.opencontainers.image.licenses, value=AGPL-3.0
             type=org.opencontainers.image.vendor, value=Henrique Sebastião
             type=org.opencontainers.image.base.name, value=python:3.13-alpine
-            type=org.opencontainers.image.title, value=Downtify
+            type=org.opencontainers.image.title, value=Castify
     
       - name: Login to DockerHub
         uses: docker/login-action@v4.7.0

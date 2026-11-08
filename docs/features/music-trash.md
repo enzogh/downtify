@@ -19,7 +19,7 @@ services:
       - DOWNTIFY_TRASH=true
 ```
 
-The trash then covers the downloads folder (`/downloads`), and Downtify moves the files itself. To cover other folders as well (the [slskd folder](slskd-navidrome.md), [existing music folders](external-library.md)), or to have the files moved by a separate process, use a [configuration file](#the-configuration-file) instead.
+The trash then covers the downloads folder (`/downloads`), and Castify moves the files itself. To cover other folders as well (the [slskd folder](slskd-navidrome.md), [existing music folders](external-library.md)), or to have the files moved by a separate process, use a [configuration file](#the-configuration-file) instead.
 
 While the trash is on:
 
@@ -71,11 +71,11 @@ That stays true after its 30 days, so a monitored playlist doesn't bring back a 
 
 ## Where the files go
 
-A song moves to a `.downtify-trash` folder at the top of its library folder (for example `/downloads/.downtify-trash/<id>/`), readable only by Downtify's user, with an empty `.ignore` file so that Jellyfin skips it. Downtify's own scans, players, streams and the apps never show what's in it.
+A song moves to a `.downtify-trash` folder at the top of its library folder (for example `/downloads/.downtify-trash/<id>/`), readable only by Castify's user, with an empty `.ignore` file so that Jellyfin skips it. Castify's own scans, players, streams and the apps never show what's in it.
 
 Moves are renames on the same disk — nothing is copied — that never replace an existing file, and each file is checked against what was confirmed (size and SHA-256) before it moves, before it comes back and before it is deleted. A file that changed in between stops the operation and is kept. This needs Linux and a filesystem with atomic renames that don't replace (`renameat2` with `RENAME_NOREPLACE`: ext4, XFS, Btrfs, tmpfs, ZFS…); elsewhere the trash refuses to move anything (`This storage can’t move files safely`).
 
-Don't delete the database in `/data` or go back to a Downtify version without the trash while songs are in it: the database is what knows where each one came from.
+Don't delete the database in `/data` or go back to a Castify version without the trash while songs are in it: the database is what knows where each one came from.
 
 ## The configuration file
 
@@ -100,15 +100,15 @@ Don't delete the database in `/data` or go back to a Downtify version without th
 | Key | Description |
 |-----|-------------|
 | `version` | Always `1` |
-| `worker` | `embedded` (default): Downtify moves the files itself. `external`: only a [separate worker](#a-separate-worker) does |
-| `roots` | The folders, each under a name of your choice. `path` is absolute and must be the folder as Downtify sees it — the downloads folder, the slskd folder or one of the extra music folders — and can't be a symbolic link itself |
+| `worker` | `embedded` (default): Castify moves the files itself. `external`: only a [separate worker](#a-separate-worker) does |
+| `roots` | The folders, each under a name of your choice. `path` is absolute and must be the folder as Castify sees it — the downloads folder, the slskd folder or one of the extra music folders — and can't be a symbolic link itself |
 | `marker`, `marker_value` | Optional, for removable or network storage: a file in that folder and its expected content. While the file is missing or different (the disk isn't mounted, another one is), nothing in that folder moves |
 
 A configuration that can't be read stops the server at start, with the reason in the log, rather than bring permanent deletion back.
 
 ## A separate worker
 
-With `"worker": "external"`, Downtify only records what to do and never touches the files: its container can mount the music read-only, and a separate process — with only the music folders and `/data` mounted, no network, no Docker socket — does the moves, restores and expiries:
+With `"worker": "external"`, Castify only records what to do and never touches the files: its container can mount the music read-only, and a separate process — with only the music folders and `/data` mounted, no network, no Docker socket — does the moves, restores and expiries:
 
 ```sh
 python -m downtify.trash_worker \
@@ -118,7 +118,7 @@ python -m downtify.trash_worker \
   --limit 5
 ```
 
-Each run handles at most `--limit` operations (1–20), prints what it did as JSON (`{"processed": 1, "succeeded": 1, "failed": 0}`) and exits; schedule it every minute or so (a systemd timer, cron, a Kubernetes CronJob). It checks again that whoever asked is still an admin, reading the accounts database read-only, and two runs never work at once. Run it from the same Downtify version as the server, and only while nothing else rewrites the same files.
+Each run handles at most `--limit` operations (1–20), prints what it did as JSON (`{"processed": 1, "succeeded": 1, "failed": 0}`) and exits; schedule it every minute or so (a systemd timer, cron, a Kubernetes CronJob). It checks again that whoever asked is still an admin, reading the accounts database read-only, and two runs never work at once. Run it from the same Castify version as the server, and only while nothing else rewrites the same files.
 
 ## API
 

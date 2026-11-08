@@ -76,7 +76,7 @@ function localeConfig(code) {
     label: data.name,
     lang: data.lang,
     link: localePrefix(code),
-    title: 'Downtify',
+    title: 'Castify',
     titleTemplate: `:title · ${data.titleSuffix}`,
     description: data.description,
     themeConfig: { sidebar: sidebarFor(code), ui: data.ui },
@@ -156,7 +156,7 @@ export default defineConfig({
   srcExclude: ['markdown.md'],
   base: BASE,
   lang: LOCALES[SOURCE_LOCALE].lang,
-  title: 'Downtify',
+  title: 'Castify',
   titleTemplate: `:title · ${LOCALES[SOURCE_LOCALE].titleSuffix}`,
   description: DESCRIPTION,
   locales: {
@@ -179,7 +179,7 @@ export default defineConfig({
     ['meta', { name: 'theme-color', content: '#0b0c0e' }],
     ['script', {}, THEME_SCRIPT],
     ['script', {}, LOCALE_SCRIPT],
-    ['meta', { property: 'og:site_name', content: 'Downtify' }],
+    ['meta', { property: 'og:site_name', content: 'Castify' }],
     ['meta', { property: 'og:type', content: 'website' }],
     [
       'meta',
@@ -191,7 +191,7 @@ export default defineConfig({
       { name: 'twitter:image', content: `${SITE_URL}assets/social-image.png` },
     ],
     // Umami page-view analytics for the docs site (cookieless). The
-    // Downtify app itself never loads it.
+    // Castify app itself never loads it.
     [
       'script',
       {

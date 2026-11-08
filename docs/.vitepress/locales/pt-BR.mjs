@@ -4,7 +4,7 @@ export default {
   lang: 'pt-BR',
   description:
     'Baixador de músicas auto-hospedado. Cole um link do Spotify e receba um arquivo de áudio com todas as tags — sem chaves de API, sem conta, sem complicação.',
-  titleSuffix: 'Documentação do Downtify',
+  titleSuffix: 'Documentação do Castify',
   containers: {
     info: 'Nota',
     tip: 'Dica',
@@ -19,7 +19,7 @@ export default {
     navigation: 'Navegação',
     sidebar: 'Barra lateral',
     documentation: 'Documentação',
-    docsHome: 'Início da documentação do Downtify',
+    docsHome: 'Início da documentação do Castify',
     docsBadge: 'Docs',
     searchDocs: 'Pesquisar na documentação',
     search: 'Pesquisar',
@@ -66,7 +66,6 @@ export default {
       'getting-started/environment-variables.md': 'Variáveis de ambiente',
       'features/index.md': 'Visão geral',
       'features/charts.md': 'Paradas de sucesso',
-      'features/similar.md': 'Similares',
       'features/finder.md': 'Localizador',
       'features/download-settings.md': 'Configurações de download',
       'features/download-queue.md': 'Fila de downloads',

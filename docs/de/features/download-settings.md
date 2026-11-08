@@ -31,7 +31,7 @@ Verfügbar für verlustbehaftete Formate (MP3, M4A, OGG, OPUS). FLAC ignoriert d
 Das heruntergeladene Audio wird für jedes verlustbehaftete Format mit der gewählten Bitrate kodiert. Hat das von YouTube gelieferte Audio bereits den Ziel-Codec bei ungefähr dieser Bitrate (z. B. der AAC-Stream mit ~128 kbps für **M4A @ 128**), wird es unverändert übernommen statt neu kodiert, denn eine Neukodierung würde nur Qualität kosten.
 
 ::: info Eine höhere Bitrate bringt keine zusätzliche Qualität
-Das Audio von YouTube reicht höchstens bis etwa **128–160 kbps** (AAC oder Opus), und Downtify lädt immer den besten verfügbaren Stream. Mit 256 oder 320 kbps kodiert, entstehen größere Dateien, die diese Quelle originalgetreu bewahren, aber keine Details zurückbringen können, die die Quelle nie hatte. Wähle eine niedrigere Bitrate, wenn dir die Dateigröße wichtiger ist.
+Das Audio von YouTube reicht höchstens bis etwa **128–160 kbps** (AAC oder Opus), und Castify lädt immer den besten verfügbaren Stream. Mit 256 oder 320 kbps kodiert, entstehen größere Dateien, die diese Quelle originalgetreu bewahren, aber keine Details zurückbringen können, die die Quelle nie hatte. Wähle eine niedrigere Bitrate, wenn dir die Dateigröße wichtiger ist.
 :::
 
 ## Vorlage für den Dateinamen
@@ -86,7 +86,7 @@ Das Limit gilt für jeden Batch-Download — Playlist-/Album-Downloads, den Batc
 
 ## Pause zwischen Downloads
 
-Lässt Downtify nach dem Abschluss eines Songs eine konfigurierbare Anzahl Sekunden warten, bevor der nächste beginnt, statt die Anfragen direkt hintereinander abzufeuern.
+Lässt Castify nach dem Abschluss eines Songs eine konfigurierbare Anzahl Sekunden warten, bevor der nächste beginnt, statt die Anfragen direkt hintereinander abzufeuern.
 
 | Wert | Verhalten |
 |-------|-----------|
@@ -103,7 +103,7 @@ Dieselbe Idee, aber für die **[Vorhandenen Musikordner](external-library.md)** 
 
 ## Cover herunterladen
 
-Steuert, ob Downtify überhaupt Albumcover einbettet. Standardmäßig an. Schalte es aus, um das Abrufen von Covern ganz zu überspringen — alle anderen Tags (Titel, Künstler, Album, Jahr, Songtext) werden weiterhin normal eingebettet, aber die Dateien werden kleiner und laden etwas schneller, da das Coverbild nie angefordert oder geschrieben wird.
+Steuert, ob Castify überhaupt Albumcover einbettet. Standardmäßig an. Schalte es aus, um das Abrufen von Covern ganz zu überspringen — alle anderen Tags (Titel, Künstler, Album, Jahr, Songtext) werden weiterhin normal eingebettet, aber die Dateien werden kleiner und laden etwas schneller, da das Coverbild nie angefordert oder geschrieben wird.
 
 Ausschalten überspringt auch das Schreiben der eigenständigen `cover.jpg`, die die Option *Nach Album sortieren* (siehe [Dateiorganisation](file-organization.md)) erzeugt, und der [Player](player.md) bzw. die Bibliothek zeigen für so heruntergeladene Titel kein Cover (stattdessen das Ersatz-Notensymbol).
 
@@ -111,33 +111,33 @@ Diese `cover.jpg` teilen sich alle Titel im Albumordner. Löscht du einen Titel 
 
 ## Cover-Auflösung
 
-Nur relevant, wenn **Cover herunterladen** (oben) an ist. Legt die Zielgröße (Breite und Höhe in Pixeln) fest, die Downtify für eingebettete Cover von **YouTube Music** oder **Deezer** anfordert. Wähle eine Voreinstellung (300, 600, 800, 1000, 1200) oder ziehe den Schieberegler irgendwo zwischen **300 und 1200**; der aktuelle Wert in Pixeln steht daneben. Standard ist 600.
+Nur relevant, wenn **Cover herunterladen** (oben) an ist. Legt die Zielgröße (Breite und Höhe in Pixeln) fest, die Castify für eingebettete Cover von **YouTube Music** oder **Deezer** anfordert. Wähle eine Voreinstellung (300, 600, 800, 1000, 1200) oder ziehe den Schieberegler irgendwo zwischen **300 und 1200**; der aktuelle Wert in Pixeln steht daneben. Standard ist 600.
 
-Das ist nützlich, wenn du deine Bibliothek in einen Medienserver wie Plex einspeist, der Cover in höherer Auflösung anzeigt, als Downtify standardmäßig einbettet.
+Das ist nützlich, wenn du deine Bibliothek in einen Medienserver wie Plex einspeist, der Cover in höherer Auflösung anzeigt, als Castify standardmäßig einbettet.
 
 Die beiden Quellen setzen die Einstellung unterschiedlich um, da nur eine von ihnen tatsächlich auf Abruf skaliert werden kann:
 
 - Thumbnails von **YouTube Music** lassen sich durch Ändern ihrer URL skalieren — am echten CDN geprüft, liefern die höheren Voreinstellungen bei den meisten Covern tatsächlich mehr Details (nicht nur Hochskalierung), bis zur Auflösung des Quellbilds selbst.
-- **Deezer** bietet für das Cover jedes Titels, Albums, Künstlers oder jeder Playlist nur vier feste Größen (56, 250, 500 und 1000 px) — eine Zwischengröße gibt es nicht. Downtify wählt die kleinste dieser vier, die mindestens so groß ist wie der eingestellte Wert (bei 300 px gibt es die 500-px-Version, da es keine exakte 300-px-Größe gibt); wer mehr als 1000 px verlangt, bekommt ebenfalls die 1000-px-Version, die größte von Deezer.
+- **Deezer** bietet für das Cover jedes Titels, Albums, Künstlers oder jeder Playlist nur vier feste Größen (56, 250, 500 und 1000 px) — eine Zwischengröße gibt es nicht. Castify wählt die kleinste dieser vier, die mindestens so groß ist wie der eingestellte Wert (bei 300 px gibt es die 500-px-Version, da es keine exakte 300-px-Größe gibt); wer mehr als 1000 px verlangt, bekommt ebenfalls die 1000-px-Version, die größte von Deezer.
 
 ::: info Cover aus Spotify sind nicht betroffen
-Downtify bettet bereits das **größte** Cover ein, das Spotifys öffentliche Embed-API für von Spotify aufgelöste Titel/Alben/Playlists anbietet — eine größere Größe gibt es nicht. Diese Einstellung hebt nur die Obergrenze für Titel an, die über YouTube Music aufgelöst werden (Freitextsuche, YouTube-URLs und jeder Spotify-Titel, der für das eigentliche Audio erneut YouTube Music zugeordnet wird) oder über Deezer (ein eingefügter Deezer-Link oder ein Titel aus den [Charts](charts.md)).
+Castify bettet bereits das **größte** Cover ein, das Spotifys öffentliche Embed-API für von Spotify aufgelöste Titel/Alben/Playlists anbietet — eine größere Größe gibt es nicht. Diese Einstellung hebt nur die Obergrenze für Titel an, die über YouTube Music aufgelöst werden (Freitextsuche, YouTube-URLs und jeder Spotify-Titel, der für das eigentliche Audio erneut YouTube Music zugeordnet wird) oder über Deezer (ein eingefügter Deezer-Link oder ein Titel aus den [Charts](charts.md)).
 :::
 
 Eine Änderung dieses Werts in den Einstellungen wirkt sofort, auch für die gerade geöffnete Suchseite — sie erfordert kein erneutes Herunterladen von etwas, das schon auf der Festplatte liegt.
 
 ## Vorhandene Dateien überschreiben
 
-Standardmäßig an, entsprechend Downtifys bisherigem Verhalten: Jeder Download durchläuft die Pipeline (Audio abrufen, Tags, Cover, Songtext) und überschreibt, was bereits unter dem berechneten Ausgabepfad liegt.
+Standardmäßig an, entsprechend Castifys bisherigem Verhalten: Jeder Download durchläuft die Pipeline (Audio abrufen, Tags, Cover, Songtext) und überschreibt, was bereits unter dem berechneten Ausgabepfad liegt.
 
 ### Was „erneut“ wirklich bedeutet
 
-Ist es an, ist ein erneuter Download ein **komplett frischer Lauf**, keine Reparatur der vorhandenen Datei. Downtify sieht nicht nach, was du schon hast: Es durchsucht deine [Audioquellen](#audio-provider) in der konfigurierten Reihenfolge — ist also slskd zuerst, wird slskd zuerst versucht, nicht nur als Rückfall —, holt das Audio von der Quelle, die antwortet, und schreibt die heutigen Tags, Cover und Songtexte darauf.
+Ist es an, ist ein erneuter Download ein **komplett frischer Lauf**, keine Reparatur der vorhandenen Datei. Castify sieht nicht nach, was du schon hast: Es durchsucht deine [Audioquellen](#audio-provider) in der konfigurierten Reihenfolge — ist also slskd zuerst, wird slskd zuerst versucht, nicht nur als Rückfall —, holt das Audio von der Quelle, die antwortet, und schreibt die heutigen Tags, Cover und Songtexte darauf.
 
 Das hat eine Folge, die man vor dem erneuten Herunterladen einer großen Bibliothek kennen sollte:
 
 ::: warning Ein anderes Format lässt die alte Datei zurück
-Die neue Datei wird an dem Pfad geschrieben, den die [Vorlage für den Dateinamen](#output-filename-template) erzeugt, mit der Endung des **neuen** Audios. Downtify überschreibt die alte Datei nur, wenn beide dieselbe Endung haben.
+Die neue Datei wird an dem Pfad geschrieben, den die [Vorlage für den Dateinamen](#output-filename-template) erzeugt, mit der Endung des **neuen** Audios. Castify überschreibt die alte Datei nur, wenn beide dieselbe Endung haben.
 
 Lädst du also `Künstler - Song.mp3` erneut herunter und slskd antwortet mit einer FLAC, bekommst du **beide**: `Künstler - Song.mp3` (die alte, unberührt) und `Künstler - Song.flac`. Ist [slskd-Dateien an Ort und Stelle lassen](slskd-navidrome.md#leave-files-in-place) an — der Standard —, wird die slskd-Datei nicht einmal in deinen Download-Ordner kopiert, die alte bleibt also genau dort, wo sie war, und die neue liegt unter `slskd/`.
 
@@ -146,13 +146,13 @@ Nichts geht verloren, aber du bekommst Dubletten. Um eine Datei wirklich zu erse
 
 ### Das Cover kommt von Spotify oder YouTube Music, nicht aus der Datei
 
-Jedes Artwork, das das heruntergeladene Audio mitbringt — auch ein hochauflösendes Cover, das in einer slskd-Datei eingebettet ist —, wird beim Taggen **verworfen und ersetzt**. Downtify bettet immer das Cover ein, das es für den Titel von Spotify oder YouTube Music abruft, in der von dir konfigurierten [Cover-Auflösung](#cover-art-resolution) (standardmäßig 600 px). Dasselbe gilt für Titel, Künstler, Album und die übrigen Tags: Die eigenen Tags der Quelle werden nicht beibehalten.
+Jedes Artwork, das das heruntergeladene Audio mitbringt — auch ein hochauflösendes Cover, das in einer slskd-Datei eingebettet ist —, wird beim Taggen **verworfen und ersetzt**. Castify bettet immer das Cover ein, das es für den Titel von Spotify oder YouTube Music abruft, in der von dir konfigurierten [Cover-Auflösung](#cover-art-resolution) (standardmäßig 600 px). Dasselbe gilt für Titel, Künstler, Album und die übrigen Tags: Die eigenen Tags der Quelle werden nicht beibehalten.
 
 Wenn du größere Cover auf bereits vorhandenen Dateien willst, ist erneutes Herunterladen der lange Weg. [Bibliothek verbessern](library-upgrade.md) macht genau das — es vergleicht das eingebettete Cover jeder Datei mit Spotify, iTunes und YouTube Music, schreibt das größte, ergänzt fehlende Songtexte und Tags und fasst das Audio nie an.
 
 Schalte es aus, um nie einen Song herunterzuladen, der schon auf der Festplatte liegt. Das ist vor allem wichtig beim Herunterladen einer Playlist, beim Importieren einer [CSV-Bibliothek](library-import.md) oder wenn die [Playlist-Überwachung](playlist-monitor.md) Playlists synchronisiert, die Titel untereinander oder mit Songs gemeinsam haben, die schon in deiner Bibliothek liegen — bei eingeschalteter Option wird jede dieser Dubletten erneut heruntergeladen.
 
-Ist sie aus, sucht Downtify den Song **irgendwo im Download-Ordner**, nicht nur dort, wo der neue Download landen würde:
+Ist sie aus, sucht Castify den Song **irgendwo im Download-Ordner**, nicht nur dort, wo der neue Download landen würde:
 
 - im Bibliotheksstamm (Einzeltitel-Downloads),
 - im Ordner einer beliebigen Playlist (Playlist-Downloads, CSV-Importe, Playlist-Überwachung),
@@ -172,17 +172,17 @@ Wenn ein Song übersprungen wird:
 
 ## Audioanbieter
 
-Der Standard-Audioanbieter ist **YouTube Music**. Downtify nutzt [`ytmusicapi`](https://ytmusicapi.readthedocs.io/), um die beste Übereinstimmung durch Vergleich der Titellänge zu finden. Hat YouTube Music keinen akzeptablen Treffer oder nur einen mit stark abweichender Länge (wahrscheinlich eine andere Aufnahme), fällt Downtify automatisch auf die Suche im normalen YouTube zurück — siehe [So funktioniert es](../how-it-works.md#fallback-to-standard-youtube).
+Der Standard-Audioanbieter ist **YouTube Music**. Castify nutzt [`ytmusicapi`](https://ytmusicapi.readthedocs.io/), um die beste Übereinstimmung durch Vergleich der Titellänge zu finden. Hat YouTube Music keinen akzeptablen Treffer oder nur einen mit stark abweichender Länge (wahrscheinlich eine andere Aufnahme), fällt Castify automatisch auf die Suche im normalen YouTube zurück — siehe [So funktioniert es](../how-it-works.md#fallback-to-standard-youtube).
 
 **Einstellungen → Audioquellen** kann auch nur das normale **YouTube** oder **slskd** (Soulseek) als geordnete Rückfallliste nutzen — siehe [slskd und Navidrome](slskd-navidrome.md#audio-sources-and-fallback-order).
 
 ### Eine bestimmte Audioquelle erzwingen
 
-Wählt Downtify das falsche YouTube-Music-Video (z. B. ein Cover statt des Originals), kannst du es pro Titel überschreiben:
+Wählt Castify das falsche YouTube-Music-Video (z. B. ein Cover statt des Originals), kannst du es pro Titel überschreiben:
 
 **Option A — eine YouTube-Music-URL direkt einfügen**
 
-Füge `https://music.youtube.com/watch?v=…` (oder eine normale `youtube.com/watch?v=…`-URL) in die Suchleiste ein und starte den Download. Downtify holt das Audio genau von diesem Video.
+Füge `https://music.youtube.com/watch?v=…` (oder eine normale `youtube.com/watch?v=…`-URL) in die Suchleiste ein und starte den Download. Castify holt das Audio genau von diesem Video.
 
 ::: info
 Beim Download über eine YouTube-URL stammen die Metadaten (Titel, Künstler, Cover) von YouTube statt von Spotify. Für saubere Tags nutze Option B.
@@ -194,11 +194,11 @@ Beim Download über eine YouTube-URL stammen die Metadaten (Titel, Künstler, Co
 2. Füge eine YouTube- oder YouTube-Music-URL in das erscheinende Feld ein.
 3. Drücke **Enter** oder klicke auf **Anwenden**.
 
-Downtify lädt den Titel mit genau diesem Video erneut herunter und behält dabei alle Spotify-Metadaten (Titel, Künstler, Album, Cover, Songtext).
+Castify lädt den Titel mit genau diesem Video erneut herunter und behält dabei alle Spotify-Metadaten (Titel, Künstler, Album, Cover, Songtext).
 
 ## Eingebettete Metadaten
 
-Downtify bettet die folgenden Tags in jede heruntergeladene Datei ein, unabhängig vom Format:
+Castify bettet die folgenden Tags in jede heruntergeladene Datei ein, unabhängig vom Format:
 
 | Tag | Quelle |
 |-----|--------|

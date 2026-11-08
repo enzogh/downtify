@@ -12,7 +12,7 @@ icon: lucide/hand-heart
 
 버그 보고에는 다음을 포함하세요.
 
-- Downtify 버전
+- Castify 버전
 - 설치 방법(Docker run, Docker Compose, Umbrel, …)
 - 재현 단계
 - 기대한 것과 실제로 일어난 일
@@ -106,7 +106,7 @@ downtify/
 
 ## 번역
 
-Downtify에는 번역할 것이 두 가지 있으며, 어느 쪽이든 — 또는 둘 다 — 맡을 수 있습니다.
+Castify에는 번역할 것이 두 가지 있으며, 어느 쪽이든 — 또는 둘 다 — 맡을 수 있습니다.
 
 | 번역 대상 | 위치 | 가이드 |
 |---------------|-------|-------|
@@ -133,4 +133,4 @@ npm test                                        # check the structure of what yo
 - 제출하기 전에 `uv run pytest`를 실행하세요
 - PR은 `main`을 대상으로 여세요
 
-Downtify가 도움이 되었다면 GitHub에 별을 남겨 주세요 — 프로젝트가 성장하는 데 도움이 됩니다.
+Castify가 도움이 되었다면 GitHub에 별을 남겨 주세요 — 프로젝트가 성장하는 데 도움이 됩니다.

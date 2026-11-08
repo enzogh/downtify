@@ -4,7 +4,7 @@ icon: lucide/list-music
 
 # Exportación M3U
 
-Downtify genera automáticamente un archivo de playlist `EXTM3U` estándar cada vez que se descarga una playlist de Spotify — ya sea manualmente o mediante el [Monitor de playlists](playlist-monitor.md).
+Castify genera automáticamente un archivo de playlist `EXTM3U` estándar cada vez que se descarga una playlist de Spotify — ya sea manualmente o mediante el [Monitor de playlists](playlist-monitor.md).
 
 ## Ubicación del archivo
 
@@ -19,7 +19,7 @@ Las [canciones que me gustan](liked-songs.md) también se escriben en `Playlists
 
 ## Rutas relativas
 
-Las rutas de las canciones dentro del M3U se escriben **relativas al propio archivo M3U**, no como rutas absolutas. Esto significa que el mismo archivo funciona tanto leído desde dentro del contenedor de Downtify (`/downloads/…`) como desde otro consumidor que monte la misma biblioteca en otra raíz — por ejemplo, Jellyfin en `/nas/music/…`. Basta con apuntar tu servidor multimedia al mismo punto de montaje de la biblioteca y la playlist aparecerá como una unidad.
+Las rutas de las canciones dentro del M3U se escriben **relativas al propio archivo M3U**, no como rutas absolutas. Esto significa que el mismo archivo funciona tanto leído desde dentro del contenedor de Castify (`/downloads/…`) como desde otro consumidor que monte la misma biblioteca en otra raíz — por ejemplo, Jellyfin en `/nas/music/…`. Basta con apuntar tu servidor multimedia al mismo punto de montaje de la biblioteca y la playlist aparecerá como una unidad.
 
 ## Activar / desactivar
 
@@ -27,7 +27,7 @@ La generación de M3U se controla en **Ajustes → Descargas y archivos → Gene
 
 ## Portada
 
-Justo debajo de ese ajuste, **Guardar la portada de la playlist** (activada por defecto) escribe la imagen de portada de la propia playlist junto a su M3U, con el mismo nombre — antes que las canciones, para que la carpeta parezca la playlist desde el principio. Downtify muestra entonces esa imagen para la playlist en lugar de una cuadrícula con las portadas de sus canciones. Una playlist que creas en la Biblioteca recibe un mosaico de hasta cuatro portadas de canciones, escrito del mismo modo. Consulta [Portadas de playlists](playlist-cover-art.md).
+Justo debajo de ese ajuste, **Guardar la portada de la playlist** (activada por defecto) escribe la imagen de portada de la propia playlist junto a su M3U, con el mismo nombre — antes que las canciones, para que la carpeta parezca la playlist desde el principio. Castify muestra entonces esa imagen para la playlist en lugar de una cuadrícula con las portadas de sus canciones. Una playlist que creas en la Biblioteca recibe un mosaico de hasta cuatro portadas de canciones, escrito del mismo modo. Consulta [Portadas de playlists](playlist-cover-art.md).
 
 ## Cuándo se escribe
 
@@ -61,7 +61,7 @@ Es compatible con Jellyfin, Navidrome, Plex, VLC, Kodi, Sonos y cualquier otro r
 
 ## Playlists que creas
 
-**Biblioteca → Playlists → Nueva playlist** escribe el mismo tipo de M3U en `Playlists/`, con una línea extra `#EXTDOWNTIFY:manual` para que Downtify la distinga de una playlist descargada de Spotify/YouTube. Puedes renombrarla y añadir o quitar canciones (incluidas las de [carpetas adicionales](external-library.md)). Eliminar esa playlist, eliminar una canción o desasignar una carpeta adicional actualiza el M3U; el audio solo se elimina cuando eliminas la propia canción o una playlist importada.
+**Biblioteca → Playlists → Nueva playlist** escribe el mismo tipo de M3U en `Playlists/`, con una línea extra `#EXTDOWNTIFY:manual` para que Castify la distinga de una playlist descargada de Spotify/YouTube. Puedes renombrarla y añadir o quitar canciones (incluidas las de [carpetas adicionales](external-library.md)). Eliminar esa playlist, eliminar una canción o desasignar una carpeta adicional actualiza el M3U; el audio solo se elimina cuando eliminas la propia canción o una playlist importada.
 
 ### Añadir canciones a una playlist
 

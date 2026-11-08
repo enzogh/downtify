@@ -1356,7 +1356,7 @@ class AuthMiddleware:
             (b'cache-control', b'no-store'),
         ]
         if status == 401:
-            headers.append((b'www-authenticate', b'Bearer realm="Downtify"'))
+            headers.append((b'www-authenticate', b'Bearer realm="Castify"'))
         await send({
             'type': 'http.response.start',
             'status': status,

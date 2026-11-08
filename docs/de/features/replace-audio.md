@@ -4,14 +4,14 @@ icon: lucide/replace
 
 # Audio ersetzen
 
-Downtify wählt das Audio für jeden Song automatisch aus, und manchmal wählt es das falsche: einen anderen Song mit demselben Namen, einen Live-Mitschnitt, einen Remix oder einen Upload mit langem Intro. Mit **Audio ersetzen** wählst du die richtige Version von Hand aus. Der Titel behält überall seinen Platz — in seinen Playlists, M3U-Dateien, Likes und gekoppelten Apps — und nur das Audio ändert sich.
+Castify wählt das Audio für jeden Song automatisch aus, und manchmal wählt es das falsche: einen anderen Song mit demselben Namen, einen Live-Mitschnitt, einen Remix oder einen Upload mit langem Intro. Mit **Audio ersetzen** wählst du die richtige Version von Hand aus. Der Titel behält überall seinen Platz — in seinen Playlists, M3U-Dateien, Likes und gekoppelten Apps — und nur das Audio ändert sich.
 
 Nur Admins können Audio ersetzen (siehe [Benutzer und Anmeldung](users.md#admins-and-users)).
 
 ## Das Audio eines Titels ersetzen
 
 1. Öffne in der **Bibliothek** das Menü des Titels (Rechtsklick oder die Schaltfläche **⋯**) und wähle **Audio ersetzen …**.
-2. Downtify sucht auf **YouTube Music** und **YouTube** nach „Künstler - Titel“ und listet auf, was es findet. Ändere die Suche oder füge einen YouTube- oder YouTube-Music-Link zu einem Video oder Song ein, um genau den gewünschten Upload zu bekommen.
+2. Castify sucht auf **YouTube Music** und **YouTube** nach „Künstler - Titel“ und listet auf, was es findet. Ändere die Suche oder füge einen YouTube- oder YouTube-Music-Link zu einem Video oder Song ein, um genau den gewünschten Upload zu bekommen.
 3. Wähle eine Version. Jede zeigt, woher sie stammt und wie lang sie ist, neben der Länge deiner Datei. Eine Version, die höchstens 3 Sekunden von der Länge deiner Datei abweicht, wird hervorgehoben. Die Schaltfläche ↗ öffnet sie auf YouTube, damit du vor der Auswahl reinhören kannst.
 4. Drücke **Audio ersetzen**. Das Ersetzen läuft wie ein Download: Es zeigt seinen Fortschritt im Dialog und in der **Warteschlange**, und der Dialog meldet, wann es fertig ist.
 
@@ -23,7 +23,7 @@ Schlägt es fehl (das Video ist nicht verfügbar oder YouTube verlangt eine Anme
 - **Die Tags.** Titel, Künstler, Album, Titelnummer, Jahr, Cover, eingebettete Songtexte und alle anderen Tags werden unverändert von der alten Datei auf das neue Audio kopiert. Die `.lrc`-Begleitdatei bleibt unberührt. Synchrone Songtexte waren auf das alte Audio getaktet: Beginnt die neue Version an anderer Stelle, können sie verschoben sein.
 - **Das Datum.** Die Datei behält ihr Änderungsdatum und springt deshalb nicht an die Spitze von „Kürzlich hinzugefügt“.
 
-Ersetzt werden können nur `.mp3`-, `.flac`-, `.m4a`-, `.ogg`- und `.opus`-Dateien — die Formate, die Downtify schreibt.
+Ersetzt werden können nur `.mp3`-, `.flac`-, `.m4a`-, `.ogg`- und `.opus`-Dateien — die Formate, die Castify schreibt.
 
 ## So funktioniert es
 

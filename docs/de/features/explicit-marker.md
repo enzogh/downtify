@@ -16,9 +16,9 @@ Fahre mit der Maus über das **E** (oder lass es dir von einem Screenreader vorl
 
 ## Woher die Kennzeichnung stammt
 
-Das entscheidet der Dienst, von dem du herunterlädst: Spotify, YouTube Music und Deezer markieren jeweils ihre expliziten Songs, und Downtify übernimmt, was der gewählte sagt. Lädt Downtify einen Song von YouTube Music, beschreibt die Kennzeichnung das **Video, das tatsächlich heruntergeladen wird**: Ist der Song auf Spotify explizit, Downtify hat aber eine entschärfte Version zugeordnet, wird die Datei nicht markiert; nennt Spotify ihn dagegen unbedenklich, die Zuordnung ist aber explizit, wird sie markiert.
+Das entscheidet der Dienst, von dem du herunterlädst: Spotify, YouTube Music und Deezer markieren jeweils ihre expliziten Songs, und Castify übernimmt, was der gewählte sagt. Lädt Castify einen Song von YouTube Music, beschreibt die Kennzeichnung das **Video, das tatsächlich heruntergeladen wird**: Ist der Song auf Spotify explizit, Castify hat aber eine entschärfte Version zugeordnet, wird die Datei nicht markiert; nennt Spotify ihn dagegen unbedenklich, die Zuordnung ist aber explizit, wird sie markiert.
 
-Ein Song, den der Dienst nicht markiert, erhält gar keine Kennzeichnung — das ist nicht dasselbe wie als jugendfrei bestätigt, und Downtify schreibt nie eine „Clean“-Kennzeichnung.
+Ein Song, den der Dienst nicht markiert, erhält gar keine Kennzeichnung — das ist nicht dasselbe wie als jugendfrei bestätigt, und Castify schreibt nie eine „Clean“-Kennzeichnung.
 
 ## In der Datei
 
@@ -33,10 +33,10 @@ Die Kennzeichnung wird wie bei iTunes in die Tags der Datei geschrieben, damit M
 Dateien, die du schon hattest, werden genauso gelesen: Alles, was iTunes, MusicBrainz Picard oder ein anderer Tagger mit `1` (oder dem älteren `4`) markiert hat, zeigt ebenfalls das **E**, auch Songs aus [zusätzlichen Ordnern](external-library.md).
 
 ::: info Vor dieser Version heruntergeladene Songs
-Dateien, die Downtify schrieb, bevor es die Kennzeichnung gab, haben nichts in ihren Tags und zeigen deshalb kein **E**, selbst wenn der Song explizit ist. Lade den Song erneut mit [Audio ersetzen](replace-audio.md) oder ganz neu herunter, um ihn zu markieren. Eine Datei behält ihre Kennzeichnung, wenn [Bibliothek verbessern](library-upgrade.md) oder Audio ersetzen sie neu schreibt: Die Kennzeichnung wird nur hinzugefügt, nie entfernt.
+Dateien, die Castify schrieb, bevor es die Kennzeichnung gab, haben nichts in ihren Tags und zeigen deshalb kein **E**, selbst wenn der Song explizit ist. Lade den Song erneut mit [Audio ersetzen](replace-audio.md) oder ganz neu herunter, um ihn zu markieren. Eine Datei behält ihre Kennzeichnung, wenn [Bibliothek verbessern](library-upgrade.md) oder Audio ersetzen sie neu schreibt: Die Kennzeichnung wird nur hinzugefügt, nie entfernt.
 :::
 
-Beim ersten Laden der Bibliothek nach dem Update liest Downtify die Tags jeder Datei erneut, um nach der Kennzeichnung zu suchen — wie damals, als es lernte, Codec und Genre anzuzeigen. Bei einer großen Bibliothek auf einer langsamen Platte dauert das einmalig einen Moment.
+Beim ersten Laden der Bibliothek nach dem Update liest Castify die Tags jeder Datei erneut, um nach der Kennzeichnung zu suchen — wie damals, als es lernte, Codec und Genre anzuzeigen. Bei einer großen Bibliothek auf einer langsamen Platte dauert das einmalig einen Moment.
 
 ## Für App-Entwickler
 

@@ -4,7 +4,7 @@ icon: lucide/folder-plus
 
 # Mevcut müzik klasörleri
 
-Downtify’ın Kitaplığı, indirdiği dosyalardan ve işaret ettiğiniz **ek klasörlerden** oluşur. Bu klasörler `/downloads` içine kopyalanmaz. Downtify her dosyanın etiketlerini (başlık, sanatçı, albüm, parça numarası, yıl) okur, zaten sahip olduğunuz şarkıları atlar ve geri kalanını Kitaplıkta ve oynatıcıda eşleşen sanatçının altına yerleştirir.
+Castify’ın Kitaplığı, indirdiği dosyalardan ve işaret ettiğiniz **ek klasörlerden** oluşur. Bu klasörler `/downloads` içine kopyalanmaz. Castify her dosyanın etiketlerini (başlık, sanatçı, albüm, parça numarası, yıl) okur, zaten sahip olduğunuz şarkıları atlar ve geri kalanını Kitaplıkta ve oynatıcıda eşleşen sanatçının altına yerleştirir.
 
 ## Klasör ekleme
 
@@ -29,14 +29,14 @@ Eşitleme dosyaları `/downloads` içine kopyalamaz. Klasör yazılabilir olduğ
 :::
 
 ::: tip Salt okunur bağlamalar
-Downtify’ın MP3’leri yeniden yazmasını istemiyorsanız koleksiyonu `:ro` ile bağlayın. Eşitleme yine de onları dizinler. `.lrc` dosyalarını [söz klasörüne](lyrics.md#sidecar-lrc-file) koyun (**.lrc dosyasını sesin yanında tut**’u kapatın). Eksik kapaklar MP3’e değil `/data/cover_cache` altına (Kitaplığın kapak uç noktası) kaydedilir. iTunes türü dosyaya değil, Downtify’ın kitaplık meta veri veritabanına kaydedilir. Salt okunur bir dosyanın yanında zaten duran bir `.lrc` söz klasörüne **kopyalanır** ve yerinde bırakılır.
+Castify’ın MP3’leri yeniden yazmasını istemiyorsanız koleksiyonu `:ro` ile bağlayın. Eşitleme yine de onları dizinler. `.lrc` dosyalarını [söz klasörüne](lyrics.md#sidecar-lrc-file) koyun (**.lrc dosyasını sesin yanında tut**’u kapatın). Eksik kapaklar MP3’e değil `/data/cover_cache` altına (Kitaplığın kapak uç noktası) kaydedilir. iTunes türü dosyaya değil, Castify’ın kitaplık meta veri veritabanına kaydedilir. Salt okunur bir dosyanın yanında zaten duran bir `.lrc` söz klasörüne **kopyalanır** ve yerinde bırakılır.
 :::
 
 ## Eşitleme ne yapar
 
 1. Yapılandırılmış her klasörde çalınabilir ses arar (kitaplığın geri kalanıyla aynı biçimler: MP3, M4A, FLAC, OGG, WAV, AAC, OPUS).
 2. Gömülü etiketleri okur. Başlığı/sanatçısı olmayan dosya, diğer kitaplık satırları gibi dosya adındaki `Sanatçı - Başlık`’a başvurur.
-3. Kitaplık o şarkıya zaten sahipse dosyayı **atlar** (aynı sanatçı + başlık ve ikisi de biliniyorsa birkaç saniye içinde süre) — Downtify indirmiş olsun ya da başka bir ek klasörden gelmiş olsun.
+3. Kitaplık o şarkıya zaten sahipse dosyayı **atlar** (aynı sanatçı + başlık ve ikisi de biliniyorsa birkaç saniye içinde süre) — Castify indirmiş olsun ya da başka bir ek klasörden gelmiş olsun.
 4. **Sanatçıları eşleştirir**: kitaplıkta zaten bulunan adlarla (`The Beatles` ve `Beatles` tek sanatçı olur). Bilinen bir sanatçıyla eşleşmeyen adlar yeni sanatçı olarak görünür. Yeni sanatçılar, tamamlanmış bir indirmeyle aynı profil doldurma için (bu ayarlar açıksa fotoğraf/biyografi) kuyruğa alınır.
 5. Klasör yazılabilirse **bir indirme gibi etiketler**. İçe aktarılan her parça için bir indirmenin kullanacağı aynı söz sağlayıcılarını, kapak aramasını (yalnızca dosyada görsel yoksa) ve iTunes tür aramasını kullanır. Sözler dosyaya gider; bir `.lrc` yan dosyası sesin yanına ya da Ayarlar’da seçtiğiniz [söz klasörüne](lyrics.md#sidecar-lrc-file) yazılır. Kapak ve tür [İndirme ayarları](download-settings.md)’nı izler (`download_cover_art`, `download_lyrics`). **Salt okunur** bir bağlamada MP3 yeniden yazılmaz: eksik kapak `/data/cover_cache` altında saklanır, tür kitaplık kataloğunda saklanır ve bir tane seçtiyseniz `.lrc` dosyaları söz klasörüne gider. Aramalar **Eşzamanlı indirmeler** boyutundaki gruplar halinde çalışır; Ayarlar → İndirmeler ve dosyalar’daki **Eşitleme araması arası bekleme** bu gruplar arasında bekler, böylece büyük klasörler sağlayıcıların hız sınırlarına takılmaz.
 6. Kitaplık sayfası ve oynatıcı sonucu olağan kısa tarama TTL’ini beklemeden görsün diye kitaplık yol önbelleğini geçersiz kılar.
@@ -45,7 +45,7 @@ Eşitleme **arka planda** çalışır. Ayarlar’dan çıkabilirsiniz; hâlâ ç
 
 Bu klasörlere daha fazla dosya bıraktıktan sonra **Klasörleri eşitle**’yi yeniden çalıştırın. Klasör listesini eşitlemeden kaydetmek de onları bir sonraki kitaplık taramasına (yaklaşık bir dakika ya da bir sonraki indirme/silme) dahil eder.
 
-Bir klasörü listeden kaldırmak onun **eşlemesini kaldırır**: o parçalar Kitaplıktan ve oynatıcıdan çıkar, Downtify’ın ürettiği ekstralar (`.lrc` yan dosyaları, önbelleğe alınmış kapaklar) silinir. Diskteki ses dosyaları yerinde kalır.
+Bir klasörü listeden kaldırmak onun **eşlemesini kaldırır**: o parçalar Kitaplıktan ve oynatıcıdan çıkar, Castify’ın ürettiği ekstralar (`.lrc` yan dosyaları, önbelleğe alınmış kapaklar) silinir. Diskteki ses dosyaları yerinde kalır.
 
 Var olmayan veya okunamayan klasörler eşitlemeden sonra bildirilir; diğerleri yine de taranır.
 

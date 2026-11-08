@@ -4,7 +4,7 @@ icon: lucide/image
 
 # Çalma listesi kapakları
 
-Downtify, medya sunucuları ve dosya gezginlerinin genel bir simge yerine çalma listesinin gerçek görselini göstermesi için çalma listesinin kendi kapağını [M3U dosyasının](m3u-export.md) yanına kaydedebilir.
+Castify, medya sunucuları ve dosya gezginlerinin genel bir simge yerine çalma listesinin gerçek görselini göstermesi için çalma listesinin kendi kapağını [M3U dosyasının](m3u-export.md) yanına kaydedebilir.
 
 Varsayılan olarak açıktır. **Ayarlar → İndirmeler ve dosyalar → Çalma listesi kapağını kaydet** içinden kapatın.
 
@@ -25,7 +25,7 @@ Kapak, **çalma listesinin M3U’suyla aynı adla ve aynı klasöre**, yalnızca
 ```
 
 ::: info M3U gerekir
-**M3U çalma listeleri yaz** kapalıyken kapak da kaydedilmez: Downtify görseli M3U’nun yoluna göre yerleştirir, M3U yoksa koyacak yer yoktur. M3U yazımı kapalıyken ayar gizlenir.
+**M3U çalma listeleri yaz** kapalıyken kapak da kaydedilmez: Castify görseli M3U’nun yoluna göre yerleştirir, M3U yoksa koyacak yer yoktur. M3U yazımı kapalıyken ayar gizlenir.
 :::
 
 ## Kaynaklar ve çözünürlük
@@ -46,13 +46,13 @@ Her iki durumda da **parçalardan önce** — klasör dolarken zaten çalma list
 
 Kapağın çözümlenememesi veya indirilememesi (bir ağ hatası, görseli olmayan bir çalma listesi) günlüğe yazılır ve atlanır — indirmenin kendisini asla geciktirmez ya da başarısız kılmaz.
 
-## Downtify arayüzünde
+## Castify arayüzünde
 
 Kendi görseli olan bir çalma listesi (bir Spotify veya YouTube çalma listesiyle indirilen), Kitaplığın çalma listelerini listelediği her yerde onu gösterir — ızgara, çalma listesi sayfası, kenar çubuğu ve oynatıcı. Görseli olmayan çalma listeleri ve Kitaplıkta oluşturduğunuz çalma listeleri, en fazla dört farklı parça kapağından oluşan bir mozaik gösterir: ikisi yan yana, üçü solda uzun bir döşeme artı sağda üst üste iki, dördü 2×2 ızgara olarak. Aynı kolaj, Navidrome da görsün diye elle oluşturulan bir çalma listesinin M3U’sunun yanına `<çalma-listesi-adı>.jpg` olarak yazılır ve şarkı ekleyip çıkardıkça yeniden oluşturulur.
 
 ## Navidrome
 
-Yapılandırılacak bir şey yok: Navidrome çalma listesi görselini bir **yan görselden** — çalma listesinin adını taşıyan, aynı klasördeki bir dosya — çözümler; Downtify’ın yazdığı da tam olarak budur. Navidrome’un müzik klasörü indirme klasörünüzü kapsadığı sürece görsel bir sonraki taramasında belirir. Downtify’dan hiçbir API çağrısı gerekmez. [slskd ve Navidrome](slskd-navidrome.md#navidrome) sayfasına bakın.
+Yapılandırılacak bir şey yok: Navidrome çalma listesi görselini bir **yan görselden** — çalma listesinin adını taşıyan, aynı klasördeki bir dosya — çözümler; Castify’ın yazdığı da tam olarak budur. Navidrome’un müzik klasörü indirme klasörünüzü kapsadığı sürece görsel bir sonraki taramasında belirir. Castify’dan hiçbir API çağrısı gerekmez. [slskd ve Navidrome](slskd-navidrome.md#navidrome) sayfasına bakın.
 
 ## Temizlik
 

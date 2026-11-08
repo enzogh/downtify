@@ -4,7 +4,7 @@ icon: lucide/settings
 
 # Umgebungsvariablen
 
-Alle Umgebungsvariablen sind optional. Downtify funktioniert ohne sie sofort.
+Alle Umgebungsvariablen sind optional. Castify funktioniert ohne sie sofort.
 
 ## Grundlegendes
 
@@ -44,7 +44,7 @@ Siehe [Mobile Apps](../features/mobile-apps.md) und [Benutzer und Anmeldung](../
 | `DOWNTIFY_OIDC_USERNAME_CLAIM` | `preferred_username` | Claim used for new account names, falling back to `email` and then `sub`. |
 | `DOWNTIFY_OIDC_GROUPS_CLAIM` | `groups` | Claim containing group names; dotted paths are supported. |
 | `DOWNTIFY_OIDC_ALLOWED_GROUPS` | _(empty)_ | Comma-separated group allowlist; unset means any authenticated provider identity may sign in. |
-| `DOWNTIFY_OIDC_ADMIN_GROUPS` | _(empty)_ | Comma-separated groups mapped to Downtify admins. Other OIDC users are normal users. |
+| `DOWNTIFY_OIDC_ADMIN_GROUPS` | _(empty)_ | Comma-separated groups mapped to Castify admins. Other OIDC users are normal users. |
 | `DOWNTIFY_TRUSTED_PROXIES` | _(nicht gesetzt)_ | Kommagetrennte Adressen oder Netzwerke deines Reverse-Proxys (z. B. `172.18.0.0/16,10.0.0.5`). Nur bei Anfragen von diesen werden die Header `X-Forwarded-For`, `X-Forwarded-Proto` und `X-Forwarded-Host` geglaubt — für die Client-Adresse, nach der Anmelde- und Kopplungsversuche begrenzt werden, das Secure-Flag des Anmelde-Cookies und die Same-Site-Prüfung. Nicht gesetzt: Diese Header werden ignoriert. |
 | `DOWNTIFY_DISCOVERY` | `true` | `false` beendet das Ankündigen des Servers im lokalen Netzwerk (mDNS, `_downtify._tcp`), womit die Apps ihn unter *In diesem Netzwerk gefunden* auflisten. Im Bridge-Netzwerk von Docker erreicht die Ankündigung das LAN ohnehin nicht — siehe [Docker Compose](docker-compose.md#finding-the-server-from-the-apps). |
 | `DOWNTIFY_TRANSCODE_CACHE_MB` | `2048` | Maximale Größe in MB, unter der der Cache transkodierter Kopien (`/data/transcode_cache`) gehalten wird; die am längsten nicht gespielten Kopien fliegen zuerst raus. |
@@ -60,7 +60,7 @@ Siehe [Musik-Papierkorb](../features/music-trash.md). Aus, solange keine dieser 
 
 | Variable | Standard | Beschreibung |
 |----------|---------|-------------|
-| `DOWNTIFY_TRASH` | `false` | `true` schaltet den Musik-Papierkorb für den Download-Ordner ein: Entfernte Titel kommen 30 Tage lang in einen Papierkorb, und Downtify verschiebt die Dateien selbst. Solange er an ist, entfernen nur Admins Titel. |
+| `DOWNTIFY_TRASH` | `false` | `true` schaltet den Musik-Papierkorb für den Download-Ordner ein: Entfernte Titel kommen 30 Tage lang in einen Papierkorb, und Castify verschiebt die Dateien selbst. Solange er an ist, entfernen nur Admins Titel. |
 | `DOWNTIFY_TRASH_CONFIG` | _(nicht gesetzt)_ | Pfad (im Container) einer JSON-Datei mit den Ordnern, die der Papierkorb abdeckt, und wo sein Worker läuft (`embedded` oder `external`). Hat Vorrang vor `DOWNTIFY_TRASH`. Eine unlesbare Datei verhindert den Serverstart. Siehe [Die Konfigurationsdatei](../features/music-trash.md#the-configuration-file). |
 
 ## Health-Check
@@ -84,7 +84,7 @@ YouTube stellt automatisierte Downloader regelmäßig auf die Probe. Diese Varia
 |----------|---------|-------------|
 | `DOWNTIFY_FORCE_IPV4` | _(nicht gesetzt)_ | Auf `1` setzen, damit yt-dlp nur IPv4 nutzt. Nützlich, wenn dein Host eine defekte oder ratenbegrenzte IPv6-Adresse hat. |
 | `DOWNTIFY_YT_SLEEP_REQUESTS` | _(unset)_ | Seconds yt-dlp waits between its requests to YouTube during a download. Unset, downloads aren't paced — until YouTube answers `429 Too Many Requests`: that song is retried once with a 1 s pause, and every download stays paced for the next 15 minutes. Set a number to force a pause always (`1` is the old behaviour, about 7 s slower per song), or `0` to never pause. To space out whole downloads instead, use **Settings → Downloads → Delay between downloads**. |
-| `DOWNTIFY_YT_PLAYER_CLIENTS` | `ios,android,web_embedded,mweb,web,tv` | Kommagetrennte Liste der zu probierenden yt-dlp-Player-Clients, der Reihe nach. Die Standardliste von Downtify bevorzugt bereits Clients, die ohne JavaScript-Runtime funktionieren. Nur ändern, wenn du weißt, dass ein bestimmter Client blockiert wird. |
+| `DOWNTIFY_YT_PLAYER_CLIENTS` | `ios,android,web_embedded,mweb,web,tv` | Kommagetrennte Liste der zu probierenden yt-dlp-Player-Clients, der Reihe nach. Die Standardliste von Castify bevorzugt bereits Clients, die ohne JavaScript-Runtime funktionieren. Nur ändern, wenn du weißt, dass ein bestimmter Client blockiert wird. |
 | `DOWNTIFY_YT_PO_TOKEN` | _(nicht gesetzt)_ | Kommagetrennte Proof-of-Origin-Tokens für yt-dlp, jedes in der Form `<client>.<context>+<token>` (z. B. `mweb.gvs+ABC123`). Nur nötig, wenn YouTube für die genutzten Clients PO-Tokens verlangt. |
 | `DOWNTIFY_COOKIES_FILE` | _(nicht gesetzt)_ | Pfad zu einer `cookies.txt` im Netscape-Format **im Container**. Lässt yt-dlp sich wie eine echte Browsersitzung authentifizieren — nötig für explizite/altersbeschränkte Titel und immer dann, wenn YouTube eine Anmeldeschranke erzwingt. Hat Vorrang vor einer in der Weboberfläche hochgeladenen Datei und macht diesen Bereich der Oberfläche schreibgeschützt. Siehe [YouTube-Cookies](../features/youtube-cookies.md). |
 | `DOWNTIFY_COOKIES_FROM_BROWSER` | _(nicht gesetzt)_ | Name des Browsers, aus dem Cookies gelesen werden (z. B. `chrome`, `firefox`). Setzt voraus, dass der Cookie-Speicher des Browsers im Container erreichbar ist, daher in Docker selten nutzbar. |

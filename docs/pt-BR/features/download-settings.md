@@ -31,7 +31,7 @@ Disponível para formatos com perdas (MP3, M4A, OGG, OPUS). O FLAC ignora esta c
 O áudio baixado é codificado no bitrate que você escolher, em todos os formatos com perdas. Se o áudio que o YouTube entrega já tem o codec de destino em um bitrate próximo disso (por exemplo, o fluxo AAC de ~128 kbps para **M4A @ 128**), ele é mantido como está em vez de recodificado, já que recodificar só perderia qualidade.
 
 ::: info Um bitrate maior não acrescenta qualidade
-O áudio do YouTube chega a no máximo **128–160 kbps** (AAC ou Opus), e o Downtify sempre baixa o melhor fluxo disponível. Codificá-lo a 256 ou 320 kbps gera arquivos maiores que preservam essa fonte fielmente, mas não recuperam detalhes que a fonte nunca teve. Escolha um bitrate menor se o tamanho dos arquivos importa mais para você.
+O áudio do YouTube chega a no máximo **128–160 kbps** (AAC ou Opus), e o Castify sempre baixa o melhor fluxo disponível. Codificá-lo a 256 ou 320 kbps gera arquivos maiores que preservam essa fonte fielmente, mas não recuperam detalhes que a fonte nunca teve. Escolha um bitrate menor se o tamanho dos arquivos importa mais para você.
 :::
 
 ## Modelo de nome de arquivo
@@ -86,7 +86,7 @@ O limite vale para todo download em lote — downloads de playlists/álbuns, o e
 
 ## Pausa entre downloads
 
-Faz o Downtify esperar um número configurável de segundos ao terminar uma música antes de começar a próxima, em vez de disparar as requisições em sequência.
+Faz o Castify esperar um número configurável de segundos ao terminar uma música antes de começar a próxima, em vez de disparar as requisições em sequência.
 
 | Valor | Comportamento |
 |-------|-----------|
@@ -103,7 +103,7 @@ A mesma ideia, mas para as **[Pastas de músicas existentes](external-library.md
 
 ## Baixar capa
 
-Controla se o Downtify incorpora a capa do álbum. Ligado por padrão. Desligue para pular totalmente a busca da capa — todas as outras tags (título, artista, álbum, ano, letra) continuam sendo incorporadas normalmente, mas os arquivos ficam menores e baixam um pouco mais rápido, já que a imagem da capa nunca é pedida nem gravada.
+Controla se o Castify incorpora a capa do álbum. Ligado por padrão. Desligue para pular totalmente a busca da capa — todas as outras tags (título, artista, álbum, ano, letra) continuam sendo incorporadas normalmente, mas os arquivos ficam menores e baixam um pouco mais rápido, já que a imagem da capa nunca é pedida nem gravada.
 
 Desligar isto também pula a gravação do `cover.jpg` avulso que a opção *Organizar por álbum* (veja [Organização de arquivos](file-organization.md)) produz, e o [player](player.md) e a biblioteca não mostrarão capa nas faixas baixadas assim (aparece o ícone de nota musical no lugar).
 
@@ -111,33 +111,33 @@ Esse `cover.jpg` é compartilhado por todas as faixas da pasta do álbum. Exclui
 
 ## Resolução da capa
 
-Só importa quando **Baixar capa** (acima) está ligado. Define o tamanho desejado (largura e altura, em pixels) que o Downtify pede para a capa incorporada vinda do **YouTube Music** ou do **Deezer**. Escolha uma predefinição (300, 600, 800, 1000, 1200) ou arraste o controle deslizante de **300 a 1200**; o valor atual em pixels aparece ao lado. O padrão é 600.
+Só importa quando **Baixar capa** (acima) está ligado. Define o tamanho desejado (largura e altura, em pixels) que o Castify pede para a capa incorporada vinda do **YouTube Music** ou do **Deezer**. Escolha uma predefinição (300, 600, 800, 1000, 1200) ou arraste o controle deslizante de **300 a 1200**; o valor atual em pixels aparece ao lado. O padrão é 600.
 
-É útil ao alimentar a biblioteca em um servidor de mídia como o Plex, que exibe capas em resolução maior do que a incorporada por padrão pelo Downtify.
+É útil ao alimentar a biblioteca em um servidor de mídia como o Plex, que exibe capas em resolução maior do que a incorporada por padrão pelo Castify.
 
 As duas fontes aplicam a configuração de modos diferentes, já que só uma delas pode de fato ser redimensionada sob demanda:
 
 - As miniaturas do **YouTube Music** podem ser redimensionadas editando a URL — verificado no CDN real, as predefinições mais altas devolvem de verdade mais detalhe (não apenas ampliação) na maioria das capas, até a resolução da própria imagem de origem.
-- O **Deezer** só oferece quatro tamanhos fixos para a capa de qualquer faixa, álbum, artista ou playlist (56, 250, 500 e 1000 px) — não há tamanho intermediário para pedir. O Downtify escolhe o menor desses quatro que ainda seja pelo menos tão grande quanto o valor configurado (pedir 300 px dá a de 500 px, pois não existe um tamanho exato de 300 px); pedir mais de 1000 px também dá a de 1000 px, a maior do Deezer.
+- O **Deezer** só oferece quatro tamanhos fixos para a capa de qualquer faixa, álbum, artista ou playlist (56, 250, 500 e 1000 px) — não há tamanho intermediário para pedir. O Castify escolhe o menor desses quatro que ainda seja pelo menos tão grande quanto o valor configurado (pedir 300 px dá a de 500 px, pois não existe um tamanho exato de 300 px); pedir mais de 1000 px também dá a de 1000 px, a maior do Deezer.
 
 ::: info Capas vindas do Spotify não são afetadas
-O Downtify já incorpora a **maior** capa que a API de embed pública do Spotify oferece para faixas/álbuns/playlists resolvidos pelo Spotify — não há tamanho maior para pedir. Esta configuração só eleva o teto para faixas resolvidas pelo YouTube Music (busca de texto livre, URLs do YouTube e qualquer faixa do Spotify reassociada ao YouTube Music para o áudio em si) ou pelo Deezer (um link do Deezer colado, ou uma faixa das [Paradas](charts.md)).
+O Castify já incorpora a **maior** capa que a API de embed pública do Spotify oferece para faixas/álbuns/playlists resolvidos pelo Spotify — não há tamanho maior para pedir. Esta configuração só eleva o teto para faixas resolvidas pelo YouTube Music (busca de texto livre, URLs do YouTube e qualquer faixa do Spotify reassociada ao YouTube Music para o áudio em si) ou pelo Deezer (um link do Deezer colado, ou uma faixa das [Paradas](charts.md)).
 :::
 
 Mudar este valor em Configurações tem efeito imediato, inclusive na página de busca aberta no momento — não exige baixar de novo nada que já esteja no disco.
 
 ## Sobrescrever arquivos existentes
 
-Ligado por padrão, como no comportamento histórico do Downtify: todo download passa pelo pipeline (busca do áudio, tags, capa, letra) e sobrescreve o que já estiver no caminho de saída calculado.
+Ligado por padrão, como no comportamento histórico do Castify: todo download passa pelo pipeline (busca do áudio, tags, capa, letra) e sobrescreve o que já estiver no caminho de saída calculado.
 
 ### O que "de novo" realmente significa
 
-Ligado, um novo download é uma **execução totalmente nova**, não um reparo do arquivo existente. O Downtify não olha o que você já tem: ele pesquisa as suas [fontes de áudio](#audio-provider) na ordem configurada — então, se o slskd for o primeiro, o slskd é tentado primeiro, e não só como alternativa —, busca o áudio na fonte que responder e grava nele as tags, a capa e a letra de hoje.
+Ligado, um novo download é uma **execução totalmente nova**, não um reparo do arquivo existente. O Castify não olha o que você já tem: ele pesquisa as suas [fontes de áudio](#audio-provider) na ordem configurada — então, se o slskd for o primeiro, o slskd é tentado primeiro, e não só como alternativa —, busca o áudio na fonte que responder e grava nele as tags, a capa e a letra de hoje.
 
 Isso tem uma consequência que vale conhecer antes de baixar de novo uma biblioteca grande:
 
 ::: warning Um formato diferente deixa o arquivo antigo para trás
-O novo arquivo é gravado no caminho que o [modelo de nome de arquivo](#output-filename-template) produz, com a extensão do **novo** áudio. O Downtify sobrescreve o arquivo antigo só quando os dois terminam com a mesma extensão.
+O novo arquivo é gravado no caminho que o [modelo de nome de arquivo](#output-filename-template) produz, com a extensão do **novo** áudio. O Castify sobrescreve o arquivo antigo só quando os dois terminam com a mesma extensão.
 
 Então, baixar de novo `Artista - Música.mp3` quando o slskd responde com um FLAC dá **os dois**: `Artista - Música.mp3` (o antigo, intocado) e `Artista - Música.flac`. Com [Deixar os arquivos do slskd onde estão](slskd-navidrome.md#leave-files-in-place) ligado — o padrão —, o arquivo do slskd nem é copiado para a sua pasta de downloads, então o antigo continua exatamente onde estava e o novo fica em `slskd/`.
 
@@ -146,13 +146,13 @@ Nada se perde, mas você ganha duplicatas. Para realmente substituir um arquivo,
 
 ### A capa vem do Spotify ou do YouTube Music, não do arquivo
 
-Qualquer arte que o áudio baixado traga — inclusive uma capa de alta resolução incorporada em um arquivo do slskd — é **descartada e substituída** durante a gravação das tags. O Downtify sempre incorpora a capa que busca para a faixa no Spotify ou no YouTube Music, na [resolução da capa](#cover-art-resolution) que você configurou (600 px por padrão). O mesmo vale para título, artistas, álbum e o resto das tags: as tags da própria fonte não são mantidas.
+Qualquer arte que o áudio baixado traga — inclusive uma capa de alta resolução incorporada em um arquivo do slskd — é **descartada e substituída** durante a gravação das tags. O Castify sempre incorpora a capa que busca para a faixa no Spotify ou no YouTube Music, na [resolução da capa](#cover-art-resolution) que você configurou (600 px por padrão). O mesmo vale para título, artistas, álbum e o resto das tags: as tags da própria fonte não são mantidas.
 
 Se o que você quer é uma capa maior em arquivos que já tem, baixar de novo é o caminho longo. [Melhorar biblioteca](library-upgrade.md) faz exatamente isso — compara a capa incorporada de cada arquivo com a do Spotify, do iTunes e do YouTube Music, grava a maior, completa letras e tags ausentes e nunca toca no áudio.
 
 Desligue para nunca baixar uma música que já está no disco. Isso importa mais ao baixar uma playlist, importar uma [biblioteca por CSV](library-import.md) ou deixar o [Monitor de playlists](playlist-monitor.md) sincronizar playlists que compartilham faixas entre si ou com músicas que já estão na sua biblioteca — com a opção ligada, cada uma dessas duplicatas é baixada de novo.
 
-Desligada, o Downtify procura a música **em qualquer lugar da pasta de downloads**, não só onde o novo download iria:
+Desligada, o Castify procura a música **em qualquer lugar da pasta de downloads**, não só onde o novo download iria:
 
 - a raiz da biblioteca (downloads de faixas avulsas),
 - a pasta de qualquer playlist (downloads de playlists, importações por CSV, Monitor de playlists),
@@ -172,17 +172,17 @@ Quando uma música é pulada:
 
 ## Provedor de áudio
 
-O provedor de áudio padrão é o **YouTube Music**. O Downtify usa o [`ytmusicapi`](https://ytmusicapi.readthedocs.io/) para buscar a melhor correspondência comparando a duração da faixa. Quando o YouTube Music não tem uma correspondência aceitável, ou só uma com duração muito diferente (provavelmente outra gravação), o Downtify recorre automaticamente à busca no YouTube comum — veja [Como funciona](../how-it-works.md#fallback-to-standard-youtube).
+O provedor de áudio padrão é o **YouTube Music**. O Castify usa o [`ytmusicapi`](https://ytmusicapi.readthedocs.io/) para buscar a melhor correspondência comparando a duração da faixa. Quando o YouTube Music não tem uma correspondência aceitável, ou só uma com duração muito diferente (provavelmente outra gravação), o Castify recorre automaticamente à busca no YouTube comum — veja [Como funciona](../how-it-works.md#fallback-to-standard-youtube).
 
 **Configurações → Fontes de áudio** também pode usar só o **YouTube** comum, ou o **slskd** (Soulseek), como uma lista ordenada de alternativas — veja [slskd e Navidrome](slskd-navidrome.md#audio-sources-and-fallback-order).
 
 ### Forçar uma fonte de áudio específica
 
-Se o Downtify escolher o vídeo errado do YouTube Music (por exemplo, um cover em vez do original), você pode substituí-lo por faixa:
+Se o Castify escolher o vídeo errado do YouTube Music (por exemplo, um cover em vez do original), você pode substituí-lo por faixa:
 
 **Opção A — cole direto uma URL do YouTube Music**
 
-Cole `https://music.youtube.com/watch?v=…` (ou uma URL comum `youtube.com/watch?v=…`) na barra de busca e clique em baixar. O Downtify busca o áudio exatamente desse vídeo.
+Cole `https://music.youtube.com/watch?v=…` (ou uma URL comum `youtube.com/watch?v=…`) na barra de busca e clique em baixar. O Castify busca o áudio exatamente desse vídeo.
 
 ::: info
 Ao baixar por URL do YouTube, os metadados (título, artista, capa) vêm do YouTube e não do Spotify. Para tags limpas, use a Opção B.
@@ -194,11 +194,11 @@ Ao baixar por URL do YouTube, os metadados (título, artista, capa) vêm do YouT
 2. Cole uma URL do YouTube ou do YouTube Music no campo que aparece.
 3. Pressione **Enter** ou clique em **Aplicar**.
 
-O Downtify baixa a faixa de novo usando exatamente esse vídeo, mantendo todos os metadados do Spotify (título, artista, álbum, capa, letra).
+O Castify baixa a faixa de novo usando exatamente esse vídeo, mantendo todos os metadados do Spotify (título, artista, álbum, capa, letra).
 
 ## Metadados incorporados
 
-O Downtify incorpora as tags a seguir em todo arquivo baixado, qualquer que seja o formato:
+O Castify incorpora as tags a seguir em todo arquivo baixado, qualquer que seja o formato:
 
 | Tag | Fonte |
 |-----|--------|

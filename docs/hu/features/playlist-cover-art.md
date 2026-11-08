@@ -4,7 +4,7 @@ icon: lucide/image
 
 # Lejátszási lista borítók
 
-A Downtify elmentheti a lejátszási lista saját borítóját az [M3U fájl](m3u-export.md) mellé, hogy a médiaszerverek és fájlböngészők a lejátszási lista valódi képét mutassák egy általános ikon helyett.
+A Castify elmentheti a lejátszási lista saját borítóját az [M3U fájl](m3u-export.md) mellé, hogy a médiaszerverek és fájlböngészők a lejátszási lista valódi képét mutassák egy általános ikon helyett.
 
 Alapértelmezetten be van kapcsolva. Kikapcsolása: **Beállítások → Letöltések és fájlok → Lejátszási lista borítójának mentése**.
 
@@ -25,7 +25,7 @@ Ha a *Rendezés előadó szerint* vagy a *Rendezés album szerint* be van kapcso
 ```
 
 ::: info Kell hozzá az M3U
-Ha az **M3U listák írása** ki van kapcsolva, borító sem mentődik: a Downtify a képet az M3U útvonala alapján helyezi el, enélkül nincs hova tenni. A beállítás rejtve van, amíg az M3U-írás ki van kapcsolva.
+Ha az **M3U listák írása** ki van kapcsolva, borító sem mentődik: a Castify a képet az M3U útvonala alapján helyezi el, enélkül nincs hova tenni. A beállítás rejtve van, amíg az M3U-írás ki van kapcsolva.
 :::
 
 ## Források és felbontás
@@ -46,13 +46,13 @@ Mindkét szolgáltatás JPEG-et szolgáltat ezekhez az URL-ekhez, még ha az ere
 
 A borító feloldásának vagy letöltésének kudarca (hálózati hiba, kép nélküli lejátszási lista) naplózásra kerül, és kimarad — magát a letöltést soha nem tartja fel és nem buktatja meg.
 
-## A Downtify felületén
+## A Castify felületén
 
 Az a lejátszási lista, amelynek saját képe van (Spotify- vagy YouTube-lejátszási listával letöltve), mindenhol azt mutatja, ahol a Könyvtár lejátszási listákat sorol fel — a rácson, a lejátszási lista oldalán, az oldalsávon és a lejátszóban. Azok a listák, amelyeknek nincs, és a Könyvtárban létrehozott listák legfeljebb négy különböző számborítóból álló mozaikot mutatnak: kettőt egymás mellett, hármat egy magas bal oldali csempeként és két egymásra helyezettként jobb oldalt, négyet 2×2-es rácsban. Ugyanez a kollázs `<lejátszási-lista-neve>.jpg` néven kerül egy kézi lejátszási lista M3U-ja mellé, hogy a Navidrome is lássa, és újra elkészül, valahányszor dalt adsz hozzá vagy távolítasz el.
 
 ## Navidrome
 
-Nincs mit beállítani: a Navidrome a lejátszási lista képét egy **kísérő képből** oldja fel — a lejátszási lista nevét viselő fájlból ugyanabban a mappában —, és a Downtify pontosan ezt írja. Amíg a Navidrome zenemappája lefedi a letöltési mappádat, a kép a következő szkennelésekor megjelenik. A Downtify részéről nincs szükség API-hívásra. Lásd: [slskd és Navidrome](slskd-navidrome.md#navidrome).
+Nincs mit beállítani: a Navidrome a lejátszási lista képét egy **kísérő képből** oldja fel — a lejátszási lista nevét viselő fájlból ugyanabban a mappában —, és a Castify pontosan ezt írja. Amíg a Navidrome zenemappája lefedi a letöltési mappádat, a kép a következő szkennelésekor megjelenik. A Castify részéről nincs szükség API-hívásra. Lásd: [slskd és Navidrome](slskd-navidrome.md#navidrome).
 
 ## Takarítás
 

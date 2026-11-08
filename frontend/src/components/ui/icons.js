@@ -1,4 +1,4 @@
-// Downtify's icon set: 24px grid, drawn as strokes (1.8) unless listed in
+// Castify's icon set: 24px grid, drawn as strokes (1.8) unless listed in
 // FILLED. Bundled with the app instead of fetched from an icon CDN, so
 // the UI renders the same on an offline home server.
 

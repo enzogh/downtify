@@ -12,7 +12,7 @@ Use the [GitHub issue tracker](https://github.com/henriquesebastiao/downtify/iss
 
 For bug reports, include:
 
-- Downtify version
+- Castify version
 - How you installed it (Docker run, Docker Compose, Umbrel, …)
 - Steps to reproduce
 - What you expected vs. what happened
@@ -106,7 +106,7 @@ downtify/
 
 ## Translating
 
-Downtify has two things to translate, and you can take either one — or both:
+Castify has two things to translate, and you can take either one — or both:
 
 | You translate | Where | Guide |
 |---------------|-------|-------|
@@ -133,4 +133,4 @@ See [Internationalization](features/internationalization.md) for the details: wh
 - Run `uv run pytest` before submitting
 - Open the PR against `main`
 
-If Downtify has been useful to you, consider leaving a star on GitHub — it helps the project grow.
+If Castify has been useful to you, consider leaving a star on GitHub — it helps the project grow.

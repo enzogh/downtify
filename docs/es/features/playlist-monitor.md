@@ -21,14 +21,14 @@ Las vigilancias pertenecen a quien las creó: cada cuenta sigue sus propias play
 
 ## Cómo funciona
 
-Downtify mantiene una tarea en segundo plano que se ejecuta cada 60 segundos. En cada barrido comprueba si cada vigilancia activa debe inspeccionarse ya (según su intervalo configurado). Cuando le toca a una *playlist*, Downtify:
+Castify mantiene una tarea en segundo plano que se ejecuta cada 60 segundos. En cada barrido comprueba si cada vigilancia activa debe inspeccionarse ya (según su intervalo configurado). Cuando le toca a una *playlist*, Castify:
 
 1. Obtiene la lista completa de canciones de Spotify, Deezer o YouTube Music
 2. La compara con el conjunto de canciones ya descargadas
 3. Descarga las canciones nuevas con el mismo pipeline que una descarga manual
 4. Actualiza el archivo M3U de la playlist (si la generación de M3U está activada)
 
-La primera comprobación, que empieza en cuanto añades la vigilancia, descarga todo lo que ya hay en la playlist; las siguientes descargan solo lo añadido desde entonces. Lo «ya descargado» se registra en una pequeña base de datos SQLite (`downtify_monitor.db` en `/data`), no mirando la carpeta de descargas — así que mover un archivo descargado a otro sitio del disco (a tu propia organización de biblioteca, otra unidad, donde sea) **no** hace que Downtify crea que falta y lo vuelva a descargar en la siguiente comprobación.
+La primera comprobación, que empieza en cuanto añades la vigilancia, descarga todo lo que ya hay en la playlist; las siguientes descargan solo lo añadido desde entonces. Lo «ya descargado» se registra en una pequeña base de datos SQLite (`downtify_monitor.db` en `/data`), no mirando la carpeta de descargas — así que mover un archivo descargado a otro sitio del disco (a tu propia organización de biblioteca, otra unidad, donde sea) **no** hace que Castify crea que falta y lo vuelva a descargar en la siguiente comprobación.
 
 Un barrido aparte se ejecuta cada hora y comprueba si el archivo de cada canción descargada sigue ahí. Los archivos realmente borrados (a diferencia de los movidos) se olvidan en ese momento, así que la canción vuelve a poder descargarse — en la siguiente comprobación de la vigilancia tras ese barrido horario, no al instante.
 
@@ -54,16 +54,16 @@ Las playlists públicas de Deezer se vigilan como cualquier otra: pega el enlace
 
 ## Playlists de YouTube Music
 
-Usa una playlist de YouTube Music para canciones que no están en Spotify: remixes, directos, versiones, subidas de canales promocionales. Cada canción se descarga del **vídeo exacto de la playlist**. Downtify no vuelve a buscarlo, así que lo que obtienes es lo que añadiste a la playlist.
+Usa una playlist de YouTube Music para canciones que no están en Spotify: remixes, directos, versiones, subidas de canales promocionales. Cada canción se descarga del **vídeo exacto de la playlist**. Castify no vuelve a buscarlo, así que lo que obtienes es lo que añadiste a la playlist.
 
 - **Se obtienen todas las canciones**, por larga que sea la playlist. Los vídeos eliminados o privados se omiten.
-- **Las canciones que YouTube Music marca en gris se descargan igualmente.** Las playlists hechas por conversores e importadores (Soundiiz, TuneMyMusic y similares) suelen listar canciones como subidas normales de YouTube que YouTube Music muestra como no disponibles y sin id de canción. Downtify encuentra el vídeo a partir de la miniatura de la entrada y lo descarga como cualquier otro, así que una playlist así no sale vacía. Un vídeo realmente eliminado o hecho privado no se puede descargar: cuando YouTube Music lo marca así, se omite, y cuando solo da una miniatura, la canción aparece como fallida en la cola.
-- **Artista y título salen del título del vídeo.** Muchas entradas de playlist son subidas acreditadas al canal que las publicó (p. ej. `MrSuicideSheep`), y el crédito real está en el título, como `Bronze Whale - Patterns`. Para todo lo que no es un lanzamiento de catálogo, Downtify separa `Artista - Título` en el nombre del archivo y las etiquetas. También quita sufijos como `(Official Video)` o `[Lyrics]`. La parte tras el guion que nombra una versión (`Yellow - Live at Glastonbury`) se queda en el título. Las canciones de catálogo (audio oficial, o cualquier cosa archivada bajo un álbum) conservan el artista y el título propios de YouTube Music.
+- **Las canciones que YouTube Music marca en gris se descargan igualmente.** Las playlists hechas por conversores e importadores (Soundiiz, TuneMyMusic y similares) suelen listar canciones como subidas normales de YouTube que YouTube Music muestra como no disponibles y sin id de canción. Castify encuentra el vídeo a partir de la miniatura de la entrada y lo descarga como cualquier otro, así que una playlist así no sale vacía. Un vídeo realmente eliminado o hecho privado no se puede descargar: cuando YouTube Music lo marca así, se omite, y cuando solo da una miniatura, la canción aparece como fallida en la cola.
+- **Artista y título salen del título del vídeo.** Muchas entradas de playlist son subidas acreditadas al canal que las publicó (p. ej. `MrSuicideSheep`), y el crédito real está en el título, como `Bronze Whale - Patterns`. Para todo lo que no es un lanzamiento de catálogo, Castify separa `Artista - Título` en el nombre del archivo y las etiquetas. También quita sufijos como `(Official Video)` o `[Lyrics]`. La parte tras el guion que nombra una versión (`Yellow - Live at Glastonbury`) se queda en el título. Las canciones de catálogo (audio oficial, o cualquier cosa archivada bajo un álbum) conservan el artista y el título propios de YouTube Music.
 - **No todo enlace `list=` es una playlist.** El enlace `OLAK5uy_…` de un álbum se sigue descargando como álbum. Un enlace `watch?v=…&list=…` es la única canción que estaba sonando. Una mezcla de radio (`list=RD…`) no tiene una lista fija de canciones y no se puede vigilar.
 
 ## Vigilancia de artistas
 
-En lugar de armar una playlist por artista, pega un enlace de artista y Downtify sigue todo su catálogo. Añade uno desde la pestaña **Artistas** de la página Monitor — pega la URL, elige un intervalo, haz clic en **Vigilar artista**. Las vigilancias de artistas muestran un número de lanzamientos en lugar de un número de canciones.
+En lugar de armar una playlist por artista, pega un enlace de artista y Castify sigue todo su catálogo. Añade uno desde la pestaña **Artistas** de la página Monitor — pega la URL, elige un intervalo, haz clic en **Vigilar artista**. Las vigilancias de artistas muestran un número de lanzamientos en lugar de un número de canciones.
 
 URL aceptadas:
 
@@ -72,10 +72,10 @@ URL aceptadas:
 
 Un handle se resuelve al canal del artista cuando añades la vigilancia, así que el mismo artista pegado por handle y por URL de canal se reconoce como una sola vigilancia. Un handle que no pertenece a un artista de YouTube Music se rechaza.
 
-En cada barrido, Downtify lista la discografía del artista, la compara con los lanzamientos que ya ha procesado y descarga todas las canciones de lo que sea nuevo. Un barrido en régimen estable cuesta una sola petición — las listas de canciones solo se obtienen para lanzamientos que no ha visto antes.
+En cada barrido, Castify lista la discografía del artista, la compara con los lanzamientos que ya ha procesado y descarga todas las canciones de lo que sea nuevo. Un barrido en régimen estable cuesta una sola petición — las listas de canciones solo se obtienen para lanzamientos que no ha visto antes.
 
 ::: info Por qué la discografía viene de YouTube Music
-El embed público de Spotify expone el nombre de un artista y una vista previa de sus canciones más populares, pero **no** su discografía — leerla exigiría credenciales de la API de Spotify, que Downtify deliberadamente no usa. Así que un enlace de artista de Spotify se resuelve a su nombre y se asocia al mismo artista en YouTube Music, que es también de donde se obtiene el audio. La ventaja: todo lanzamiento que Downtify puede ver es uno que realmente puede descargar. El inconveniente: el enlace sigue al artista de YouTube Music con exactamente ese nombre (sin importar mayúsculas ni signos), la mejor coincidencia de YouTube Music cuando varios lo comparten. Con un nombre común, comprueba que la vigilancia es el artista que querías y, si no, pega directamente la URL del artista de YouTube Music. Un artista de Spotify cuyo nombre exacto no tiene ningún artista de YouTube Music solo se puede añadir así: Downtify no adivina.
+El embed público de Spotify expone el nombre de un artista y una vista previa de sus canciones más populares, pero **no** su discografía — leerla exigiría credenciales de la API de Spotify, que Castify deliberadamente no usa. Así que un enlace de artista de Spotify se resuelve a su nombre y se asocia al mismo artista en YouTube Music, que es también de donde se obtiene el audio. La ventaja: todo lanzamiento que Castify puede ver es uno que realmente puede descargar. El inconveniente: el enlace sigue al artista de YouTube Music con exactamente ese nombre (sin importar mayúsculas ni signos), la mejor coincidencia de YouTube Music cuando varios lo comparten. Con un nombre común, comprueba que la vigilancia es el artista que querías y, si no, pega directamente la URL del artista de YouTube Music. Un artista de Spotify cuyo nombre exacto no tiene ningún artista de YouTube Music solo se puede añadir así: Castify no adivina.
 :::
 
 ::: warning El primer barrido descarga todo el catálogo antiguo
@@ -211,7 +211,7 @@ Por defecto, una playlist comprobada cada día (o semana / 2 semanas / mes) se s
 
 ## Enriquecimiento de metadatos por canción
 
-Las entradas del embed de playlist de Spotify carecen del año de lanzamiento y usan la portada de la playlist en lugar de la portada del álbum de cada canción. Downtify vuelve a obtener cada canción nueva individualmente para conseguir la portada y el año correctos antes de descargar — recurriendo a los datos a nivel de playlist si falla la obtención por canción. Las entradas de playlist de YouTube Music se saltan este paso: cada una ya trae los metadatos de su propio vídeo.
+Las entradas del embed de playlist de Spotify carecen del año de lanzamiento y usan la portada de la playlist en lugar de la portada del álbum de cada canción. Castify vuelve a obtener cada canción nueva individualmente para conseguir la portada y el año correctos antes de descargar — recurriendo a los datos a nivel de playlist si falla la obtención por canción. Las entradas de playlist de YouTube Music se saltan este paso: cada una ya trae los metadatos de su propio vídeo.
 
 ## Integración con M3U
 
@@ -223,7 +223,7 @@ Con [Guardar la portada de la playlist](playlist-cover-art.md) activado, la port
 
 ## Qué pasa con las canciones que salen de una playlist
 
-Las playlists «en vivo» (el *Top 50* de Spotify, *Descubrimiento semanal*, listas editoriales) cambian cada semana. Downtify trata una vigilancia como una **fuente de música nueva**, nunca como algo que gobierna lo que conservas:
+Las playlists «en vivo» (el *Top 50* de Spotify, *Descubrimiento semanal*, listas editoriales) cambian cada semana. Castify trata una vigilancia como una **fuente de música nueva**, nunca como algo que gobierna lo que conservas:
 
 - **Una vigilancia nunca borra archivos de audio descargados.** Ni cuando una canción sale de la playlist, ni cuando sale de todas las playlists que vigilas, ni cuando la propia playlist se encoge, ni cuando pulsas **Dejar de vigilar**.
 - **Solo la playlist sigue a la playlist.** En cada barrido, el [archivo M3U](m3u-export.md) se reescribe a partir de las canciones actuales de la playlist, en su orden actual, así que una canción que salió desaparece del M3U. Su archivo se queda en la carpeta y en tu biblioteca, buscable y reproducible — también a través de Navidrome, Jellyfin o cualquier cosa apuntada a la misma carpeta.
@@ -232,7 +232,7 @@ Las playlists «en vivo» (el *Top 50* de Spotify, *Descubrimiento semanal*, lis
 Eso hace que una playlist de listas de éxitos sirva como feed de descubrimiento: llegan canciones nuevas automáticamente, y lo que dejan atrás se acumula como tu biblioteca.
 
 ```
-Top 50 - USA        →  new song appears   →  Downtify downloads it
+Top 50 - USA        →  new song appears   →  Castify downloads it
                     →  song drops out     →  M3U updated, file kept
 ```
 
@@ -244,7 +244,7 @@ Para quitar de la playlist una canción que no quieres, y que no vuelva en cada 
 **Dejar de vigilar** (en el menú ⋯ de la vigilancia) solo olvida la vigilancia: nada cambia en el disco. **Eliminar** en una playlist de la página **Biblioteca** es lo destructivo — quita las canciones de esa playlist, su M3U y su entrada de catálogo.
 :::
 
-Si un archivo desaparece de verdad — lo sacaste de la carpeta de descargas, o lo borraste a mano —, un barrido horario lo nota y olvida el registro que Downtify tenía de él, así que la siguiente comprobación de una vigilancia que aún lista la canción la descarga de nuevo. Un archivo simplemente *movido* dentro de la carpeta de descargas se sigue encontrando y no se vuelve a descargar.
+Si un archivo desaparece de verdad — lo sacaste de la carpeta de descargas, o lo borraste a mano —, un barrido horario lo nota y olvida el registro que Castify tenía de él, así que la siguiente comprobación de una vigilancia que aún lista la canción la descarga de nuevo. Un archivo simplemente *movido* dentro de la carpeta de descargas se sigue encontrando y no se vuelve a descargar.
 
 ## Almacenamiento
 
@@ -256,13 +256,13 @@ El estado del monitor se guarda en una base de datos SQLite en `/data/downtify_m
 - Cada pista que añadió una vigilancia (`watch_events`): cuándo, el archivo, qué proveedor de audio la obtuvo, si la vigilancia la descargó o la encontró ya en la biblioteca, y si llegó con su primera comprobación. Estas filas guardan el id, el nombre y el dueño de la vigilancia tal como eran, y la sobreviven: dejar de vigilar o redirigir una vigilancia las conserva, así que sus canciones siguen diciendo de dónde vinieron
 - Las pistas que cada vigilancia sigue sin poder descargar (`watch_failures`), hasta que una funciona, sale de la playlist o la vigilancia se redirige
 
-Las bases de datos creadas antes de la Vigilancia de artistas se migran automáticamente al iniciar; las filas existentes siguen funcionando como vigilancias de playlists. Las pistas registradas antes de que Downtify guardara el historial anterior se añaden a él una vez, en el primer arranque, con un resultado desconocido (**Antes del registro**) — las del primer día de una vigilancia cuentan como su primera comprobación.
+Las bases de datos creadas antes de la Vigilancia de artistas se migran automáticamente al iniciar; las filas existentes siguen funcionando como vigilancias de playlists. Las pistas registradas antes de que Castify guardara el historial anterior se añaden a él una vez, en el primer arranque, con un resultado desconocido (**Antes del registro**) — las del primer día de una vigilancia cuentan como su primera comprobación.
 
 ## Actividad y almacenamiento por vigilancia
 
 La página Monitor y la página de cada vigilancia (**Actividad y canciones** en el menú **⋯** de una vigilancia, o un clic en su **Actividad**) muestran qué vigilancias hacen crecer tu biblioteca — útil con muchas vigilancias, o para averiguar por qué un mix generado trajo canciones que no esperabas.
 
-**Qué cuenta como actividad.** Solo cuentan las canciones que una vigilancia añadió de verdad: las que descargó. Las que encontró ya en tu biblioteca (otra vigilancia, o una descarga tuya, ya las tenía) cuentan aparte como **Ya en la biblioteca**, igual que lo que trajo su primera comprobación, cuando descarga todo lo que la playlist ya tenía. Así, una playlist estática aparece inactiva aunque su primera comprobación descargara 300 canciones, y un mix que añade 15 canciones por semana aparece como 15 por semana. Las pistas registradas antes de que Downtify guardara este historial cuentan como añadidas, y la página dice cuántas son.
+**Qué cuenta como actividad.** Solo cuentan las canciones que una vigilancia añadió de verdad: las que descargó. Las que encontró ya en tu biblioteca (otra vigilancia, o una descarga tuya, ya las tenía) cuentan aparte como **Ya en la biblioteca**, igual que lo que trajo su primera comprobación, cuando descarga todo lo que la playlist ya tenía. Así, una playlist estática aparece inactiva aunque su primera comprobación descargara 300 canciones, y un mix que añade 15 canciones por semana aparece como 15 por semana. Las pistas registradas antes de que Castify guardara este historial cuentan como añadidas, y la página dice cuántas son.
 
 En el periodo elegido (7, 30 o 90 días, recordado en el navegador) una vigilancia muestra:
 

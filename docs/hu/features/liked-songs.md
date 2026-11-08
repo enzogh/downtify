@@ -4,7 +4,7 @@ icon: lucide/heart
 
 # Kedvelt számok
 
-Koppints egy szám szívére, hogy kedveld. Amint egy számot kedvelsz, a Downtify vezet egy **Kedvelt számok** lejátszási listát az összes kedvelt számmal, így a kedvenceid egy kattintásra vannak — a Downtifyban és minden, a könyvtáradra mutató médiaszerveren.
+Koppints egy szám szívére, hogy kedveld. Amint egy számot kedvelsz, a Castify vezet egy **Kedvelt számok** lejátszási listát az összes kedvelt számmal, így a kedvenceid egy kattintásra vannak — a Castifyban és minden, a könyvtáradra mutató médiaszerveren.
 
 Nincs mit bekapcsolni.
 
@@ -51,16 +51,16 @@ Egy kedvelés követi azt a fájlt, amelynek adták:
 
 | Mi történik a fájllal | Mi történik a kedveléssel |
 |--------------------------|--------------------------|
-| Törlöd a számot a Downtifyban | A kedvelés vele megy, és a lista újraíródik |
+| Törlöd a számot a Castifyban | A kedvelés vele megy, és a lista újraíródik |
 | Áthelyezed, és lefuttatod a [Könyvtárútvonalak javítása](library-catalog.md#fix-library-paths) funkciót | A kedvelés követi a fájlt az új helyére |
-| A Downtify-on kívül eltűnik (leválasztott meghajtó, kézi törlés) | A kedvelés megmarad, de a szám kimarad a listából, amíg vissza nem kerül |
+| A Castify-on kívül eltűnik (leválasztott meghajtó, kézi törlés) | A kedvelés megmarad, de a szám kimarad a listából, amíg vissza nem kerül |
 
 A hiányzó fájl kedvelésének megtartása azt jelenti, hogy egy kihúzott meghajtó nem veszi el a szíveidet. Ha kézzel töröltél fájlokat, és a kedvelések is menjenek, használd az **Összes kedvelés eltávolítása** funkciót, vagy a törlés előtt vond vissza a számok kedvelését.
 
 ## Jó tudni
 
 - A kedvelések a könyvtár adatbázisában (`downtify_library.db`, a `/data` köteteden) tárolódnak, nem a hangfájlokban. A szám címkéibe semmi sem íródik.
-- A listát a Downtify nem hozza létre a [Navidrome](slskd-navidrome.md)-ban. Egyszerű M3U fájl, így az, hogy egy médiaszerver mit kezd vele, azon múlik, hogyan olvassa az M3U fájlokat.
+- A listát a Castify nem hozza létre a [Navidrome](slskd-navidrome.md)-ban. Egyszerű M3U fájl, így az, hogy egy médiaszerver mit kezd vele, azon múlik, hogyan olvassa az M3U fájlokat.
 - A [lejátszási listafájl](m3u-export.md) akkor is megíródik, ha a letöltési beállításokban az *M3U lejátszási listák írása* ki van kapcsolva: a funkció lényege maga a lista.
 
 ## API

@@ -4,7 +4,7 @@ icon: lucide/play
 
 # Başlarken
 
-Downtify, Spotify’dan müzik indiren, kendi sunucunuzda barındırılan bir web uygulamasıdır — API anahtarı, hesap ya da Premium abonelik gerekmez. Her şey tek bir Docker kapsayıcısı içinde çalışır.
+Castify, Spotify’dan müzik indiren, kendi sunucunuzda barındırılan bir web uygulamasıdır — API anahtarı, hesap ya da Premium abonelik gerekmez. Her şey tek bir Docker kapsayıcısı içinde çalışır.
 
 ## Neye ihtiyacınız var
 
@@ -38,6 +38,6 @@ Downtify, Spotify’dan müzik indiren, kendi sunucunuzda barındırılan bir we
 
 ## Sonraki adımlar
 
-Downtify çalışmaya başladığında tarayıcınızda [http://localhost:8000](http://localhost:8000) adresini açın. Arama çubuğuna bir Spotify parçası, albümü veya çalma listesi adresi yapıştırın ve **İndir**’a tıklayın.
+Castify çalışmaya başladığında tarayıcınızda [http://localhost:8000](http://localhost:8000) adresini açın. Arama çubuğuna bir Spotify parçası, albümü veya çalma listesi adresi yapıştırın ve **İndir**’a tıklayın.
 
 [İndirme ayarları](../features/download-settings.md), [çalma listesi izleyici](../features/playlist-monitor.md), [yerleşik oynatıcı](../features/player.md) ve daha fazlası için belgelerin geri kalanına göz atın.

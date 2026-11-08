@@ -22,7 +22,7 @@ Pega una de estas en el cuadro **Añadir un podcast**, o escribe un nombre para 
 | El nombre de un programa (texto libre) | Se busca en el directorio de podcasts de iTunes |
 
 ::: info Los programas exclusivos de Spotify no se pueden descargar
-Un programa que solo existe en Spotify (sin feed público) se informa como tal — Downtify no adivina ni recurre a otra cosa. Busca el programa por nombre para comprobarlo antes de dar por hecho que es exclusivo.
+Un programa que solo existe en Spotify (sin feed público) se informa como tal — Castify no adivina ni recurre a otra cosa. Busca el programa por nombre para comprobarlo antes de dar por hecho que es exclusivo.
 :::
 
 Antes de confirmar, eliges:
@@ -62,7 +62,7 @@ Los episodios suenan en el mismo reproductor integrado que la música, con algun
 
 - **Retroceder 15 s / avanzar 30 s** en lugar de aleatorio y repetir, que no se aplican a un solo episodio.
 - **Velocidad de reproducción** (0,75× a 2×), junto al temporizador de apagado.
-- La **posición de reanudación** se guarda en el servidor cada ~10 segundos de reproducción y una vez más al pausar, así que cerrar la pestaña — o abrir Downtify en otro dispositivo — retoma el episodio cerca de donde lo dejaste. La lista de episodios de un programa muestra una pista «Reanudar en …» para lo que está a medias.
+- La **posición de reanudación** se guarda en el servidor cada ~10 segundos de reproducción y una vez más al pausar, así que cerrar la pestaña — o abrir Castify en otro dispositivo — retoma el episodio cerca de donde lo dejaste. La lista de episodios de un programa muestra una pista «Reanudar en …» para lo que está a medias.
 
 El corazón (canciones que te gustan) e «ir al álbum/artista» no se aplican a los episodios y no aparecen en uno.
 
@@ -74,12 +74,12 @@ Los archivos de los episodios siguen estando bajo el mismo volumen de descargas,
 
 ## Etiquetas
 
-Downtify escribe lo que las apps de podcast y los servidores multimedia ya leen de un episodio: título, el programa como álbum, el autor del programa como artista, el año de publicación, números de episodio/temporada, la portada del propio programa (la mayor entre la imagen del feed y la de iTunes, la misma idea que la [portada de música](download-settings.md#cover-art-resolution)) y la descripción del episodio como comentario. Las notas del programa se guardan como texto plano — Downtify les quita el HTML en lugar de renderizarlo.
+Castify escribe lo que las apps de podcast y los servidores multimedia ya leen de un episodio: título, el programa como álbum, el autor del programa como artista, el año de publicación, números de episodio/temporada, la portada del propio programa (la mayor entre la imagen del feed y la de iTunes, la misma idea que la [portada de música](download-settings.md#cover-art-resolution)) y la descripción del episodio como comentario. Las notas del programa se guardan como texto plano — Castify les quita el HTML en lugar de renderizarlo.
 
 ## Conviene saber
 
 - **Sin podcasts en vídeo.** Un episodio cuyo único adjunto es un archivo de vídeo se omite por completo; solo se admite audio.
-- **Sin capítulos.** Los feeds que incluyen marcadores de capítulo aún no los tienen en Downtify.
+- **Sin capítulos.** Los feeds que incluyen marcadores de capítulo aún no los tienen en Castify.
 - **No se refleja en Navidrome.** A diferencia de las playlists, las suscripciones a podcasts no se envían a una biblioteca de Navidrome — los episodios son archivos normales que tu servidor multimedia ya ve por su cuenta.
 - Cancelar la suscripción (**⋯ → Cancelar suscripción**) elimina los episodios descargados por defecto; elige **Cancelar suscripción, conservar episodios descargados** para dejar los archivos en su sitio.
 

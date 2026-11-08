@@ -15,7 +15,7 @@ a la calidad solicitada. No ofrece una suscripción ni se salta una.
 Mantén el modo de inicio de sesión normal por sesión de Deemix. No actives el
 modo de usuario único en un servidor sin protección: su endpoint de conexión devuelve el ARL compartido.
 
-Monta en Downtify un archivo privado con tu ARL de Deezer, legible solo
+Monta en Castify un archivo privado con tu ARL de Deezer, legible solo
 por su cuenta de servicio, y define `DOWNTIFY_DEEMIX_ARL_FILE` con esa ruta.
 El ARL solo se lee al abrir una sesión por cookie. Nunca se guarda en los
 ajustes, ni se devuelve al navegador ni se registra en el log. Trátalo como una contraseña;
@@ -27,11 +27,11 @@ La prueba de conexión no pone descargas en cola.
 | ----------------------------- | ------------------------------------------------------------------ |
 | URL del servidor              | Dirección interna de Deemix, p. ej. `http://deemix:6595`           |
 | Carpeta de descarga dentro de Deemix | Normalmente `/downloads`                                    |
-| La misma carpeta dentro de Downtify | Bind mount compartido, p. ej. `/deemix`; se admite solo lectura |
+| La misma carpeta dentro de Castify | Bind mount compartido, p. ej. `/deemix`; se admite solo lectura |
 | Calidad                       | MP3 128, MP3 320 o FLAC; los derechos no admitidos fallan de forma explícita |
 
 La carpeta compartida se registra como carpeta de biblioteca externa al guardar.
-Los archivos se quedan allí, con la organización artista/álbum de Deemix. Downtify conserva
+Los archivos se quedan allí, con la organización artista/álbum de Deemix. Castify conserva
 su formato, etiquetas, carátulas y archivos `.lrc` sin reescribirlos.
 La letra incrustada y los `.lrc` del mismo nombre los lee el reproductor.
 Esta integración no borra, mueve ni genera ningún audio ni letra.

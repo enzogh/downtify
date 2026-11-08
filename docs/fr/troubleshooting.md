@@ -15,7 +15,7 @@ Error: ERROR: [youtube] <id>: Sign in to confirm your age.
 This video may be inappropriate for some users.
 ```
 
-**Cause** — YouTube ne sert les titres soumis à une limite d’âge (explicites) qu’à un compte adulte connecté. Downtify télécharge anonymement par défaut ; YouTube refuse donc.
+**Cause** — YouTube ne sert les titres soumis à une limite d’âge (explicites) qu’à un compte adulte connecté. Castify télécharge anonymement par défaut ; YouTube refuse donc.
 
 **Solution** — fournissez des cookies YouTube : **Paramètres** (⚙️) → **Cookies YouTube** → **Envoyer cookies.txt**. Voir [Cookies YouTube](features/youtube-cookies.md) pour savoir comment exporter le fichier.
 
@@ -36,7 +36,7 @@ Si cela échoue encore avec des cookies configurés, les cookies sont périmés 
 
 ## Un cookies.txt sous Windows / Docker Desktop n’est pas pris en compte
 
-**Symptôme** — `DOWNTIFY_COOKIES_FILE` est définie mais Downtify se comporte comme s’il n’y avait pas de cookies.
+**Symptôme** — `DOWNTIFY_COOKIES_FILE` est définie mais Castify se comporte comme s’il n’y avait pas de cookies.
 
 **Cause** — le chemin est un chemin *du conteneur*. Un chemin Windows comme `C:\Users\me\cookies.txt` ne signifie rien dans le conteneur, et le fichier doit être monté avant que la variable puisse le désigner.
 
@@ -57,7 +57,7 @@ environment:
 
 ## Les cookies envoyés ont disparu après la mise à jour du conteneur
 
-Le fichier envoyé se trouve dans le répertoire de données de Downtify (`/data`). Si ce répertoire n’est ni un volume nommé ni un bind mount, tout ce qu’il contient — réglages et base de données de la Surveillance de playlists compris — est perdu quand le conteneur est recréé :
+Le fichier envoyé se trouve dans le répertoire de données de Castify (`/data`). Si ce répertoire n’est ni un volume nommé ni un bind mount, tout ce qu’il contient — réglages et base de données de la Surveillance de playlists compris — est perdu quand le conteneur est recréé :
 
 ```yaml
 volumes:
@@ -67,13 +67,13 @@ volumes:
 
 ## « cookies.txt is invalid » à l’envoi
 
-Downtify valide le fichier à l’envoi. Ce doit être un cookie jar **Netscape** : un cookie par ligne, champs séparés par des tabulations, éventuellement avec des commentaires `#`. Un export JSON, un tableur ou un en-tête `Cookie:` copié est refusé.
+Castify valide le fichier à l’envoi. Ce doit être un cookie jar **Netscape** : un cookie par ligne, champs séparés par des tabulations, éventuellement avec des commentaires `#`. Un export JSON, un tableur ou un en-tête `Cookie:` copié est refusé.
 
 Utilisez une extension de navigateur qui exporte au format Netscape (voir [Cookies YouTube](features/youtube-cookies.md)) et exportez pendant que l’onglet est sur `youtube.com`.
 
 ## Une playlist retélécharge des titres que j’ai déjà
 
-Downtify enregistre chaque titre téléchargé automatiquement dans sa base de données ; déplacer des fichiers ailleurs sur le disque ne déclenche donc pas de retéléchargement. Un titre n’est retéléchargé qu’après qu’une vérification horaire a constaté que son fichier manque réellement dans le répertoire de téléchargements. Voir [Surveillance de playlists](features/playlist-monitor.md#how-it-works).
+Castify enregistre chaque titre téléchargé automatiquement dans sa base de données ; déplacer des fichiers ailleurs sur le disque ne déclenche donc pas de retéléchargement. Un titre n’est retéléchargé qu’après qu’une vérification horaire a constaté que son fichier manque réellement dans le répertoire de téléchargements. Voir [Surveillance de playlists](features/playlist-monitor.md#how-it-works).
 
 Si des fichiers disparaissent à chaque redémarrage, le volume `/downloads` n’est pas persistant — même solution que ci-dessus.
 
@@ -85,12 +85,12 @@ Cela signifie généralement que le morceau n’est vraiment pas sur YouTube, ou
 
 ## L’audio téléchargé a de mauvaises métadonnées ou une mauvaise pochette
 
-Downtify récupère les métadonnées depuis Spotify et fait correspondre l’audio sur YouTube Music. Un décalage signifie généralement que la correspondance est tombée sur une reprise, un remix ou une version live. Télécharger depuis le lien de l’**album** Spotify plutôt que depuis un résultat de recherche donne beaucoup plus d’éléments au comparateur (numéro de piste, album, type de sortie).
+Castify récupère les métadonnées depuis Spotify et fait correspondre l’audio sur YouTube Music. Un décalage signifie généralement que la correspondance est tombée sur une reprise, un remix ou une version live. Télécharger depuis le lien de l’**album** Spotify plutôt que depuis un résultat de recherche donne beaucoup plus d’éléments au comparateur (numéro de piste, album, type de sortie).
 
 ## Toujours bloqué ?
 
 Ouvrez une issue sur [github.com/henriquesebastiao/downtify/issues](https://github.com/henriquesebastiao/downtify/issues) avec :
 
-- la version de Downtify (affichée en bas de la barre latérale et dans **Paramètres → À propos**),
+- la version de Castify (affichée en bas de la barre latérale et dans **Paramètres → À propos**),
 - les journaux du conteneur autour de l’échec (`docker compose logs downtify`),
 - et si des cookies sont configurés.

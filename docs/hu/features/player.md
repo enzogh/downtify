@@ -4,7 +4,7 @@ icon: lucide/headphones
 
 # Beépített lejátszó
 
-A Downtify webes lejátszóval érkezik, hogy külön alkalmazás nélkül hallgathasd a letöltött zenéidet. Nyomj lejátszást a Könyvtár bármely számán, albumán, előadóján vagy lejátszási listáján — vagy a Sor egy kész letöltésén —, és a lejátszó elindul.
+A Castify webes lejátszóval érkezik, hogy külön alkalmazás nélkül hallgathasd a letöltött zenéidet. Nyomj lejátszást a Könyvtár bármely számán, albumán, előadóján vagy lejátszási listáján — vagy a Sor egy kész letöltésén —, és a lejátszó elindul.
 
 ## Lejátszósáv
 
@@ -45,10 +45,10 @@ A borítót és a sort szavak nélkül szereted jobban? Kapcsold ki a **Beállí
 A Most szól ezután a **Következik** nézeten nyílik meg. Egy, a kikapcsolás előtti `&panel=lyrics` hivatkozás szintén ide érkezik egy üres fül helyett. A lejátszó egyáltalán nem kéri el egy szám dalszövegét, amíg el van rejtve.
 
 ::: info Az elrejtés nem törlés
-Ez csak azt változtatja meg, amit a lejátszó mutat. A fájljaid megtartják a Downtify által beléjük ágyazott dalszöveget, a mellettük lévő `.lrc` fájlok pedig a helyükön maradnak, így a médiaszerverek és más lejátszók továbbra is látják őket. A letöltések is tovább szerzik be a dalszövegeket — ez a **Címkék és dalszövegek** alatti külön **Dalszövegek letöltése** beállítás (lásd: [Dalszövegek](lyrics.md)).
+Ez csak azt változtatja meg, amit a lejátszó mutat. A fájljaid megtartják a Castify által beléjük ágyazott dalszöveget, a mellettük lévő `.lrc` fájlok pedig a helyükön maradnak, így a médiaszerverek és más lejátszók továbbra is látják őket. A letöltések is tovább szerzik be a dalszövegeket — ez a **Címkék és dalszövegek** alatti külön **Dalszövegek letöltése** beállítás (lásd: [Dalszövegek](lyrics.md)).
 :::
 
-A témához és a hangszínszabályzóhoz hasonlóan a választás a böngészőben (`localStorage`) tárolódik, tehát eszközönként és böngészőnként érvényes, nem Downtify-szerverenként — elrejtheted a dalszöveget telefonon, és megtarthatod asztali gépen.
+A témához és a hangszínszabályzóhoz hasonlóan a választás a böngészőben (`localStorage`) tárolódik, tehát eszközönként és böngészőnként érvényes, nem Castify-szerverenként — elrejtheted a dalszöveget telefonon, és megtarthatod asztali gépen.
 
 ## Hangszínszabályzó
 
@@ -60,9 +60,9 @@ Tízsávos grafikus hangszínszabályzó a Most szól **Hangszínszabályzó** p
 - **Be-/kikapcsoló** és **Visszaállítás** (vissza Lineárisra, előerősítő 0, ki). Egy sáv mozdítása vagy egy előbeállítás választása a hangszínszabályzót is bekapcsolja.
 - A csúszkák mögötti görbe az összes sáv együttes válasza.
 
-A sávok kiemelése a hangos zenét a teljes kivezérlés fölé nyomná és torzítaná, ezért a Downtify automatikusan csökkenti a hangerőt a görbe legnagyobb kiemelésével — a panel megmondja, mennyivel. Ez a csúcsot 0 dB-en tartja, így egy kiemelt előbeállítás átformálja a hangot, nem csupán hangosabbá teszi. Az előerősítő 0 dB fölé emelése megszünteti ezt a biztonsági tartalékot, és a panel figyelmeztet, hogy a hangos részek torzulhatnak.
+A sávok kiemelése a hangos zenét a teljes kivezérlés fölé nyomná és torzítaná, ezért a Castify automatikusan csökkenti a hangerőt a görbe legnagyobb kiemelésével — a panel megmondja, mennyivel. Ez a csúcsot 0 dB-en tartja, így egy kiemelt előbeállítás átformálja a hangot, nem csupán hangosabbá teszi. Az előerősítő 0 dB fölé emelése megszünteti ezt a biztonsági tartalékot, és a panel figyelmeztet, hogy a hangos részek torzulhatnak.
 
-A beállítások a böngészőben (`localStorage`) tárolódnak, és mindenre vonatkoznak, amit lejátszol, minden fülön, amíg meg nem változtatod őket. Böngészőnként érvényesek, nem Downtify-szerverenként.
+A beállítások a böngészőben (`localStorage`) tárolódnak, és mindenre vonatkoznak, amit lejátszol, minden fülön, amíg meg nem változtatod őket. Böngészőnként érvényesek, nem Castify-szerverenként.
 
 ### Böngészőtámogatás
 
@@ -86,7 +86,7 @@ Minden szám menüje (a **⋯** gomb, vagy jobb kattintás asztali gépen) tarta
 
 Ugyanezek a műveletek érvényesek a Könyvtárban egy többszámos kijelölésre.
 
-A sor, az aktuális szám, annak pozíciója, a véletlen sorrend és az ismétlés megmarad, így a Downtify újranyitása ott folytatja, ahol abbahagytad (a 2000-nél több számos sorok nem maradnak meg). A törölt fájlok automatikusan kiesnek a sorból.
+A sor, az aktuális szám, annak pozíciója, a véletlen sorrend és az ismétlés megmarad, így a Castify újranyitása ott folytatja, ahol abbahagytad (a 2000-nél több számos sorok nem maradnak meg). A törölt fájlok automatikusan kiesnek a sorból.
 
 ## Billentyűzet és médiabillentyűk
 

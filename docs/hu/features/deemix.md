@@ -15,7 +15,7 @@ a kért minőségre. Nem biztosít előfizetést, és nem kerül meg egyet sem.
 Tartsd meg a Deemix szokásos, munkamenetenkénti bejelentkezési módját. Ne kapcsold be az
 egyfelhasználós módot védtelen szerveren: a csatlakozási végpontja visszaadja a megosztott ARL-t.
 
-Csatolj a Downtifyba egy privát fájlt a Deezer ARL-eddel, amely csak a szolgáltatásfiókja
+Csatolj a Castifyba egy privát fájlt a Deezer ARL-eddel, amely csak a szolgáltatásfiókja
 számára olvasható, és állítsd a `DOWNTIFY_DEEMIX_ARL_FILE` értékét erre az útvonalra.
 Az ARL-t csak sütis munkamenet megnyitásakor olvassa be. Soha nem tárolódik a
 beállításokban, nem kerül vissza a böngészőbe, és nem kerül naplóba. Kezeld jelszóként;
@@ -27,11 +27,11 @@ A kapcsolatteszt nem állít sorba letöltéseket.
 | ----------------------------- | ------------------------------------------------------------------ |
 | Szerver URL-je                | A Deemix belső címe, pl. `http://deemix:6595`                      |
 | Letöltési mappa a Deemixben   | Általában `/downloads`                                             |
-| Ugyanaz a mappa a Downtifyban | Megosztott bind mount, pl. `/deemix`; a csak olvasható is támogatott |
+| Ugyanaz a mappa a Castifyban | Megosztott bind mount, pl. `/deemix`; a csak olvasható is támogatott |
 | Minőség                       | MP3 128, MP3 320 vagy FLAC; a nem támogatott jogosultságok kifejezetten hibával járnak |
 
 A megosztott mappa mentéskor külső könyvtármappaként kerül regisztrálásra.
-A fájlok ott maradnak, a Deemix előadó/album szerinti szervezésében. A Downtify megőrzi
+A fájlok ott maradnak, a Deemix előadó/album szerinti szervezésében. A Castify megőrzi
 a formátumukat, címkéiket, borítóikat és `.lrc` kísérőfájljaikat, újraírás nélkül.
 A beágyazott dalszövegeket és az azonos nevű `.lrc` fájlokat a lejátszó olvassa.
 Ez az integráció semmilyen hangot vagy dalszöveget nem töröl, nem mozgat és nem generál.

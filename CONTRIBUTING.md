@@ -1,6 +1,6 @@
-# Contributing to Downtify
+# Contributing to Castify
 
-Thanks for your interest in improving Downtify! This document describes how to set up the project locally, the coding and formatting standards every contribution must follow, and the workflow for submitting changes.
+Thanks for your interest in improving Castify! This document describes how to set up the project locally, the coding and formatting standards every contribution must follow, and the workflow for submitting changes.
 
 By submitting a pull request you agree that your contribution is licensed under the project's [AGPL-3.0](./LICENSE) license.
 
@@ -47,7 +47,7 @@ For non-trivial changes, **open an issue first** to align on scope before writin
 
 ## Project overview
 
-Downtify is a self-hosted Spotify downloader. It resolves track/album/playlist metadata from the public `open.spotify.com/embed` endpoints (no Spotify Premium / Web API key required), pulls audio from YouTube via `yt-dlp`, transcodes with `ffmpeg`, and embeds cover art plus ID3 / Vorbis / MP4 metadata via `mutagen`. The backend is FastAPI, the frontend is a Vue 3 SPA, and everything ships as a Docker image.
+Castify is a self-hosted Spotify downloader. It resolves track/album/playlist metadata from the public `open.spotify.com/embed` endpoints (no Spotify Premium / Web API key required), pulls audio from YouTube via `yt-dlp`, transcodes with `ffmpeg`, and embeds cover art plus ID3 / Vorbis / MP4 metadata via `mutagen`. The backend is FastAPI, the frontend is a Vue 3 SPA, and everything ships as a Docker image.
 
 Repository layout:
 
@@ -300,14 +300,14 @@ Reviews are an exchange. Expect to iterate. Keep responses to review comments fo
 ## Reporting bugs and requesting features
 
 - Use the [issues page](https://github.com/henriquesebastiao/downtify/issues) and pick the appropriate template.
-- For bugs, include: Downtify version, deployment method (Docker vs. local), OS, exact reproduction steps, expected vs. actual behavior, and relevant log output. If a specific Spotify URL triggers the bug, include it — the project deliberately uses only public endpoints, so the URL is not sensitive.
+- For bugs, include: Castify version, deployment method (Docker vs. local), OS, exact reproduction steps, expected vs. actual behavior, and relevant log output. If a specific Spotify URL triggers the bug, include it — the project deliberately uses only public endpoints, so the URL is not sensitive.
 - For feature requests, describe the problem first, then the proposed solution. Features that require Spotify Premium credentials or the Spotify Web API will not be accepted.
 
 ---
 
 ## Translations
 
-Downtify has two things to translate — the **app** and the **documentation** — and you can contribute either one or both, in a single pull request or in separate ones. They are independent: a language can exist in one and not yet in the other, and partial work is welcome (missing app strings fall back to English; untranslated pages stay in English).
+Castify has two things to translate — the **app** and the **documentation** — and you can contribute either one or both, in a single pull request or in separate ones. They are independent: a language can exist in one and not yet in the other, and partial work is welcome (missing app strings fall back to English; untranslated pages stay in English).
 
 ### The app
 

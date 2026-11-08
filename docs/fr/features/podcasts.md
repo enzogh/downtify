@@ -22,7 +22,7 @@ Collez l’un de ceux-ci dans la zone **Ajouter un podcast**, ou saisissez un no
 | Le nom d’une émission (texte libre) | Recherché dans l’annuaire de podcasts d’iTunes |
 
 ::: info Les émissions exclusives à Spotify ne peuvent pas être téléchargées
-Une émission qui n’existe que sur Spotify (sans flux public) est signalée comme telle — Downtify ne devine pas et ne se rabat pas sur autre chose. Cherchez l’émission par son nom pour vérifier avant de la supposer exclusive.
+Une émission qui n’existe que sur Spotify (sans flux public) est signalée comme telle — Castify ne devine pas et ne se rabat pas sur autre chose. Cherchez l’émission par son nom pour vérifier avant de la supposer exclusive.
 :::
 
 Avant de confirmer, vous choisissez :
@@ -62,7 +62,7 @@ Les épisodes se lisent dans le même lecteur intégré que la musique, avec que
 
 - **Reculer de 15 s / avancer de 30 s** à la place d’aléatoire et de répétition, qui ne s’appliquent pas à un seul épisode.
 - **Vitesse de lecture** (0,75× à 2×), à côté de la minuterie de mise en veille.
-- La **position de reprise** est enregistrée sur le serveur toutes les ~10 secondes de lecture et une fois de plus à la pause ; fermer l’onglet — ou ouvrir Downtify sur un autre appareil — reprend donc l’épisode près de l’endroit où vous l’avez laissé. La liste d’épisodes d’une émission affiche une indication « Reprendre à … » pour tout ce qui est à moitié écouté.
+- La **position de reprise** est enregistrée sur le serveur toutes les ~10 secondes de lecture et une fois de plus à la pause ; fermer l’onglet — ou ouvrir Castify sur un autre appareil — reprend donc l’épisode près de l’endroit où vous l’avez laissé. La liste d’épisodes d’une émission affiche une indication « Reprendre à … » pour tout ce qui est à moitié écouté.
 
 Le cœur (titres aimés) et « aller à l’album/l’artiste » ne s’appliquent pas aux épisodes et n’apparaissent pas sur l’un d’eux.
 
@@ -74,12 +74,12 @@ Les fichiers d’épisodes restent sous le même volume de téléchargements, da
 
 ## Tags
 
-Downtify écrit ce que les applications de podcast et les serveurs multimédias lisent déjà pour un épisode : le titre, l’émission comme album, l’auteur de l’émission comme artiste, l’année de publication, les numéros d’épisode/de saison, l’image propre de l’émission (la plus grande entre l’image du flux et celle d’iTunes, même idée que la [pochette des morceaux](download-settings.md#cover-art-resolution)) et la description de l’épisode comme commentaire. Les notes de l’émission sont stockées en texte brut — Downtify en retire le HTML au lieu de l’afficher.
+Castify écrit ce que les applications de podcast et les serveurs multimédias lisent déjà pour un épisode : le titre, l’émission comme album, l’auteur de l’émission comme artiste, l’année de publication, les numéros d’épisode/de saison, l’image propre de l’émission (la plus grande entre l’image du flux et celle d’iTunes, même idée que la [pochette des morceaux](download-settings.md#cover-art-resolution)) et la description de l’épisode comme commentaire. Les notes de l’émission sont stockées en texte brut — Castify en retire le HTML au lieu de l’afficher.
 
 ## Bon à savoir
 
 - **Pas de podcasts vidéo.** Un épisode dont la seule pièce jointe est un fichier vidéo est entièrement ignoré ; seul l’audio est pris en charge.
-- **Pas de chapitres.** Les flux qui incluent des marqueurs de chapitre ne les ont pas encore dans Downtify.
+- **Pas de chapitres.** Les flux qui incluent des marqueurs de chapitre ne les ont pas encore dans Castify.
 - **Non reflété dans Navidrome.** Contrairement aux playlists, les abonnements aux podcasts ne sont pas poussés dans une bibliothèque Navidrome — les épisodes sont de simples fichiers que votre serveur multimédia voit déjà de lui-même.
 - Se désabonner (**⋯ → Se désabonner**) supprime par défaut les épisodes téléchargés ; choisissez **Se désabonner, garder les épisodes téléchargés** pour laisser les fichiers en place.
 

@@ -4,7 +4,7 @@ icon: lucide/wand-sparkles
 
 # Kitaplığı iyileştir
 
-Zamanla oluşmuş bir kitaplık, bir parça indirildiğinde her Downtify sürümünün yapabildiğini taşır: bir kaynağın sunduğu en küçük kapak, söz yok, albümü ya da yılı olmayan etiketler. **Kitaplığı iyileştir** diskte zaten olana bakar ve yalnızca geride kalanı onarır — yeniden indirme yok, elle halledilecek bir şey yok.
+Zamanla oluşmuş bir kitaplık, bir parça indirildiğinde her Castify sürümünün yapabildiğini taşır: bir kaynağın sunduğu en küçük kapak, söz yok, albümü ya da yılı olmayan etiketler. **Kitaplığı iyileştir** diskte zaten olana bakar ve yalnızca geride kalanı onarır — yeniden indirme yok, elle halledilecek bir şey yok.
 
 **Kitaplık → Kitaplığı iyileştir** üzerinden açın.
 
@@ -14,7 +14,7 @@ Varsayılan mod **kapakları, sözleri ve etiketleri** yeniden yazar. İsteğe b
 
 ## Nasıl çalışır
 
-1. **Tarama.** Downtify her kitaplık parçasını okur ve geride kalanı kategori başına bildirir. Hiçbir şey yazılmaz.
+1. **Tarama.** Castify her kitaplık parçasını okur ve geride kalanı kategori başına bildirir. Hiçbir şey yazılmaz.
 2. **Seçim.** Taramanın bir şey bulduğu her kategori, parça sayısı ve bir anahtarla listelenir. İstemediğinizin işaretini kaldırın.
 3. **İyileştirme.** Seçilen parçalar tek tek işlenen bir kuyruğa girer. Duraklatabilir, sürdürebilir veya durdurabilirsiniz ve yeniden başlatmadan sağ çıkar.
 
@@ -32,7 +32,7 @@ Bir parça şu durumlarda geride sayılır:
 - **ne** gömülü sözü **ne de** bir `.lrc` yan dosyası varsa (dosyanın yanında ya da Ayarlar’daki söz klasöründe);
 - etiketlerinde **albüm**, **albüm sanatçısı**, **yıl** veya **parça numarası**ndan biri eksikse.
 
-**Etiketleri yenile** yalnızca Downtify’ın hâlâ Spotify parça kimliğine sahip olduğu parçalar için çalışır — Spotify bağlantısından indirdikleri, [parça dizininde](library-catalog.md#what-gets-stored) tutulanlar. Diğer parçalar kuyruğa alınır ama _Yapacak bir şey yok_ olarak döner.
+**Etiketleri yenile** yalnızca Castify’ın hâlâ Spotify parça kimliğine sahip olduğu parçalar için çalışır — Spotify bağlantısından indirdikleri, [parça dizininde](library-catalog.md#what-gets-stored) tutulanlar. Diğer parçalar kuyruğa alınır ama _Yapacak bir şey yok_ olarak döner.
 
 ## Seçenekler
 
@@ -40,7 +40,7 @@ Bir parça şu durumlarda geride sayılır:
 
 `300px` · `500px` · **`600px`** · `1000px` · `1200px`
 
-Bu boyutta veya daha büyük kapaklara dokunulmaz. Downtify yalnızca dosyadakinden **kesinlikle daha büyük** bir kapak yazar; bu yüzden bir iyileştirmeyi iki kez çalıştırmak boşuna hiçbir şeyi yeniden yazmaz.
+Bu boyutta veya daha büyük kapaklara dokunulmaz. Castify yalnızca dosyadakinden **kesinlikle daha büyük** bir kapak yazar; bu yüzden bir iyileştirmeyi iki kez çalıştırmak boşuna hiçbir şeyi yeniden yazmaz.
 
 Boyutlar nereden gelir:
 
@@ -67,11 +67,11 @@ Bir parçaya bakıldıktan sonra sonraki tarama onu bu süre boyunca atlar; böy
 
 Bellek **parça ve kategori başına** tutulur; kısmi çalıştırmaları çalıştıran da budur: 16.000 parçanın yalnızca kapaklarını onarmak, sözlerine hiç bakılıp bakılmadığı hakkında bir şey söylemez, bu yüzden sonraki bir söz çalıştırması hepsini yine ele alır. Bir tarama ayrıca incelediği ve yapacak bir şey bulmadığı kategorileri de kaydeder — bakıp bir şey bulmamak da diğerleri gibi bir denetimdir.
 
-Downtify her parça ve kategori için şunları hatırlar: ne zaman denetlendiği, onu denetleyen Downtify sürümü ve — kapaklar için — bulunan en büyük kapak ile nereden geldiği. Hangi söz sağlayıcılarına zaten sorulduğu ayrıca, şarkı ve sağlayıcı başına tutulur (bkz. [Şarkı sözleri](lyrics.md)).
+Castify her parça ve kategori için şunları hatırlar: ne zaman denetlendiği, onu denetleyen Castify sürümü ve — kapaklar için — bulunan en büyük kapak ile nereden geldiği. Hangi söz sağlayıcılarına zaten sorulduğu ayrıca, şarkı ve sağlayıcı başına tutulur (bkz. [Şarkı sözleri](lyrics.md)).
 
 İki şey onu her zaman geçersiz kılar:
 
-- **daha yeni bir Downtify sürümü** her şeyi yeniden denetler, çünkü öncekinden daha iyi eşleştirebilir ya da etiketleyebilir;
+- **daha yeni bir Castify sürümü** her şeyi yeniden denetler, çünkü öncekinden daha iyi eşleştirebilir ya da etiketleyebilir;
 - **Her parçayı her zaman denetle**’yi seçmek o tarama için belleği yok sayar.
 
 Bir tarama, her şey yakın zamanda denetlendiği _için_ yapacak bir şey bulamazsa bunu söyler ve açıklamasız bir “iyileştirilecek bir şey yok” bırakmak yerine belleksiz yeniden çalıştırmayı önerir.
@@ -82,7 +82,7 @@ Bir tarama, her şey yakın zamanda denetlendiği _için_ yapacak bir şey bulam
 
 **Duraklat**, işlemdeki parçadan sonra durur ve kuyruğu korur. **Durdur** geri kalanını bırakır; zaten iyileştirilen parçalar iyileştirilmiş kalır. Sayfadan ayrılabilirsiniz — çalıştırma sürer ve açık diğer sekmeler onu izler.
 
-Kuyruk `/data/downtify_library.db` içinde yaşar; yani çalıştırma ortasında **Downtify’ı (veya kapsayıcıyı) yeniden başlatmak** onu kaldığı yerden sürdürür. İşlem öldüğünde işlemde olan bir parça kuyruğa geri konur.
+Kuyruk `/data/downtify_library.db` içinde yaşar; yani çalıştırma ortasında **Castify’ı (veya kapsayıcıyı) yeniden başlatmak** onu kaldığı yerden sürdürür. İşlem öldüğünde işlemde olan bir parça kuyruğa geri konur.
 
 ## Bir iyileştirme başarısız olursa hiçbir şey kaybolmaz
 
@@ -94,7 +94,7 @@ Her yazma, özgün dosyanın yanındaki bir çalışma kopyasına gider (`<ad>.d
 
 Bir iyileştirme etiketleri yerinde yeniden yazar; bu yüzden salt okunur dosya sistemindeki parçalar, üst veri, kapak veya söz aranmadan önce bir açıklamayla **atlanır**. Çalınabilir ve çalma listelerinde kalırlar; dosyaları ve bağlama izinleri değişmez. Atlanan salt okunur bir parça başarıyla denetlenmiş olarak hatırlanmaz, bu yüzden klasörü sonradan yazılabilir olursa yeniden ele alınabilir. Beklenmeyen izin, disk alanı ve G/Ç hataları yine başarısızlık olarak görünür.
 
-Bu, korumalı ses dosyalarını yeniden yazmadan kapakları ve sözleri Downtify’ın veri klasöründe ayrı tutabilen [mevcut klasör zenginleştirmesinden](external-library.md) farklıdır.
+Bu, korumalı ses dosyalarını yeniden yazmadan kapakları ve sözleri Castify’ın veri klasöründe ayrı tutabilen [mevcut klasör zenginleştirmesinden](external-library.md) farklıdır.
 
 ## Ses neden değiştirilmez
 
@@ -104,14 +104,14 @@ Sıradan etiket iyileştirmeleri sesi değiştirmez. Aşağıdaki ayrı mod tam 
 
 [Deemix kaynağını](deemix.md) etkinleştirip sınadıktan sonra **Kitaplığı iyileştir**, taramadan önce iki bağımsız anahtar sunar:
 
-- **Use verified Deemix recordings**: tercih edilen bir harici koleksiyonun gizlediği kopyalar dahil özgün Downtify indirmelerini tarar. Sanatçıyı, tam başlığı/sürümü ve albümü tam olarak eşleştirir; belirsiz katalog sonuçlarını reddeder. Eski klibin süresi, doğru bir katalog kaydını reddetmek için kullanılmaz. İndirilen etiketleri, katalog süresini, seçilen kaliteyi ve tam FFmpeg çözümlemesini doğrular.
-- **Remove old Downtify audio after import**: ek olarak değişmemiş her özgün dosyayı yayımlamadan sonra kaldırır. Varsayılan olarak kapalıdır. Özgünleri tutmak yine de çalma listelerini ve favorileri Deemix kaydına günceller.
+- **Use verified Deemix recordings**: tercih edilen bir harici koleksiyonun gizlediği kopyalar dahil özgün Castify indirmelerini tarar. Sanatçıyı, tam başlığı/sürümü ve albümü tam olarak eşleştirir; belirsiz katalog sonuçlarını reddeder. Eski klibin süresi, doğru bir katalog kaydını reddetmek için kullanılmaz. İndirilen etiketleri, katalog süresini, seçilen kaliteyi ve tam FFmpeg çözümlemesini doğrular.
+- **Remove old Castify audio after import**: ek olarak değişmemiş her özgün dosyayı yayımlamadan sonra kaldırır. Varsayılan olarak kapalıdır. Özgünleri tutmak yine de çalma listelerini ve favorileri Deemix kaydına günceller.
 
-Bu tarama, kapak/söz/etiket işleri yerine bir **ses** kategorisi üretir. Çıktı dosyalarına, kapağa, albüm düzenine ve yerel sözlere Deemix sahiptir. Downtify bunları yerinde okur. Mevcut yerel veya gömülü sözler korunur; yalnızca eksik sözler, sesi yeniden yazmadan, yazılabilir özel bir söz klasöründe tamamlanabilir. Deemix MP3 için yapılandırıldığında daha yüksek kaliteli kayıpsız bir özgün dosya korunur.
+Bu tarama, kapak/söz/etiket işleri yerine bir **ses** kategorisi üretir. Çıktı dosyalarına, kapağa, albüm düzenine ve yerel sözlere Deemix sahiptir. Castify bunları yerinde okur. Mevcut yerel veya gömülü sözler korunur; yalnızca eksik sözler, sesi yeniden yazmadan, yazılabilir özel bir söz klasöründe tamamlanabilir. Deemix MP3 için yapılandırıldığında daha yüksek kaliteli kayıpsız bir özgün dosya korunur.
 
 Yayımlama parti başına bir kez olur. M3U yorumları, elle konulan işaretler ve parça sırası korunur; sonra katalog yolları, çalma listesi üyelikleri, her kullanıcının beğenileri, sahiplik ve gizli parça kuralları tek bir SQLite işleminde taşınır. Eski dosyaların önbellekteki Navidrome kimlikleri yeni bir yerel arama için geçersiz kılınır. Daha önce verilmiş mobil kimlikler ve eski oynatma URL’leri kayıtlı değiştirmeye salt okunur takma adlar tutar; değişiklik işlemleri bu URL takma adlarını asla kullanmaz.
 
-Kitaplık veritabanındaki kalıcı makbuzlar kaynak/hedef SHA-256 değerlerini ve yayımlama durumunu kaydeder. Kaynaklar, değiştirme ve referanslar doğrulanana kadar kalır. Değişmiş ya da eksik bir bağlama, düzenlenmiş bir dosya, harici salt okunur bir çalma listesi referansı, etkin oynatma veya başarısız bir katalog yayımlaması temizliği görünür bir nedenle durdurur. Duraklat/sürdür ve yeniden başlatma makbuzları yeniden kullanır. Genel bir yineleme taraması ya da yaşa dayalı temizlik yoktur: yalnızca Downtify’ın indirme klasöründeki doğrulanmış özgünler uygundur. Elle yapılan Deemix/slskd indirmeleri, harici özgünler, dizinler ve yan dosyalar asla silinmez. Bir özgün kaldırıldıktan sonra kapsayıcıyı geri almak o dosyayı geri getirmez; gerekirse kendi depolama yedeğinizden geri yükleyin.
+Kitaplık veritabanındaki kalıcı makbuzlar kaynak/hedef SHA-256 değerlerini ve yayımlama durumunu kaydeder. Kaynaklar, değiştirme ve referanslar doğrulanana kadar kalır. Değişmiş ya da eksik bir bağlama, düzenlenmiş bir dosya, harici salt okunur bir çalma listesi referansı, etkin oynatma veya başarısız bir katalog yayımlaması temizliği görünür bir nedenle durdurur. Duraklat/sürdür ve yeniden başlatma makbuzları yeniden kullanır. Genel bir yineleme taraması ya da yaşa dayalı temizlik yoktur: yalnızca Castify’ın indirme klasöründeki doğrulanmış özgünler uygundur. Elle yapılan Deemix/slskd indirmeleri, harici özgünler, dizinler ve yan dosyalar asla silinmez. Bir özgün kaldırıldıktan sonra kapsayıcıyı geri almak o dosyayı geri getirmez; gerekirse kendi depolama yedeğinizden geri yükleyin.
 
 Bağlama adları Docker yollarından farklı olan NAS kullanıcıları için bir yönetici, `DOWNTIFY_DEEMIX_M3U_ROOT` değerini Deemix köküne çözümlenen bir kapsayıcı takma adına ayarlayabilir. Göreli M3U yolları bu takma adı kullanır (örneğin `/music/existing`’a eşlenen `/Download`). İsteğe bağlı `DOWNTIFY_LIBRARY_READY_MARKERS`, hazırlıktan ve temizlikten önce denetlenen işaretçi yolları ve beklenen metinden oluşan bir JSON nesnesidir. Eksik bir işaretçi güvenli tarafta başarısız olur. Varsayılan mod için değişkenlerin hiçbiri gerekli değildir.
 

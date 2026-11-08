@@ -1,6 +1,6 @@
 ---
 layout: home
-title: Downtify
+title: Castify
 titleTemplate: Téléchargeur de musique auto-hébergé
 description: Téléchargeur de musique auto-hébergé. Collez un lien Spotify et obtenez un fichier audio parfaitement étiqueté — sans clé d’API, sans compte, sans prise de tête.
 icon: lucide/house
@@ -72,7 +72,7 @@ quickStart:
 
 ## Comment ça marche vraiment
 
-L’API officielle de Spotify réserve les téléchargements aux abonnés Premium. Downtify passe par la porte de service — il lit les métadonnées que Spotify expose déjà sur ses pages d’intégration publiques, demande à YouTube Music l’audio le plus proche, confie le fichier à `yt-dlp` et `ffmpeg`, et écrit les bons tags avec `mutagen`. Tout le pipeline tient dans un seul conteneur Docker.
+L’API officielle de Spotify réserve les téléchargements aux abonnés Premium. Castify passe par la porte de service — il lit les métadonnées que Spotify expose déjà sur ses pages d’intégration publiques, demande à YouTube Music l’audio le plus proche, confie le fichier à `yt-dlp` et `ffmpeg`, et écrit les bons tags avec `mutagen`. Tout le pipeline tient dans un seul conteneur Docker.
 
 <HomePipeline :steps="$frontmatter.pipeline" />
 

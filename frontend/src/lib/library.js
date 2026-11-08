@@ -110,7 +110,7 @@ export function normalizeTrack(row) {
   const artists = listed.length
     ? listed
     : splitArtists(artist, raw.album_artist)
-  // "Various Artists" only names a compilation with the flag Downtify
+  // "Various Artists" only names a compilation with the flag Castify
   // writes on one: older versions tagged any song with several artists
   // that way, and such a track stays with its first artist's album.
   // Mirrors album_owner_of in downtify/library_catalog.py.
