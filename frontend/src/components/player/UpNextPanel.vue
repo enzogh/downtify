@@ -7,6 +7,18 @@
           {{ summary }}
         </p>
       </div>
+      <label
+        v-if="!libraryOnly"
+        class="flex shrink-0 cursor-pointer items-center gap-2 text-xs font-semibold text-white/70"
+        :title="t('autoplay.hint')"
+      >
+        {{ t('autoplay.label') }}
+        <UiSwitch
+          :model-value="autoplay.enabled.value"
+          :aria-label="t('autoplay.label')"
+          @update:model-value="autoplay.setAutoplay($event)"
+        />
+      </label>
       <button
         v-if="upcoming.length"
         type="button"
@@ -46,69 +58,87 @@
       </div>
 
       <TransitionGroup name="list" tag="ol">
-        <li
+        <template
           v-for="(item, position) in upcoming"
-          :key="`${item.track.file}-${item.index}`"
-          class="group flex h-14 items-center gap-3 rounded-[10px] px-2.5 transition-colors hover:bg-white/8"
-          :class="dragOver === position ? 'bg-white/12' : ''"
-          :draggable="!player.shuffle.value"
-          @dragstart="onDragStart($event, item.index)"
-          @dragover.prevent="dragOver = position"
-          @dragleave="dragOver = -1"
-          @drop.prevent="onDrop(item.index)"
-          @dragend="dragOver = -1"
+          :key="`${item.track.file}-${item.index}-${item.track.title}`"
         >
-          <button
-            type="button"
-            class="flex min-w-0 flex-1 items-center gap-3 text-left"
-            @click="player.playAt(item.index)"
+          <li
+            v-if="position === firstAutoplay"
+            class="flex items-center gap-2 px-2.5 pt-3 pb-1 text-xs font-semibold tracking-wide text-white/55 uppercase"
           >
-            <CoverArt
-              :thumb="150"
-              :src="item.track.hasCover ? item.track.cover : ''"
-              :name="item.track.album || item.track.title"
-              rounded="rounded-[6px]"
-              :letter-size="12"
-              :icon-size="14"
-              class="size-10"
-            />
-            <span class="min-w-0 flex-1">
-              <span class="flex items-center gap-1.5">
-                <span class="truncate text-sm font-medium text-white">{{
-                  item.track.title
+            <AppIcon name="sparkle" :size="13" />
+            {{ t('autoplay.upNextHeading') }}
+          </li>
+          <li
+            class="group flex h-14 items-center gap-3 rounded-[10px] px-2.5 transition-colors hover:bg-white/8"
+            :class="dragOver === position ? 'bg-white/12' : ''"
+            :draggable="!player.shuffle.value"
+            @dragstart="onDragStart($event, item.index)"
+            @dragover.prevent="dragOver = position"
+            @dragleave="dragOver = -1"
+            @drop.prevent="onDrop(item.index)"
+            @dragend="dragOver = -1"
+          >
+            <button
+              type="button"
+              class="flex min-w-0 flex-1 items-center gap-3 text-left"
+              @click="player.playAt(item.index)"
+            >
+              <CoverArt
+                :thumb="150"
+                :src="item.track.hasCover ? item.track.cover : ''"
+                :name="item.track.album || item.track.title"
+                rounded="rounded-[6px]"
+                :letter-size="12"
+                :icon-size="14"
+                class="size-10"
+              />
+              <span class="min-w-0 flex-1">
+                <span class="flex items-center gap-1.5">
+                  <span class="truncate text-sm font-medium text-white">{{
+                    item.track.title
+                  }}</span>
+                  <ExplicitBadge v-if="item.track.explicit" tone="onDark" />
+                </span>
+                <span class="block truncate text-xs text-white/55">{{
+                  item.track.artist
                 }}</span>
-                <ExplicitBadge v-if="item.track.explicit" tone="onDark" />
               </span>
-              <span class="block truncate text-xs text-white/55">{{
-                item.track.artist
-              }}</span>
+            </button>
+            <span class="tabular text-xs text-white/45 group-hover:hidden">
+              {{
+                item.track.duration ? formatDuration(item.track.duration) : ''
+              }}
             </span>
-          </button>
-          <span class="tabular text-xs text-white/45 group-hover:hidden">
-            {{ item.track.duration ? formatDuration(item.track.duration) : '' }}
-          </span>
-          <button
-            type="button"
-            class="hidden size-8 items-center justify-center rounded-full text-white/60 hover:bg-white/10 hover:text-white group-hover:flex"
-            :aria-label="t('player.removeFromQueue')"
-            @click="player.removeAt(item.index)"
-          >
-            <AppIcon name="x" :size="16" />
-          </button>
-          <AppIcon
-            v-if="!player.shuffle.value"
-            name="grip"
-            :size="16"
-            class="hidden cursor-grab text-white/35 sm:block"
-          />
-        </li>
+            <button
+              type="button"
+              class="hidden size-8 items-center justify-center rounded-full text-white/60 hover:bg-white/10 hover:text-white group-hover:flex"
+              :aria-label="t('player.removeFromQueue')"
+              @click="player.removeAt(item.index)"
+            >
+              <AppIcon name="x" :size="16" />
+            </button>
+            <AppIcon
+              v-if="!player.shuffle.value"
+              name="grip"
+              :size="16"
+              class="hidden cursor-grab text-white/35 sm:block"
+            />
+          </li>
+        </template>
       </TransitionGroup>
 
       <p
         v-if="!upcoming.length"
         class="px-2 py-8 text-center text-sm text-white/50"
       >
-        {{ t('player.queueEnds') }}
+        {{
+          autoplay.loading.value
+            ? t('autoplay.finding')
+            : autoplay.enabled.value && !libraryOnly
+              ? t('autoplay.queueEndsAutoplay')
+              : t('player.queueEnds')
+        }}
       </p>
     </div>
   </div>
@@ -121,6 +151,9 @@ import CoverArt from '../ui/CoverArt.vue'
 import EqBars from '../ui/EqBars.vue'
 import ExplicitBadge from '../ui/ExplicitBadge.vue'
 import { usePlayer } from '/src/model/player'
+import { useAutoplay } from '/src/model/autoplay'
+import { libraryOnly } from '/src/model/musicPolicy'
+import UiSwitch from '../ui/UiSwitch.vue'
 import { formatDuration, splitLength } from '/src/lib/format'
 import { useI18n } from '/src/i18n'
 
@@ -132,6 +165,11 @@ let dragFrom = -1
 const current = computed(() => player.currentTrack.value)
 // Long queues render the first stretch only; the rest is still queued.
 const upcoming = computed(() => player.upcoming.value.slice(0, 200))
+const autoplay = useAutoplay()
+// Where the songs autoplay added begin: a heading goes above them.
+const firstAutoplay = computed(() =>
+  upcoming.value.findIndex((item) => item.track.autoplay)
+)
 
 const summary = computed(() => {
   const rest = player.upcoming.value

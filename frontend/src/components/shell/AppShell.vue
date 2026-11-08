@@ -40,6 +40,7 @@
 
 <script setup>
 import { startListeningLog } from '/src/model/listening'
+import { startAutoplay } from '/src/model/autoplay'
 import { ref, watch, onMounted, onUnmounted } from 'vue'
 import {
   libraryOnly,
@@ -82,6 +83,7 @@ const player = usePlayer()
 const { showLyrics } = usePlayerPrefs()
 const route = useRoute()
 startListeningLog()
+startAutoplay()
 const router = useRouter()
 const ui = useUi()
 const nowPlaying = useNowPlaying()

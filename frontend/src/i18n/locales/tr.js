@@ -180,6 +180,14 @@ export default {
     add: 'Çalma listesini favorilere ekle',
     remove: 'Çalma listesini favorilerden kaldır',
   },
+  autoplay: {
+    title: 'Otomatik oynatma',
+    label: 'Otomatik oynatma',
+    hint: 'Sıra bittiğinde son dinlediklerine benzer şarkılarla devam eder. İndirilmemiş şarkılar akışla çalar. Bu cihazda kaydedilir.',
+    upNextHeading: 'Önerilen · Otomatik oynatma',
+    finding: 'Sıradaki şarkılar aranıyor…',
+    queueEndsAutoplay: 'Sıra bittiğinde benzer şarkılar çalmaya devam eder.',
+  },
   fade: {
     title: 'Şarkılar arası geçiş',
     hint: 'Şarkının son saniyelerinde sesi kısar, sonrakini açar. Bu cihazda kaydedilir.',

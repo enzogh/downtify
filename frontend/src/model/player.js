@@ -20,6 +20,8 @@ const VOLUME_KEY = 'downtify-player-volume'
 const RATE_KEY = 'downtify-player-rate'
 const SESSION_KEY = 'downtify-player-session'
 const FADE_KEY = 'downtify-player-fade'
+// How long before a track ends its successor is prepared at the latest.
+const PREPARE_BEFORE_END_SECONDS = 30
 // Queues past this size aren't persisted across reloads (localStorage
 // quota); the player still works, it just starts empty next time.
 const MAX_PERSISTED_TRACKS = 2000
@@ -101,6 +103,11 @@ function ensureAudio() {
   audio.playbackRate = playbackRate.value
   audio.addEventListener('timeupdate', () => {
     currentTime.value = audio.currentTime
+    // Safety net near the end: whatever is next by now (a track queued
+    // late, a prefetch that failed) gets prepared before it is due.
+    if (duration.value - audio.currentTime < PREPARE_BEFORE_END_SECONDS) {
+      prefetchNext()
+    }
   })
   audio.addEventListener('progress', () => {
     // The current track finished loading: warm the next one now, so a
@@ -263,6 +270,9 @@ function insertTracks(files, position) {
     shuffleOrder.splice(at, 0, ...added)
     shuffleVersion.value += 1
   }
+  // The current track may have loaded long ago (the progress trigger has
+  // fired): prepare the new next one now, not when it is already due.
+  if (currentIndex.value >= 0) maybePrefetch()
 }
 
 /** Add to the end of the queue. */
@@ -462,13 +472,18 @@ async function playUnresolved(index) {
   startAudio(ensureAudio(), index)
 }
 
+// The stream track being prepared right now, so the timeupdate safety
+// net doesn't ask again on every tick.
+let preparing = null
+
 /** Resolve the next unstored track while this one plays, one ahead. */
 function prefetchNext() {
   if (libraryOnly.value) return
   const upcoming = nextIndex()
   if (upcoming < 0) return
   const track = playlist.value[upcoming]
-  if (!needsStreamUrl(track)) return
+  if (!needsStreamUrl(track) || preparing === track) return
+  preparing = track
   const list = playlist.value
   resolveTrackUrl(track).then(
     ({ url, videoId }) => {
@@ -482,8 +497,16 @@ function prefetchNext() {
     },
     () => {
       // Silent: advancing into it resolves again, with an error then.
+      if (preparing === track) preparing = null
     }
   )
+}
+
+/** Prepare whatever is next now (tracks were added after the current
+ * one started, e.g. by autoplay). */
+function prepareNext() {
+  prefetchedFor = -1
+  if (currentIndex.value >= 0) maybePrefetch()
 }
 
 function startPlayback(a) {
@@ -969,6 +992,7 @@ export function usePlayer() {
     setPlaylist,
     playList,
     enqueue,
+    prepareNext,
     playNext,
     moveTrack,
     removeAt,

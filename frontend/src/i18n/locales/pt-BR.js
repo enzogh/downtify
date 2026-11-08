@@ -185,6 +185,15 @@ export default {
     add: 'Adicionar playlist aos favoritos',
     remove: 'Remover playlist dos favoritos',
   },
+  autoplay: {
+    title: 'Reprodução automática',
+    label: 'Reprodução automática',
+    hint: 'Quando a fila acaba, continua com músicas parecidas com as últimas. As não baixadas tocam por streaming. Salvo neste dispositivo.',
+    upNextHeading: 'Recomendadas · Reprodução automática',
+    finding: 'Procurando as próximas músicas…',
+    queueEndsAutoplay:
+      'Quando a fila acabar, músicas parecidas continuam tocando.',
+  },
   fade: {
     title: 'Transição entre músicas',
     hint: 'Abaixa o som nos últimos segundos de uma música e aumenta o da próxima. Salvo neste dispositivo.',

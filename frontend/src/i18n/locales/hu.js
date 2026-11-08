@@ -185,6 +185,14 @@ export default {
     add: 'Lista hozzáadása a kedvencekhez',
     remove: 'Lista eltávolítása a kedvencekből',
   },
+  autoplay: {
+    title: 'Automatikus lejátszás',
+    label: 'Automatikus lejátszás',
+    hint: 'Ha a sor véget ér, hasonló dalokkal folytatja. A le nem töltött dalok streamelve szólnak. Ezen az eszközön mentve.',
+    upNextHeading: 'Ajánlott · Automatikus lejátszás',
+    finding: 'A következő dalok keresése…',
+    queueEndsAutoplay: 'Ha a sor véget ér, hasonló dalok szólnak tovább.',
+  },
   fade: {
     title: 'Áttűnés a dalok között',
     hint: 'Az utolsó másodpercekben elhalkítja a dalt, a következőt felhangosítja. Ezen az eszközön mentve.',

@@ -177,6 +177,14 @@ export default {
     add: 'Add playlist to favorites',
     remove: 'Remove playlist from favorites',
   },
+  autoplay: {
+    title: 'Autoplay',
+    label: 'Autoplay',
+    hint: 'When the queue ends, keep playing songs like the last ones. Songs you haven’t downloaded stream. Saved on this device.',
+    upNextHeading: 'Recommended · Autoplay',
+    finding: 'Finding songs to play next…',
+    queueEndsAutoplay: 'When the queue ends, similar songs keep playing.',
+  },
   fade: {
     title: 'Fade between songs',
     hint: 'Fades a song out over its last seconds and the next one in. Saved on this device.',

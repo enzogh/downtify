@@ -191,6 +191,15 @@ export default {
     add: 'Mettre la playlist en favoris',
     remove: 'Retirer la playlist des favoris',
   },
+  autoplay: {
+    title: 'Lecture automatique',
+    label: 'Lecture automatique',
+    hint: 'À la fin de la file, continue avec des titres proches des derniers écoutés. Ceux qui ne sont pas téléchargés sont lus en streaming. Enregistré sur cet appareil.',
+    upNextHeading: 'Recommandés · Lecture automatique',
+    finding: 'Recherche des prochains titres…',
+    queueEndsAutoplay:
+      'À la fin de la file, des titres similaires prennent le relais.',
+  },
   fade: {
     title: 'Fondu entre les titres',
     hint: 'Baisse le son sur les dernières secondes d’un titre et monte celui du suivant. Enregistré sur cet appareil.',

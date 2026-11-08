@@ -88,6 +88,10 @@ The same actions apply to a multi-track selection in the Library.
 
 The queue, the current track, its position, shuffle and repeat are remembered, so reopening Downtify resumes where you left off (queues of more than 2000 tracks aren't remembered). Deleted files drop out of the queue automatically.
 
+**Autoplay** (Settings → General, or the switch at the top of **Up next**; on by default, saved per device) keeps the music going when the queue runs out. When one track is left, it adds ten songs like the last ones played, under **Recommended · Autoplay** in Up next. Songs you haven't downloaded stream, and the next one is prepared ahead like any other streamed track, so playback carries on without a pause. It doesn't run with repeat on, for podcasts, or in library-only mode. After you clear Up next, it waits for a new song before suggesting again.
+
+Whatever comes next is prepared as soon as it is queued, and again 30 seconds before the current track ends if it still isn't ready, so a song added late (by autoplay or by hand) also starts without waiting.
+
 **Fade between songs** (Settings → General) fades a song out over its last seconds and the next one in, from off up to 12 seconds. It applies when the queue moves on by itself. A song you pick yourself starts at full volume, and nothing fades when no song follows (the end of the queue, repeat one, or a sleep timer set to stop after the track). Podcast episodes never fade. The setting is saved per device, like the volume.
 
 ## Keyboard and media keys

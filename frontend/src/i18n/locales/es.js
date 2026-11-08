@@ -187,6 +187,14 @@ export default {
     add: 'Añadir playlist a favoritos',
     remove: 'Quitar playlist de favoritos',
   },
+  autoplay: {
+    title: 'Reproducción automática',
+    label: 'Reproducción automática',
+    hint: 'Cuando termina la cola, sigue con canciones parecidas a las últimas. Las que no están descargadas se reproducen en streaming. Se guarda en este dispositivo.',
+    upNextHeading: 'Recomendadas · Reproducción automática',
+    finding: 'Buscando las siguientes canciones…',
+    queueEndsAutoplay: 'Cuando termine la cola, seguirán canciones parecidas.',
+  },
   fade: {
     title: 'Fundido entre canciones',
     hint: 'Baja una canción en sus últimos segundos y sube la siguiente. Se guarda en este dispositivo.',

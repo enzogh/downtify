@@ -160,6 +160,14 @@ export default {
     add: '收藏播放列表',
     remove: '取消收藏播放列表',
   },
+  autoplay: {
+    title: '自动播放',
+    label: '自动播放',
+    hint: '队列结束后，继续播放与最近歌曲相似的歌曲。未下载的歌曲将以流媒体播放。保存在此设备上。',
+    upNextHeading: '推荐 · 自动播放',
+    finding: '正在查找接下来的歌曲…',
+    queueEndsAutoplay: '队列结束后，将继续播放相似歌曲。',
+  },
   fade: {
     title: '歌曲间淡入淡出',
     hint: '在歌曲最后几秒降低音量并淡入下一首。保存在此设备上。',

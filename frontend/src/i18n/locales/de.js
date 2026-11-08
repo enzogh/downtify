@@ -189,6 +189,15 @@ export default {
     add: 'Playlist zu Favoriten hinzufügen',
     remove: 'Playlist aus Favoriten entfernen',
   },
+  autoplay: {
+    title: 'Autoplay',
+    label: 'Autoplay',
+    hint: 'Wenn die Warteschlange endet, laufen ähnliche Songs weiter. Nicht geladene Songs werden gestreamt. Auf diesem Gerät gespeichert.',
+    upNextHeading: 'Empfohlen · Autoplay',
+    finding: 'Suche die nächsten Songs…',
+    queueEndsAutoplay:
+      'Wenn die Warteschlange endet, laufen ähnliche Songs weiter.',
+  },
   fade: {
     title: 'Überblenden zwischen Songs',
     hint: 'Blendet einen Song in den letzten Sekunden aus und den nächsten ein. Auf diesem Gerät gespeichert.',
