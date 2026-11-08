@@ -55,6 +55,12 @@ from .download_log import (
 )
 from .download_policy import DownloadPolicyBlocked
 from .file_naming import sanitize_file_name
+from .ip_rotation import (
+    MAX_ROTATIONS_PER_ATTEMPT,
+    current_generation,
+    is_bot_check_error,
+    rotate_exit_ip,
+)
 from .itunes import fetch_genre as _fetch_itunes_genre
 from .library_paths import library_stored_path, slskd_dir_from_downloader
 from .m3u import sanitize_playlist_name
@@ -334,6 +340,26 @@ def _yt_po_tokens() -> list[str]:
     return [t.strip() for t in raw.split(',') if t.strip()]
 
 
+def yt_extractor_args() -> dict[str, dict[str, list[str]]]:
+    """yt-dlp ``extractor_args`` shared by downloads and streams.
+
+    ``DOWNTIFY_POT_PROVIDER_URL`` points yt-dlp at a bgutil PO Token
+    server (e.g. ``http://bgutil:4416``). With it, YouTube sees tokens
+    a real browser would send, which keeps "Sign in to confirm you're
+    not a bot" away on datacenter / VPN IPs.
+    """
+
+    youtube: dict[str, list[str]] = {'player_client': _yt_player_clients()}
+    po_tokens = _yt_po_tokens()
+    if po_tokens:
+        youtube['po_token'] = po_tokens
+    args: dict[str, dict[str, list[str]]] = {'youtube': youtube}
+    pot_url = os.getenv('DOWNTIFY_POT_PROVIDER_URL', '').strip()
+    if pot_url:
+        args['youtubepot-bgutilhttp'] = {'base_url': [pot_url]}
+    return args
+
+
 # Substrings YouTube/yt-dlp use when a video is behind the age wall.
 _AGE_GATE_ERROR_FRAGMENTS = (
     'confirm your age',
@@ -350,8 +376,15 @@ def is_age_restricted_error(message: str) -> bool:
     )
 
 
-# YouTube's "slow down" answer, as yt-dlp words it.
-_RATE_LIMIT_ERROR_FRAGMENTS = ('http error 429', 'too many requests')
+# YouTube's "slow down" answers, as yt-dlp words them. The bot check
+# shows up when an IP sends too many requests too fast, so it's treated
+# like a 429: pace and retry.
+_RATE_LIMIT_ERROR_FRAGMENTS = (
+    'http error 429',
+    'too many requests',
+    'confirm you\u2019re not a bot',
+    "confirm you're not a bot",
+)
 #: Pause between YouTube requests once YouTube has rate-limited us.
 RATE_LIMIT_PACING_SECONDS = 1.0
 #: How long downloads stay paced after a rate limit.
@@ -361,7 +394,8 @@ _paced_until = 0.0
 
 
 def is_rate_limited_error(message: str) -> bool:
-    """Whether a yt-dlp error is YouTube's ``429 Too Many Requests``."""
+    """Whether a yt-dlp error is YouTube's ``429 Too Many Requests`` or
+    its "Sign in to confirm you're not a bot" check."""
 
     lowered = message.lower()
     return any(fragment in lowered for fragment in _RATE_LIMIT_ERROR_FRAGMENTS)
@@ -1505,9 +1539,7 @@ class Downloader:
             # gated by YouTube's "Sign in to confirm you're not a bot"
             # check on datacenter IPs. `tv` and `mweb` almost always
             # bypass it. Order matters — yt-dlp tries them in sequence.
-            'extractor_args': {
-                'youtube': {'player_client': _yt_player_clients()}
-            },
+            'extractor_args': yt_extractor_args(),
             # `web`/`web_embedded` need a JS runtime to solve YouTube's
             # signature/n-challenges (see the comment on
             # _DEFAULT_YT_PLAYER_CLIENTS above) — that's the only real
@@ -1588,29 +1620,9 @@ class Downloader:
         else:
             url = f'https://music.youtube.com/watch?v={video_id}'
         try:
-            try:
-                self._run_download(
-                    ydl_opts, url, extract_format, extract_bitrate
-                )
-            except Exception as exc:
-                if 'sleep_interval_requests' in ydl_opts or (
-                    not is_rate_limited_error(str(exc))
-                ):
-                    raise
-                # YouTube said slow down: pace from now on, and give
-                # this song one more, paced, try.
-                note_rate_limited()
-                logger.warning(
-                    'YouTube rate-limited a download; pacing requests '
-                    'for the next {} minutes',
-                    RATE_LIMIT_PACING_WINDOW_SECONDS // 60,
-                )
-                ydl_opts['sleep_interval_requests'] = (
-                    request_pacing_seconds() or RATE_LIMIT_PACING_SECONDS
-                )
-                self._run_download(
-                    ydl_opts, url, extract_format, extract_bitrate
-                )
+            self._download_riding_out_blocks(
+                ydl_opts, url, extract_format, extract_bitrate
+            )
         except Exception as exc:
             if soundcloud is not None and _is_missing_format_error(exc):
                 raise RuntimeError(
@@ -1630,6 +1642,54 @@ class Downloader:
                     final_path = candidate
                     break
         return final_path
+
+    @classmethod
+    def _download_riding_out_blocks(
+        cls,
+        ydl_opts: dict[str, Any],
+        url: str,
+        extract_format: str,
+        extract_bitrate: str,
+    ) -> None:
+        """Run one download, retrying past YouTube's blocks.
+
+        A bot check gets a new exit IP and another try (when
+        ``DOWNTIFY_IP_ROTATE_URL`` is set), up to
+        :data:`MAX_ROTATIONS_PER_ATTEMPT` times. A ``429`` - or a bot
+        check that no new IP fixed - paces requests and retries once.
+        """
+
+        rotations = 0
+        while True:
+            seen = current_generation()
+            try:
+                cls._run_download(
+                    ydl_opts, url, extract_format, extract_bitrate
+                )
+                return
+            except Exception as exc:
+                message = str(exc)
+                if not is_rate_limited_error(message):
+                    raise
+                if (
+                    is_bot_check_error(message)
+                    and rotations < MAX_ROTATIONS_PER_ATTEMPT
+                    and rotate_exit_ip(seen)
+                ):
+                    rotations += 1
+                elif 'sleep_interval_requests' in ydl_opts:
+                    raise
+            if 'sleep_interval_requests' not in ydl_opts:
+                # YouTube said slow down: pace from now on.
+                note_rate_limited()
+                logger.warning(
+                    'YouTube rate-limited a download (429 or bot check); '
+                    'pacing requests for the next {} minutes',
+                    RATE_LIMIT_PACING_WINDOW_SECONDS // 60,
+                )
+                ydl_opts['sleep_interval_requests'] = (
+                    request_pacing_seconds() or RATE_LIMIT_PACING_SECONDS
+                )
 
     @staticmethod
     def _run_download(

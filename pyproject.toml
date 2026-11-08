@@ -5,6 +5,7 @@ description = "Download your Spotify playlists and songs along with album art an
 readme = "README.md"
 requires-python = ">=3.11,<3.15"
 dependencies = [
+    "bgutil-ytdlp-pot-provider==2.0.2",
     "fastapi>=0.162.0",
     "feedparser>=6.0.14",
     "httpx[socks]>=0.28.1",
@@ -15,7 +16,7 @@ dependencies = [
     "requests[socks]>=2.34.2",
     "uvicorn>=0.54.0",
     "websockets>=17.4",
-    "yt-dlp>=2026.10.26",
+    "yt-dlp[default]>=2026.10.26",
     "ytmusicapi>=1.12.3",
     "zeroconf>=0.153.0",
 ]

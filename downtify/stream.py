@@ -34,11 +34,12 @@ from mutagen import File as _mutagen_file
 from .downloader import (
     MAX_TRACK_DURATION_SECONDS,
     TrackTooLongError,
-    _yt_player_clients,
     _YtdlpLogger,
     describe_duration,
     is_age_restricted_error,
+    yt_extractor_args,
 )
+from .ip_rotation import run_with_ip_rotation
 
 #: What a YouTube video id looks like — anything else is rejected
 #: without touching the network.
@@ -73,7 +74,7 @@ def _ydl_options() -> dict[str, Any]:
         'noplaylist': True,
         'nocheckcertificate': True,
         'socket_timeout': _TIMEOUT,
-        'extractor_args': {'youtube': {'player_client': _yt_player_clients()}},
+        'extractor_args': yt_extractor_args(),
         'remote_components': ['ejs:github'],
     }
     if os.getenv('DOWNTIFY_FORCE_IPV4', '').strip() in {'1', 'true', 'yes'}:
@@ -105,9 +106,13 @@ def stream_url_for_video(
             (parts[0],) if len(parts) == 1 else (parts[0], parts[1])
         )
     url = f'https://www.youtube.com/watch?v={vid}'
-    try:
+
+    def extract() -> Any:
         with yt_dlp.YoutubeDL(opts) as ydl:
-            info = ydl.extract_info(url, download=False)
+            return ydl.extract_info(url, download=False)
+
+    try:
+        info = run_with_ip_rotation(extract)
     except Exception as exc:
         if is_age_restricted_error(str(exc)):
             raise ValueError(
@@ -350,9 +355,7 @@ class StreamCache:
             'socket_timeout': _TIMEOUT,
             'retries': 10,
             'extractor_retries': 3,
-            'extractor_args': {
-                'youtube': {'player_client': _yt_player_clients()}
-            },
+            'extractor_args': yt_extractor_args(),
             'remote_components': ['ejs:github'],
         }
         if os.getenv('DOWNTIFY_FORCE_IPV4', '').strip() in {
@@ -373,9 +376,13 @@ class StreamCache:
                 (parts[0],) if len(parts) == 1 else (parts[0], parts[1])
             )
         url = f'https://www.youtube.com/watch?v={video_id}'
-        try:
+
+        def download() -> None:
             with yt_dlp.YoutubeDL(opts) as ydl:
                 ydl.download([url])
+
+        try:
+            run_with_ip_rotation(download)
         except Exception as exc:
             if is_age_restricted_error(str(exc)):
                 raise ValueError(

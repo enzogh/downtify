@@ -8,22 +8,31 @@ anyio==4.16.0
     # via
     #   httpx
     #   starlette
+bgutil-ytdlp-pot-provider==2.0.2
+    # via downtify
+brotli==1.2.1 ; implementation_name == 'cpython' and sys_platform != 'ios'
+    # via yt-dlp
+brotlicffi==1.2.1.0 ; implementation_name != 'cpython'
+    # via yt-dlp
 certifi==2026.10.23
     # via
     #   httpcore
     #   httpx
     #   requests
-cffi==2.1.1 ; platform_python_implementation != 'PyPy'
-    # via cryptography
+    #   yt-dlp
+cffi==2.1.1 ; implementation_name != 'cpython' or platform_python_implementation != 'PyPy'
+    # via
+    #   brotlicffi
+    #   cryptography
 charset-normalizer==3.5.2
     # via requests
-click==8.5.0
+click==8.5.1
     # via uvicorn
 colorama==0.4.6 ; sys_platform == 'win32'
     # via loguru
 cryptography==50.0.2
     # via joserfc
-fastapi==0.162.0
+fastapi==0.162.2
     # via downtify
 feedparser==6.0.14
     # via downtify
@@ -51,11 +60,15 @@ load-dotenv==0.1.0
 loguru==0.7.3
     # via downtify
 mutagen==1.48.1
-    # via downtify
+    # via
+    #   downtify
+    #   yt-dlp
 opentelemetry-api==1.45.2
     # via fastapi
-pycparser==3.12 ; implementation_name != 'PyPy' and platform_python_implementation != 'PyPy'
+pycparser==3.12 ; (implementation_name != 'PyPy' and implementation_name != 'cpython') or (implementation_name == 'cpython' and platform_python_implementation != 'PyPy')
     # via cffi
+pycryptodomex==3.24.2
+    # via yt-dlp
 pydantic==2.14.3
     # via fastapi
 pydantic-core==2.50.4
@@ -67,6 +80,7 @@ python-dotenv==1.2.4
 requests==2.34.2
     # via
     #   downtify
+    #   yt-dlp
     #   ytmusicapi
 socksio==1.0.0
     # via httpx
@@ -86,16 +100,22 @@ typing-inspection==0.4.5
     #   fastapi
     #   pydantic
 urllib3==2.8.0
-    # via requests
+    # via
+    #   requests
+    #   yt-dlp
 uvicorn==0.54.0
     # via downtify
 websockets==17.4
-    # via downtify
+    # via
+    #   downtify
+    #   yt-dlp
 win32-setctime==1.2.1 ; sys_platform == 'win32'
     # via loguru
 yt-dlp==2026.10.26
     # via downtify
+yt-dlp-ejs==0.8.0
+    # via yt-dlp
 ytmusicapi==1.12.3
     # via downtify
-zeroconf==0.153.0
+zeroconf==0.154.0
     # via downtify

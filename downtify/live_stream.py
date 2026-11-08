@@ -40,6 +40,7 @@ from yt_dlp.networking import Request as YtRequest
 from yt_dlp.networking.exceptions import HTTPError
 
 from .downloader import is_age_restricted_error
+from .ip_rotation import run_with_ip_rotation
 from .stream import _ydl_options, clean_video_id
 
 #: Size of one upstream request (YouTube throttles bigger ones).
@@ -169,11 +170,15 @@ def resolve_live_source(
 
     vid = clean_video_id(video_id)
     opts = {**_ydl_options(), **_cookie_options(cookies_file)}
-    try:
+
+    def extract() -> Any:
         with yt_dlp.YoutubeDL(opts) as ydl:
-            info = ydl.extract_info(
+            return ydl.extract_info(
                 f'https://www.youtube.com/watch?v={vid}', download=False
             )
+
+    try:
+        info = run_with_ip_rotation(extract)
     except Exception as exc:
         if is_age_restricted_error(str(exc)):
             raise ValueError(
