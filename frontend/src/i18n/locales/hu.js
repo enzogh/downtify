@@ -1764,11 +1764,6 @@ export default {
     externalLibraryLogNoteNoLyrics: 'nincs dalszöveg',
     version: 'Verzió: {version}',
     upToDate: 'Naprakész',
-    source: 'Forráskód',
-    sourceHint: 'A Castify nyílt forráskódú.',
-    docs: 'Dokumentáció',
-    docsHint: 'Telepítés, beállítások és API-referencia.',
-    openDocs: 'Dokumentáció megnyitása',
     users: 'Felhasználók',
     activity: 'Tevékenység',
     personalHint:

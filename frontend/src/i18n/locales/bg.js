@@ -1750,11 +1750,6 @@ export default {
     externalLibraryLogNoteNoLyrics: 'текстът не е намерен',
     version: 'Версия {version}',
     upToDate: 'Актуално',
-    source: 'Изходен код',
-    sourceHint: 'Castify е с отворен код.',
-    docs: 'Документация',
-    docsHint: 'Инсталация, настройки и справка за API.',
-    openDocs: 'Отвори документацията',
     users: 'Потребители',
     activity: 'Активност',
     personalHint:

@@ -1809,11 +1809,6 @@ export default {
     externalLibraryLogNoteNoLyrics: 'keine Songtexte gefunden',
     version: 'Version {version}',
     upToDate: 'Auf dem neuesten Stand',
-    source: 'Quellcode',
-    sourceHint: 'Castify ist Open Source.',
-    docs: 'Dokumentation',
-    docsHint: 'Einrichtung, Einstellungen und API-Referenz.',
-    openDocs: 'Dokumentation öffnen',
     users: 'Benutzer',
     activity: 'Aktivität',
     personalHint:

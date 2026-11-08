@@ -1776,11 +1776,6 @@ export default {
     externalLibraryLogNoteNoLyrics: 'letra no encontrada',
     version: 'Versión {version}',
     upToDate: 'Al día',
-    source: 'Código fuente',
-    sourceHint: 'Castify es de código abierto.',
-    docs: 'Documentación',
-    docsHint: 'Instalación, ajustes y referencia de la API.',
-    openDocs: 'Abrir documentación',
     users: 'Usuarios',
     activity: 'Actividad',
     personalHint:

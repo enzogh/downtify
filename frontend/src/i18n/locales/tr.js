@@ -1749,11 +1749,6 @@ export default {
     externalLibraryLogNoteNoLyrics: 'söz bulunamadı',
     version: 'Sürüm {version}',
     upToDate: 'Güncel',
-    source: 'Kaynak kodu',
-    sourceHint: 'Castify açık kaynaklıdır.',
-    docs: 'Belgeler',
-    docsHint: 'Kurulum, ayarlar ve API başvurusu.',
-    openDocs: 'Belgeleri aç',
     users: 'Kullanıcılar',
     activity: 'Etkinlik',
     personalHint:

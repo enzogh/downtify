@@ -1752,11 +1752,6 @@ export default {
     externalLibraryLogNoteNoLyrics: '가사 없음',
     version: '버전 {version}',
     upToDate: '최신 버전',
-    source: '소스 코드',
-    sourceHint: 'Castify는 오픈 소스 소프트웨어입니다.',
-    docs: '문서',
-    docsHint: '설치 가이드, 설정 안내 및 API 레퍼런스.',
-    openDocs: '문서 열기',
     users: '사용자 관리',
     activity: '활동 로그',
     personalHint:

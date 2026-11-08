@@ -1802,11 +1802,6 @@ export default {
     externalLibraryLogNoteNoLyrics: 'paroles introuvables',
     version: 'Version {version}',
     upToDate: 'À jour',
-    source: 'Code source',
-    sourceHint: 'Castify est open source.',
-    docs: 'Documentation',
-    docsHint: 'Installation, paramètres et référence de l’API.',
-    openDocs: 'Ouvrir la documentation',
     users: 'Utilisateurs',
     activity: 'Activité',
     personalHint:

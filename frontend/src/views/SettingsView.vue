@@ -901,32 +901,6 @@
                 {{ t('settings.upToDate') }}
               </UiBadge>
             </div>
-            <SettingGroup>
-              <SettingRow
-                :label="t('settings.source')"
-                :description="t('settings.sourceHint')"
-              >
-                <UiButton
-                  variant="ghost"
-                  icon="arrow-up-right"
-                  href="https://github.com/henriquesebastiao/downtify"
-                >
-                  GitHub
-                </UiButton>
-              </SettingRow>
-              <SettingRow
-                :label="t('settings.docs')"
-                :description="t('settings.docsHint')"
-              >
-                <UiButton
-                  variant="ghost"
-                  icon="arrow-up-right"
-                  href="https://henriquesebastiao.github.io/downtify/"
-                >
-                  {{ t('settings.openDocs') }}
-                </UiButton>
-              </SettingRow>
-            </SettingGroup>
           </template>
         </div>
       </Transition>

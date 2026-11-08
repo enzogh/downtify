@@ -1724,11 +1724,6 @@ export default {
     externalLibraryLogNoteNoLyrics: 'no lyrics found',
     version: 'Version {version}',
     upToDate: 'Up to date',
-    source: 'Source code',
-    sourceHint: 'Castify is open source.',
-    docs: 'Documentation',
-    docsHint: 'Setup, settings and the API reference.',
-    openDocs: 'Open docs',
     users: 'Users',
     activity: 'Activity',
     personalHint:

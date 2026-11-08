@@ -1788,11 +1788,6 @@ export default {
     externalLibraryLogNoteNoLyrics: 'δεν βρέθηκαν στίχοι',
     version: 'Έκδοση {version}',
     upToDate: 'Ενημερωμένο',
-    source: 'Πηγαίος κώδικας',
-    sourceHint: 'Το Castify είναι ανοιχτού κώδικα.',
-    docs: 'Τεκμηρίωση',
-    docsHint: 'Εγκατάσταση, ρυθμίσεις και αναφορά API.',
-    openDocs: 'Άνοιγμα τεκμηρίωσης',
     users: 'Χρήστες',
     activity: 'Δραστηριότητα',
     personalHint:
