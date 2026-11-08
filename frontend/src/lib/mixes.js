@@ -52,14 +52,13 @@ export function recentPlayCounts(plays, now = Date.now()) {
 }
 
 /**
- * Up to `count` mixes of up to `size` tracks: each led by an artist you
- * play (or like, or simply have the most of), half their songs and half
- * from the other artists you return to, in an order that holds for the
- * day. `{ id, title, artist, artists, tracks, covers }` each.
+ * The artists the mixes are led by: those you play (or like, or simply
+ * have the most songs from), with at least three songs in the library.
+ * `{ key, name, tracks, score }` each, best first.
  */
-export function buildMixes(
+export function mixSeeds(
   tracks,
-  { plays = [], liked = new Set(), now = Date.now(), count = 4, size = 30 } = {}
+  { plays = [], liked = new Set(), now = Date.now(), count = 4 } = {}
 ) {
   const usable = (tracks || []).filter(
     (track) => track?.file && artistOf(track)
@@ -70,55 +69,131 @@ export function buildMixes(
   for (const track of usable) {
     const key = keyOf(artistOf(track))
     if (!byArtist.has(key)) {
-      byArtist.set(key, { name: artistOf(track), tracks: [], score: 0 })
+      byArtist.set(key, { key, name: artistOf(track), tracks: [], score: 0 })
     }
     const entry = byArtist.get(key)
     entry.tracks.push(track)
     entry.score +=
       (counts[track.file] || 0) * 3 + (liked.has(track.file) ? 2 : 0) + 0.01
   }
-  const ranked = [...byArtist.values()]
+  return [...byArtist.values()]
     .filter((entry) => entry.tracks.length >= 3)
     .sort((a, b) => b.score - a.score || b.tracks.length - a.tracks.length)
-  const seeds = ranked.slice(0, count)
+    .slice(0, count)
+}
+
+function songArtists(song) {
+  if (Array.isArray(song?.artists) && song.artists.length) return song.artists
+  return song?.artist ? [song.artist] : []
+}
+
+function songIdentity(artist, title) {
+  return `${keyOf(artist)}|${keyOf(title)}`
+}
+
+/**
+ * Up to `count` mixes of up to `size` songs, each led by one artist (see
+ * mixSeeds) and held together by what YouTube Music plays after them:
+ * `similar[seed.key]` is that radio mix (search rows). A mix is
+ *
+ * - up to half the lead artist's own songs,
+ * - songs you have by the artists of that radio mix,
+ * - then the radio mix's songs themselves (streamed when not downloaded),
+ *
+ * in an order that holds for the day. Without a radio mix yet, it is the
+ * lead artist's songs alone - never unrelated artists. Library songs are
+ * tracks; the rest are search rows. `{ id, number, artist, artists,
+ * items, covers }` each, `items` being `{ track }` or `{ song }`.
+ */
+export function buildMixes(
+  tracks,
+  {
+    plays = [],
+    liked = new Set(),
+    similar = {},
+    now = Date.now(),
+    count = 4,
+    size = 30,
+  } = {}
+) {
+  const seeds = mixSeeds(tracks, { plays, liked, now, count })
+  if (!seeds.length) return []
+  const byArtist = new Map()
+  for (const track of tracks || []) {
+    if (!track?.file || !artistOf(track)) continue
+    const key = keyOf(artistOf(track))
+    if (!byArtist.has(key)) byArtist.set(key, [])
+    byArtist.get(key).push(track)
+  }
   const day = Math.floor(now / DAY_MS)
   return seeds.map((seed, index) => {
-    const random = seeded(`${day}:${keyOf(seed.name)}`)
+    const random = seeded(`${day}:${seed.key}`)
+    const radio = similar[seed.key] || []
     const own = shuffled(seed.tracks, random).slice(0, Math.ceil(size / 2))
-    // The others: the ranked artists after this one, round-robin, so a
-    // mix mixes rather than repeating one neighbour.
-    const others = ranked
-      .filter((entry) => entry !== seed)
-      .slice(0, 8)
-      .map((entry) => shuffled(entry.tracks, random))
-    const guests = []
-    for (let i = 0; guests.length < size - own.length; i += 1) {
+    const seen = new Set(
+      own.map((track) => songIdentity(artistOf(track), track.title))
+    )
+    const items = own.map((track) => ({ track }))
+    // Songs you have by the radio mix's artists, one artist at a time.
+    const related = [
+      ...new Set(
+        radio
+          .flatMap((song) => songArtists(song).map(keyOf))
+          .filter((key) => key && key !== seed.key)
+      ),
+    ]
+    const relatedLists = related
+      .map((key) => shuffled(byArtist.get(key) || [], random))
+      .filter((list) => list.length)
+    for (let i = 0; items.length < size; i += 1) {
       let added = false
-      for (const list of others) {
-        if (list[i]) {
-          guests.push(list[i])
-          added = true
-          if (guests.length >= size - own.length) break
-        }
+      for (const list of relatedLists) {
+        const track = list[i]
+        if (!track || items.length >= size) continue
+        const id = songIdentity(artistOf(track), track.title)
+        if (seen.has(id)) continue
+        seen.add(id)
+        items.push({ track })
+        added = true
       }
       if (!added) break
     }
-    const list = shuffled([...own, ...guests], random)
+    // Then the radio mix itself, for what the library hasn't got.
+    for (const song of radio) {
+      if (items.length >= size) break
+      const id = songIdentity(songArtists(song)[0], song?.name || song?.title)
+      if (seen.has(id)) continue
+      seen.add(id)
+      items.push({ song })
+    }
+    const list = shuffled(items, random)
     const artists = [
       seed.name,
-      ...new Set(guests.map(artistOf).filter((name) => name !== seed.name)),
+      ...new Set(
+        list
+          .map((item) =>
+            item.track ? artistOf(item.track) : songArtists(item.song)[0]
+          )
+          .filter((name) => name && keyOf(name) !== seed.key)
+      ),
     ].slice(0, 3)
+    const covers = list
+      .map((item) =>
+        item.track
+          ? item.track.hasCover
+            ? item.track.cover
+            : ''
+          : item.song?.cover_url || ''
+      )
+      .filter((cover, i, all) => cover && all.indexOf(cover) === i)
+      .slice(0, 4)
     return {
-      id: `mix-${index + 1}`,
+      id: String(index + 1),
       number: index + 1,
       artist: seed.name,
       artists,
-      tracks: list,
-      covers: list
-        .filter((track) => track.hasCover && track.cover)
-        .map((track) => track.cover)
-        .filter((cover, i, all) => all.indexOf(cover) === i)
-        .slice(0, 4),
+      items: list,
+      covers,
     }
   })
 }

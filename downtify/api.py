@@ -3425,9 +3425,10 @@ def _artist_image_kinds_to_save(settings: dict[str, Any]) -> tuple[str, ...]:
 
 def _ui_language() -> str:
     """The language the web UI is shown in (see ``ui_language`` in
-    ``DEFAULT_SETTINGS``), or ``en`` while no page has said."""
+    ``DEFAULT_SETTINGS``), or ``fr`` - the web UI's default - while no
+    page has said."""
 
-    return str(state.settings.get('ui_language') or '') or 'en'
+    return str(state.settings.get('ui_language') or '') or 'fr'
 
 
 def after_download(song: dict[str, Any], filename: str) -> None:

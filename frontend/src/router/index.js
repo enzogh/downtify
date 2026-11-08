@@ -13,6 +13,12 @@ const routes = [
     component: () => import('/src/views/SearchView.vue'),
   },
   {
+    // A "Made for you" mix from Home: 1-4, or "repeat" (On repeat).
+    path: '/mix/:id',
+    name: 'Mix',
+    component: () => import('/src/views/MixView.vue'),
+  },
+  {
     // A pasted Spotify / YouTube Music link, resolved before downloading.
     path: '/link',
     name: 'Link',

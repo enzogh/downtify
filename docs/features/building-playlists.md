@@ -38,6 +38,14 @@ When you search, the results open with a **Top result**: the artist, album or so
 
 ## Made for you
 
-Home shows up to four **Daily Mix** playlists, plus **On repeat** once you have played some songs often enough. Each daily mix is led by one artist you play (or like, or simply have the most songs from) and is filled out with the other artists you come back to. A mix keeps the same order for the day and is new the next day. **On repeat** lists the songs you played at least three times in the last 30 days.
+Home shows up to four **Daily Mix** playlists, plus **On repeat** once you have played some songs often enough. Each opens its own page (`/mix/1` … `/mix/4`, `/mix/repeat`) with the list and **Play** / **Shuffle**.
 
-The mixes are built in the browser from the songs in your library and a listening log kept on this device: a song counts once it has played for 30 seconds. The log is stored only in the browser (`localStorage`) and keeps 30 days. Nothing about it is sent to the server, so each device has its own mixes.
+A daily mix is led by one artist you play (or like, or simply have the most songs from) and held together by YouTube Music's radio mix for one of their songs:
+
+- up to half of it is that artist's songs from your library;
+- then songs you have by the artists of that radio mix;
+- then the radio mix's own songs, streamed until you download them.
+
+An artist that isn't in that radio mix never ends up in the mix. A mix keeps the same order for the day and is made again the next day; the radio mixes are kept in the browser for the day. In [library-only mode](library-only.md) a mix is the lead artist's songs alone. **On repeat** lists the songs you played at least three times in the last 30 days.
+
+The mixes use a listening log kept on this device: a song counts once it has played for 30 seconds. The log is stored only in the browser (`localStorage`) and keeps 30 days. Nothing about it is sent to the server, so each device has its own mixes.

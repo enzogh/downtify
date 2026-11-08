@@ -8,7 +8,7 @@ icon: lucide/sparkles
 
 ## How to use it
 
-Open **Similar** from the sidebar (under **Charts**, or the **More** sheet on phones). Type the **Artist** or the **Track** (either one is enough — a bare artist seeds from its top hit), then **Find similar**:
+The **Similar** page is no longer in the sidebar: open it from the **Similar** button described below (it lands at `/similar`). Type the **Artist** or the **Track** (either one is enough — a bare artist seeds from its top hit), then **Find similar**:
 
 You don't have to type, either: every track row in the app carries a **Similar** button (the wand icon next to the download button, filled like it on Search, Charts and Discover — in Top songs and pasted links it is a ghost icon, and a context-menu item on Library, Album, Artist and Playlist tracks). It opens this page already searching for that track. Search results also play in full straight from the row, without downloading anything.
 

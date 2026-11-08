@@ -272,14 +272,7 @@ const items = [
     label: 'nav.monitor',
     match: ['MonitorWatch'],
   },
-  {
-    name: 'Podcasts',
-    icon: 'mic',
-    label: 'nav.podcasts',
-    match: ['PodcastShow'],
-  },
   { name: 'Charts', icon: 'trending', label: 'nav.charts' },
-  { name: 'Similar', icon: 'wand', label: 'nav.similar' },
 ]
 
 function isActive(item) {

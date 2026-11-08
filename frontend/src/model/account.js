@@ -9,7 +9,12 @@
 import { ref, watch } from 'vue'
 
 import API from '/src/model/api'
-import { currentLocale, setLocale } from '/src/i18n'
+import {
+  currentLocale,
+  defaultedLocale,
+  setLocale,
+  takeFrenchDefault,
+} from '/src/i18n'
 import { playbackReport } from '/src/lib/auth'
 import { useAuth } from '/src/model/auth'
 import { usePlayer } from '/src/model/player'
@@ -24,6 +29,9 @@ const showPublicPlaylists = ref(true)
 const playlistSharing = ref(true)
 const ready = ref(false)
 let started = false
+// True until the first account preferences of this browser are applied
+// after the switch to French as the default language.
+let frenchDefaultPending = takeFrenchDefault()
 
 function current() {
   const theme = useTheme()
@@ -42,8 +50,12 @@ function apply(prefs) {
   const theme = useTheme()
   const { showLyrics, normalizeVolume } = usePlayerPrefs()
   if (prefs.theme) theme.setMode(prefs.theme)
-  if (prefs.locale && prefs.locale !== currentLocale.value)
-    setLocale(prefs.locale)
+  if (prefs.locale) {
+    // French is the default: the English an account saved back when it
+    // was the default becomes French once (see i18n/index.js).
+    const locale = defaultedLocale(prefs.locale, !frenchDefaultPending)
+    if (locale !== currentLocale.value) setLocale(locale)
+  }
   if (typeof prefs.show_lyrics === 'boolean')
     showLyrics.value = prefs.show_lyrics
   if (typeof prefs.normalize_volume === 'boolean')
@@ -77,8 +89,11 @@ async function start() {
   }
   apply(prefs)
   ready.value = true
-  // An account without them adopts this browser's.
-  if (Object.keys(prefs).length < 4) save()
+  // An account without them adopts this browser's; one switched to the
+  // French default keeps it.
+  const switched = frenchDefaultPending && prefs.locale === 'en'
+  frenchDefaultPending = false
+  if (Object.keys(prefs).length < 4 || switched) save()
   const theme = useTheme()
   const { showLyrics, normalizeVolume } = usePlayerPrefs()
   watch(

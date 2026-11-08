@@ -1,220 +1,50 @@
 <template>
   <div
-    class="mx-auto flex max-w-[1680px] flex-col gap-10 px-4 pt-6 sm:px-6 md:pt-8 lg:px-10"
+    class="mx-auto flex max-w-[1680px] flex-col gap-9 px-4 pt-6 pb-10 sm:px-6 md:pt-8 lg:px-10"
   >
-    <!-- Hero: paste or search -->
-    <div
-      class="grid gap-4 animate-rise lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]"
+    <!-- Greeting, and what is downloading right now -->
+    <header
+      class="flex flex-wrap items-center justify-between gap-3 animate-rise"
     >
-      <section
-        class="relative flex flex-col gap-5 overflow-hidden rounded-panel border border-line-2 bg-surface p-6 sm:p-8"
+      <h1 class="text-display text-3xl font-bold sm:text-[34px]">
+        {{ greeting }}
+      </h1>
+      <RouterLink
+        v-if="pending"
+        :to="{ name: 'Queue' }"
+        class="flex h-9 items-center gap-2 rounded-full bg-surface-2 px-3.5 text-[13px] font-semibold text-fg-2 hover:bg-raised"
       >
-        <div
-          class="pointer-events-none absolute -top-24 -right-24 size-72 rounded-full bg-accent/10 blur-3xl"
-          aria-hidden="true"
-        />
-        <div class="relative flex flex-col gap-1.5">
-          <h1 class="text-display text-3xl font-bold sm:text-[32px]">
-            {{ greeting }}
-          </h1>
-          <p class="text-[15px] text-muted">{{ t('home.lead') }}</p>
-        </div>
-        <form
-          class="relative flex flex-col gap-2 sm:flex-row"
-          @submit.prevent="submit"
-        >
-          <label
-            class="flex h-14 min-w-0 flex-none items-center gap-3 rounded-[14px] sm:flex-1 border bg-bg px-4 transition-colors focus-within:border-accent"
-            :class="kind.type === 'link' ? 'border-accent/60' : 'border-line-3'"
-          >
-            <AppIcon
-              :name="kind.type === 'link' ? 'link' : 'search'"
-              :size="20"
-              :class="kind.type === 'link' ? 'text-accent' : 'text-faint'"
-            />
-            <span class="sr-only">{{ t('home.inputLabel') }}</span>
-            <input
-              v-model="text"
-              type="text"
-              enterkeyhint="go"
-              autocomplete="off"
-              :placeholder="t('home.inputPlaceholder')"
-              class="h-full min-w-0 flex-1 bg-transparent text-[15px] outline-none placeholder:text-faint"
-            />
-          </label>
-          <UiButton
-            type="submit"
-            variant="primary"
-            size="lg"
-            class="!h-14 sm:!px-6"
-            :icon="kind.type === 'link' ? 'download' : 'search'"
-            :disabled="kind.type === 'empty'"
-          >
-            {{
-              kind.type === 'link' ? t('home.getIt') : t('search.searchButton')
-            }}
-          </UiButton>
-        </form>
-        <p v-if="unsupported" class="relative -mt-2 text-[13px] text-danger">
-          {{ unsupported }}
-        </p>
-        <div
-          class="relative flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-faint"
-        >
-          <span class="flex items-center gap-1.5">
-            <AppIcon name="spotify" :size="14" class="text-spotify" />{{
-              t('home.hintSpotify')
-            }}
-          </span>
-          <span class="flex items-center gap-1.5">
-            <AppIcon name="youtube" :size="14" class="text-src-ytm" />{{
-              t('home.hintYoutube')
-            }}
-          </span>
-          <span class="flex items-center gap-1.5">
-            <AppIcon name="deezer" :size="14" class="text-deezer" />{{
-              t('home.hintDeezer')
-            }}
-          </span>
-          <span class="flex items-center gap-1.5">
-            <AppIcon
-              name="soundcloud"
-              :size="14"
-              class="text-src-soundcloud"
-            />{{ t('home.hintSoundcloud') }}
-          </span>
-          <button
-            type="button"
-            class="flex items-center gap-1.5 hover:text-fg"
-            @click="csvPicker?.click()"
-          >
-            <AppIcon name="file-music" :size="14" />{{ t('home.hintCsv') }}
-          </button>
-          <input
-            ref="csvPicker"
-            type="file"
-            accept=".csv,text/csv"
-            class="hidden"
-            @change="importCsv"
-          />
-        </div>
-      </section>
+        <AppIcon name="download" :size="15" class="text-accent" />
+        {{ t('home.downloadingCount', { count: pending }) }}
+      </RouterLink>
+    </header>
 
-      <section
-        class="flex flex-col gap-4 rounded-panel border border-line-2 bg-surface p-6"
-      >
-        <div class="flex items-center justify-between">
-          <h2 class="text-[15px] font-semibold">
-            {{ pending ? t('home.downloading') : t('home.yourLibrary') }}
-          </h2>
-          <RouterLink
-            :to="{ name: pending ? 'Queue' : 'Library' }"
-            class="text-[13px] font-semibold text-accent hover:text-accent-hi"
-            >{{
-              pending ? t('home.openQueue') : t('home.openLibrary')
-            }}</RouterLink
-          >
-        </div>
-
-        <template v-if="pending">
-          <ul class="flex flex-col gap-3">
-            <li
-              v-for="item in activeItems"
-              :key="item.key"
-              class="flex items-center gap-3"
-            >
-              <CoverArt
-                :src="item.song.cover_url"
-                :name="item.song.album_name || item.song.name"
-                rounded="rounded-[8px]"
-                :letter-size="13"
-                class="size-11"
-              />
-              <div class="min-w-0 flex-1">
-                <div class="flex items-center justify-between gap-2">
-                  <span class="truncate text-[13px] font-semibold">{{
-                    item.song.name
-                  }}</span>
-                  <SourceBadge
-                    v-if="item.provider"
-                    :source="item.provider"
-                    compact
-                  />
-                </div>
-                <UiProgress
-                  class="mt-2"
-                  :value="item.progress"
-                  :indeterminate="!item.progress"
-                />
-              </div>
-            </li>
-          </ul>
-          <p
-            v-if="waiting"
-            class="border-t border-line pt-3 text-[13px] text-muted"
-          >
-            {{ t('home.waiting', { count: waiting }) }}
-          </p>
-        </template>
-
-        <dl v-else class="grid grid-cols-2 gap-4">
-          <div
-            v-for="stat in stats"
-            :key="stat.label"
-            class="flex flex-col gap-0.5"
-          >
-            <dt class="text-xs text-muted">{{ stat.label }}</dt>
-            <dd class="text-display tabular text-2xl font-semibold">
-              {{ stat.value }}
-            </dd>
-          </div>
-        </dl>
-      </section>
-    </div>
-
-    <!-- Personal shortcuts stay below the welcome and library summary. -->
+    <!-- Quick access: what you play most, two to four a row -->
     <div
-      v-if="jumpBackIn.length || favoriteEntries.length"
-      class="grid gap-5"
-      :class="
-        jumpBackIn.length && favoriteEntries.length ? 'lg:grid-cols-2' : ''
-      "
+      v-if="quickAccess.length"
+      class="grid grid-cols-2 gap-2 animate-rise md:grid-cols-3 xl:grid-cols-4"
       data-home-access
     >
-      <HomeShelf
-        v-if="jumpBackIn.length"
-        kind="recent"
-        :title="t('home.jumpBackIn')"
-        :entries="jumpBackIn"
-      />
-      <HomeShelf
-        v-if="favoriteEntries.length"
-        kind="favorites"
-        :title="t('playlistFavorites.title')"
-        :entries="favoriteEntries"
+      <HomeShortcut
+        v-for="entry in quickAccess"
+        :key="entry.id"
+        :entry="entry"
         @play="favoriteActions.play($event)"
       />
     </div>
 
-    <!-- Made for you: daily mixes from the library and what this device
-         listens to (lib/mixes.js), and the songs on repeat. -->
-    <section
-      v-if="mixes.length"
-      class="flex flex-col gap-4 animate-rise [animation-delay:120ms]"
+    <HomeRow
+      v-if="madeForYou.length"
+      :title="t('home.madeForYou')"
+      :subtitle="t('home.madeForYouHint')"
     >
-      <div class="flex flex-col gap-0.5">
-        <h2 class="text-display text-xl font-semibold">
-          {{ t('home.madeForYou') }}
-        </h2>
-        <p class="text-[13px] text-muted">{{ t('home.madeForYouHint') }}</p>
-      </div>
       <div
-        class="grid grid-cols-2 gap-x-5 gap-y-7 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-6"
+        v-for="mix in madeForYou"
+        :key="mix.id"
+        class="w-36 shrink-0 snap-start sm:w-44"
       >
         <MediaTile
-          v-for="mix in mixes"
-          :key="mix.id"
-          :to="mix.to"
+          :to="{ name: 'Mix', params: { id: mix.id } }"
           :title="mix.title"
           :subtitle="mix.subtitle"
           :covers="mix.covers"
@@ -225,63 +55,40 @@
           @play="playMix(mix)"
         />
       </div>
-    </section>
+    </HomeRow>
 
-    <!-- Recently added -->
-    <section
-      v-if="recentAlbums.length"
-      class="flex flex-col gap-4 animate-rise [animation-delay:160ms]"
-    >
-      <div class="flex items-baseline justify-between gap-4">
-        <h2 class="text-display text-xl font-semibold">
-          {{ t('home.recentlyAdded') }}
-        </h2>
-        <RouterLink
-          :to="{ name: 'Library', params: { tab: 'albums' } }"
-          class="text-[13px] font-semibold text-muted hover:text-fg"
-          >{{ t('common.seeAll') }}</RouterLink
-        >
-      </div>
+    <HomeRow v-if="jumpBackIn.length" :title="t('home.jumpBackIn')">
       <div
-        class="grid grid-cols-2 gap-x-5 gap-y-7 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-6"
+        v-for="entry in jumpBackIn"
+        :key="entry.id"
+        class="w-36 shrink-0 snap-start sm:w-44"
       >
         <MediaTile
-          v-for="album in recentAlbums"
-          :key="album.key"
-          :to="{
-            name: 'Album',
-            query: { artist: album.artist, title: album.title },
-          }"
-          :title="album.title"
-          :subtitle="[album.artist, album.year].filter(Boolean).join(' · ')"
-          :cover="album.cover"
-          :name="album.title"
-          @play="playAlbum(album)"
+          :to="entry.route || { name: 'Home' }"
+          :title="entry.title"
+          :subtitle="entry.subtitle || t(`home.kind.${entry.type}`)"
+          :cover="entry.cover || ''"
+          :covers="entry.covers || []"
+          :name="entry.title"
+          :round="entry.type === 'artist'"
+          :icon="entryIcon(entry)"
+          :playing="entry.playing"
+          :playable="false"
         />
       </div>
-    </section>
+    </HomeRow>
 
-    <!-- Playlists -->
-    <section
+    <HomeRow
       v-if="recentPlaylists.length"
-      class="flex flex-col gap-4 animate-rise [animation-delay:240ms]"
+      :title="t('home.playlists')"
+      :see-all="{ name: 'Library', params: { tab: 'playlists' } }"
     >
-      <div class="flex items-baseline justify-between gap-4">
-        <h2 class="text-display text-xl font-semibold">
-          {{ t('home.playlists') }}
-        </h2>
-        <RouterLink
-          :to="{ name: 'Library', params: { tab: 'playlists' } }"
-          class="text-[13px] font-semibold text-muted hover:text-fg"
-          >{{ t('common.seeAll') }}</RouterLink
-        >
-      </div>
       <div
-        class="grid grid-cols-2 gap-x-5 gap-y-7 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-6"
+        v-for="playlist in recentPlaylists"
+        :key="playlist.key"
+        class="w-36 shrink-0 snap-start sm:w-44"
       >
         <MediaTile
-          v-for="playlist in recentPlaylists"
-          :key="playlist.key"
           :to="{ name: 'Playlist', query: { name: playlist.name } }"
           :title="playlist.title"
           :subtitle="t('common.tracks', { count: itemTrackCount(playlist) })"
@@ -293,9 +100,56 @@
           @play="playlistActions.play(playlist)"
         />
       </div>
-    </section>
+    </HomeRow>
 
-    <!-- First run -->
+    <HomeRow
+      v-if="recentAlbums.length"
+      :title="t('home.recentlyAdded')"
+      :see-all="{ name: 'Library', params: { tab: 'albums' } }"
+    >
+      <div
+        v-for="album in recentAlbums"
+        :key="album.key"
+        class="w-36 shrink-0 snap-start sm:w-44"
+      >
+        <MediaTile
+          :to="{
+            name: 'Album',
+            query: { artist: album.artist, title: album.title },
+          }"
+          :title="album.title"
+          :subtitle="[album.artist, album.year].filter(Boolean).join(' · ')"
+          :cover="album.cover"
+          :name="album.title"
+          @play="playAlbum(album)"
+        />
+      </div>
+    </HomeRow>
+
+    <HomeRow
+      v-if="topArtists.length"
+      :title="t('home.yourArtists')"
+      :see-all="{ name: 'Library', params: { tab: 'artists' } }"
+    >
+      <div
+        v-for="artist in topArtists"
+        :key="artist.name"
+        class="w-36 shrink-0 snap-start sm:w-44"
+      >
+        <MediaTile
+          :to="{ name: 'Artist', query: { name: artist.name } }"
+          :title="artist.name"
+          :subtitle="t('search.artist')"
+          :cover="artist.cover"
+          :name="artist.name"
+          round
+          icon="user"
+          :playable="false"
+        />
+      </div>
+    </HomeRow>
+
+    <!-- First run: the search bar takes links as well as words -->
     <section
       v-if="library.loaded.value && !library.trackCount.value"
       class="grid gap-4 md:grid-cols-3"
@@ -316,63 +170,39 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
+// Home, laid out like Spotify's: a greeting, quick access to what you
+// play, then rows that scroll sideways - your mixes, what you played,
+// your playlists, what was added, your artists. Links go in the search
+// bar at the top, which takes them as well as words.
+import { computed, onMounted } from 'vue'
 import AppIcon from '/src/components/ui/AppIcon.vue'
-import CoverArt from '/src/components/ui/CoverArt.vue'
-import HomeShelf from '/src/components/home/HomeShelf.vue'
-import SourceBadge from '/src/components/ui/SourceBadge.vue'
-import UiButton from '/src/components/ui/UiButton.vue'
-import UiProgress from '/src/components/ui/UiProgress.vue'
+import HomeRow from '/src/components/home/HomeRow.vue'
+import HomeShortcut from '/src/components/home/HomeShortcut.vue'
 import MediaTile from '/src/components/library/MediaTile.vue'
-import { useDownloadManager, useProgressTracker } from '/src/model/download'
+import { useProgressTracker } from '/src/model/download'
 import { useHistory } from '/src/model/history'
-import { useListening } from '/src/model/listening'
-import { useLikes } from '/src/model/likes'
-import { buildMixes, onRepeat } from '/src/lib/mixes'
 import { useLibrary } from '/src/model/library'
+import { useLikes } from '/src/model/likes'
+import { useListening } from '/src/model/listening'
+import { useMixes } from '/src/model/mixes'
 import { usePlayer } from '/src/model/player'
 import { usePlaylistActions } from '/src/model/playlistActions'
 import { useTrackActions } from '/src/model/trackActions'
-import { useUi } from '/src/model/ui'
-import { classifyInput } from '/src/lib/input'
-import { formatBytes } from '/src/lib/format'
 import { itemTrackCount } from '/src/lib/library'
+import { mixSeeds } from '/src/lib/mixes'
 import { useI18n } from '/src/i18n'
 
 const { t } = useI18n()
-const router = useRouter()
 const library = useLibrary()
-const favoriteActions = usePlaylistActions()
-const favoritePlaylists = computed(() =>
-  library.playlists.value.filter((playlist) => playlist.favorite)
-)
-const favoriteEntries = computed(() =>
-  favoritePlaylists.value.map((playlist) => ({
-    id: playlist.key,
-    type: 'playlist',
-    title: playlist.title,
-    subtitle: t('common.tracks', { count: itemTrackCount(playlist) }),
-    cover: playlist.cover,
-    covers: playlist.covers,
-    route: { name: 'Playlist', query: { name: playlist.name } },
-    playlist,
-  }))
-)
 const history = useHistory()
-const listening = useListening()
 const likes = useLikes()
+const listening = useListening()
+const mixes = useMixes()
 const player = usePlayer()
 const tracker = useProgressTracker()
-const dm = useDownloadManager()
 const actions = useTrackActions()
 const playlistActions = usePlaylistActions()
-const ui = useUi()
-
-const text = ref('')
-const unsupported = ref('')
-const csvPicker = ref(null)
-const kind = computed(() => classifyInput(text.value))
+const favoriteActions = playlistActions
 
 const greeting = computed(() => {
   const hour = new Date().getHours()
@@ -382,130 +212,34 @@ const greeting = computed(() => {
   return t('home.greetingEvening')
 })
 
-function submit() {
-  unsupported.value = ''
-  const result = kind.value
-  if (result.type === 'link') {
-    router.push({ name: 'Link', query: { url: result.url } })
-  } else if (result.type === 'search') {
-    router.push({ name: 'Search', params: { query: result.query } })
-  } else if (result.type === 'unsupported') {
-    unsupported.value = t('search.unsupportedLink')
-  }
-}
-
-async function importCsv(event) {
-  const file = event.target.files?.[0]
-  event.target.value = ''
-  if (!file) return
-  try {
-    const result = await dm.fromCsvFile(file, file.name.replace(/\.csv$/i, ''))
-    ui.toast(t('toast.csvQueued', { count: result?.count ?? 0 }), {
-      kind: 'success',
-    })
-    router.push({ name: 'Queue', params: { tab: 'queued' } })
-  } catch (err) {
-    ui.toast(err?.response?.data?.detail || t('queue.importFailed'), {
-      kind: 'error',
-    })
-  }
-}
-
-const queueItems = computed(() => {
+const pending = computed(() => {
   tracker.queueVersion.value
-  return tracker.downloadQueue.value
+  return tracker.downloadQueue.value.filter((item) =>
+    ['active', 'queued'].includes(item.state)
+  ).length
 })
-const activeItems = computed(() =>
-  queueItems.value.filter((item) => item.state === 'active').slice(0, 3)
-)
-const waiting = computed(
-  () => queueItems.value.filter((item) => item.state === 'queued').length
-)
-const pending = computed(() => activeItems.value.length + waiting.value)
 
-const stats = computed(() => [
-  {
-    label: t('library.tracks'),
-    value: library.trackCount.value.toLocaleString(),
-  },
-  {
-    label: t('library.albums'),
-    value: library.albumCount.value.toLocaleString(),
-  },
-  {
-    label: t('library.artists'),
-    value: library.artistCount.value.toLocaleString(),
-  },
-  { label: t('home.size'), value: formatBytes(library.totalSize.value) },
-])
-
-const recentAlbums = computed(() =>
-  [...library.albums.value].sort((a, b) => b.added - a.added).slice(0, 12)
-)
-const recentPlaylists = computed(() =>
-  [...library.ownPlaylists.value]
-    .filter((playlist) => itemTrackCount(playlist))
-    .sort((a, b) => b.added - a.added)
-    .slice(0, 6)
-)
-
-// The mixes need every song, which the Home summary alone doesn't load:
-// fetched once the page is idle.
+// The mixes and your artists need every song, which the Home summary
+// alone doesn't load: fetched once the page is idle.
 onMounted(() => {
-  if (library.tracksComplete.value) return
-  const later = window.requestIdleCallback || ((fn) => setTimeout(fn, 1200))
-  later(() => library.ensureTracks().catch(() => {}))
+  const later = window.requestIdleCallback || ((fn) => setTimeout(fn, 600))
+  later(() => mixes.ensure())
 })
 
-const mixes = computed(() => {
-  if (!library.tracksComplete.value) return []
-  const now = Date.now()
-  const made = buildMixes(library.tracks.value, {
-    plays: listening.plays.value,
-    liked: likes.liked.value,
-    now,
-  }).map((mix) => ({
-    ...mix,
-    title: t('home.dailyMix', { n: mix.number }),
-    subtitle: t('home.mixWith', { artists: mix.artists.join(', ') }),
-    to: { name: 'Artist', query: { name: mix.artist } },
-  }))
-  const repeat = onRepeat(library.tracks.value, listening.plays.value, { now })
-  if (repeat.length >= 5) {
-    made.unshift({
-      id: 'on-repeat',
-      title: t('home.onRepeat'),
-      subtitle: t('home.onRepeatHint'),
-      tracks: repeat,
-      covers: repeat
-        .filter((track) => track.hasCover && track.cover)
-        .map((track) => track.cover)
-        .filter((cover, i, all) => all.indexOf(cover) === i)
-        .slice(0, 4),
-      to: { name: 'Library', params: { tab: 'tracks' } },
-    })
-  }
-  return made.slice(0, 6)
-})
-
-function mixContext(mix) {
-  return { type: 'mix', title: mix.title, route: mix.to }
-}
-
-function isMixPlaying(mix) {
+function isPlaying(entry) {
   const ctx = player.context.value
   return (
-    player.isPlaying.value && ctx?.type === 'mix' && ctx.title === mix.title
+    player.isPlaying.value &&
+    ctx?.type === entry.type &&
+    ctx?.title === entry.title
   )
 }
 
-function playMix(mix) {
-  if (isMixPlaying(mix)) {
-    player.pause()
-    return
-  }
-  // Not remembered in "Jump back in": a mix changes every day.
-  player.setPlaylist(mix.tracks, { startIndex: 0, context: mixContext(mix) })
+function entryIcon(entry) {
+  if (entry.type === 'artist') return 'user'
+  if (entry.type === 'playlist') return 'playlist'
+  if (entry.type === 'mix') return 'sparkle'
+  return 'disc'
 }
 
 const jumpBackIn = computed(() =>
@@ -521,19 +255,144 @@ const jumpBackIn = computed(() =>
         cover: live.cover || live.covers[0] || entry.cover || '',
         covers: live.covers,
         route: { name: 'Playlist', query: { name: live.name } },
+        playlist: live,
       }
     })
     .filter(Boolean)
     .map((entry) => ({ ...entry, playing: isPlaying(entry) }))
 )
 
-function isPlaying(entry) {
+function playlistEntry(playlist) {
+  return {
+    id: `playlist:${playlist.key}`,
+    type: 'playlist',
+    title: playlist.title,
+    subtitle: t('common.tracks', { count: itemTrackCount(playlist) }),
+    cover: playlist.cover,
+    covers: playlist.covers,
+    route: { name: 'Playlist', query: { name: playlist.name } },
+    playlist,
+    playing: isPlaying({ type: 'playlist', title: playlist.title }),
+  }
+}
+
+// Up to eight: liked songs and pinned playlists first, then what you
+// played lately, then your newest playlists - each once.
+const quickAccess = computed(() => {
+  const own = library.ownPlaylists.value
+  const candidates = [
+    ...own.filter((playlist) => playlist.liked && itemTrackCount(playlist)),
+    ...library.playlists.value.filter((playlist) => playlist.favorite),
+  ].map(playlistEntry)
+  for (const entry of jumpBackIn.value) {
+    candidates.push({ ...entry, id: `${entry.type}:${entry.id}` })
+  }
+  candidates.push(
+    ...[...own]
+      .filter((playlist) => itemTrackCount(playlist))
+      .sort((a, b) => b.added - a.added)
+      .map(playlistEntry)
+  )
+  const seen = new Set()
+  const picked = []
+  for (const entry of candidates) {
+    const key = JSON.stringify(entry.route || entry.id)
+    if (seen.has(key)) continue
+    seen.add(key)
+    picked.push(entry)
+    if (picked.length >= 8) break
+  }
+  return picked
+})
+
+const recentPlaylists = computed(() =>
+  [...library.ownPlaylists.value]
+    .filter((playlist) => itemTrackCount(playlist))
+    .sort((a, b) => Number(b.liked) - Number(a.liked) || b.added - a.added)
+    .slice(0, 12)
+)
+
+const recentAlbums = computed(() =>
+  [...library.albums.value].sort((a, b) => b.added - a.added).slice(0, 12)
+)
+
+const artistsByName = computed(
+  () =>
+    new Map(
+      library.artists.value.map((artist) => [
+        String(artist.name || '').toLowerCase(),
+        artist,
+      ])
+    )
+)
+
+// The artists you play (or like, or have the most of), with their photo.
+const topArtists = computed(() => {
+  if (!library.tracksComplete.value) return []
+  return mixSeeds(library.tracks.value, {
+    plays: listening.plays.value,
+    liked: likes.liked.value,
+    count: 12,
+  }).map((seed) => {
+    const found = artistsByName.value.get(seed.name.toLowerCase())
+    return {
+      name: seed.name,
+      cover:
+        found?.cover ||
+        seed.tracks.find((track) => track.hasCover)?.cover ||
+        '',
+    }
+  })
+})
+
+const madeForYou = computed(() => {
+  const made = mixes.mixes.value.map((mix) => ({
+    id: mix.id,
+    title: t('home.dailyMix', { n: mix.number }),
+    subtitle: mix.artists.join(', '),
+    covers: mix.covers,
+    mix,
+  }))
+  const repeat = mixes.repeat.value
+  if (repeat.length >= 5) {
+    made.unshift({
+      id: 'repeat',
+      title: t('home.onRepeat'),
+      subtitle: t('home.onRepeatHint'),
+      covers: repeat
+        .filter((track) => track.hasCover && track.cover)
+        .map((track) => track.cover)
+        .filter((cover, i, all) => all.indexOf(cover) === i)
+        .slice(0, 4),
+      tracks: repeat,
+    })
+  }
+  return made
+})
+
+function isMixPlaying(mix) {
   const ctx = player.context.value
   return (
-    player.isPlaying.value &&
-    ctx?.type === entry.type &&
-    ctx?.title === entry.title
+    player.isPlaying.value && ctx?.type === 'mix' && ctx.title === mix.title
   )
+}
+
+function playMix(mix) {
+  if (isMixPlaying(mix)) {
+    player.pause()
+    return
+  }
+  const queue = mix.mix ? mixes.queueOf(mix.mix) : mix.tracks
+  if (!queue.length) return
+  // Not remembered in "Jump back in": a mix changes every day.
+  player.setPlaylist(queue, {
+    startIndex: 0,
+    context: {
+      type: 'mix',
+      title: mix.title,
+      route: { name: 'Mix', params: { id: mix.id } },
+    },
+  })
 }
 
 async function playAlbum(album) {

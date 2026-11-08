@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { AVAILABLE_LOCALES, setLocale, t } from '../i18n'
 import en from '../i18n/locales/en.js'
 
@@ -57,6 +57,8 @@ describe('i18n locale key consistency', () => {
 })
 
 describe('t()', () => {
+  // The page opens in French; these read the English source messages.
+  beforeEach(() => setLocale('en'))
   afterEach(() => setLocale('en'))
 
   it('interpolates params', () => {
@@ -81,5 +83,21 @@ describe('t()', () => {
 
   it('returns the key when a message is missing', () => {
     expect(t('nope.missing')).toBe('nope.missing')
+  })
+})
+
+describe('the French default', () => {
+  it('opens in French when nothing, or the old English default, is saved', async () => {
+    const { defaultedLocale, INITIAL_LOCALE } = await import('../i18n')
+    expect(INITIAL_LOCALE).toBe('fr')
+    expect(defaultedLocale(null, false)).toBe('fr')
+    expect(defaultedLocale('xx', true)).toBe('fr')
+    expect(defaultedLocale('en', false)).toBe('fr')
+  })
+
+  it('keeps any other choice, and English once switched', async () => {
+    const { defaultedLocale } = await import('../i18n')
+    expect(defaultedLocale('de', false)).toBe('de')
+    expect(defaultedLocale('en', true)).toBe('en')
   })
 })

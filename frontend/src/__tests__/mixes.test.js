@@ -49,19 +49,45 @@ describe('buildMixes', () => {
     expect(mixes.map((mix) => mix.artist)).not.toContain('Solo')
   })
 
-  it('mixes in other artists, without repeating a song', () => {
+  it('without a radio mix, keeps to the lead artist', () => {
     const [mix] = buildMixes(library, { now: NOW, size: 10 })
-    const files = mix.tracks.map((item) => item.file)
-    expect(new Set(files).size).toBe(files.length)
-    expect(new Set(mix.tracks.map((item) => item.artist)).size).toBeGreaterThan(
-      1
+    expect(new Set(mix.items.map((item) => item.track.artist))).toEqual(
+      new Set([mix.artist])
     )
-    expect(mix.tracks.length).toBeLessThanOrEqual(10)
+  })
+
+  it('adds songs by the radio mix artists you have, then its own songs', () => {
+    const plays = [1, 2, 3].map(() => ({ file: 'Alpha/1.mp3', at: NOW }))
+    const radio = [
+      { name: 'Beta 1', artists: ['Beta'] },
+      { name: 'Elsewhere', artists: ['Delta'], cover_url: '/d.jpg' },
+    ]
+    const [mix] = buildMixes(library, {
+      plays,
+      now: NOW,
+      count: 1,
+      size: 12,
+      similar: { alpha: radio },
+    })
+    expect(mix.artist).toBe('Alpha')
+    const artists = mix.items.map((item) =>
+      item.track ? item.track.artist : item.song.artists[0]
+    )
+    expect(artists).toContain('Beta')
+    expect(artists).toContain('Delta')
+    // Gamma isn't in Alpha's radio mix: it stays out.
+    expect(artists).not.toContain('Gamma')
+    // Beta 1 is in the library: it comes once, as the library track.
+    const betaOne = mix.items.filter(
+      (item) => (item.track?.title || item.song?.name) === 'Beta 1'
+    )
+    expect(betaOne).toHaveLength(1)
+    expect(betaOne[0].track).toBeTruthy()
   })
 
   it('keeps the same order all day and changes it the next', () => {
     const order = (now) =>
-      buildMixes(library, { now })[0].tracks.map((item) => item.file)
+      buildMixes(library, { now })[0].items.map((item) => item.track.file)
     expect(order(NOW)).toEqual(order(NOW + 1000))
     const days = [1, 2, 3, 4, 5].map((d) => order(NOW + d * DAY).join())
     expect(new Set(days).size).toBeGreaterThan(1)

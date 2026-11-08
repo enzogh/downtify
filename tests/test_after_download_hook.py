@@ -293,12 +293,14 @@ def test_the_artist_is_queued_in_the_users_language(
     assert seeding == [(tmp_path, 'Thunderstruck', 'pt-BR', ())]
 
 
-def test_the_language_falls_back_to_english_when_no_page_has_said(
+def test_the_language_falls_back_to_french_when_no_page_has_said(
     monkeypatch, seeding
 ):
+    """French is the web UI's default language."""
+
     _settings(monkeypatch, ui_language='')
     api.enrich_artist_after_download(SONG, 'f.mp3')
-    assert seeding[0][2] == 'en'
+    assert seeding[0][2] == 'fr'
 
 
 @pytest.mark.parametrize(

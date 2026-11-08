@@ -44,7 +44,7 @@ describe('the language sync in model/settings.js', () => {
 
   // Import the module the way a page load does: the server has `server` on
   // file, and the page is shown in `locale`.
-  async function boot({ server, locale }) {
+  async function boot({ server, locale, switchedToFrench = false }) {
     vi.resetModules()
     store = {}
     globalThis.localStorage = {
@@ -54,6 +54,7 @@ describe('the language sync in model/settings.js', () => {
       },
     }
     if (locale) store['downtify-locale'] = locale
+    if (switchedToFrench) store['downtify-locale-fr-default'] = '1'
     vi.doMock('/src/model/api', () => ({
       default: {
         // Server settings are an admin's to load (model/auth.js).
@@ -95,9 +96,25 @@ describe('the language sync in model/settings.js', () => {
     expect(sent()).toEqual([{ ui_language: 'pt-BR' }])
   })
 
-  it('also tells it "en" to someone who never touched the picker', async () => {
+  it('tells it "fr", the default, to someone who never touched the picker', async () => {
     await boot({ server: { format: 'mp3' }, locale: null })
-    expect(sent()).toEqual([{ ui_language: 'en' }])
+    expect(sent()).toEqual([{ ui_language: 'fr' }])
+  })
+
+  it('switches the English the old default saved to French, once', async () => {
+    await boot({ server: { ui_language: 'en' }, locale: 'en' })
+    expect(i18n.currentLocale.value).toBe('fr')
+    expect(sent()).toEqual([{ ui_language: 'fr' }])
+  })
+
+  it('keeps English when it was picked after the switch', async () => {
+    await boot({
+      server: { ui_language: 'en' },
+      locale: 'en',
+      switchedToFrench: true,
+    })
+    expect(i18n.currentLocale.value).toBe('en')
+    expect(api.setSettings).not.toHaveBeenCalled()
   })
 
   it('says nothing when the server already has the language', async () => {
@@ -111,7 +128,7 @@ describe('the language sync in model/settings.js', () => {
   })
 
   it('sends the new language when the picker changes it', async () => {
-    await boot({ server: { ui_language: 'en' }, locale: 'en' })
+    await boot({ server: { ui_language: 'es' }, locale: 'es' })
     expect(api.setSettings).not.toHaveBeenCalled()
     i18n.setLocale('fr')
     await nextTick()

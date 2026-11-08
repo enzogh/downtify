@@ -6,7 +6,7 @@ icon: lucide/mic
 
 Subscribe to a show and its new episodes download on their own — no re-pasting a link every week. Podcasts are handled end to end differently from music: an episode is already a finished audio file sitting at an RSS `<enclosure>` URL, so there is no YouTube matching or transcoding involved, just a download and a tag write.
 
-Open **Podcasts** from the sidebar (on phones: **More → Podcasts**).
+The **Podcasts** page is no longer in the sidebar: open it at `/podcasts` (bookmark it to keep it at hand). Episodes you already subscribed to keep downloading.
 
 Subscriptions belong to whoever subscribes: each account follows its own shows (the same feed subscribed twice lands in two folders), with its own episodes, resume positions and dismissals. An admin sees every subscription.
 

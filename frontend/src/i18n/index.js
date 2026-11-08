@@ -30,20 +30,47 @@ export const AVAILABLE_LOCALES = [
   { code: 'zh-CN', name: '简体中文', messages: zhCN },
 ]
 
+// Messages a locale lacks fall back to English, the source language.
 const DEFAULT_LOCALE = 'en'
+// What everyone sees until they pick another language.
+export const INITIAL_LOCALE = 'fr'
 const STORAGE_KEY = 'downtify-locale'
+// Set once English (the old default, saved automatically) has been
+// switched to French in this browser - after that, English is a choice.
+const FRENCH_DEFAULT_KEY = 'downtify-locale-fr-default'
 
-const stored = (() => {
+function readStorage(key) {
   try {
-    return localStorage.getItem(STORAGE_KEY)
+    return localStorage.getItem(key)
   } catch {
     return null
   }
-})()
+}
 
-const initial = AVAILABLE_LOCALES.find((l) => l.code === stored)
-  ? stored
-  : DEFAULT_LOCALE
+/**
+ * The language to use for a saved one: French when nothing (valid) is
+ * saved, and once, French for the English the old default saved.
+ */
+export function defaultedLocale(saved, migrated) {
+  const known = AVAILABLE_LOCALES.some((l) => l.code === saved)
+  if (!known) return INITIAL_LOCALE
+  if (saved === DEFAULT_LOCALE && !migrated) return INITIAL_LOCALE
+  return saved
+}
+
+/** True the first time this browser meets the French default. */
+export function takeFrenchDefault() {
+  if (readStorage(FRENCH_DEFAULT_KEY)) return false
+  try {
+    localStorage.setItem(FRENCH_DEFAULT_KEY, '1')
+  } catch {
+    // ignore
+  }
+  return true
+}
+
+const migratedBefore = Boolean(readStorage(FRENCH_DEFAULT_KEY))
+const initial = defaultedLocale(readStorage(STORAGE_KEY), migratedBefore)
 
 export const currentLocale = ref(initial)
 
