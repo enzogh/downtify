@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
+import asyncio
 from pathlib import Path
 
 import pytest
 
 from downtify import api, manual_playlists
-from downtify.download_log import OUTCOME_COMPLETED, OUTCOME_SKIPPED
 from downtify.library_catalog import LibraryContext
 from downtify.manual_playlists import create_manual_playlist
 from downtify.playlist_pending import PlaylistPendingSongs, pending_key
@@ -81,26 +81,41 @@ def library(tmp_path: Path, monkeypatch) -> LibraryContext:
     )
     ctx = LibraryContext(download_dir=root)
     monkeypatch.setattr(api, 'library_context', lambda: ctx)
-    monkeypatch.setattr(api.state, 'loop', None)
-    monkeypatch.setattr(api.state, 'download_log', None)
     return ctx
 
 
-@pytest.mark.parametrize('outcome', [OUTCOME_COMPLETED, OUTCOME_SKIPPED])
-def test_a_finished_download_moves_into_the_playlists(
-    library, store, monkeypatch, outcome
+def _playlist_files(library: LibraryContext, name: str) -> list[str]:
+    return manual_playlists._read_files(
+        library, library.download_dir / 'Playlists' / f'{name}.m3u'
+    )
+
+
+def test_a_downloaded_song_moves_into_its_playlists(
+    library, store, monkeypatch
 ):
     monkeypatch.setattr(api.state, 'playlist_pending', store)
     create_manual_playlist(library, 'Road trip')
+    create_manual_playlist(library, 'Gym')
     store.add('Road trip', [SONG])
+    store.add('Gym', [SONG])
 
-    api.record_download_outcome(SONG, outcome, 'Halo.mp3')
+    assert api.claim_pending_playlist_songs(SONG, 'Halo.mp3') is True
 
-    files = manual_playlists._read_files(
-        library, library.download_dir / 'Playlists' / 'Road trip.m3u'
-    )
-    assert files == ['Halo.mp3']
+    assert _playlist_files(library, 'Road trip') == ['Halo.mp3']
+    assert _playlist_files(library, 'Gym') == ['Halo.mp3']
     assert store.songs('Road trip') == []
+
+
+def test_a_job_resolved_again_is_matched_by_its_url(
+    library, store, monkeypatch
+):
+    monkeypatch.setattr(api.state, 'playlist_pending', store)
+    create_manual_playlist(library, 'Road trip')
+    store.add('Road trip', [{**SONG, 'song_id': ''}])
+
+    job_song = {'song_id': 'other-id', 'url': SONG['url']}
+    assert api.claim_pending_playlist_songs(job_song, 'Halo.mp3') is True
+    assert _playlist_files(library, 'Road trip') == ['Halo.mp3']
 
 
 def test_a_deleted_playlist_does_not_break_the_download(
@@ -109,16 +124,41 @@ def test_a_deleted_playlist_does_not_break_the_download(
     monkeypatch.setattr(api.state, 'playlist_pending', store)
     store.add('Gone', [SONG])
 
-    api.record_download_outcome(SONG, OUTCOME_COMPLETED, 'Halo.mp3')
-
+    assert api.claim_pending_playlist_songs(SONG, 'Halo.mp3') is False
     assert store.songs('Gone') == []
 
 
-def test_a_failed_download_keeps_the_song_waiting(library, store, monkeypatch):
+def test_the_claim_waits_for_the_library_registration(
+    library, store, monkeypatch
+):
+    """The download thread's outcome hook no longer claims: the playlist
+    listing would drop a file the library listing doesn't know yet."""
+
     monkeypatch.setattr(api.state, 'playlist_pending', store)
+    monkeypatch.setattr(api.state, 'download_log', None)
     create_manual_playlist(library, 'Road trip')
     store.add('Road trip', [SONG])
 
-    api.record_download_outcome(SONG, 'failed', '')
+    api.record_download_outcome(SONG, 'completed', 'Halo.mp3')
 
     assert len(store.songs('Road trip')) == 1
+
+
+def test_the_async_claim_announces_the_change(library, store, monkeypatch):
+    monkeypatch.setattr(api.state, 'playlist_pending', store)
+    create_manual_playlist(library, 'Road trip')
+    store.add('Road trip', [SONG])
+    sent: list[str] = []
+
+    async def announce() -> None:
+        sent.append('playlists_changed')
+
+    monkeypatch.setattr(api, 'announce_playlists_changed', announce)
+    monkeypatch.setattr(
+        api, 'invalidate_library_paths_cache', lambda **_: None
+    )
+
+    asyncio.run(api._claim_pending_playlist_songs(SONG, 'Halo.mp3'))
+
+    assert sent == ['playlists_changed']
+    assert _playlist_files(library, 'Road trip') == ['Halo.mp3']

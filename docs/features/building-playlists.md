@@ -14,7 +14,7 @@ Songs from a search, the charts, the Similar page or the recommendations below a
 - **Add songs** on the playlist page: the search box looks in the library *and* for new songs, listed under **Not in your library yet**;
 - dragging the song onto a playlist in the sidebar.
 
-A song that is already in the library goes into the playlist at once. Any other song is queued for download and shows on the playlist page under **songs downloading**. You can play it there straight away (it streams), and it moves into the playlist, at the end, as soon as its download finishes. The same happens when the queue finds the song already in the library. If a download fails, the song stays in that list until you retry it from the [queue](download-queue.md) or take it out with the **×** next to it.
+A song that is already in the library goes into the playlist at once. Any other song is queued for download and shows on the playlist page under **songs downloading**. You can play it there straight away (it streams), and it moves into the playlist, at the end, as soon as its download finishes: an open playlist page shows it there without a reload, on every device and for every editor. The same happens when the queue finds the song already in the library. If a download fails, the song stays in that list until you retry it from the [queue](download-queue.md) or take it out with the **×** next to it.
 
 ::: info Where the waiting songs live
 A playlist's M3U file only ever lists files that exist, so media servers reading it never see a missing song. The songs still waiting are kept in Downtify's database (`/data/downtify_library.db`). Renaming the playlist keeps them, and deleting it forgets them.
@@ -29,6 +29,8 @@ Drag any song from a track list (an album, an artist, the Library, a playlist) o
 ## Recommended songs
 
 Below a playlist you can edit, **Recommended songs** suggests ten songs that fit it. They come from YouTube Music's radio mixes of a few of its songs, most recently added first, and leave out what the playlist already has. **Add** puts a song into the playlist and downloads it when needed. **Refresh** uses other songs of the playlist to suggest again.
+
+The suggestions are kept in the browser for a day, so opening the playlist again shows them at once without asking YouTube Music. They are made again when a new song lands in the playlist, when you press **Refresh**, or after that day. The server also keeps each radio mix for six hours, so other playlists and devices that start from the same songs get them straight away.
 
 ## Search
 

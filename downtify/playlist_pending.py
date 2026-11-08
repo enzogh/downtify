@@ -185,22 +185,25 @@ class PlaylistPendingSongs:
                 ).rowcount
         return removed
 
-    def claim(self, song_id: str) -> list[str]:
-        """The playlists waiting on *song_id* (their names as added),
-        which stop waiting: the caller now writes the file into them."""
+    def claim(self, *song_ids: str) -> list[str]:
+        """The playlists waiting on any of *song_ids* (a job's
+        ``song_id`` and its ``url``; their names as added), which stop
+        waiting: the caller now writes the file into them."""
 
-        sid = str(song_id or '').strip()
-        if not sid:
+        ids = list(dict.fromkeys(str(sid or '').strip() for sid in song_ids))
+        ids = [sid for sid in ids if sid]
+        if not ids:
             return []
+        marks = ','.join('?' * len(ids))
         with self._lock, self._connect() as conn:
             rows = conn.execute(
                 'SELECT playlist_name FROM playlist_pending_songs '
-                'WHERE song_id = ? ORDER BY seq',
-                (sid,),
+                f'WHERE song_id IN ({marks}) ORDER BY seq',
+                ids,
             ).fetchall()
             conn.execute(
-                'DELETE FROM playlist_pending_songs WHERE song_id = ?',
-                (sid,),
+                f'DELETE FROM playlist_pending_songs WHERE song_id IN ({marks})',
+                ids,
             )
         return list(dict.fromkeys(str(row[0]) for row in rows))
 

@@ -616,7 +616,6 @@ from .playlist_mosaic import MAX_PLAYLIST_COVER_BYTES, keep_explicit_cover
 from .playlist_pending import (
     MAX_PENDING_PER_EDIT,
     PlaylistPendingSongs,
-    song_key,
 )
 from .playlist_shares import (
     PRIVATE,
@@ -653,6 +652,7 @@ from .track_index import (
 from .track_owners import TrackOwners
 from .traffic import DIRECTION_IN, TrafficCounters
 from .transcode import Transcoder
+from .ttl_cache import TTLCache
 from .update_check import UpdateChecker
 from .watch_history import OUTCOME_UNKNOWN
 from .watch_stats import (
@@ -3486,22 +3486,30 @@ def enrich_artist_after_download(song: dict[str, Any], filename: str) -> None:
         )
 
 
-def claim_pending_playlist_songs(song: dict[str, Any], filename: str) -> None:
+def claim_pending_playlist_songs(song: dict[str, Any], filename: str) -> bool:
     """A song some Library playlists were waiting on is now *filename*:
     write it at the end of each (see :mod:`downtify.playlist_pending`).
-    Runs on the download's own thread; never raises."""
+    True when a playlist changed. Never raises.
+
+    Called once the file is registered in the library listing
+    (:func:`_record_finished_download`, :func:`_finish_with_existing`):
+    the playlist listing only keeps files the listing knows, so a claim
+    any earlier would publish the playlist without its new song."""
 
     store = state.playlist_pending
     if store is None:
-        return
+        return False
+    changed = False
     try:
-        names = store.claim(song_key(song))
+        keys = [str(song.get('song_id') or ''), str(song.get('url') or '')]
+        names = store.claim(*keys)
         if not names:
-            return
+            return False
         ctx = library_context()
         for name in names:
             try:
                 edit_manual_playlist(ctx, name, add=[filename])
+                changed = True
             except ManualPlaylistError as exc:
                 logger.debug(
                     'Pending song {} not added to {!r}: {}',
@@ -3509,16 +3517,27 @@ def claim_pending_playlist_songs(song: dict[str, Any], filename: str) -> None:
                     name,
                     exc,
                 )
-        invalidate_library_paths_cache()
-        loop = state.loop
-        if loop is not None:
-            asyncio.run_coroutine_threadsafe(
-                announce_playlists_changed(), loop
-            )
     except Exception:
         logger.opt(exception=True).debug(
             'Could not add {} to the playlists waiting on it', filename
         )
+    return changed
+
+
+async def _claim_pending_playlist_songs(
+    song: dict[str, Any], filename: str
+) -> None:
+    """:func:`claim_pending_playlist_songs` off the event loop, then tell
+    open pages the playlists changed, so they show the song in place."""
+
+    if not filename or state.playlist_pending is None:
+        return
+    changed = await asyncio.to_thread(
+        claim_pending_playlist_songs, song, filename
+    )
+    if changed:
+        invalidate_library_paths_cache()
+        await announce_playlists_changed()
 
 
 def record_download_outcome(
@@ -3529,8 +3548,6 @@ def record_download_outcome(
     file's size and provider (see :mod:`downtify.download_log`). Runs on
     the download's own thread; never raises."""
 
-    if filename and outcome in {OUTCOME_COMPLETED, OUTCOME_SKIPPED}:
-        claim_pending_playlist_songs(song, filename)
     log = state.download_log
     if log is None:
         return
@@ -4519,6 +4536,7 @@ async def _finish_with_existing(
         # The file is shared, the ownership isn't: everyone waiting on
         # this job asked for it too.
         await asyncio.to_thread(_note_download_owners, existing, sharers)
+    await _claim_pending_playlist_songs(song, existing)
     await state.connections.broadcast_job(
         _job_users(job),
         {
@@ -4741,6 +4759,7 @@ async def _record_finished_download(
     except Exception:
         logger.exception('Could not register {} in the library', filename)
         return
+    await _claim_pending_playlist_songs(song, filename)
     if refresh_playlists and affected:
         await _schedule_playlist_refresh_after_download(affected)
 
@@ -9574,6 +9593,11 @@ def _artist_website(name: str) -> str:
     return str((profile.get('social') or {}).get('website') or '')
 
 
+#: Radio mixes already fetched: playlist recommendations ask for the same
+#: seeds every time a playlist opens (see downtify/ttl_cache.py).
+_SIMILAR_CACHE: TTLCache[dict[str, Any]] = TTLCache(6 * 60 * 60, 512)
+
+
 @router.get('/api/similar/tracks')
 async def similar_tracks_endpoint(
     artist: str = Query('', max_length=200),
@@ -9594,8 +9618,12 @@ async def similar_tracks_endpoint(
         return library_only.similar(
             entries_for_request(request), artist, track, limit
         )
+    key = (artist.strip().casefold(), track.strip().casefold(), limit)
+    cached = _SIMILAR_CACHE.get(key)
+    if cached is not None:
+        return cached
     try:
-        return await asyncio.to_thread(
+        found = await asyncio.to_thread(
             providers.youtube_similar_tracks,
             artist,
             track,
@@ -9603,6 +9631,9 @@ async def similar_tracks_endpoint(
         )
     except ValueError as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
+    if found.get('tracks'):
+        _SIMILAR_CACHE.set(key, found)
+    return found
 
 
 @router.get('/api/stream')

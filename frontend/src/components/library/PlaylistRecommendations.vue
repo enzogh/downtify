@@ -52,17 +52,29 @@
 // "Recommended songs" under a Library playlist, like Spotify's: YouTube
 // Music radio mixes seeded from a few of its songs, minus what it has.
 // Adding one downloads it when the library hasn't got it.
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { watchDebounced } from '@vueuse/core'
 import UiButton from '../ui/UiButton.vue'
 import SongRow from '../search/SongRow.vue'
 import API from '/src/model/api'
 import { libraryOnly } from '/src/model/musicPolicy'
 import { usePlaylistActions } from '/src/model/playlistActions'
-import { pickSeeds, recommendationKey } from '/src/lib/recommendations'
+import {
+  interleave,
+  pickSeeds,
+  recommendationKey,
+} from '/src/lib/recommendations'
+import {
+  cachedRecommendations,
+  saveRecommendations,
+  seedSignature,
+} from '/src/lib/recommendationCache'
 import { useI18n } from '/src/i18n'
 
 const props = defineProps({
   playlist: { type: Object, required: true },
+  // Songs the playlist is waiting on (downloading): not suggested again.
+  pending: { type: Array, default: () => [] },
 })
 const { t } = useI18n()
 const actions = usePlaylistActions()
@@ -92,17 +104,44 @@ const have = computed(() => {
   return keys
 })
 
+const waiting = computed(
+  () => new Set(props.pending.map((song) => recommendationKey(song)))
+)
+
 const shown = computed(() =>
   found.value
     .filter((song) => {
       const key = songKey(song)
-      return !have.value.has(key) && !added.value.has(key)
+      return (
+        !have.value.has(key) && !added.value.has(key) && !waiting.value.has(key)
+      )
     })
     .slice(0, SHOWN)
 )
 
-async function load() {
+// The newest songs the first mixes start from: when one is added (a song
+// lands in the playlist), the recommendations are made again.
+const baseSignature = computed(() =>
+  seedSignature(pickSeeds(props.playlist.tracks || [], 3, 0))
+)
+
+// Shown from the cache when this playlist's are still good; fetched only
+// the first time, after a new song, a day later, or on Refresh.
+async function load({ force = false } = {}) {
   if (!enabled.value) return
+  const name = props.playlist.name
+  const signature = baseSignature.value
+  if (!force) {
+    const cached = cachedRecommendations(name, signature)
+    if (cached) {
+      serial += 1
+      round = cached.round || 0
+      found.value = cached.songs || []
+      loading.value = false
+      return
+    }
+    round = 0
+  }
   const mine = ++serial
   loading.value = true
   const seeds = pickSeeds(props.playlist.tracks || [], 3, round)
@@ -111,32 +150,32 @@ async function load() {
       seeds.map((track) => API.getSimilarTracks(track.artist, track.title, 12))
     )
     if (mine !== serial) return
-    const merged = []
-    const seen = new Set()
-    // Interleave the mixes so one seed doesn't fill the list.
     const lists = results.map((res) =>
       res.status === 'fulfilled' ? res.value.data?.tracks || [] : []
     )
-    const longest = Math.max(0, ...lists.map((list) => list.length))
-    for (let i = 0; i < longest; i += 1) {
-      for (const list of lists) {
-        const song = list[i]
-        if (!song) continue
-        const key = songKey(song)
-        if (seen.has(key)) continue
-        seen.add(key)
-        merged.push(song)
-      }
+    found.value = interleave(lists, songKey)
+    // A failed lookup isn't remembered: the next visit tries again.
+    if (results.some((res) => res.status === 'fulfilled')) {
+      saveRecommendations(name, { signature, round, songs: found.value })
     }
-    found.value = merged
   } finally {
     if (mine === serial) loading.value = false
   }
 }
 
+// On open, the saved list shows at once; the debounced check below only
+// fetches when it no longer holds.
+if (enabled.value) {
+  const cached = cachedRecommendations(props.playlist.name, baseSignature.value)
+  if (cached) {
+    round = cached.round || 0
+    found.value = cached.songs || []
+  }
+}
+
 function refresh() {
   round += 1
-  load()
+  load({ force: true })
 }
 
 async function add(song) {
@@ -150,13 +189,17 @@ async function add(song) {
   }
 }
 
-onMounted(load)
 watch(
-  () => [props.playlist.name, enabled.value],
+  () => props.playlist.name,
   () => {
-    round = 0
     added.value = new Set()
-    load()
   }
+)
+// Debounced: the playlist's rows arrive in a burst when it opens, and
+// only the settled list should decide whether the cache still holds.
+watchDebounced(
+  () => [props.playlist.name, enabled.value, baseSignature.value],
+  () => load(),
+  { debounce: 350, immediate: true }
 )
 </script>

@@ -29,20 +29,19 @@
 // or a recommendation before they were downloaded. They play streamed and
 // move into the playlist proper once their download ends (the server
 // writes them in, see downtify/playlist_pending.py).
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import AppIcon from '../ui/AppIcon.vue'
 import UiIconButton from '../ui/UiIconButton.vue'
 import SongRow from '../search/SongRow.vue'
 import API from '/src/model/api'
-import { useLibrary } from '/src/model/library'
 import { usePlaylistActions } from '/src/model/playlistActions'
 import { useI18n } from '/src/i18n'
 
 const props = defineProps({
   playlist: { type: Object, required: true },
 })
+const emit = defineEmits(['update'])
 const { t } = useI18n()
-const library = useLibrary()
 const actions = usePlaylistActions()
 const songs = ref([])
 const canEdit = computed(() => Boolean(props.playlist.canEditTracks))
@@ -51,15 +50,19 @@ let serial = 0
 async function load() {
   if (!props.playlist.manual) {
     songs.value = []
+    emit('update', songs.value)
     return
   }
   const mine = ++serial
   try {
     const res = await API.getPlaylistPending(props.playlist.name)
-    if (mine === serial) songs.value = res.data?.songs || []
+    if (mine !== serial) return
+    songs.value = res.data?.songs || []
   } catch {
-    if (mine === serial) songs.value = []
+    if (mine !== serial) return
+    songs.value = []
   }
+  emit('update', songs.value)
 }
 
 async function remove(song) {
@@ -68,21 +71,25 @@ async function remove(song) {
 
 onMounted(load)
 // Read again when songs were added or taken out here, and when the
-// playlist itself changed (a waiting song finished and moved in).
+// playlist itself grew (a waiting song finished and moved in).
 watch(
   () => [
     props.playlist.name,
-    props.playlist.tracks?.length,
+    props.playlist.fileCount,
     actions.pendingVersion.value,
-    library.playlists.value,
   ],
   load
 )
-// While songs wait, the library refreshes as downloads end.
-watch(
-  () => library.tracks.value.length,
-  () => {
-    if (songs.value.length) load()
-  }
-)
+// Another editor added or removed some, or a download ended elsewhere:
+// the server says so on the WebSocket.
+let timer = null
+const stop = API.onMessage((data) => {
+  if (data?.type !== 'playlists_changed') return
+  clearTimeout(timer)
+  timer = setTimeout(load, 300)
+})
+onBeforeUnmount(() => {
+  stop()
+  clearTimeout(timer)
+})
 </script>

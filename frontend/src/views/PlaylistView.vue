@@ -339,8 +339,11 @@
           "
         />
 
-        <PlaylistPendingSongs :playlist="playlist" />
-        <PlaylistRecommendations :playlist="playlist" />
+        <PlaylistPendingSongs
+          :playlist="playlist"
+          @update="pendingSongs = $event"
+        />
+        <PlaylistRecommendations :playlist="playlist" :pending="pendingSongs" />
 
         <UiPanel
           v-if="canHide && playlist.hiddenCount"
@@ -438,6 +441,8 @@ import { useI18n } from '/src/i18n'
 
 const { t } = useI18n()
 const route = useRoute()
+// What PlaylistPendingSongs lists, so recommendations leave them out.
+const pendingSongs = ref([])
 const router = useRouter()
 const library = useLibrary()
 const player = usePlayer()

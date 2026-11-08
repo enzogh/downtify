@@ -34,3 +34,24 @@ export function pickSeeds(tracks, count = 3, round = 0) {
   }
   return seeds.length ? seeds : ordered.slice(0, count)
 }
+
+/**
+ * One list from several mixes, taking from each in turn so one seed
+ * doesn't fill it, without repeating a song.
+ */
+export function interleave(lists, keyOf = recommendationKey) {
+  const merged = []
+  const seen = new Set()
+  const longest = Math.max(0, ...lists.map((list) => list.length))
+  for (let i = 0; i < longest; i += 1) {
+    for (const list of lists) {
+      const song = list[i]
+      if (!song) continue
+      const key = keyOf(song)
+      if (seen.has(key)) continue
+      seen.add(key)
+      merged.push(song)
+    }
+  }
+  return merged
+}
