@@ -160,7 +160,15 @@ export default {
     add: '收藏播放列表',
     remove: '取消收藏播放列表',
   },
+  mix: {
+    kicker: '混合歌单',
+    notFound: '此混合歌单已不可用。',
+    completing: '正在添加相配的歌曲…',
+    with: '{artists} 等',
+  },
   autoplay: {
+    repeatOn: '已开启重复播放：关闭后将播放这些歌曲。',
+    playNow: '立即播放',
     title: '自动播放',
     label: '自动播放',
     hint: '队列结束后，继续播放与最近歌曲相似的歌曲。未下载的歌曲将以流媒体播放。保存在此设备上。',
@@ -305,6 +313,11 @@ export default {
     delete: '从音乐库删除',
   },
   home: {
+    downloadingCount: {
+      one: '{count} 个下载进行中',
+      other: '{count} 个下载进行中',
+    },
+    yourArtists: '你的艺人',
     madeForYou: '为你打造',
     madeForYouHint:
       '根据你在此设备上的收听，从音乐库生成的混合歌单。每天更新。',
@@ -335,6 +348,7 @@ export default {
     recentlyAdded: '最近添加',
     playlists: '你的播放列表',
     kind: {
+      mix: '混合',
       album: '专辑',
       playlist: '播放列表',
       artist: '艺人',

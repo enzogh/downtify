@@ -128,16 +128,81 @@
         </template>
       </TransitionGroup>
 
+      <!-- Recommended songs after the queue, shown as soon as something
+           plays; they join it when it runs out (model/autoplay.js). -->
+      <section v-if="showSuggestions" class="mt-1">
+        <p
+          v-if="firstAutoplay < 0"
+          class="flex items-center gap-2 px-2.5 pt-3 pb-1 text-xs font-semibold tracking-wide text-white/55 uppercase"
+        >
+          <AppIcon name="sparkle" :size="13" />
+          {{ t('autoplay.upNextHeading') }}
+        </p>
+        <p
+          v-if="player.repeatMode.value !== 'off'"
+          class="px-2.5 pb-1 text-xs text-white/45"
+        >
+          {{ t('autoplay.repeatOn') }}
+        </p>
+        <ol>
+          <li
+            v-for="track in autoplay.suggestions.value"
+            :key="`suggestion-${track.artist}-${track.title}`"
+            class="group flex h-14 items-center gap-3 rounded-[10px] px-2.5 opacity-75 transition hover:bg-white/8 hover:opacity-100"
+          >
+            <button
+              type="button"
+              class="flex min-w-0 flex-1 items-center gap-3 text-left"
+              :title="t('autoplay.playNow')"
+              @click="autoplay.playSuggestion(track)"
+            >
+              <CoverArt
+                :thumb="150"
+                :src="track.hasCover ? track.cover : ''"
+                :name="track.album || track.title"
+                rounded="rounded-[6px]"
+                :letter-size="12"
+                :icon-size="14"
+                class="size-10"
+              />
+              <span class="min-w-0 flex-1">
+                <span class="flex items-center gap-1.5">
+                  <span class="truncate text-sm font-medium text-white">{{
+                    track.title
+                  }}</span>
+                  <ExplicitBadge v-if="track.explicit" tone="onDark" />
+                </span>
+                <span class="block truncate text-xs text-white/55">{{
+                  track.artist
+                }}</span>
+              </span>
+            </button>
+            <span class="tabular text-xs text-white/45">
+              {{ track.duration ? formatDuration(track.duration) : '' }}
+            </span>
+          </li>
+        </ol>
+      </section>
+      <ul
+        v-else-if="autoplay.loading.value && !upcoming.length"
+        class="flex flex-col gap-1 px-2.5 pt-2"
+        :aria-label="t('autoplay.finding')"
+      >
+        <li
+          v-for="n in 4"
+          :key="n"
+          class="h-12 animate-pulse rounded-[10px] bg-white/6"
+        />
+      </ul>
+
       <p
-        v-if="!upcoming.length"
+        v-if="!upcoming.length && !showSuggestions && !autoplay.loading.value"
         class="px-2 py-8 text-center text-sm text-white/50"
       >
         {{
-          autoplay.loading.value
-            ? t('autoplay.finding')
-            : autoplay.enabled.value && !libraryOnly
-              ? t('autoplay.queueEndsAutoplay')
-              : t('player.queueEnds')
+          autoplay.enabled.value && !libraryOnly
+            ? t('autoplay.queueEndsAutoplay')
+            : t('player.queueEnds')
         }}
       </p>
     </div>
@@ -167,6 +232,12 @@ const current = computed(() => player.currentTrack.value)
 const upcoming = computed(() => player.upcoming.value.slice(0, 200))
 const autoplay = useAutoplay()
 // Where the songs autoplay added begin: a heading goes above them.
+const showSuggestions = computed(
+  () =>
+    autoplay.enabled.value &&
+    !libraryOnly.value &&
+    autoplay.suggestions.value.length > 0
+)
 const firstAutoplay = computed(() =>
   upcoming.value.findIndex((item) => item.track.autoplay)
 )

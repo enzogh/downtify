@@ -185,7 +185,15 @@ export default {
     add: 'Lista hozzáadása a kedvencekhez',
     remove: 'Lista eltávolítása a kedvencekből',
   },
+  mix: {
+    kicker: 'Mix',
+    notFound: 'Ez a mix már nem érhető el.',
+    completing: 'Illő dalok hozzáadása…',
+    with: '{artists} és mások',
+  },
   autoplay: {
+    repeatOn: 'Az ismétlés be van kapcsolva: ezek a kikapcsolása után szólnak.',
+    playNow: 'Lejátszás most',
     title: 'Automatikus lejátszás',
     label: 'Automatikus lejátszás',
     hint: 'Ha a sor véget ér, hasonló dalokkal folytatja. A le nem töltött dalok streamelve szólnak. Ezen az eszközön mentve.',
@@ -334,6 +342,11 @@ export default {
     delete: 'Törlés a könyvtárból',
   },
   home: {
+    downloadingCount: {
+      one: '{count} letöltés folyamatban',
+      other: '{count} letöltés folyamatban',
+    },
+    yourArtists: 'Előadóid',
     madeForYou: 'Neked készült',
     madeForYouHint:
       'Mixek a könyvtáradból, aszerint, amit ezen az eszközön hallgatsz. Minden nap újak.',
@@ -365,6 +378,7 @@ export default {
     recentlyAdded: 'Nemrég hozzáadva',
     playlists: 'Lejátszási listáid',
     kind: {
+      mix: 'Mix',
       album: 'Album',
       playlist: 'Lejátszási lista',
       artist: 'Előadó',

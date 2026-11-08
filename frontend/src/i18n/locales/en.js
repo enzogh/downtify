@@ -177,7 +177,15 @@ export default {
     add: 'Add playlist to favorites',
     remove: 'Remove playlist from favorites',
   },
+  mix: {
+    kicker: 'Mix',
+    notFound: 'This mix isn’t available any more.',
+    completing: 'Adding songs that fit…',
+    with: 'With {artists} and more',
+  },
   autoplay: {
+    repeatOn: 'Repeat is on: these play once you turn it off.',
+    playNow: 'Play now',
     title: 'Autoplay',
     label: 'Autoplay',
     hint: 'When the queue ends, keep playing songs like the last ones. Songs you haven’t downloaded stream. Saved on this device.',
@@ -326,6 +334,11 @@ export default {
     delete: 'Delete from library',
   },
   home: {
+    downloadingCount: {
+      one: '{count} download in progress',
+      other: '{count} downloads in progress',
+    },
+    yourArtists: 'Your artists',
     madeForYou: 'Made for you',
     madeForYouHint:
       'Mixes from your library, built from what you play on this device. New every day.',
@@ -357,6 +370,7 @@ export default {
     recentlyAdded: 'Recently added',
     playlists: 'Your playlists',
     kind: {
+      mix: 'Mix',
       album: 'Album',
       playlist: 'Playlist',
       artist: 'Artist',

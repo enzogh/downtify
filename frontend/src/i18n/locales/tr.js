@@ -180,7 +180,15 @@ export default {
     add: 'Çalma listesini favorilere ekle',
     remove: 'Çalma listesini favorilerden kaldır',
   },
+  mix: {
+    kicker: 'Mix',
+    notFound: 'Bu mix artık yok.',
+    completing: 'Uyan şarkılar ekleniyor…',
+    with: '{artists} ve diğerleri',
+  },
   autoplay: {
+    repeatOn: 'Tekrar açık: kapattığında bunlar çalar.',
+    playNow: 'Şimdi çal',
     title: 'Otomatik oynatma',
     label: 'Otomatik oynatma',
     hint: 'Sıra bittiğinde son dinlediklerine benzer şarkılarla devam eder. İndirilmemiş şarkılar akışla çalar. Bu cihazda kaydedilir.',
@@ -329,6 +337,11 @@ export default {
     delete: 'Kitaplıktan sil',
   },
   home: {
+    downloadingCount: {
+      one: '{count} indirme sürüyor',
+      other: '{count} indirme sürüyor',
+    },
+    yourArtists: 'Sanatçıların',
     madeForYou: 'Senin için',
     madeForYouHint:
       'Bu cihazda dinlediklerine göre kitaplığından hazırlanan mixler. Her gün yeni.',
@@ -364,6 +377,7 @@ export default {
     recentlyAdded: 'Son eklenenler',
     playlists: 'Çalma listelerin',
     kind: {
+      mix: 'Mix',
       album: 'Albüm',
       playlist: 'Çalma listesi',
       artist: 'Sanatçı',

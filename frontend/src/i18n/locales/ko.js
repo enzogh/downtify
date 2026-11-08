@@ -178,7 +178,15 @@ export default {
     add: '재생목록을 즐겨찾기에 추가',
     remove: '재생목록을 즐겨찾기에서 제거',
   },
+  mix: {
+    kicker: '믹스',
+    notFound: '이 믹스는 더 이상 없습니다.',
+    completing: '어울리는 곡을 추가하는 중…',
+    with: '{artists} 외',
+  },
   autoplay: {
+    repeatOn: '반복이 켜져 있습니다. 반복을 끄면 이 곡들이 재생됩니다.',
+    playNow: '지금 재생',
     title: '자동 재생',
     label: '자동 재생',
     hint: '대기열이 끝나면 최근 곡과 비슷한 곡을 계속 재생합니다. 다운로드하지 않은 곡은 스트리밍됩니다. 이 기기에 저장됩니다.',
@@ -327,6 +335,11 @@ export default {
     delete: '라이브러리에서 삭제',
   },
   home: {
+    downloadingCount: {
+      one: '{count}개 다운로드 중',
+      other: '{count}개 다운로드 중',
+    },
+    yourArtists: '내 아티스트',
     madeForYou: '회원님을 위한 추천',
     madeForYouHint:
       '이 기기에서 듣는 음악을 바탕으로 보관함에서 만든 믹스입니다. 매일 새로워집니다.',
@@ -357,6 +370,7 @@ export default {
     recentlyAdded: '최근 추가된 항목',
     playlists: '내 재생목록',
     kind: {
+      mix: '믹스',
       album: '앨범',
       playlist: '재생목록',
       artist: '아티스트',

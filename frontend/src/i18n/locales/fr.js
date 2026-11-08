@@ -191,7 +191,16 @@ export default {
     add: 'Mettre la playlist en favoris',
     remove: 'Retirer la playlist des favoris',
   },
+  mix: {
+    kicker: 'Mix',
+    notFound: 'Ce mix n’est plus disponible.',
+    completing: 'Ajout de titres qui vont avec…',
+    with: 'Avec {artists} et plus',
+  },
   autoplay: {
+    repeatOn:
+      'La répétition est activée : ces titres seront lus une fois qu’elle sera désactivée.',
+    playNow: 'Lire maintenant',
     title: 'Lecture automatique',
     label: 'Lecture automatique',
     hint: 'À la fin de la file, continue avec des titres proches des derniers écoutés. Ceux qui ne sont pas téléchargés sont lus en streaming. Enregistré sur cet appareil.',
@@ -343,6 +352,11 @@ export default {
     delete: 'Supprimer de la bibliothèque',
   },
   home: {
+    downloadingCount: {
+      one: '{count} téléchargement en cours',
+      other: '{count} téléchargements en cours',
+    },
+    yourArtists: 'Tes artistes',
     madeForYou: 'Conçu pour toi',
     madeForYouHint:
       'Des mix de ta bibliothèque, faits à partir de ce que tu écoutes sur cet appareil. Nouveaux chaque jour.',
@@ -377,6 +391,7 @@ export default {
     recentlyAdded: 'Ajouts récents',
     playlists: 'Vos playlists',
     kind: {
+      mix: 'Mix',
       album: 'Album',
       playlist: 'Playlist',
       artist: 'Artiste',

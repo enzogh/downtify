@@ -1,8 +1,9 @@
-// Autoplay (Settings > General, per device, on by default): when the
-// queue is about to run out, recommended songs like the last ones played
-// are added after it, streamed when they aren't downloaded, and the next
-// one is prepared ahead (see player.prepareNext) so playback carries on
-// without a pause.
+// Autoplay (Settings > General, per device, on by default), as Spotify
+// does it: as soon as something plays, "Up next" lists recommended songs
+// like the end of the queue, right after it. When the queue reaches its
+// last track (repeat off) they join it - streamed when they aren't
+// downloaded, the next one prepared ahead (player.prepareNext) - and the
+// following suggestions are fetched from the new end of the queue.
 import { ref, watch } from 'vue'
 import API from '/src/model/api'
 import { libraryOnly } from '/src/model/musicPolicy'
@@ -30,10 +31,12 @@ function readEnabled() {
 
 const enabled = ref(readEnabled())
 const loading = ref(false)
+// The recommended songs shown after the queue (player tracks), and the
+// seeds they came from.
+const suggestions = ref([])
+let suggestionsKey = ''
+let fetchingKey = ''
 let started = false
-// The seeds last topped up from: the same ones never fetch twice, so
-// clearing "Up next" doesn't bring the same songs straight back.
-let lastKey = ''
 
 export function setAutoplay(on) {
   enabled.value = Boolean(on)
@@ -42,21 +45,34 @@ export function setAutoplay(on) {
   } catch {
     // ignore
   }
-  if (enabled.value) topUp()
+  if (!enabled.value) suggestions.value = []
+  update()
 }
 
-async function topUp() {
-  const player = usePlayer()
-  if (!enabled.value || libraryOnly.value || loading.value) return
-  if (player.repeatMode.value !== 'off') return
+function active(player) {
   const index = player.currentIndex.value
   const list = player.playlist.value
-  if (index < 0 || !list.length || list[index]?.isPodcast) return
-  if (player.upcoming.value.length > AUTOPLAY_THRESHOLD) return
-  const seeds = autoplaySeeds(list, index)
+  return (
+    enabled.value &&
+    !libraryOnly.value &&
+    index >= 0 &&
+    list.length > 0 &&
+    !list[index]?.isPodcast
+  )
+}
+
+/** Fetch the suggestions for the end of the queue, when they changed. */
+async function refreshSuggestions(player) {
+  const list = player.playlist.value
+  const seeds = autoplaySeeds(list, list.length - 1)
   const key = seedsKey(seeds)
-  if (!seeds.length || key === lastKey) return
-  lastKey = key
+  if (!seeds.length) {
+    suggestions.value = []
+    suggestionsKey = ''
+    return
+  }
+  if (key === suggestionsKey || key === fetchingKey) return
+  fetchingKey = key
   loading.value = true
   try {
     const results = await Promise.allSettled(
@@ -64,25 +80,57 @@ async function topUp() {
         API.getSimilarTracks(track.artist, track.title, AUTOPLAY_BATCH + 4)
       )
     )
+    if (fetchingKey !== key) return
     const lists = results.map((res) =>
       res.status === 'fulfilled' ? res.value.data?.tracks || [] : []
     )
-    // The queue may have changed while asking: compare with it now.
-    const songs = freshSongs(interleave(lists), player.playlist.value)
-    if (!songs.length) return
     const library = useLibrary()
-    player.enqueue(
-      songs.map((song) => ({
-        ...songToPlayerTrack(song, library.findTrack),
-        autoplay: true,
-      }))
-    )
-    player.prepareNext()
+    suggestions.value = freshSongs(
+      interleave(lists),
+      player.playlist.value
+    ).map((song) => ({
+      ...songToPlayerTrack(song, library.findTrack),
+      autoplay: true,
+    }))
+    suggestionsKey = key
   } catch {
     // Autoplay is a bonus: the queue simply ends.
   } finally {
-    loading.value = false
+    if (fetchingKey === key) {
+      fetchingKey = ''
+      loading.value = false
+    }
   }
+}
+
+/** Move the suggestions into the queue once it is about to run out. */
+function promote(player) {
+  if (player.repeatMode.value !== 'off') return
+  if (player.upcoming.value.length > AUTOPLAY_THRESHOLD) return
+  const tracks = freshSongs(
+    suggestions.value.map((track) => ({ ...track, name: track.title })),
+    player.playlist.value
+  )
+  if (!tracks.length) return
+  suggestions.value = []
+  suggestionsKey = ''
+  player.enqueue(tracks)
+  player.prepareNext()
+}
+
+async function update() {
+  const player = usePlayer()
+  if (!active(player)) return
+  await refreshSuggestions(player)
+  promote(player)
+}
+
+/** Play a suggestion now: it goes right after the current track. */
+export function playSuggestion(track) {
+  const player = usePlayer()
+  suggestions.value = suggestions.value.filter((item) => item !== track)
+  player.playNext([track])
+  player.next()
 }
 
 /** Start watching the queue (once, from the app shell). */
@@ -96,11 +144,13 @@ export function startAutoplay() {
       player.playlist.value.length,
       player.repeatMode.value,
       player.shuffle.value,
+      libraryOnly.value,
     ],
-    () => topUp()
+    () => update(),
+    { immediate: true }
   )
 }
 
 export function useAutoplay() {
-  return { enabled, loading, setAutoplay }
+  return { enabled, loading, suggestions, setAutoplay, playSuggestion }
 }
