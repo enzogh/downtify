@@ -7,6 +7,7 @@ import os
 import re
 import shutil
 import threading
+import time
 from concurrent.futures import Future, ThreadPoolExecutor
 from pathlib import Path
 from typing import Any, Callable, Optional
@@ -347,6 +348,52 @@ def is_age_restricted_error(message: str) -> bool:
     return any(
         fragment in message.lower() for fragment in _AGE_GATE_ERROR_FRAGMENTS
     )
+
+
+# YouTube's "slow down" answer, as yt-dlp words it.
+_RATE_LIMIT_ERROR_FRAGMENTS = ('http error 429', 'too many requests')
+#: Pause between YouTube requests once YouTube has rate-limited us.
+RATE_LIMIT_PACING_SECONDS = 1.0
+#: How long downloads stay paced after a rate limit.
+RATE_LIMIT_PACING_WINDOW_SECONDS = 15 * 60
+# Until when (epoch seconds) downloads are paced; 0 = not paced.
+_paced_until = 0.0
+
+
+def is_rate_limited_error(message: str) -> bool:
+    """Whether a yt-dlp error is YouTube's ``429 Too Many Requests``."""
+
+    lowered = message.lower()
+    return any(fragment in lowered for fragment in _RATE_LIMIT_ERROR_FRAGMENTS)
+
+
+def note_rate_limited(now: Optional[float] = None) -> None:
+    """Pace every download for a while: YouTube just said slow down."""
+
+    global _paced_until
+    _paced_until = (time.time() if now is None else now) + (
+        RATE_LIMIT_PACING_WINDOW_SECONDS
+    )
+
+
+def request_pacing_seconds(now: Optional[float] = None) -> float:
+    """Seconds yt-dlp waits between YouTube requests (``0``: none).
+
+    Downloads aren't paced by default - a fixed 1 s pause before every
+    request made each song wait ~7 s longer, while YouTube's lookups
+    take a dozen requests. Pacing switches itself on for
+    :data:`RATE_LIMIT_PACING_WINDOW_SECONDS` after a ``429``;
+    ``DOWNTIFY_YT_SLEEP_REQUESTS`` (seconds) forces it either way.
+    """
+
+    raw = os.getenv('DOWNTIFY_YT_SLEEP_REQUESTS', '').strip()
+    if raw:
+        try:
+            return max(0.0, float(raw))
+        except ValueError:
+            logger.warning('Ignoring DOWNTIFY_YT_SLEEP_REQUESTS={!r}', raw)
+    moment = time.time() if now is None else now
+    return RATE_LIMIT_PACING_SECONDS if moment < _paced_until else 0.0
 
 
 def _is_missing_format_error(exc: Exception) -> bool:
@@ -1470,10 +1517,12 @@ class Downloader:
             # gets used and those two clients silently yield no audio
             # (see henriquesebastiao/downtify#247).
             'remote_components': ['ejs:github'],
-            # Light pacing so we don't trigger 429 rate limits when the
-            # user fires off multiple downloads back-to-back.
-            'sleep_interval_requests': 1,
         }
+        # Pacing only once YouTube has rate-limited us (or when forced):
+        # a pause before every request slowed each download by seconds.
+        pacing = request_pacing_seconds()
+        if pacing > 0:
+            ydl_opts['sleep_interval_requests'] = pacing
         # Many container setups have IPv6 advertised but unroutable for
         # googlevideo.com, which surfaces as EAI_AGAIN on the AAAA lookup.
         # Setting DOWNTIFY_FORCE_IPV4=1 binds yt-dlp to IPv4 only.
@@ -1539,14 +1588,29 @@ class Downloader:
         else:
             url = f'https://music.youtube.com/watch?v={video_id}'
         try:
-            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                # Registered directly: `ydl_opts['postprocessors']` only
-                # accepts yt-dlp's built-in postprocessors by name.
-                ydl.add_post_processor(
-                    _ExtractAudioPP(ydl, extract_format, extract_bitrate),
-                    when='post_process',
+            try:
+                self._run_download(
+                    ydl_opts, url, extract_format, extract_bitrate
                 )
-                ydl.download([url])
+            except Exception as exc:
+                if 'sleep_interval_requests' in ydl_opts or (
+                    not is_rate_limited_error(str(exc))
+                ):
+                    raise
+                # YouTube said slow down: pace from now on, and give
+                # this song one more, paced, try.
+                note_rate_limited()
+                logger.warning(
+                    'YouTube rate-limited a download; pacing requests '
+                    'for the next {} minutes',
+                    RATE_LIMIT_PACING_WINDOW_SECONDS // 60,
+                )
+                ydl_opts['sleep_interval_requests'] = (
+                    request_pacing_seconds() or RATE_LIMIT_PACING_SECONDS
+                )
+                self._run_download(
+                    ydl_opts, url, extract_format, extract_bitrate
+                )
         except Exception as exc:
             if soundcloud is not None and _is_missing_format_error(exc):
                 raise RuntimeError(
@@ -1566,6 +1630,24 @@ class Downloader:
                     final_path = candidate
                     break
         return final_path
+
+    @staticmethod
+    def _run_download(
+        ydl_opts: dict[str, Any],
+        url: str,
+        extract_format: str,
+        extract_bitrate: str,
+    ) -> None:
+        """One yt-dlp download of *url* plus the audio extraction."""
+
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            # Registered directly: `ydl_opts['postprocessors']` only
+            # accepts yt-dlp's built-in postprocessors by name.
+            ydl.add_post_processor(
+                _ExtractAudioPP(ydl, extract_format, extract_bitrate),
+                when='post_process',
+            )
+            ydl.download([url])
 
     def _fetch_and_tag(
         self,

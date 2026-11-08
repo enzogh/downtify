@@ -83,6 +83,7 @@ YouTube는 주기적으로 자동 다운로더를 확인합니다. 기본값이 
 | 변수 | 기본값 | 설명 |
 |----------|---------|-------------|
 | `DOWNTIFY_FORCE_IPV4` | _(설정 안 됨)_ | `1`로 하면 yt-dlp가 IPv4만 쓰도록 강제합니다. 호스트의 IPv6 주소가 고장났거나 요청 제한에 걸릴 때 유용합니다. |
+| `DOWNTIFY_YT_SLEEP_REQUESTS` | _(unset)_ | Seconds yt-dlp waits between its requests to YouTube during a download. Unset, downloads aren't paced — until YouTube answers `429 Too Many Requests`: that song is retried once with a 1 s pause, and every download stays paced for the next 15 minutes. Set a number to force a pause always (`1` is the old behaviour, about 7 s slower per song), or `0` to never pause. To space out whole downloads instead, use **Settings → Downloads → Delay between downloads**. |
 | `DOWNTIFY_YT_PLAYER_CLIENTS` | `ios,android,web_embedded,mweb,web,tv` | 순서대로 시도할 yt-dlp 플레이어 클라이언트의 쉼표 구분 목록. Downtify의 기본 목록은 이미 JavaScript 런타임 없이 동작하는 클라이언트를 우선합니다. 특정 클라이언트가 차단된다는 것을 알 때만 바꾸세요. |
 | `DOWNTIFY_YT_PO_TOKEN` | _(설정 안 됨)_ | yt-dlp용 Proof-of-Origin 토큰을 쉼표로 구분하며, 각각 `<client>.<context>+<token>` 형식입니다(예: `mweb.gvs+ABC123`). YouTube가 사용 중인 클라이언트에 PO Token을 요구하기 시작할 때만 필요합니다. |
 | `DOWNTIFY_COOKIES_FILE` | _(설정 안 됨)_ | **컨테이너 안의** Netscape 형식 `cookies.txt` 경로. yt-dlp가 실제 브라우저 세션처럼 인증할 수 있게 하며, 선정적/연령 제한 트랙과 YouTube가 로그인 장벽을 둘 때 필요합니다. 웹 UI에서 업로드한 파일보다 우선하고 UI의 해당 섹션을 읽기 전용으로 만듭니다. [YouTube 쿠키](../features/youtube-cookies.md)를 참고하세요. |
