@@ -86,6 +86,8 @@ The limit applies to every batch download — playlist/album downloads, the batc
 
 The slots are shared fairly between accounts. Each free slot goes to the account with the fewest songs downloading at that moment, so a long playlist queued by one person doesn't hold up a single song someone else asks for afterwards: it starts at the next free slot. Each account's own songs keep their order. On a server with one account (or with sign-in turned off), the queue simply runs in order. Lowering the value lets the downloads already running finish; nothing is cut off.
 
+In a playlist or an album, while songs download, Castify already looks up the next couple of songs (their full details and their YouTube Music match), so each song can start downloading as soon as it gets a slot. This only happens when YouTube Music (or YouTube) is the first [audio source](#audio-provider); Soulseek, Deezer and SoundCloud still search when the song's turn comes. It never searches more than *Parallel downloads* + 2 songs ahead, and changing the audio sources meanwhile makes a song search again.
+
 ## Delay between downloads
 
 Makes Castify wait a configurable number of seconds after finishing one song before starting the next one, instead of firing requests back-to-back.

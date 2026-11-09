@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import base64
+import functools
 import os
 import re
 import shutil
@@ -77,6 +78,7 @@ from .providers import (
     soundcloud_track_url,
 )
 from .release_files import matches_release
+from .search_ahead import PreparedSong, SearchAhead
 from .slskd_provider import download_from_slskd
 
 # Extensions that count as "this song is already downloaded". Deliberately
@@ -540,6 +542,9 @@ class Downloader:
         self.max_track_duration_seconds = max_track_duration_seconds
         self._target_locks: dict[str, threading.Lock] = {}
         self._target_locks_guard = threading.Lock()
+        # Enrichment + YouTube search of a batch's next songs, done while
+        # the current ones download (see downtify/search_ahead.py).
+        self.search_ahead = SearchAhead()
 
     @staticmethod
     def _normalize_audio_providers(
@@ -618,6 +623,91 @@ class Downloader:
                 raw.get('max_parallel_downloads'), 3, 1, 8
             ),
         }
+
+    @staticmethod
+    def _known_video_id(song: dict[str, Any]) -> Optional[str]:
+        """The YouTube video *song* already names, if any."""
+
+        if song.get('_match_by_metadata'):
+            return None
+        if song.get('youtube_id'):
+            return song['youtube_id']
+        if song.get('source') == 'youtube':
+            return song.get('song_id')
+        return None
+
+    def _enabled_providers(self) -> tuple[str, ...]:
+        """:attr:`audio_providers` without the switched-off ones."""
+
+        return tuple(
+            provider
+            for provider in self.audio_providers
+            if not (
+                provider == 'deemix'
+                and not self.deemix_settings.get('enabled')
+            )
+            and not (
+                provider == 'slskd' and not self.slskd_settings.get('enabled')
+            )
+        )
+
+    def search_ahead_for(
+        self, song: dict[str, Any], subdir: Optional[str] = None
+    ) -> bool:
+        """Start preparing *song* (enrichment + YouTube search) in the
+        background; whether it was started.
+
+        Only for a song whose first audio source is YouTube (Music) and
+        that names no video yet: slskd, deemix and SoundCloud keep
+        searching when the song's turn comes, as before.
+        """
+
+        enabled = self._enabled_providers()
+        if not enabled or enabled[0] not in {'youtube-music', 'youtube'}:
+            return False
+        if self._known_video_id(song):
+            return False
+        return self.search_ahead.start(
+            song, functools.partial(self._prepare_song, subdir=subdir)
+        )
+
+    def _prepare_song(
+        self, song: dict[str, Any], subdir: Optional[str] = None
+    ) -> Optional[PreparedSong]:
+        """What :meth:`_download_impl` looks up before fetching *song*,
+        or ``None`` when it should be left to the download itself."""
+
+        trash = getattr(self, 'trash_store', None)
+        if trash is not None and trash.blocked(song):
+            return None
+        if (
+            not self.overwrite_existing_files
+            and self._can_resolve_path_early(song)
+            and self.find_existing_download(song, subdir) is not None
+        ):
+            return None
+        providers = self._enabled_providers()
+        song = spotify_mod.enrich_track_from_spotify_if_sparse(song)
+        song = deezer_mod.enrich_track_from_deezer_if_sparse(song)
+        if providers[0] == 'youtube-music':
+            video_id, match = find_match(song)
+            provider = 'youtube-music' if match is not None else 'youtube'
+        else:
+            video_id, match = find_match_youtube_only(song), None
+            provider = 'youtube'
+        if not video_id:
+            return None
+        # The album / track number lookups the match leads to, too.
+        song = enrich_from_match(song, match)
+        return PreparedSong(song, video_id, match, provider, providers)
+
+    def _take_prepared(self, song: dict[str, Any]) -> Optional[PreparedSong]:
+        """*song*'s prepared result, if still valid for the settings."""
+
+        prepared = self.search_ahead.take(song)
+        if prepared is None or prepared.providers != self._enabled_providers():
+            return None
+        return prepared
 
     def _resolve_source(
         self,
@@ -1126,19 +1216,28 @@ class Downloader:
         ):
             known_video_id = song.get('song_id')
 
-        if not known_video_id:
-            # Playlist rows lack year/track number; the per-track embed has
-            # them, and they can feed the output path and the slskd match.
-            song = spotify_mod.enrich_track_from_spotify_if_sparse(song)
-            # A Deezer album/playlist row names only its lead artist.
-            song = deezer_mod.enrich_track_from_deezer_if_sparse(song)
-        # A known video is a candidate for an enabled YouTube provider,
-        # not permission to bypass earlier sources or disabled providers.
-        video_id, match, provider, local_source = self._resolve_source(
-            song,
-            progress_cb,
-            **({'cancel_check': cancel_check} if cancel_check else {}),
-        )
+        # Searched ahead while earlier songs of the batch downloaded.
+        prepared = None if known_video_id else self._take_prepared(song)
+        if prepared is not None:
+            song = prepared.song
+            video_id, match = prepared.video_id, prepared.match
+            provider, local_source = prepared.provider, None
+        else:
+            if not known_video_id:
+                # Playlist rows lack year/track number; the per-track
+                # embed has them, and they can feed the output path and
+                # the slskd match.
+                song = spotify_mod.enrich_track_from_spotify_if_sparse(song)
+                # A Deezer album/playlist row names only its lead artist.
+                song = deezer_mod.enrich_track_from_deezer_if_sparse(song)
+            # A known video is a candidate for an enabled YouTube
+            # provider, not permission to bypass earlier sources or
+            # disabled providers.
+            video_id, match, provider, local_source = self._resolve_source(
+                song,
+                progress_cb,
+                **({'cancel_check': cancel_check} if cancel_check else {}),
+            )
         if cancel_check:
             cancel_check()
         if (
@@ -1176,7 +1275,9 @@ class Downloader:
                 f'Could not find {source} for {song.get("name")!r}{hint}'
             )
 
-        song = self._with_album_override(enrich_from_match(song, match))
+        if prepared is None:
+            song = enrich_from_match(song, match)
+        song = self._with_album_override(song)
 
         # Sparse rows learn their duration from the per-track embed
         # above; re-check now that it is known.

@@ -648,6 +648,7 @@ from .podcasts import (
     resolve_spotify_podcast,
     search_shows,
 )
+from .search_ahead import SEARCH_AHEAD_DEPTH
 from .server_identity import ServerIdentity
 from .slskd_provider import reset_slskd_parallelism
 from .storage_scan import plan_folders, scan_folders
@@ -4325,6 +4326,69 @@ async def _broadcast_queue_state() -> None:
 queue_pause.on_drained = _broadcast_queue_state
 
 
+class _BatchProgress:
+    """How many songs of a batch are done, for :func:`_search_ahead`."""
+
+    def __init__(self) -> None:
+        self.done = 0
+        self._changed = asyncio.Event()
+
+    def finished(self) -> None:
+        self.done += 1
+        self._changed.set()
+
+    async def changed(self) -> None:
+        self._changed.clear()
+        await self._changed.wait()
+
+
+async def _search_ahead(
+    songs: list[dict[str, Any]],
+    subdir: Optional[str],
+    progress: _BatchProgress,
+) -> None:
+    """Have the next songs of a batch searched while earlier ones download.
+
+    Keeps the search at most "Parallel downloads" + a couple of songs
+    ahead of the finished ones, so a long playlist never turns into a
+    burst of YouTube searches whose results go stale before they're used.
+    """
+
+    start = getattr(state.downloader, 'search_ahead_for', None)
+    if start is None or len(songs) < 2:
+        return
+    for index, song in enumerate(songs):
+        while index >= progress.done + _search_ahead_window():
+            await progress.changed()
+        start(song, subdir)
+
+
+def _search_ahead_window() -> int:
+    return (
+        _clamp_parallel_downloads(state.settings.get('max_parallel_downloads'))
+        + SEARCH_AHEAD_DEPTH
+    )
+
+
+@contextlib.asynccontextmanager
+async def _searching_ahead(
+    songs: list[dict[str, Any]], subdir: Optional[str]
+) -> AsyncIterator[_BatchProgress]:
+    """Run :func:`_search_ahead` for the duration of a batch."""
+
+    progress = _BatchProgress()
+    task = asyncio.ensure_future(_search_ahead(songs, subdir, progress))
+    try:
+        yield progress
+    finally:
+        task.cancel()
+        with contextlib.suppress(asyncio.CancelledError, Exception):
+            await task
+        prepared = getattr(state.downloader, 'search_ahead', None)
+        if prepared is not None:
+            prepared.discard(songs)
+
+
 #: Slot owner of an admin's audio replacement (it has no account id).
 _AUDIO_REPLACE_OWNER = 'audio-replace'
 
@@ -5111,6 +5175,14 @@ async def _process_batch(
 
     async def _bounded(index: int, song: dict[str, Any], song_id: str) -> None:
         try:
+            await _download_one(index, song, song_id)
+        finally:
+            progress.finished()
+
+    async def _download_one(
+        index: int, song: dict[str, Any], song_id: str
+    ) -> None:
+        try:
             filename = await _run_download(
                 song,
                 song_id,
@@ -5135,13 +5207,14 @@ async def _process_batch(
                 songs, resolved, playlist_name, playlist_subdir
             )
 
-    await asyncio.gather(
-        *[
-            _bounded(i, s, sid)
-            for i, (s, sid) in enumerate(zip(songs, job_ids))
-        ],
-        return_exceptions=False,
-    )
+    async with _searching_ahead(songs, playlist_subdir) as progress:
+        await asyncio.gather(
+            *[
+                _bounded(i, s, sid)
+                for i, (s, sid) in enumerate(zip(songs, job_ids))
+            ],
+            return_exceptions=False,
+        )
 
     if wants_m3u:
         await _write_batch_m3u(songs, resolved, playlist_name, playlist_subdir)
@@ -6223,9 +6296,12 @@ async def download_album_endpoint(
         except Exception:
             logger.exception('Album track download failed for {}', song_id)
             return song_id, None
+        finally:
+            progress.finished()
         return song_id, filename
 
-    results = await asyncio.gather(*(_one(song) for song in songs))
+    async with _searching_ahead(songs, None) as progress:
+        results = await asyncio.gather(*(_one(song) for song in songs))
     return {
         song_id: filename
         for song_id, filename in results
