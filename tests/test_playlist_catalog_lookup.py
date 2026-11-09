@@ -95,3 +95,47 @@ def test_prune_stale_playlist_row(tmp_path: Path) -> None:
     assert pruned == 1
     assert 'My List' in affected
     assert catalog.list_tracks('My List') == []
+
+
+def test_backfill_again_leaves_linked_tracks_alone(tmp_path: Path) -> None:
+    download_dir = tmp_path / 'downloads'
+    download_dir.mkdir()
+    (download_dir / 'Artist - Song.mp3').write_bytes(b'audio')
+    (download_dir / 'Moved - Song.mp3').write_bytes(b'audio')
+
+    monitor_db = tmp_path / 'monitor.db'
+    with sqlite3.connect(monitor_db) as conn:
+        conn.executescript("""
+            CREATE TABLE monitored_playlists (
+                id INTEGER PRIMARY KEY, spotify_id TEXT, name TEXT
+            );
+            CREATE TABLE downloaded_tracks (
+                id INTEGER PRIMARY KEY, playlist_id INTEGER,
+                track_spotify_id TEXT, filename TEXT
+            );
+            INSERT INTO monitored_playlists VALUES (1, 'pl1', 'Old Mix');
+            INSERT INTO downloaded_tracks VALUES
+                (1, 1, '4uLU6hMCjMI75M1A2tKUQC', 'Artist - Song.mp3');
+        """)
+
+    db = tmp_path / 'library.db'
+    catalog = PlaylistCatalog(db)
+    catalog.backfill_from_monitor_db(monitor_db, download_dir=download_dir)
+    # A batch download set the track's order since.
+    with sqlite3.connect(db) as conn:
+        conn.execute('UPDATE playlist_tracks SET track_order = 7')
+
+    count = catalog.backfill_from_monitor_db(
+        monitor_db, download_dir=download_dir
+    )
+    assert count == 1
+    assert catalog.list_tracks('Old Mix')[0]['track_order'] == 7
+
+    # A file the history now places elsewhere is still followed.
+    with sqlite3.connect(monitor_db) as conn:
+        conn.execute(
+            "UPDATE downloaded_tracks SET filename = 'Moved - Song.mp3'"
+        )
+    catalog.backfill_from_monitor_db(monitor_db, download_dir=download_dir)
+    tracks = catalog.list_tracks('Old Mix')
+    assert [t['filename'] for t in tracks] == ['Moved - Song.mp3']

@@ -211,20 +211,58 @@ class PlaylistCatalog:
         except sqlite3.Error:
             return 0
 
-        linked = 0
-        for row in rows:
-            pl_name = str(row[0] or '').strip()
-            spotify_id = str(row[1] or '').strip() or None
-            tid = str(row[2] or '').strip()
-            filename = _norm_path(str(row[3] or ''))
-            if not pl_name or not tid or not filename:
-                continue
-            full = locate_library_file(filename, download_dir, slskd_dir)
-            if full is None:
-                continue
-            self.ensure_playlist(pl_name, spotify_id=spotify_id)
-            self.upsert_track(pl_name, {'song_id': tid}, filename, full)
-            linked += 1
+        # This runs on every start: skip the tracks already linked to the
+        # same file and write the rest in one transaction. A commit per
+        # row cost minutes on spinning disks.
+        with self._connect() as conn:
+            known = {
+                (str(r['playlist_name']), str(r['track_spotify_id'])): (
+                    str(r['filename']),
+                    r['content_key'],
+                )
+                for r in conn.execute(
+                    'SELECT playlist_name, track_spotify_id, filename, '
+                    'content_key FROM playlist_tracks'
+                )
+            }
+            linked = 0
+            for row in rows:
+                pl_name = str(row[0] or '').strip()
+                spotify_id = str(row[1] or '').strip() or None
+                tid = _catalog_track_id({'song_id': str(row[2] or '').strip()})
+                filename = _norm_path(str(row[3] or ''))
+                if not pl_name or not tid or not filename:
+                    continue
+                full = locate_library_file(filename, download_dir, slskd_dir)
+                if full is None:
+                    continue
+                ck = file_content_key(full)
+                if known.get((pl_name, tid)) == (filename, ck):
+                    linked += 1
+                    continue
+                conn.execute(
+                    """INSERT INTO playlists (name, spotify_id, updated_at)
+                       VALUES (?, ?, ?)
+                       ON CONFLICT(name) DO UPDATE SET
+                       spotify_id=COALESCE(excluded.spotify_id,
+                                           playlists.spotify_id),
+                       updated_at=excluded.updated_at""",
+                    (pl_name, spotify_id, _now_iso()),
+                )
+                conn.execute(
+                    """INSERT INTO playlist_tracks
+                       (playlist_name, track_spotify_id, content_key,
+                        filename, track_order)
+                       VALUES (?, ?, ?, ?, 0)
+                       ON CONFLICT(playlist_name, track_spotify_id)
+                       DO UPDATE SET
+                       content_key=excluded.content_key,
+                       filename=excluded.filename,
+                       track_order=excluded.track_order""",
+                    (pl_name, tid, ck, filename),
+                )
+                known[pl_name, tid] = (filename, ck)
+                linked += 1
         return linked
 
     def list_playlist_names(self) -> list[str]:

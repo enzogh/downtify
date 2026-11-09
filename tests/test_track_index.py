@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import sqlite3
+
 from downtify.downloader import Downloader
 from downtify.library_paths import library_stored_path
 from downtify.track_index import (
@@ -84,3 +86,35 @@ def test_filenames_by_spotify_id_reads_the_whole_index(tmp_path):
         '4uLU6hMCjMI75M1A2tKUQC': 'A/One.mp3',
         '1x00000000000000000000': 'Two.flac',
     }
+
+
+def test_backfill_from_monitor_db_writes_only_changes(tmp_path):
+    other = '0VjIjW4GlUZAMYd2vXMi3b'
+    monitor_db = tmp_path / 'monitor.db'
+    with sqlite3.connect(monitor_db) as conn:
+        conn.executescript(f"""
+            CREATE TABLE downloaded_tracks (
+                id INTEGER PRIMARY KEY, track_spotify_id TEXT, filename TEXT
+            );
+            INSERT INTO downloaded_tracks VALUES
+                (1, '{SPOTIFY_ID}', 'a/old.mp3'),
+                (2, '{SPOTIFY_ID}', 'a/song.mp3'),
+                (3, '{other}', 'b\\other.mp3'),
+                (4, 'not-a-spotify-id', 'c.mp3');
+        """)
+    index = TrackIndex(tmp_path / 'library.db')
+    song_file = tmp_path / 'song.mp3'
+    song_file.write_bytes(b'audio')
+    index.register(SPOTIFY_ID, 'a/song.mp3', full_path=song_file)
+
+    # The later row wins; the known track keeps its content key.
+    assert index.backfill_from_monitor_db(monitor_db) == 1
+    assert index.lookup(SPOTIFY_ID) == 'a/song.mp3'
+    assert index.lookup(other) == 'b/other.mp3'
+    assert index.backfill_from_monitor_db(monitor_db) == 0
+    with sqlite3.connect(tmp_path / 'library.db') as conn:
+        (ck,) = conn.execute(
+            'SELECT content_key FROM library_tracks WHERE spotify_track_id = ?',
+            (SPOTIFY_ID,),
+        ).fetchone()
+    assert ck

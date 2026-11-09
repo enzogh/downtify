@@ -254,7 +254,6 @@ class TrackIndex:
         path = Path(monitor_db_path)
         if not path.is_file():
             return 0
-        imported = 0
         with sqlite3.connect(str(path)) as src:
             try:
                 rows = src.execute(
@@ -264,15 +263,39 @@ class TrackIndex:
                 ).fetchall()
             except sqlite3.Error:
                 return 0
+        # Later rows win, as when each one was registered in turn.
+        wanted: dict[str, str] = {}
         for track_id, filename in rows:
             tid = str(track_id or '').strip()
-            if not _SPOTIFY_TRACK_ID.fullmatch(tid):
-                continue
-            before = self.lookup(tid)
-            self.register(tid, str(filename))
-            if before != str(filename):
-                imported += 1
-        return imported
+            name = str(filename or '').strip().replace('\\', '/')
+            if _SPOTIFY_TRACK_ID.fullmatch(tid) and name:
+                wanted[tid] = name
+        if not wanted:
+            return 0
+        # This runs on every start: write only what changed, in one
+        # transaction. A commit per row cost minutes on spinning disks.
+        with self._connect() as conn:
+            known = {
+                str(row['spotify_track_id']): str(row['filename'])
+                for row in conn.execute(
+                    'SELECT spotify_track_id, filename FROM library_tracks'
+                )
+            }
+            changed = [
+                (tid, name, _now_iso())
+                for tid, name in wanted.items()
+                if known.get(tid) != name
+            ]
+            conn.executemany(
+                """INSERT INTO library_tracks
+                   (spotify_track_id, filename, content_key, registered_at)
+                   VALUES (?, ?, NULL, ?)
+                   ON CONFLICT(spotify_track_id) DO UPDATE SET
+                   filename=excluded.filename,
+                   registered_at=excluded.registered_at""",
+                changed,
+            )
+        return len(changed)
 
 
 def resolve_existing_download(
