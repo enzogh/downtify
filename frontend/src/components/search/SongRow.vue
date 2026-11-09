@@ -110,6 +110,7 @@
     </a>
     <span
       class="flex lg:opacity-0 lg:group-hover:opacity-100 focus-within:opacity-100"
+      :class="hideAddOnPhone ? 'max-sm:hidden' : ''"
       @dblclick.stop
     >
       <UiMenu
@@ -131,7 +132,7 @@
     </button>
     <div
       class="flex shrink-0 items-center justify-end gap-2"
-      :class="compact ? '' : 'w-40'"
+      :class="compact ? '' : 'sm:w-40'"
     >
       <DownloadState :song="song" />
     </div>
@@ -169,6 +170,10 @@ const props = defineProps({
   songs: { type: Array, default: null },
   // A narrow column (next to the search's top result): no album column.
   compact: { type: Boolean, default: false },
+  // The list has its own add button next to each row (a playlist's
+  // recommendations): no + menu on a phone, where room is short - the
+  // same menu still opens on a long press.
+  hideAddOnPhone: { type: Boolean, default: false },
 })
 const { t } = useI18n()
 const player = usePlayer()

@@ -30,15 +30,24 @@
         :key="songKey(song)"
         class="flex items-center gap-1"
       >
-        <SongRow :song="song" :songs="shown" class="min-w-0 flex-1" />
+        <SongRow
+          :song="song"
+          :songs="shown"
+          hide-add-on-phone
+          class="min-w-0 flex-1"
+        />
+        <!-- Icon only on a phone: the song's title needs the room. -->
         <UiButton
           variant="secondary"
           size="sm"
+          icon="plus"
           :loading="adding === songKey(song)"
-          class="mr-2 shrink-0"
+          :aria-label="t('playlists.recommendedAdd')"
+          :title="t('playlists.recommendedAdd')"
+          class="mr-2 shrink-0 max-sm:w-8 max-sm:px-0"
           @click="add(song)"
         >
-          {{ t('playlists.recommendedAdd') }}
+          <span class="max-sm:hidden">{{ t('playlists.recommendedAdd') }}</span>
         </UiButton>
       </li>
     </ul>

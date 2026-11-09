@@ -71,8 +71,12 @@
           >{{ kicker }}</span
         >
         <h1
-          class="text-display line-clamp-2 text-4xl leading-[1.05] font-bold text-balance break-words sm:text-5xl xl:text-[64px]"
-          :class="banner ? 'text-white' : 'text-fg'"
+          class="text-display line-clamp-3 leading-[1.05] font-bold text-balance break-words sm:line-clamp-2 sm:text-5xl xl:text-[64px]"
+          :class="[
+            banner ? 'text-white' : 'text-fg',
+            title.length > 24 ? 'text-[28px]' : 'text-4xl',
+          ]"
+          :title="title"
         >
           {{ title }}
         </h1>
