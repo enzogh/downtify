@@ -37,6 +37,7 @@ from downtify import (
     auth_routes,
     download_policy_routes,
     jam_routes,
+    m3u,
     mobile_routes,
     song_link_routes,
     trash_routes,
@@ -107,6 +108,7 @@ from downtify.playlist_catalog import (
     ManualPlaylistOwners,
     PlaylistCatalog,
 )
+from downtify.playlist_custom_order import PlaylistCustomOrder
 from downtify.playlist_hidden import PlaylistHiddenSongs
 from downtify.playlist_pending import PlaylistPendingSongs
 from downtify.playlist_shares import PlaylistShares
@@ -436,6 +438,8 @@ def _open_library_stores(monitor_db_path: Path) -> None:
     api.state.manual_playlist_owners = ManualPlaylistOwners(library_db)
     api.state.playlist_shares = PlaylistShares(library_db)
     api.state.song_links = SongLinks(library_db)
+    api.state.playlist_custom_order = PlaylistCustomOrder(library_db)
+    m3u.set_custom_order_source(api.state.playlist_custom_order.get)
     api.state.playlist_hidden = PlaylistHiddenSongs(library_db)
     api.state.playlist_pending = PlaylistPendingSongs(library_db)
     api.state.file_providers = FileProviders(library_db)

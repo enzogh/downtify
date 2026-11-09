@@ -180,8 +180,9 @@ downloads are shared, and files are never stored twice.
 * ``GET|POST|DELETE /api/library/playlists/pending`` (songs added to a
   manual playlist before they are downloaded: ``{name, songs}``; each is
   written into the playlist when its download ends)
-* ``PUT  /api/library/playlists/order`` (put a manual playlist's songs in
-  a new order: ``{name, files}``, every song in its new place)
+* ``PUT  /api/library/playlists/order`` (put a playlist's songs in a
+  new order: ``{name, files}``, every song in its new place - an
+  imported one's order is kept through its syncs)
 * ``POST /api/library/playlists/rename`` (rename a manual playlist)
 * ``PUT  /api/library/playlists/visibility`` (share a playlist you own:
   private, with named users - some of them editors of a Library
@@ -575,6 +576,7 @@ from .manual_playlists import (
     existing_playlist_names,
     remove_manual_playlist_cover,
     rename_manual_playlist,
+    reorder_imported_playlist,
     reorder_manual_playlist,
     save_manual_playlist_cover,
 )
@@ -1267,6 +1269,9 @@ class AppState:
     playlist_shares: Optional[PlaylistShares] = None
     # Public links to one song (see downtify/song_links.py).
     song_links: Any = None
+    # Orders owners gave their imported playlists
+    # (see downtify/playlist_custom_order.py).
+    playlist_custom_order: Any = None
     playlist_hidden: Optional[PlaylistHiddenSongs] = None
     # Songs added to a Library playlist before their download ends
     # (downtify/playlist_pending.py).
@@ -7654,15 +7659,26 @@ def _playlist_entry_refs(raw: object) -> list[tuple[str, int]]:
 async def reorder_library_playlist_endpoint(
     request: Request,
 ) -> dict[str, Any]:
-    """Put a manual playlist's songs in a new order: ``{name, files}``,
-    every song the caller sees (repeats included) in its new place. For
-    its owner (or an admin) and its editors; ``409`` when the playlist
+    """Put a playlist's songs in a new order: ``{name, files}``, every
+    song the caller sees (repeats included) in its new place.
+
+    A Library playlist: its owner (or an admin) and its editors. An
+    imported one (a link or a Playlist Monitor watch): its owner or an
+    admin - the order is kept, and syncs from its source keep it too,
+    new songs going at the end (see ``downtify/playlist_custom_order.py``).
+    Liked songs can't be reordered (``403``). ``409`` when the playlist
     changed since the caller loaded it."""
 
     payload = await _json_object(request)
     name = str(payload.get('name') or '').strip()
     entry = require_playlist_visible(name, request)
-    if not entry.get('mine', True) and not entry.get('can_edit_tracks'):
+    manual = bool(entry.get('manual'))
+    allowed = (
+        entry.get('mine', True) or entry.get('can_edit_tracks')
+        if manual
+        else entry.get('mine', True) and not entry.get('liked')
+    )
+    if not allowed:
         raise HTTPException(
             status_code=403,
             detail='Only the owner can change this playlist',
@@ -7670,16 +7686,32 @@ async def reorder_library_playlist_endpoint(
     files = payload.get('files')
     if not isinstance(files, list):
         raise HTTPException(status_code=400, detail='Send the new order')
+    order = [str(item) for item in files]
+    # What the caller was shown: songs hidden from them keep their places.
+    visible = set(entry.get('files') or [])
     try:
-        result = await asyncio.to_thread(
-            reorder_manual_playlist,
-            library_context(),
-            name,
-            [str(item) for item in files],
-            # What the caller was shown: songs hidden from them keep
-            # their places.
-            visible=set(entry.get('files') or []),
-        )
+        if manual:
+            result = await asyncio.to_thread(
+                reorder_manual_playlist,
+                library_context(),
+                name,
+                order,
+                visible=visible,
+            )
+        else:
+            result = await asyncio.to_thread(
+                reorder_imported_playlist,
+                library_context(),
+                name,
+                order,
+                visible=visible,
+            )
+            if state.playlist_custom_order is not None:
+                await asyncio.to_thread(
+                    state.playlist_custom_order.set,
+                    str(result['name']),
+                    result['files'],
+                )
     except ManualPlaylistError as exc:
         raise HTTPException(
             status_code=exc.status_code, detail=str(exc)
@@ -8038,6 +8070,11 @@ async def detach_library_playlist_endpoint(
         raise HTTPException(
             status_code=exc.status_code, detail=str(exc)
         ) from exc
+    # Its file holds the order now; nothing rewrites it from a source.
+    if state.playlist_custom_order is not None:
+        await asyncio.to_thread(
+            state.playlist_custom_order.drop, str(result['name'])
+        )
     try:
         await asyncio.to_thread(
             _unlink_imported_playlist, entry, str(result['name'])
@@ -8396,6 +8433,10 @@ async def _delete_playlist_by_name(
         await asyncio.to_thread(state.playlist_shares.forget, playlist_name)
     if state.playlist_hidden is not None:
         await asyncio.to_thread(state.playlist_hidden.forget, playlist_name)
+    if state.playlist_custom_order is not None:
+        await asyncio.to_thread(
+            state.playlist_custom_order.drop, playlist_name
+        )
     if state.playlist_pending is not None:
         await asyncio.to_thread(state.playlist_pending.drop, playlist_name)
     if state.external_playlist_imports is not None:

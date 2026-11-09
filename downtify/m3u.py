@@ -11,8 +11,9 @@ from __future__ import annotations
 
 import os
 import re
+from collections import defaultdict, deque
 from pathlib import Path
-from typing import Iterable, Optional, Sequence
+from typing import Callable, Iterable, Optional, Sequence
 
 from loguru import logger
 
@@ -32,6 +33,19 @@ _PLAYLIST_NAME_INVALID = re.compile(r'[\\/:*?"<>|\x00-\x1f]')
 #: Marks an M3U the user built in the Library, so it can be edited
 #: without touching downloaded Spotify/YouTube playlists.
 MANUAL_M3U_MARKER = '#EXTDOWNTIFY:manual'
+
+#: ``m3u stem -> stored paths in the order its owner chose`` for imported
+#: playlists (see ``downtify.playlist_custom_order``), set at startup: a
+#: sync rewriting the M3U keeps that order instead of the source's.
+CustomOrderSource = Callable[[str], list[str]]
+
+
+class _CustomOrder:
+    source: Optional[CustomOrderSource] = None
+
+
+def set_custom_order_source(source: Optional[CustomOrderSource]) -> None:
+    _CustomOrder.source = source
 
 
 def read_m3u_text(m3u_path: Path) -> Optional[str]:
@@ -495,6 +509,89 @@ def write_m3u(
     # UTF-8, no BOM, LF line endings — encoding='utf-8' on text mode
     # gives us no BOM, and we built the content with '\n' already.
     target.write_text(content, encoding='utf-8', newline='\n')
+    if not manual:
+        _keep_custom_order(target, download_dir, slskd_dir, extra_dirs)
     forget_cached_playlists()
     logger.info('Wrote M3U: {} with {} tracks', target, kept)
     return target, kept
+
+
+def _keep_custom_order(
+    target: Path,
+    download_dir: Path,
+    slskd_dir: Optional[Path],
+    extra_dirs: Optional[Sequence[Path]],
+) -> None:
+    source = _CustomOrder.source
+    if source is None:
+        return
+    try:
+        order = source(target.stem)
+        if order:
+            reorder_m3u_file(
+                target, download_dir, slskd_dir, extra_dirs, order
+            )
+    except Exception:
+        logger.opt(exception=True).warning(
+            'Could not keep the custom order of {}', target.name
+        )
+
+
+def reorder_m3u_file(
+    m3u_path: Path,
+    download_dir: Path,
+    slskd_dir: Optional[Path],
+    extra_dirs: Optional[Sequence[Path]],
+    order: Sequence[str],
+) -> list[str]:
+    """Put *m3u_path*'s tracks in *order* (stored paths, repeats
+    included), each with its own ``#EXTINF`` and comment lines.
+
+    Tracks *order* doesn't name - new ones from the source - go after the
+    others, in the order they were. The header lines stay first. Returns
+    the stored paths in their new order."""
+
+    text = read_m3u_text(m3u_path)
+    if text is None:
+        return []
+    resolve = _line_resolver(m3u_path, download_dir, slskd_dir, extra_dirs)
+    header: list[str] = []
+    blocks: list[tuple[str, list[str]]] = []
+    pending: list[str] = []
+    for raw in text.splitlines():
+        line = raw.strip()
+        if not line:
+            continue
+        if line.startswith('#'):
+            if not blocks and not pending and not line.startswith('#EXTINF'):
+                header.append(raw)
+            else:
+                pending.append(raw)
+            continue
+        found = resolve(line)
+        blocks.append((found[0] if found else '', [*pending, raw]))
+        pending = []
+    places: dict[str, deque[int]] = defaultdict(deque)
+    for index, stored in enumerate(order):
+        places[str(stored).replace('\\', '/')].append(index)
+
+    def rank(item: tuple[int, tuple[str, list[str]]]) -> tuple[int, int]:
+        index, (stored, _lines) = item
+        queue = places.get(stored)
+        if queue:
+            return (0, queue.popleft())
+        return (1, index)
+
+    ranked = sorted(
+        ((rank(item), item[1]) for item in enumerate(blocks)),
+        key=lambda pair: pair[0],
+    )
+    lines = list(header)
+    for _key, (_stored, block) in ranked:
+        lines.extend(block)
+    lines.extend(pending)
+    m3u_path.write_text(
+        '\n'.join(lines) + '\n', encoding='utf-8', newline='\n'
+    )
+    forget_cached_playlists()
+    return [stored for _key, (stored, _lines) in ranked if stored]

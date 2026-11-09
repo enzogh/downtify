@@ -275,6 +275,69 @@ def edit_manual_playlist(
     }
 
 
+def _merged_order(
+    current: list[str],
+    order: list[str],
+    visible: Optional[Collection[str]],
+) -> list[str]:
+    """*current* with the songs the caller sees put in *order*; the ones
+    hidden from them (outside *visible*) keep their places. ``409`` when
+    *order* isn't exactly the songs the caller sees."""
+
+    wanted = [_clean_path(item) for item in order if _clean_path(item)]
+    slots = [
+        index
+        for index, item in enumerate(current)
+        if visible is None or item in visible
+    ]
+    if Counter(current[index] for index in slots) != Counter(wanted):
+        raise ManualPlaylistError(
+            'The playlist changed meanwhile: reload it and try again',
+            status_code=409,
+        )
+    files = list(current)
+    for index, item in zip(slots, wanted, strict=True):
+        files[index] = item
+    return files
+
+
+@_serialized
+def reorder_imported_playlist(
+    ctx: LibraryContext,
+    name: str,
+    order: list[str],
+    *,
+    visible: Optional[Collection[str]] = None,
+) -> dict[str, Any]:
+    """Put an imported playlist's songs in *order* (see
+    :func:`reorder_manual_playlist`) - the M3U is rewritten at once; the
+    caller keeps the order for the syncs to come
+    (``downtify.playlist_custom_order``)."""
+
+    path = m3u.find_m3u_for_name(ctx.download_dir, name)
+    if path is None:
+        raise ManualPlaylistError(
+            f'Playlist {name!r} was not found', status_code=404
+        )
+    if m3u.is_manual_m3u(path):
+        raise ManualPlaylistError(
+            f'Playlist {name!r} is not imported', status_code=400
+        )
+    files = _merged_order(_read_files(ctx, path), order, visible)
+    download_dir, slskd_dir, extra_dirs = _ctx_dirs(ctx)
+    kept = m3u.reorder_m3u_file(
+        path, download_dir, slskd_dir, extra_dirs, files
+    )
+    invalidate_library_paths_cache()
+    logger.info('Reordered imported playlist {!r}', path.stem)
+    return {
+        'name': path.stem,
+        'manual': False,
+        'files': kept,
+        'count': len(kept),
+    }
+
+
 @_serialized
 def reorder_manual_playlist(
     ctx: LibraryContext,
@@ -298,21 +361,7 @@ def reorder_manual_playlist(
             f'Playlist {name!r} was not found', status_code=404
         )
     _require_manual(path, path.stem)
-    current = _read_files(ctx, path)
-    wanted = [_clean_path(item) for item in order if _clean_path(item)]
-    slots = [
-        index
-        for index, item in enumerate(current)
-        if visible is None or item in visible
-    ]
-    if Counter(current[index] for index in slots) != Counter(wanted):
-        raise ManualPlaylistError(
-            'The playlist changed meanwhile: reload it and try again',
-            status_code=409,
-        )
-    files = list(current)
-    for index, item in zip(slots, wanted, strict=True):
-        files[index] = item
+    files = _merged_order(_read_files(ctx, path), order, visible)
     written = _write(ctx, files, path)
     kept = _read_files(ctx, written)
     logger.info('Reordered manual playlist {!r}', written.stem)

@@ -4,7 +4,7 @@ icon: lucide/list-ordered
 
 # Playlist order & repeated songs
 
-A playlist you made in the Library — with **New playlist**, **Save a copy**, [Detach from source](library-catalog.md#detach-an-imported-playlist) or [an import from your music folders](external-playlists.md) — keeps its songs in the order you choose, and can play a song more than once. Playlists that follow a Spotify, YouTube Music or Deezer link keep their source's order, and **Liked songs** is ordered by when you liked each song.
+A playlist you made in the Library — with **New playlist**, **Save a copy**, [Detach from source](library-catalog.md#detach-an-imported-playlist) or [an import from your music folders](external-playlists.md) — keeps its songs in the order you choose, and can play a song more than once. Playlists that follow a Spotify, YouTube Music or Deezer link — or a Playlist Monitor watch — keep their source's order until their owner (or an admin) reorders them, and **Liked songs** is ordered by when you liked each song.
 
 ## Reorder a playlist
 
@@ -19,6 +19,8 @@ For more than one move, or on a phone:
 3. Pick **Save order**, or **Cancel** to leave it as it was.
 
 Saving switches the page's sort to **Playlist order**, so you see the order you just saved. The order is written to the playlist's M3U file, which media servers that read it (Jellyfin, Navidrome, Plex) pick up too.
+
+**Imported playlists** — those following a link or a watch — can be reordered the same way by their owner or an admin. They don't stop following their source: Castify remembers the order you chose, and every sync keeps it. Songs the source adds go at the end; songs it removes disappear. Detaching the playlist from its source makes that order its own for good.
 
 The owner, admins and the playlist's [editors](collaborative-playlists.md) can reorder it. A few things keep it safe:
 

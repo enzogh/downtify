@@ -590,15 +590,14 @@ const positions = computed(
 )
 
 // A Library playlist's songs can be put in another order by whoever may
-// edit them; imported ones follow their source.
+// edit them; an imported one's by its owner (or an admin) - that order
+// is kept through the syncs from its source, new songs at the end.
 const reordering = ref(false)
-const canReorder = computed(
-  () =>
-    playlist.value?.manual &&
-    playlist.value.canEditTracks &&
-    !playlist.value.liked &&
-    playlist.value.tracks.length > 1
-)
+const canReorder = computed(() => {
+  const p = playlist.value
+  if (!p || p.liked || p.tracks.length < 2) return false
+  return p.manual ? p.canEditTracks : p.mine
+})
 watch(canReorder, (can) => {
   if (!can) reordering.value = false
 })

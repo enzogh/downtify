@@ -30,6 +30,7 @@ from downtify.manual_playlists import (
 )
 from downtify.monitor import PlaylistMonitorDB
 from downtify.playlist_catalog import ManualPlaylistOwners, PlaylistCatalog
+from downtify.playlist_custom_order import PlaylistCustomOrder
 from downtify.playlist_shares import (
     PRIVATE,
     PUBLIC,
@@ -1030,3 +1031,63 @@ def test_detaching_a_library_playlist_is_a_conflict(world):
             )
         )
     assert err.value.status_code == 409
+
+
+# ── An imported playlist's own order ────────────────────────────────────
+
+
+def _road_with(world, *files: str) -> Path:
+    root = world.ctx.download_dir
+    for name in ('a.mp3', 'b.mp3', 'c.mp3'):
+        (root / name).write_bytes(b'audio')
+    path = root / 'Road.m3u'
+    path.write_text(
+        '#EXTM3U\n' + ''.join(f'#EXTINF:1,{f}\n{f}\n' for f in files)
+    )
+    world.found[0]['files'] = list(files)
+    return path
+
+
+def _order_road(user_id: int, files: list[str], role: str = 'user'):
+    return asyncio.run(
+        api.reorder_library_playlist_endpoint(
+            _request(user_id, role, body={'name': 'Road', 'files': files})
+        )
+    )
+
+
+def test_the_owner_reorders_an_imported_playlist(world, monkeypatch):
+    kept = PlaylistCustomOrder(world.ctx.download_dir.parent / 'order.db')
+    monkeypatch.setattr(api.state, 'playlist_custom_order', kept)
+    path = _road_with(world, 'a.mp3', 'b.mp3', 'c.mp3')
+
+    result = _order_road(ANA, ['b.mp3', 'c.mp3', 'a.mp3'])
+
+    assert result['files'] == ['b.mp3', 'c.mp3', 'a.mp3']
+    assert result['manual'] is False
+    text = path.read_text()
+    assert MANUAL_M3U_MARKER not in text
+    assert text.splitlines()[1:3] == ['#EXTINF:1,b.mp3', 'b.mp3']
+    assert kept.get('Road') == ['b.mp3', 'c.mp3', 'a.mp3']
+    # An admin may too; a viewer of the shared playlist may not.
+    assert _order_road(ADMIN_ID, ['a.mp3', 'b.mp3', 'c.mp3'], 'admin')
+    world.shares.set_visibility('Road', SHARED, [BO])
+    with pytest.raises(HTTPException) as err:
+        _order_road(BO, ['c.mp3', 'b.mp3', 'a.mp3'])
+    assert err.value.status_code == 403
+
+
+def test_detaching_forgets_the_kept_order(world, monkeypatch):
+    kept = PlaylistCustomOrder(world.ctx.download_dir.parent / 'order.db')
+    monkeypatch.setattr(api.state, 'playlist_custom_order', kept)
+    _road_with(world, 'a.mp3', 'b.mp3')
+    _order_road(ANA, ['b.mp3', 'a.mp3'])
+    monkeypatch.setattr(api, '_unlink_imported_playlist', lambda *a: None)
+
+    asyncio.run(
+        api.detach_library_playlist_endpoint(
+            _request(ANA, body={'name': 'Road'})
+        )
+    )
+
+    assert kept.get('Road') == []
