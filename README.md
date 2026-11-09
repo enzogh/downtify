@@ -52,7 +52,7 @@ Metadata comes from the public `open.spotify.com/embed` pages, the audio from th
 | **Users** | Accounts for the whole house (and OpenID Connect), a shared library admins can hide things from, per-account likes and shareable playlists. [Users & sign-in](https://downtify.henriquesebastiao.com/features/users/) |
 | **Mobile** _(experimental)_ | Sign a phone in, stream the library in full or transcoded quality, keep songs offline. [Mobile apps](https://downtify.henriquesebastiao.com/features/mobile-apps/) |
 | **Media servers** | M3U playlists with covers for Jellyfin, Navidrome and Plex, optional Soulseek downloads through slskd and Navidrome playlist sync. [slskd & Navidrome](https://downtify.henriquesebastiao.com/features/slskd-navidrome/) |
-| **Admin tools** | Storage & usage, a 30-day music trash, a pausable download queue, library-only mode, an outbound proxy and download exclusions. [All features](https://downtify.henriquesebastiao.com/features/) |
+| **Admin tools** | Storage & usage, a 30-day music trash, a pausable download queue shared fairly between accounts, library-only mode, an outbound proxy and download exclusions. [All features](https://downtify.henriquesebastiao.com/features/) |
 | **Interface** | Light and dark themes, phone to widescreen, installable as an app ([PWA](https://downtify.henriquesebastiao.com/features/pwa/)), eleven languages, French by default. |
 
 ## Quick start

@@ -84,6 +84,8 @@ Controls how many songs are downloaded simultaneously. Pick a preset (1, 2, 3, 5
 
 The limit applies to every batch download — playlist/album downloads, the batch queue endpoint, and CSV [library imports](library-import.md) — and to **[Existing music folders](external-library.md)** Sync lookups (lyrics, covers, genre). It does **not** apply to Playlist Monitor sweeps, which download new tracks one at a time. Changing this value in Settings takes effect immediately without a restart; the server clamps any value outside `1–30`.
 
+The slots are shared fairly between accounts. Each free slot goes to the account with the fewest songs downloading at that moment, so a long playlist queued by one person doesn't hold up a single song someone else asks for afterwards: it starts at the next free slot. Each account's own songs keep their order. On a server with one account (or with sign-in turned off), the queue simply runs in order. Lowering the value lets the downloads already running finish; nothing is cut off.
+
 ## Delay between downloads
 
 Makes Castify wait a configurable number of seconds after finishing one song before starting the next one, instead of firing requests back-to-back.

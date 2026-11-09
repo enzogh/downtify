@@ -24,6 +24,7 @@ from downtify.downloader import (
     MAX_PARALLEL_DOWNLOADS,
     Downloader,
 )
+from downtify.fair_slots import FairSlots
 from tests.test_downloader_extended import _minimal_mp3
 
 # The route functions take the request; these tests call them directly.
@@ -179,7 +180,7 @@ def test_run_download_announces_downloading_only_inside_the_slot(
     previous_sem = api.state.download_semaphore
 
     async def _scenario():
-        api.state.download_semaphore = asyncio.Semaphore(1)
+        api.state.download_semaphore = FairSlots(1)
         for song in songs:
             api._register_job(song, status='queued')
 

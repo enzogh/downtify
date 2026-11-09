@@ -57,6 +57,7 @@ from downtify.download_queue import PendingDownloads, queue_pause
 from downtify.downloader import Downloader
 from downtify.external_playlists import ExternalPlaylistImports
 from downtify.external_sync import ExternalSyncJob
+from downtify.fair_slots import FairSlots
 from downtify.file_providers import FileProviders
 from downtify.http_etag import JsonETagMiddleware
 from downtify.library_archive import (
@@ -605,7 +606,7 @@ def build_app() -> FastAPI:
         loop = asyncio.get_running_loop()
         start_catalog_worker()
         api.state.loop = loop
-        api.state.download_semaphore = asyncio.Semaphore(
+        api.state.download_semaphore = FairSlots(
             api._clamp_parallel_downloads(
                 api.state.settings.get('max_parallel_downloads', 3)
             )

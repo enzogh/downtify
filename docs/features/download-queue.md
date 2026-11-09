@@ -4,7 +4,7 @@ icon: lucide/circle-pause
 
 # Download Queue
 
-Everything you download goes through the **Queue** page: what is downloading (**In progress**), what is **Waiting** for a free slot, what is **Done** and what **Failed**. How many songs download at once is [Parallel downloads](download-settings.md#parallel-downloads).
+Everything you download goes through the **Queue** page: what is downloading (**In progress**), what is **Waiting** for a free slot, what is **Done** and what **Failed**. How many songs download at once is [Parallel downloads](download-settings.md#parallel-downloads). Those slots are shared fairly between accounts: one person's long playlist doesn't make everyone else wait for it to finish.
 
 ## Pausing and resuming
 

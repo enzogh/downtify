@@ -394,7 +394,14 @@ import uuid
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Any, AsyncIterator, Collection, Iterable, Optional
+from typing import (
+    Any,
+    AsyncIterator,
+    Collection,
+    Hashable,
+    Iterable,
+    Optional,
+)
 from urllib.parse import quote
 
 from fastapi import (
@@ -493,6 +500,7 @@ from .external_sync import (
     run_external_sync,
     unmap_extra_folder,
 )
+from .fair_slots import FairSlots
 from .file_providers import FileProviders, providers_for
 from .fs_suggest import suggest_directories
 from .ip_rotation import is_youtube_hiccup
@@ -1223,7 +1231,9 @@ class AppState:
     loop: Optional[asyncio.AbstractEventLoop] = None
     monitor_db: Optional[PlaylistMonitorDB] = None
     download_jobs: dict[str, dict[str, Any]] = {}
-    download_semaphore: Optional[asyncio.Semaphore] = None
+    # The "Parallel downloads" slots, shared fairly between accounts
+    # (downtify/fair_slots.py).
+    download_semaphore: Optional[FairSlots] = None
     # The unfinished jobs and the pause switch, for the next start
     # (downtify/download_queue.py).
     pending_downloads: Optional[PendingDownloads] = None
@@ -4315,6 +4325,25 @@ async def _broadcast_queue_state() -> None:
 queue_pause.on_drained = _broadcast_queue_state
 
 
+#: Slot owner of an admin's audio replacement (it has no account id).
+_AUDIO_REPLACE_OWNER = 'audio-replace'
+
+
+def _download_slot(
+    owner: Hashable,
+) -> contextlib.AbstractAsyncContextManager[Any]:
+    """One "Parallel downloads" slot for *owner* (an account id).
+
+    Free slots go to the account running the fewest downloads, so one
+    account's long playlist doesn't hold up everyone else's songs.
+    """
+
+    slots = state.download_semaphore
+    if slots is None:
+        return contextlib.nullcontext()
+    return slots.slot(owner)
+
+
 async def _queue_turn(
     song_id: str, job: dict[str, Any], song: dict[str, Any]
 ) -> bool:
@@ -4580,9 +4609,8 @@ async def _run_download_locked(
     the caller that won the race to start it.
     """
 
-    sem = state.download_semaphore
     try:
-        async with sem if sem is not None else contextlib.nullcontext():
+        async with _download_slot(user_id):
             if not await _queue_turn(song_id, job, song):
                 return None
             async with queue_pause.running():
@@ -6552,7 +6580,6 @@ async def _run_replacement(
             loop,
         )
 
-    sem = state.download_semaphore
     try:
         old_key = content_key_for(full) or ''
     except Exception:
@@ -6564,7 +6591,7 @@ async def _run_replacement(
             'message': 'Replacing audio',
             'status': 'downloading',
         })
-        async with sem if sem is not None else contextlib.nullcontext():
+        async with _download_slot(_AUDIO_REPLACE_OWNER):
             if not await _queue_turn(job_id, job, song):
                 _replacing.discard(file)
                 return
@@ -9119,9 +9146,15 @@ async def update_settings_endpoint(
                     'max_track_duration_seconds'
                 ]
         if 'max_parallel_downloads' in payload:
-            state.download_semaphore = asyncio.Semaphore(
-                state.settings['max_parallel_downloads']
-            )
+            if state.download_semaphore is None:
+                state.download_semaphore = FairSlots(
+                    state.settings['max_parallel_downloads']
+                )
+            else:
+                # In place: running downloads keep counting against it.
+                state.download_semaphore.resize(
+                    state.settings['max_parallel_downloads']
+                )
             reset_slskd_parallelism(_effective_slskd_settings(state.settings))
         if 'cover_resolution' in payload:
             providers.set_cover_resolution(state.settings['cover_resolution'])
