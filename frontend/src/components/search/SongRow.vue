@@ -153,6 +153,7 @@ import ExplicitBadge from '../ui/ExplicitBadge.vue'
 import DownloadState from './DownloadState.vue'
 import UiMenu from '../ui/UiMenu.vue'
 import { usePlaylistActions } from '/src/model/playlistActions'
+import { useTrackActions } from '/src/model/trackActions'
 import { libraryOnly as libraryOnlyMode } from '/src/model/musicPolicy'
 import { formatDuration } from '/src/lib/format'
 import { useSongPlay } from '/src/model/songPlay'
@@ -179,6 +180,7 @@ const { t } = useI18n()
 const player = usePlayer()
 const buyLinks = useBuyLinks()
 const playlistActions = usePlaylistActions()
+const trackActions = useTrackActions()
 const library = useLibrary()
 
 // Playing works like every other track row: a downloaded song plays in
@@ -205,6 +207,12 @@ const menuItems = computed(() => {
   }
   if (!libraryOnlyMode.value) {
     items.push(...playlistActions.songMenuItems([props.song]))
+    items.push({ divider: true })
+    items.push({
+      label: t('songLink.menu'),
+      icon: 'share',
+      action: () => trackActions.shareSong(props.song),
+    })
   }
   const artist = artistLinks.value.find((item) => item.to)
   if (artist || albumTo.value) items.push({ divider: true })

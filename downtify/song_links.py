@@ -1,8 +1,11 @@
 """Public links to one song, like Spotify's *Share → Copy link*.
 
-A signed-in user makes a link for a library song; anyone who has the
-link can open ``/s/<token>`` and listen to it (with its cover, title and
-artist) without signing in - and nothing else on the server. A link
+A signed-in user makes a link for a song; anyone who has the link can
+open ``/s/<token>`` and listen to it (with its cover, title and artist)
+without signing in - and nothing else on the server. The song is a
+library file (``kind`` ``file``) or one that isn't downloaded
+(``stream``): a YouTube video relayed live, like the web player streams
+a search result, with the title, artist and cover saved with the link. A link
 belongs to the user who made it: they (or an admin) can revoke it, and
 one user asking twice for the same song gets the same link back.
 
@@ -38,6 +41,23 @@ def valid_token(token: str) -> bool:
     return bool(TOKEN_PATTERN.match(str(token or '')))
 
 
+FILE = 'file'
+STREAM = 'stream'
+
+
+@dataclass(frozen=True)
+class StreamSong:
+    """What a ``stream`` link plays and shows."""
+
+    video_id: str
+    title: str
+    artist: str = ''
+    album: str = ''
+    duration: float = 0
+    cover_url: str = ''
+    explicit: bool = False
+
+
 @dataclass(frozen=True)
 class SongLink:
     token: str
@@ -45,15 +65,44 @@ class SongLink:
     content_key: str
     user_id: int
     created_at: int
+    kind: str = FILE
+    song: Optional[StreamSong] = None
+
+
+#: Columns added after the first release (``song_links`` already existed).
+_ADDED_COLUMNS = {
+    'kind': "TEXT NOT NULL DEFAULT 'file'",
+    'video_id': "TEXT NOT NULL DEFAULT ''",
+    'title': "TEXT NOT NULL DEFAULT ''",
+    'artist': "TEXT NOT NULL DEFAULT ''",
+    'album': "TEXT NOT NULL DEFAULT ''",
+    'duration': 'REAL NOT NULL DEFAULT 0',
+    'cover_url': "TEXT NOT NULL DEFAULT ''",
+    'explicit': 'INTEGER NOT NULL DEFAULT 0',
+}
 
 
 def _row(row: sqlite3.Row) -> SongLink:
+    kind = str(row['kind'] or FILE)
+    song = None
+    if kind == STREAM:
+        song = StreamSong(
+            video_id=str(row['video_id'] or ''),
+            title=str(row['title'] or ''),
+            artist=str(row['artist'] or ''),
+            album=str(row['album'] or ''),
+            duration=float(row['duration'] or 0),
+            cover_url=str(row['cover_url'] or ''),
+            explicit=bool(row['explicit']),
+        )
     return SongLink(
         token=str(row['token']),
         path=str(row['path']),
         content_key=str(row['content_key'] or ''),
         user_id=int(row['user_id'] or 0),
         created_at=int(row['created_at'] or 0),
+        kind=kind,
+        song=song,
     )
 
 
@@ -86,6 +135,15 @@ class SongLinks:
                 'CREATE INDEX IF NOT EXISTS song_links_key '
                 'ON song_links (content_key)'
             )
+            have = {
+                str(row['name'])
+                for row in conn.execute('PRAGMA table_info(song_links)')
+            }
+            for name, spec in _ADDED_COLUMNS.items():
+                if name not in have:
+                    conn.execute(
+                        f'ALTER TABLE song_links ADD COLUMN {name} {spec}'
+                    )
 
     def create(self, path: str, content_key: str, user_id: int) -> SongLink:
         """The user's link to *path*: the one they already have, else a
@@ -94,8 +152,9 @@ class SongLinks:
         path = _norm_path(path)
         with self._connect() as conn:
             found = conn.execute(
-                'SELECT * FROM song_links WHERE user_id = ? AND path = ?',
-                (int(user_id), path),
+                'SELECT * FROM song_links WHERE user_id = ? AND path = ? '
+                'AND kind = ?',
+                (int(user_id), path, FILE),
             ).fetchone()
             if found is not None:
                 return _row(found)
@@ -119,6 +178,54 @@ class SongLinks:
                 ),
             )
             return link
+
+    def create_stream(self, song: StreamSong, user_id: int) -> SongLink:
+        """The user's link to a song that isn't downloaded, by its video:
+        the one they already have (its details refreshed), else a new
+        one."""
+
+        values = (
+            song.title,
+            song.artist,
+            song.album,
+            float(song.duration or 0),
+            song.cover_url,
+            int(bool(song.explicit)),
+        )
+        with self._connect() as conn:
+            found = conn.execute(
+                'SELECT token FROM song_links WHERE user_id = ? '
+                'AND kind = ? AND video_id = ?',
+                (int(user_id), STREAM, song.video_id),
+            ).fetchone()
+            if found is not None:
+                token = str(found['token'])
+                conn.execute(
+                    'UPDATE song_links SET title = ?, artist = ?, '
+                    'album = ?, duration = ?, cover_url = ?, explicit = ? '
+                    'WHERE token = ?',
+                    (*values, token),
+                )
+            else:
+                token = secrets.token_urlsafe(12)
+                conn.execute(
+                    'INSERT INTO song_links (token, path, content_key, '
+                    'user_id, created_at, kind, video_id, title, artist, '
+                    'album, duration, cover_url, explicit) '
+                    "VALUES (?, '', '', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    (
+                        token,
+                        int(user_id),
+                        int(time.time()),
+                        STREAM,
+                        song.video_id,
+                        *values,
+                    ),
+                )
+        link = self.get(token)
+        if link is None:  # pragma: no cover - written just above
+            raise RuntimeError('Song link vanished after writing it')
+        return link
 
     def get(self, token: str) -> Optional[SongLink]:
         if not valid_token(token):

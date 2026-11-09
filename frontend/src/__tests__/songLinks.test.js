@@ -1,5 +1,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { shareSongUrl, songLinkUrl } from '../lib/songLinks'
+import {
+  loadSongLink,
+  shareSongUrl,
+  shareTrack,
+  songLinkUrl,
+  streamSongPayload,
+} from '../lib/songLinks'
 
 function stubBrowser({ coarse = false, share, write, writeText, item } = {}) {
   vi.stubGlobal('matchMedia', () => ({ matches: coarse }))
@@ -79,6 +85,69 @@ describe('shareSongUrl', () => {
     const refused = Promise.reject({ response: { status: 403 } })
     await expect(shareSongUrl(refused)).rejects.toMatchObject({
       response: { status: 403 },
+    })
+  })
+})
+
+describe('loadSongLink', () => {
+  it('reads what the page shows', async () => {
+    const fetcher = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ title: 'Song' }),
+    })
+    await expect(loadSongLink('AbCdEf123456', fetcher)).resolves.toEqual({
+      title: 'Song',
+    })
+    expect(fetcher).toHaveBeenCalledWith('/s/AbCdEf123456/info', {
+      credentials: 'omit',
+    })
+  })
+
+  it('is null for a link that does not play or a malformed token', async () => {
+    const fetcher = vi.fn().mockResolvedValue({ ok: false })
+    await expect(loadSongLink('AbCdEf123456', fetcher)).resolves.toBeNull()
+    await expect(loadSongLink('../api', fetcher)).resolves.toBeNull()
+    expect(fetcher).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('shareTrack', () => {
+  it('shapes the info like a player track', () => {
+    expect(
+      shareTrack({
+        title: 'T',
+        artist: 'A',
+        duration: 12,
+        has_cover: true,
+        cover_url: '/s/x/cover',
+      })
+    ).toMatchObject({ title: 'T', hasCover: true, cover: '/s/x/cover' })
+    expect(shareTrack(null).hasCover).toBe(false)
+  })
+})
+
+describe('streamSongPayload', () => {
+  it('describes a search row with the video to stream', () => {
+    expect(
+      streamSongPayload(
+        {
+          name: 'Teardrop',
+          artists: ['Massive Attack', 'Liz Fraser'],
+          album_name: 'Mezzanine',
+          duration: 330,
+          cover_url: 'https://img/x.jpg',
+          explicit: false,
+        },
+        'abcdefghijk'
+      )
+    ).toEqual({
+      video_id: 'abcdefghijk',
+      title: 'Teardrop',
+      artist: 'Massive Attack, Liz Fraser',
+      album: 'Mezzanine',
+      duration: 330,
+      cover_url: 'https://img/x.jpg',
+      explicit: false,
     })
   })
 })

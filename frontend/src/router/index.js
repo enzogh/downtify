@@ -1,12 +1,17 @@
 import { createWebHistory, createRouter } from 'vue-router'
 import config from '/src/config'
-import HomeView from '/src/views/HomeView.vue'
 
 const LIBRARY_TABS = 'tracks|albums|artists|playlists'
 const CHARTS_TABS = 'tracks|albums|artists|playlists'
 
 const routes = [
-  { path: '/', name: 'Home', component: HomeView },
+  {
+    // Lazy like the rest: importing it starts the signed-in app's data,
+    // which a public page (a shared song) must never load.
+    path: '/',
+    name: 'Home',
+    component: () => import('/src/views/HomeView.vue'),
+  },
   {
     path: '/search/:query?',
     name: 'Search',
@@ -136,6 +141,14 @@ const routes = [
     component: () => import('/src/views/SettingsView.vue'),
   },
   // 2.x paths, kept so bookmarks and the PWA start URL still work.
+  {
+    // A public song link: plays one song without signing in (see
+    // downtify/song_link_routes.py). Drawn without the app around it.
+    path: '/s/:token',
+    name: 'SongShare',
+    component: () => import('/src/views/SongShareView.vue'),
+    meta: { public: true },
+  },
   { path: '/download', redirect: { name: 'Queue' } },
   { path: '/player', redirect: { name: 'Home', query: { np: '1' } } },
   { path: '/:pathMatch(.*)*', redirect: { name: 'Home' } },

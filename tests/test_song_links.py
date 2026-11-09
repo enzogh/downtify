@@ -11,18 +11,19 @@ from __future__ import annotations
 
 import asyncio
 import json
+import sqlite3
 from pathlib import Path
 from typing import Any
 
 import pytest
-from fastapi import HTTPException
+from fastapi import HTTPException, Response
 from starlette.requests import Request
 
 from downtify import api, song_link_routes
 from downtify.auth import CLIENT, PUBLIC, Principal, classify
 from downtify.library_catalog import LibraryContext
 from downtify.library_visibility import HiddenRules
-from downtify.song_links import SongLinks, valid_token
+from downtify.song_links import STREAM, SongLinks, StreamSong, valid_token
 
 ADMIN_ID = 1
 ANA = 2
@@ -90,6 +91,7 @@ def world(tmp_path, monkeypatch):
     monkeypatch.setattr(api, 'library_context', lambda: ctx)
     monkeypatch.setattr(api.state, 'song_links', store)
     monkeypatch.setitem(api.state.settings, 'allow_song_links', True)
+    monkeypatch.setitem(api.state.settings, 'library_only', False)
     monkeypatch.setattr(song_link_routes, '_entry', entries.get)
     monkeypatch.setattr(api, 'hidden_rules', lambda: _Hides(hidden))
     monkeypatch.setattr(
@@ -211,7 +213,7 @@ def test_public_song_plays_without_signing_in(world):
     _link, entry, full = song_link_routes._public_song(token)
     assert entry['title'] == 'Sexy Boy'
     assert full == world.root / 'Air - Sexy Boy.mp3'
-    audio = asyncio.run(song_link_routes.song_link_audio(token))
+    audio = asyncio.run(song_link_routes.song_link_audio(token, _request(0)))
     assert Path(audio.path) == full
     assert audio.headers['x-robots-tag'].startswith('noindex')
 
@@ -273,3 +275,151 @@ def test_routes_are_classified():
     assert classify('POST', '/api/song-links') == CLIENT
     assert classify('GET', '/api/song-links') == CLIENT
     assert classify('DELETE', '/api/song-links/AbCdEf123456') == CLIENT
+
+
+# ── Songs that aren't downloaded ────────────────────────────────────────
+
+SONG = {
+    'video_id': 'dQw4w9WgXcQ',
+    'title': 'Never Gonna Give You Up',
+    'artist': 'Rick Astley',
+    'album': 'Whenever You Need Somebody',
+    'duration': 213,
+    'cover_url': 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg',
+    'explicit': False,
+}
+
+
+def _share(user_id: int, song: dict[str, Any]) -> dict[str, Any]:
+    return asyncio.run(
+        song_link_routes.create_song_link(
+            _request(user_id, body={'song': song})
+        )
+    )
+
+
+def test_a_song_that_is_not_downloaded_gets_a_link(world):
+    made = _share(ANA, SONG)
+    assert made['kind'] == STREAM
+    assert not made['file']
+    again = _share(ANA, {**SONG, 'title': 'Never Gonna Give You Up (HD)'})
+    assert again['token'] == made['token']
+    _link, info, full = song_link_routes._public_song(made['token'])
+    assert full is None
+    assert info['title'] == 'Never Gonna Give You Up (HD)'
+    assert info['artist'] == 'Rick Astley'
+    assert info['has_cover'] is True
+
+
+@pytest.mark.parametrize(
+    'song',
+    [
+        {**SONG, 'video_id': 'not a video'},
+        {**SONG, 'title': '  '},
+        'dQw4w9WgXcQ',
+    ],
+)
+def test_a_malformed_song_is_refused(world, song):
+    with pytest.raises(HTTPException) as err:
+        _share(ANA, song)
+    assert err.value.status_code == 400
+
+
+def test_only_web_covers_are_kept():
+    song = song_link_routes._stream_song({
+        **SONG,
+        'cover_url': 'javascript:alert(1)',
+    })
+    assert not song.cover_url
+
+
+def test_library_only_mode_keeps_streams_out(world, monkeypatch):
+    token = _share(ANA, SONG)['token']
+    monkeypatch.setitem(api.state.settings, 'library_only', True)
+    with pytest.raises(HTTPException) as err:
+        _share(BO, SONG)
+    assert err.value.status_code == 403
+    with pytest.raises(HTTPException) as err:
+        song_link_routes._public_song(token)
+    assert err.value.status_code == 404
+
+
+def test_a_stream_link_relays_the_video_counted_to_its_maker(
+    world, monkeypatch
+):
+    token = _share(ANA, SONG)['token']
+    seen = {}
+
+    async def relay(request, vid, duration, *, user_id):
+        seen.update(vid=vid, duration=duration, user_id=user_id)
+        return Response(b'audio', media_type='audio/webm')
+
+    monkeypatch.setattr(api, 'relay_live_audio', relay)
+    response = asyncio.run(
+        song_link_routes.song_link_audio(token, _request(0))
+    )
+    assert response.body == b'audio'
+    assert seen == {'vid': 'dQw4w9WgXcQ', 'duration': 213.0, 'user_id': ANA}
+    assert response.headers['x-robots-tag'].startswith('noindex')
+
+
+def test_a_stream_cover_points_at_the_saved_image(world):
+    token = _share(ANA, SONG)['token']
+    cover = asyncio.run(song_link_routes.song_link_cover(token))
+    assert cover.status_code == 302
+    assert cover.headers['location'] == SONG['cover_url']
+
+
+def test_links_made_before_streams_still_work(tmp_path):
+    db = tmp_path / 'old.db'
+    with sqlite3.connect(db) as conn:
+        conn.execute(
+            'CREATE TABLE song_links (token TEXT PRIMARY KEY, path TEXT NOT '
+            "NULL, content_key TEXT NOT NULL DEFAULT '', user_id INTEGER "
+            'NOT NULL DEFAULT 0, created_at INTEGER NOT NULL DEFAULT 0)'
+        )
+        conn.execute(
+            "INSERT INTO song_links VALUES ('OldToken1234', 'a.mp3', 'k', 2, 1)"
+        )
+    store = SongLinks(db)
+    old = store.get('OldToken1234')
+    assert (old.kind, old.path, old.song) == ('file', 'a.mp3', None)
+    made = store.create_stream(StreamSong('dQw4w9WgXcQ', 'Song'), ANA)
+    assert store.get(made.token).song.title == 'Song'
+
+
+# ── The page ────────────────────────────────────────────────────────────
+
+SHELL = (
+    '<!doctype html><html><head><title>Castify</title>'
+    '<script type="module" src="/assets/index.js"></script></head>'
+    '<body><div id="app"></div></body></html>'
+)
+
+
+def test_the_page_is_the_app_with_the_song_tags(world):
+    info = {
+        'title': 'Sexy Boy',
+        'artist': 'Air',
+        'album': 'Moon Safari',
+        'has_cover': True,
+        'audio_url': '/s/tok/audio',
+        'cover_url': '/s/tok/cover',
+    }
+    page = song_link_routes.render_page(info, 'https://music.example', SHELL)
+    assert '<title>Castify</title>' not in page
+    assert '<title>Sexy Boy · Air</title>' in page
+    assert '/assets/index.js' in page
+    assert page.index('og:title') < page.index('</head>')
+
+
+def test_an_unknown_link_still_opens_the_app(world, monkeypatch, tmp_path):
+    index = tmp_path / 'index.html'
+    index.write_text(SHELL, encoding='utf-8')
+    monkeypatch.setattr(song_link_routes._Spa, 'index', index)
+    page = asyncio.run(
+        song_link_routes.song_link_page('NoSuchToken123', _request(0))
+    )
+    assert page.status_code == 404
+    assert b'/assets/index.js' in page.body
+    assert b'og:title' not in page.body

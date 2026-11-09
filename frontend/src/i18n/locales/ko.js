@@ -971,6 +971,9 @@ export default {
     recommendedAdd: '추가',
     dropTitle: '플레이리스트에 추가',
     dropHint: '노래를 플레이리스트에 놓으세요.',
+    dropImportedTitle: '가져온 플레이리스트',
+    dropImportedHint:
+      '원본을 따라가요: 노래를 놓으면 먼저 원본에서 분리할지 물어봐요.',
     recommendedEmpty: '지금은 추천이 없습니다.',
     kicker: '재생목록',
     diagnostics: {
@@ -1395,6 +1398,11 @@ export default {
     copied: '링크를 복사했어요 — 링크가 있는 누구나 들을 수 있어요',
     disabled: '이 서버에서는 노래 공개 링크가 꺼져 있어요',
     copyThis: '이 링크를 복사하세요: {url}',
+    back10: '10초 뒤로',
+    forward10: '10초 앞으로',
+    playFailed: '지금은 이 노래를 재생할 수 없어요.',
+    notFound: '이 링크는 작동하지 않아요',
+    notFoundHint: '노래가 삭제되었거나 링크가 꺼졌을 수 있어요.',
   },
   sharing: {
     title: '“{name}” 공유',

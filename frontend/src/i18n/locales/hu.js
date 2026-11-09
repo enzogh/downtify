@@ -979,6 +979,9 @@ export default {
     recommendedAdd: 'Hozzáadás',
     dropTitle: 'Hozzáadás lejátszási listához',
     dropHint: 'Engedd el a dalt egy lejátszási listán.',
+    dropImportedTitle: 'Importált lejátszási listák',
+    dropImportedHint:
+      'A forrásukat követik: ha dalt ejtesz rá, előbb felajánlja a leválasztást.',
     recommendedEmpty: 'Most nincs ajánlás.',
     kicker: 'Lejátszási lista',
     diagnostics: {
@@ -1409,6 +1412,12 @@ export default {
     copied: 'Link másolva – bárki meghallgathatja, akinél megvan',
     disabled: 'A nyilvános dallinkek ki vannak kapcsolva ezen a szerveren',
     copyThis: 'Másold ki ezt a linket: {url}',
+    back10: 'Vissza 10 másodpercet',
+    forward10: 'Előre 10 másodpercet',
+    playFailed: 'Ez a dal most nem játszható le.',
+    notFound: 'Ez a link nem működik',
+    notFoundHint:
+      'Lehet, hogy a dalt eltávolították, vagy a linket kikapcsolták.',
   },
   sharing: {
     title: '„{name}” megosztása',

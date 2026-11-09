@@ -977,6 +977,9 @@ export default {
     recommendedAdd: 'Ekle',
     dropTitle: 'Bir çalma listesine ekle',
     dropHint: 'Şarkıyı bir çalma listesinin üzerine bırakın.',
+    dropImportedTitle: 'İçe aktarılan çalma listeleri',
+    dropImportedHint:
+      'Kaynaklarını izlerler: bir şarkı bırakınca önce kaynaktan ayırmanız istenir.',
     recommendedEmpty: 'Şu anda öneri yok.',
     kicker: 'Çalma listesi',
     diagnostics: {
@@ -1398,6 +1401,11 @@ export default {
     copied: 'Bağlantı kopyalandı — bağlantıya sahip herkes dinleyebilir',
     disabled: 'Bu sunucuda herkese açık şarkı bağlantıları kapalı',
     copyThis: 'Bu bağlantıyı kopyalayın: {url}',
+    back10: '10 saniye geri',
+    forward10: '10 saniye ileri',
+    playFailed: 'Bu şarkı şu anda çalınamıyor.',
+    notFound: 'Bu bağlantı çalışmıyor',
+    notFoundHint: 'Şarkı kaldırılmış ya da bağlantı kapatılmış olabilir.',
   },
   sharing: {
     title: '“{name}” paylaş',

@@ -1003,6 +1003,9 @@ export default {
     recommendedAdd: 'Hinzufügen',
     dropTitle: 'Zu einer Playlist hinzufügen',
     dropHint: 'Lege den Song auf einer Playlist ab.',
+    dropImportedTitle: 'Importierte Playlists',
+    dropImportedHint:
+      'Sie folgen ihrer Quelle: Beim Ablegen eines Songs wirst du gefragt, ob du sie zuerst lösen willst.',
     recommendedEmpty: 'Gerade keine Empfehlungen.',
     kicker: 'Playlist',
     diagnostics: {
@@ -1440,6 +1443,12 @@ export default {
     copied: 'Link kopiert – jeder mit dem Link kann zuhören',
     disabled: 'Öffentliche Song-Links sind auf diesem Server deaktiviert',
     copyThis: 'Kopiere diesen Link: {url}',
+    back10: '10 Sekunden zurück',
+    forward10: '10 Sekunden vor',
+    playFailed: 'Dieser Song kann gerade nicht abgespielt werden.',
+    notFound: 'Dieser Link funktioniert nicht',
+    notFoundHint:
+      'Der Song wurde vielleicht entfernt oder der Link deaktiviert.',
   },
   sharing: {
     title: '„{name}“ teilen',

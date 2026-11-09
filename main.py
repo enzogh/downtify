@@ -867,6 +867,7 @@ def build_app() -> FastAPI:
     app.include_router(trash_routes.router)
     app.include_router(jam_routes.router)
     app.include_router(download_policy_routes.router)
+    song_link_routes.set_spa_index(Path(WEB_GUI_LOCATION) / 'index.html')
     app.include_router(song_link_routes.router)
 
     @app.get('/list')

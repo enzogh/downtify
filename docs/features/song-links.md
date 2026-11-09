@@ -4,11 +4,13 @@ icon: lucide/share-2
 
 # Sharing a song
 
-Like Spotify's **Share → Copy link**, any song in your library can be sent to someone as a link. Whoever opens it can listen to that song in their browser **without an account and without signing in** — and sees nothing else on your server.
+Like Spotify's **Share → Copy link**, any song can be sent to someone as a link — one in your library, or one you only found in a search and never downloaded. Whoever opens it can listen to that song in their browser **without an account and without signing in** — and sees nothing else on your server.
 
 ## Making a link
 
-Open a song's **⋯** menu (or right-click it, or long-press it on a phone) in any track list — an album, an artist, the Library, a playlist — and choose **Share link**.
+Open a song's **⋯** menu (or right-click it, or long-press it on a phone) and choose **Share link**. It is there in every track list — an album, an artist, the Library, a playlist — and on songs that aren't downloaded: search results, the charts, a playlist's recommendations.
+
+A song in your library is shared as that file. A song that isn't downloaded is shared as the YouTube video the player would stream for it: the person you send it to hears it streamed through your server, exactly as you would in the player, and nothing is downloaded. Its title, artist and cover are saved with the link.
 
 - On a computer the link is copied to the clipboard.
 - On a phone your system's share sheet opens, so you can send it straight to a messaging app.
@@ -21,7 +23,9 @@ A link points at the address you opened Castify with. If that is `http://192.168
 
 ## What the person you send it to sees
 
-A page with the song's cover, title, artist and album, and a player. Messaging apps that show link previews show the cover and title too. The page plays only that one song: there is no download button, no way to browse the library, and search engines are told not to index it.
+A page drawn like Castify's own full-screen player: the cover large over a blurred backdrop of its colours, the title, artist and album, the same wave seek bar, and play, back 10 s and forward 10 s. It plays in the background and from a phone's lock screen too. Messaging apps that show link previews show the cover and title.
+
+The page plays only that one song: there is no download button, no way to browse the library, and search engines are told not to index it. A link that doesn't work opens a page that says so, and nothing else.
 
 ## When a link stops working
 
@@ -29,7 +33,8 @@ A link plays nothing — it answers *not found*, as if it had never existed — 
 
 - the song was deleted (or moved to the [music trash](music-trash.md));
 - an admin [hid the song from users](users.md#hiding-from-users), or its album or artist;
-- an admin turned the whole feature off (below).
+- an admin turned the whole feature off (below);
+- for a song that isn't downloaded, the server is in [library-only mode](library-only.md).
 
 A song rewritten in place — by a [library upgrade](library-upgrade.md) or [Replace Audio](replace-audio.md) — keeps its links.
 

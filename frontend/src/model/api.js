@@ -567,9 +567,10 @@ function renameLibraryPlaylist(name, newName, resetDisplayName = false) {
 
 // `editors`: who of `sharedWith` may also add and remove songs (Library
 // playlists only); left out, the current editors still listed stay.
-// A public link to one library song ({ token, path, file, created_at }).
-function createSongLink(file) {
-  return API.post('/api/song-links', { file })
+// A public link to one song ({ token, path, kind, file, created_at }):
+// `{ file }` for a library song, `{ song }` for one not downloaded.
+function createSongLink(body) {
+  return API.post('/api/song-links', body)
 }
 
 function getSongLinks() {

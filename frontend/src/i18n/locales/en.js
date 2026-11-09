@@ -964,6 +964,9 @@ export default {
     recommendedAdd: 'Add',
     dropTitle: 'Add to a playlist',
     dropHint: 'Drop the song on a playlist.',
+    dropImportedTitle: 'Imported playlists',
+    dropImportedHint:
+      'They follow their source: dropping a song asks to detach one first.',
     recommendedEmpty: 'No recommendations right now.',
     kicker: 'Playlist',
     diagnostics: {
@@ -1375,6 +1378,11 @@ export default {
     copied: 'Link copied — anyone with it can listen',
     disabled: 'Public song links are turned off on this server',
     copyThis: 'Copy this link: {url}',
+    back10: 'Back 10 seconds',
+    forward10: 'Forward 10 seconds',
+    playFailed: 'This song can’t be played right now.',
+    notFound: 'This link doesn’t work',
+    notFoundHint: 'The song may have been removed, or the link was turned off.',
   },
   sharing: {
     title: 'Share “{name}”',

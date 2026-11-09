@@ -902,6 +902,8 @@ export default {
     recommendedAdd: '添加',
     dropTitle: '添加到歌单',
     dropHint: '将歌曲拖放到歌单上。',
+    dropImportedTitle: '导入的歌单',
+    dropImportedHint: '它们跟随来源：拖入歌曲时会先询问是否与来源分离。',
     recommendedEmpty: '暂时没有推荐。',
     kicker: '播放列表',
     diagnostics: {
@@ -1298,6 +1300,11 @@ export default {
     copied: '链接已复制——任何拿到链接的人都能收听',
     disabled: '此服务器已关闭歌曲公开链接',
     copyThis: '复制此链接：{url}',
+    back10: '后退 10 秒',
+    forward10: '前进 10 秒',
+    playFailed: '这首歌现在无法播放。',
+    notFound: '此链接无效',
+    notFoundHint: '这首歌可能已被删除，或链接已被关闭。',
   },
   sharing: {
     title: '共享“{name}”',

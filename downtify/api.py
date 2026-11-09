@@ -9923,6 +9923,18 @@ async def stream_live_endpoint(
         vid = stream.clean_video_id(video_id)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return await relay_live_audio(
+        request, vid, duration, user_id=request_user_id(request)
+    )
+
+
+async def relay_live_audio(
+    request: Request, vid: str, duration: float, *, user_id: int
+) -> Response:
+    """Relay video *vid*'s audio live from YouTube (see
+    ``GET /api/stream/live``), the bytes counted to *user_id* - also what
+    a public song link plays for a song that isn't downloaded."""
+
     limit = _max_track_duration_seconds()
     if limit and duration > limit:
         raise HTTPException(
@@ -9938,7 +9950,6 @@ async def stream_live_endpoint(
         raise HTTPException(
             status_code=400, detail=stream.too_long_detail(limit)
         )
-    user_id = request_user_id(request)
 
     def count(sent: int) -> None:
         if user_id and state.traffic is not None:

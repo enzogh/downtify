@@ -3591,13 +3591,13 @@ Public links to one library song (see [Sharing a song](features/song-links.md)).
 
 ### `POST /api/song-links`
 
-Body `{"file": "<library path>"}`. Returns the caller's link to that song — the same one when asked again:
+Body `{"file": "<library path>"}` for a library song, or `{"song": {...}}` for one that isn't downloaded: `video_id` (the YouTube video to stream, required), `title` (required), `artist`, `album`, `duration` (seconds), `cover_url` (an `http(s)` image) and `explicit`. Returns the caller's link to that song — the same one when asked again (for a song that isn't downloaded, by its video, with the details refreshed):
 
 ```json
-{"token": "qGrewTfjZV8pqyXK", "path": "/s/qGrewTfjZV8pqyXK", "file": "Massive Attack - Teardrop.mp3", "created_at": 1794261564}
+{"token": "qGrewTfjZV8pqyXK", "path": "/s/qGrewTfjZV8pqyXK", "kind": "file", "file": "Massive Attack - Teardrop.mp3", "created_at": 1794261564}
 ```
 
-`403` while the admin's `allow_song_links` setting is off. `404` for a file that isn't a library song, or one hidden from the caller.
+`kind` is `file` or `stream` (`file` is then `""`). `400` for a malformed song, `403` while the admin's `allow_song_links` setting is off — or, for a `song`, in [library-only mode](features/library-only.md) — and `404` for a file that isn't a library song, or one hidden from the caller.
 
 ### `GET /api/song-links`
 
@@ -3609,7 +3609,7 @@ Revoke a link. Only its maker or an admin (`403` otherwise); `404` for an unknow
 
 ### `GET /s/{token}`
 
-Public, no sign-in. An HTML page with the song's cover, title, artist, album and a player, with Open Graph tags for link previews and `X-Robots-Tag: noindex`. Like every route below, it answers `404` when the token is unknown, the song is gone or hidden from users, or `allow_song_links` is off.
+Public, no sign-in. The web app's page for the song (its player, without the rest of the app), with the song's title and Open Graph tags for link previews and `X-Robots-Tag: noindex`. When the token is unknown, the song is gone or hidden from users, `allow_song_links` is off or — for a `stream` link — the server is in library-only mode, it answers `404` with the app's "this link doesn't work" page; the routes below answer a plain `404`.
 
 ### `GET /s/{token}/info`
 
@@ -3617,11 +3617,11 @@ Public. `{title, artist, album, duration, explicit, has_cover, audio_url, cover_
 
 ### `GET /s/{token}/audio`
 
-Public. The audio file as it is, with HTTP `Range` support (also `HEAD`).
+Public. A library song's file as it is, with HTTP `Range` support (also `HEAD`); a `stream` link's video relayed live like [`GET /api/stream/live`](#get-apistreamlive), its traffic counted to the link's maker.
 
 ### `GET /s/{token}/cover`
 
-Public. The song's embedded cover (`404` when it has none).
+Public. A library song's embedded cover, or a redirect to a `stream` link's saved image (`404` when it has none).
 
 ## Mobile API (v1)
 

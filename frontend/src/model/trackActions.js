@@ -17,7 +17,13 @@ import { saveName } from '/src/lib/paths'
 import { useI18n } from '/src/i18n'
 import API from '/src/model/api'
 import { previewLines, trashError, useTrashCapability } from '/src/lib/trash'
-import { shareSongUrl, songLinkUrl } from '/src/lib/songLinks'
+import {
+  shareSongUrl,
+  songLinkUrl,
+  streamSongPayload,
+} from '/src/lib/songLinks'
+import { videoIdFor } from '/src/model/streamResolve'
+import { libraryOnly } from '/src/model/musicPolicy'
 
 export function useTrackActions() {
   const trashCapability = useTrashCapability()
@@ -164,15 +170,32 @@ export function useTrackActions() {
   }
 
   /** Context-menu items for one track inside `list`. */
+  // Shares the library copy when there is one, else the video the
+  // player would stream.
+  async function createLink(track) {
+    const file =
+      track.file ||
+      library.findTrack(
+        (track.artists || [])[0] || track.artist,
+        track.name || track.title
+      )?.file
+    if (file) return API.createSongLink({ file })
+    const videoId = await videoIdFor(track)
+    return API.createSongLink({ song: streamSongPayload(track, videoId) })
+  }
+
+  // A library track (it has a `file`) or a song that isn't downloaded:
+  // a search, chart or recommendation row, or what the player streams.
   async function shareSong(track) {
+    const title = track.title || track.name || ''
+    const artist =
+      track.artist || (Array.isArray(track.artists) ? track.artists[0] : '')
     // Not awaited first: the copy has to start within the click.
-    const pending = API.createSongLink(track.file).then(({ data }) =>
-      songLinkUrl(data)
-    )
+    const pending = createLink(track).then(({ data }) => songLinkUrl(data))
     try {
       const how = await shareSongUrl(pending, {
-        title: track.title,
-        text: [track.title, track.artist].filter(Boolean).join(' · '),
+        title,
+        text: [title, artist].filter(Boolean).join(' · '),
       })
       if (how === 'copied') {
         ui.toast(t('songLink.copied'), { kind: 'success' })
@@ -250,7 +273,7 @@ export function useTrackActions() {
         // A public link anyone can listen to without signing in.
         label: t('songLink.menu'),
         icon: 'share',
-        hidden: !track.file || hide.includes('share'),
+        hidden: (!track.file && libraryOnly.value) || hide.includes('share'),
         action: () => shareSong(track),
       },
       {

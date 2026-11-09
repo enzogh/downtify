@@ -984,6 +984,9 @@ export default {
     recommendedAdd: 'Adicionar',
     dropTitle: 'Adicionar a uma playlist',
     dropHint: 'Solte a música sobre uma playlist.',
+    dropImportedTitle: 'Playlists importadas',
+    dropImportedHint:
+      'Elas seguem a origem: soltar uma música oferece desvincular a playlist primeiro.',
     recommendedEmpty: 'Nenhuma recomendação no momento.',
     kicker: 'Playlist',
     diagnostics: {
@@ -1412,6 +1415,11 @@ export default {
     copied: 'Link copiado — quem tiver o link pode ouvir',
     disabled: 'Links públicos de músicas estão desativados neste servidor',
     copyThis: 'Copie este link: {url}',
+    back10: 'Voltar 10 segundos',
+    forward10: 'Avançar 10 segundos',
+    playFailed: 'Esta música não pode ser tocada agora.',
+    notFound: 'Este link não funciona',
+    notFoundHint: 'A música pode ter sido removida, ou o link foi desativado.',
   },
   sharing: {
     title: 'Compartilhar “{name}”',

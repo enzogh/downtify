@@ -1005,6 +1005,9 @@ export default {
     recommendedAdd: 'Ajouter',
     dropTitle: 'Ajouter à une playlist',
     dropHint: 'Déposez le titre sur une playlist.',
+    dropImportedTitle: 'Playlists importées',
+    dropImportedHint:
+      'Elles suivent leur source : y déposer un titre propose d’abord de la détacher.',
     recommendedEmpty: 'Aucune recommandation pour le moment.',
     kicker: 'Playlist',
     diagnostics: {
@@ -1442,6 +1445,12 @@ export default {
     disabled:
       'Les liens publics vers des titres sont désactivés sur ce serveur',
     copyThis: 'Copiez ce lien : {url}',
+    back10: 'Reculer de 10 secondes',
+    forward10: 'Avancer de 10 secondes',
+    playFailed: 'Ce titre ne peut pas être lu pour le moment.',
+    notFound: 'Ce lien ne fonctionne pas',
+    notFoundHint:
+      'Le titre a peut-être été supprimé, ou le lien a été désactivé.',
   },
   sharing: {
     title: 'Partager « {name} »',

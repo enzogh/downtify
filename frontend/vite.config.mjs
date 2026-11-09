@@ -36,11 +36,16 @@ export default defineConfig({
     },
   },
   server: {
-    proxy: Object.fromEntries(
-      backendRoutes.map((route) => [
-        route,
-        { target: BACKEND, changeOrigin: true, ws: route === '/api' },
-      ])
-    ),
+    proxy: {
+      ...Object.fromEntries(
+        backendRoutes.map((route) => [
+          route,
+          { target: BACKEND, changeOrigin: true, ws: route === '/api' },
+        ])
+      ),
+      // A shared song's data, audio and cover (the page itself is the
+      // app's own route).
+      '^/s/[^/]+/': { target: BACKEND, changeOrigin: true },
+    },
   },
 })
