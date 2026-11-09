@@ -85,14 +85,19 @@
               ? 'bg-surface'
               : 'hover:bg-surface',
         ]"
-        :style="
-          virtual ? { transform: `translateY(${row.start}px)` } : undefined
-        "
         @click="onRowClick($event, row)"
         @dblclick="playRow(row)"
         @contextmenu="openMenu($event, row)"
+        :style="[
+          virtual ? { transform: `translateY(${row.start}px)` } : {},
+          reorderLine(row),
+        ]"
         draggable="true"
         @dragstart="onDragStart($event, row)"
+        @dragover="onReorderOver($event, row)"
+        @dragleave="onReorderLeave(row)"
+        @drop="onReorderDrop($event, row)"
+        @dragend="onReorderEnd"
       >
         <span v-if="selectable" class="max-md:hidden" @click.stop>
           <Checkbox
@@ -243,6 +248,7 @@ import EqBars from '../ui/EqBars.vue'
 import ExplicitBadge from '../ui/ExplicitBadge.vue'
 import UiMenu from '../ui/UiMenu.vue'
 import { setDragSongs } from '/src/lib/dragSongs'
+import { reorderTarget } from '/src/lib/playlistOrder'
 import LikeButton from '../player/LikeButton.vue'
 import TrackArtistLinks from './TrackArtistLinks.vue'
 import { useAuth } from '/src/model/auth'
@@ -272,8 +278,12 @@ const props = defineProps({
   // On an artist's page: their name, so the tracks they only guest on
   // are labelled as such.
   guestOf: { type: String, default: '' },
+  // A Library playlist: rows are dragged into a new order, emitted as
+  // `reorder` with `{ from, to }` (indexes into `tracks`, `to` being the
+  // place in the list once moved).
+  reorderable: { type: Boolean, default: false },
 })
-const emit = defineEmits(['update:selected', 'update:sort'])
+const emit = defineEmits(['update:selected', 'update:sort', 'reorder'])
 
 const auth = useAuth()
 const library = useLibrary()
@@ -415,6 +425,62 @@ function onDragStart(event, row) {
       ? [...props.selected]
       : [row.track.file]
   setDragSongs(event, { files }, row.track.title)
+  if (props.reorderable && files.length === 1) {
+    event.dataTransfer.effectAllowed = 'copyMove'
+    event.dataTransfer.setData(REORDER_TYPE, String(row.index))
+    reorderFrom = row.index
+  }
+}
+
+// Reordering: a line above or below the row under the pointer shows
+// where the dragged song lands.
+const REORDER_TYPE = 'application/x-downtify-reorder'
+let reorderFrom = -1
+const reorderAt = ref(null)
+
+function isReorder(event) {
+  return (
+    props.reorderable &&
+    reorderFrom >= 0 &&
+    Array.from(event.dataTransfer?.types || []).includes(REORDER_TYPE)
+  )
+}
+
+function onReorderOver(event, row) {
+  if (!isReorder(event)) return
+  event.preventDefault()
+  event.dataTransfer.dropEffect = 'move'
+  const box = event.currentTarget.getBoundingClientRect()
+  const after = event.clientY > box.top + box.height / 2
+  reorderAt.value = { index: row.index, after }
+}
+
+function onReorderLeave(row) {
+  if (reorderAt.value?.index === row.index) reorderAt.value = null
+}
+
+function onReorderDrop(event, row) {
+  if (!isReorder(event)) return
+  event.preventDefault()
+  const at = reorderAt.value || { index: row.index, after: false }
+  const to = reorderTarget(reorderFrom, at.index, at.after)
+  const from = reorderFrom
+  onReorderEnd()
+  if (to !== from) emit('reorder', { from, to })
+}
+
+function onReorderEnd() {
+  reorderFrom = -1
+  reorderAt.value = null
+}
+
+function reorderLine(row) {
+  const at = reorderAt.value
+  if (!at || at.index !== row.index) return {}
+  const color = 'var(--color-accent)'
+  return {
+    boxShadow: at.after ? `inset 0 -2px 0 ${color}` : `inset 0 2px 0 ${color}`,
+  }
 }
 
 function openMenu(event, row) {

@@ -319,6 +319,8 @@
               :tracks="shownTracks"
               :positions="filtering ? positions : null"
               :context="playlistActions.contextFor(playlist)"
+              :reorderable="canReorder && !filtering"
+              @reorder="onDragReorder"
             />
             <UiEmpty
               v-else
@@ -427,7 +429,7 @@ import { usePlayer } from '/src/model/player'
 import { usePlaylistActions } from '/src/model/playlistActions'
 import { useTrackActions } from '/src/model/trackActions'
 import { useUi } from '/src/model/ui'
-import { sortTracks, trackRowKey } from '/src/lib/library'
+import { moveItem, sortTracks, trackRowKey } from '/src/lib/library'
 import { songDownloadState } from '/src/lib/downloadState'
 import {
   filterPlaylistSongs,
@@ -600,6 +602,17 @@ const canReorder = computed(
 watch(canReorder, (can) => {
   if (!can) reordering.value = false
 })
+
+// A song dragged to a new place in the list: the list as shown (sorted
+// or not) with that song moved becomes the playlist's order.
+async function onDragReorder({ from, to }) {
+  const moved = moveItem(shownTracks.value, from, to)
+  trackSort.value = { key: 'order', dir: 'asc' }
+  await playlistActions.reorder(
+    playlist.value,
+    moved.map((track) => track.file)
+  )
+}
 
 // Show the order just saved, rather than a sort picked before.
 function onReordered() {

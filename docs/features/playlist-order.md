@@ -8,6 +8,10 @@ A playlist you made in the Library — with **New playlist**, **Save a copy**, [
 
 ## Reorder a playlist
 
+With a mouse, the quickest way is to drag a song straight to its new place in the playlist's list: a line shows where it lands, and the new order is saved as soon as you drop it. The list as it is shown becomes the order, even when it was sorted another way, and the page switches back to **Playlist order**. Dragging is off while you search the playlist.
+
+For more than one move, or on a phone:
+
 1. Open the playlist and pick **Reorder**, next to the sort picker above its songs.
 2. Move the songs:
     - drag a row to its new place (with a mouse);

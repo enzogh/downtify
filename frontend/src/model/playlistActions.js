@@ -384,6 +384,14 @@ export function usePlaylistActions() {
     if (songs.length) await addSongs(playlist, songs)
   }
 
+  // Songs dropped on an imported playlist: it follows its source, so it
+  // is detached first (asked, like "Detach from source"), then they go in.
+  async function detachThenAdd(playlist, dropped) {
+    if (!(await detach(playlist))) return
+    const live = library.findPlaylist(playlist.name)
+    if (live?.canEditTracks) await addDropped(live, dropped)
+  }
+
   // A new playlist from songs dropped on "New playlist".
   function createFromDropped({ files = [], songs = [] }) {
     openCreate(files)
@@ -820,6 +828,7 @@ export function usePlaylistActions() {
     addMenuItems,
     addSongs,
     addDropped,
+    detachThenAdd,
     createFromDropped,
     removePending,
     songMenuItems,
