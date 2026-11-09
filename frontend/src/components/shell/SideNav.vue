@@ -305,12 +305,7 @@ async function onDrop(event, playlist) {
   const dropped = readDragSongs(event)
   if (!dropped) return
   event.preventDefault()
-  if (dropped.files.length) {
-    await playlistActions.addFiles(playlist, dropped.files)
-  }
-  if (dropped.songs.length) {
-    await playlistActions.addSongs(playlist, dropped.songs)
-  }
+  await playlistActions.addDropped(playlist, dropped)
 }
 
 const recentPlaylists = computed(() =>

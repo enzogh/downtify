@@ -31,6 +31,7 @@
     <RenamePlaylistModal />
     <PlaylistShareModal />
     <AddTracksToPlaylistModal />
+    <PlaylistDropDock />
     <DefaultPasswordPrompt />
     <ReplaceAudioDialog v-if="auth.isAdmin.value" />
     <BuyLinksDialog />
@@ -61,6 +62,7 @@ import CreatePlaylistModal from '../library/CreatePlaylistModal.vue'
 import PlaylistShareModal from '../library/PlaylistShareModal.vue'
 import RenamePlaylistModal from '../library/RenamePlaylistModal.vue'
 import AddTracksToPlaylistModal from '../library/AddTracksToPlaylistModal.vue'
+import PlaylistDropDock from './PlaylistDropDock.vue'
 import SignIn from './SignIn.vue'
 import DefaultPasswordPrompt from './DefaultPasswordPrompt.vue'
 import ReplaceAudioDialog from '../library/ReplaceAudioDialog.vue'

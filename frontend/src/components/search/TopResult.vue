@@ -3,6 +3,8 @@
     :is="linkTo ? RouterLink : 'div'"
     :to="linkTo || undefined"
     class="group relative flex h-full min-h-56 flex-col gap-4 rounded-panel bg-surface p-5 transition-colors hover:bg-surface-2"
+    :draggable="result.kind === 'song' ? 'true' : undefined"
+    @dragstart="onDragStart"
   >
     <CoverArt
       :src="cover"
@@ -57,6 +59,8 @@ import { localCatalogRoute } from '/src/lib/library'
 import { deezerImage } from '/src/lib/deezerImage'
 import { knownArtistPhoto } from '/src/lib/artistPhotoProxy'
 import { useI18n } from '/src/i18n'
+import { setDragSongs } from '/src/lib/dragSongs'
+import { useLibrary } from '/src/model/library'
 
 const props = defineProps({
   result: { type: Object, required: true },
@@ -104,6 +108,17 @@ const byline = computed(() => {
   }
   return item.artist || ''
 })
+
+// A song can be dragged onto a playlist, like the rows next to it.
+const library = useLibrary()
+function onDragStart(event) {
+  if (props.result.kind !== 'song') return
+  const song = props.result.item
+  const artist = (song.artists || [])[0] || song.artist
+  const track = library.findTrack(artist, song.name)
+  if (track?.file) setDragSongs(event, { files: [track.file] }, song.name)
+  else setDragSongs(event, { songs: [song] }, song.name)
+}
 
 const linkTo = computed(() => {
   const item = props.result.item

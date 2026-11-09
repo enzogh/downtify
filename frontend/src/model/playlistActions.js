@@ -376,6 +376,20 @@ export function usePlaylistActions() {
     }
   }
 
+  // Songs dropped on a playlist (see lib/dragSongs): library files go in
+  // at once, the rest download first.
+  async function addDropped(playlist, { files = [], songs = [] }) {
+    if (!playlist?.canEditTracks) return
+    if (files.length) await addFiles(playlist, files)
+    if (songs.length) await addSongs(playlist, songs)
+  }
+
+  // A new playlist from songs dropped on "New playlist".
+  function createFromDropped({ files = [], songs = [] }) {
+    openCreate(files)
+    createSongs.value = songs
+  }
+
   // "Add to playlist" for songs that may not be downloaded yet.
   function songMenuItems(songs) {
     const list = Array.isArray(songs) ? songs : [songs]
@@ -805,6 +819,8 @@ export function usePlaylistActions() {
     showHidden,
     addMenuItems,
     addSongs,
+    addDropped,
+    createFromDropped,
     removePending,
     songMenuItems,
     openCreateFromSongs,
