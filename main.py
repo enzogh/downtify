@@ -38,6 +38,7 @@ from downtify import (
     download_policy_routes,
     jam_routes,
     mobile_routes,
+    song_link_routes,
     trash_routes,
 )
 from downtify.activity import ActivityLog
@@ -123,6 +124,7 @@ from downtify.server_port import (
     set_restart_handler,
     write_runtime_port,
 )
+from downtify.song_links import SongLinks
 from downtify.stream import stream_cache_from_env
 from downtify.telemetry import redact_url_secrets
 from downtify.track_index import TrackIndex
@@ -433,6 +435,7 @@ def _open_library_stores(monitor_db_path: Path) -> None:
     api.state.playlist_catalog = PlaylistCatalog(library_db)
     api.state.manual_playlist_owners = ManualPlaylistOwners(library_db)
     api.state.playlist_shares = PlaylistShares(library_db)
+    api.state.song_links = SongLinks(library_db)
     api.state.playlist_hidden = PlaylistHiddenSongs(library_db)
     api.state.playlist_pending = PlaylistPendingSongs(library_db)
     api.state.file_providers = FileProviders(library_db)
@@ -864,6 +867,7 @@ def build_app() -> FastAPI:
     app.include_router(trash_routes.router)
     app.include_router(jam_routes.router)
     app.include_router(download_policy_routes.router)
+    app.include_router(song_link_routes.router)
 
     @app.get('/list')
     def list_downloads(request: Request, refresh: bool = False) -> list[str]:

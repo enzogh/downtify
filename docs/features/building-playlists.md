@@ -24,7 +24,9 @@ In [library-only mode](library-only.md) nothing can be downloaded, so the **+** 
 
 ## Drag and drop
 
-Drag any song from a track list (an album, an artist, the Library, a playlist) or from a search result onto a playlist in the sidebar to add it. To drag several songs at once, select them first. The sidebar lists every playlist you created, empty ones included, so you can drop songs onto a new playlist.
+Drag any song from a track list (an album, an artist, the Library, a playlist) or from a search result — the **Top result** card included — to add it to a playlist. To drag several songs at once, select them first.
+
+As soon as you start dragging, an **Add to a playlist** panel opens on the right with every playlist you can add to (yours, empty ones included, and those shared with you as an editor). Drop the songs on one of them, or on **New playlist…** to create a playlist with them. On a wide screen you can also drop onto the playlists in the sidebar.
 
 ## Recommended songs
 

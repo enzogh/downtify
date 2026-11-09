@@ -1044,6 +1044,8 @@ RULES: list[tuple[frozenset[str], re.Pattern[str], str]] = [
             CLIENT,
         ),
         (_ALL, r'^/api/discover/blocked$', CLIENT),
+        (_m('GET', 'POST'), r'^/api/song-links$', CLIENT),
+        (_m('DELETE'), r'^/api/song-links/[A-Za-z0-9_-]+$', CLIENT),
         (_READ, r'^/api/podcasts/', CLIENT),
         (
             _m('POST'),

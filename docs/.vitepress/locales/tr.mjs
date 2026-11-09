@@ -83,6 +83,7 @@ export default {
       'features/collaborative-playlists.md': 'Birlikte düzenlenen listeler',
       'features/playlist-order.md': 'Sıralama ve tekrarlanan şarkılar',
       'features/building-playlists.md': 'Çalma listesi oluşturma',
+      'features/song-links.md': 'Bir şarkıyı paylaşma',
       'features/users.md': 'Kullanıcılar ve oturum açma',
       'features/mobile-apps.md': 'Mobil uygulamalar',
       'features/library-only.md': 'Library-only mode',

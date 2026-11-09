@@ -1003,6 +1003,8 @@ export default {
       'D’après les titres de cette playlist. En ajouter un le télécharge si besoin.',
     recommendedRefresh: 'Actualiser',
     recommendedAdd: 'Ajouter',
+    dropTitle: 'Ajouter à une playlist',
+    dropHint: 'Déposez le titre sur une playlist.',
     recommendedEmpty: 'Aucune recommandation pour le moment.',
     kicker: 'Playlist',
     diagnostics: {
@@ -1434,6 +1436,13 @@ export default {
       unknown: 'Avant le suivi',
     },
   },
+  songLink: {
+    menu: 'Partager le lien',
+    copied: 'Lien copié — toute personne qui l’a peut écouter',
+    disabled:
+      'Les liens publics vers des titres sont désactivés sur ce serveur',
+    copyThis: 'Copiez ce lien : {url}',
+  },
   sharing: {
     title: 'Partager « {name} »',
     hint: 'Les personnes avec qui vous la partagez peuvent l’écouter, la suivre et en enregistrer une copie. Seules celles que vous autorisez à la modifier peuvent ajouter ou retirer des titres.',
@@ -1520,6 +1529,9 @@ export default {
     allowPlaylistSharing: 'Autoriser les utilisateurs à partager des playlists',
     allowPlaylistSharingHint:
       'Les utilisateurs peuvent partager leurs playlists avec d’autres ou les rendre publiques. Désactivé, toutes les playlists partagées restent masquées jusqu’à la réactivation.',
+    allowSongLinks: 'Autoriser les liens publics vers des titres',
+    allowSongLinksHint:
+      'Les utilisateurs peuvent partager un lien vers un titre que n’importe qui peut écouter sans se connecter. Désactivé, plus aucun lien ne fonctionne jusqu’à ce que vous le réactiviez.',
     searchAlbums: 'Afficher les albums dans les résultats',
     searchAlbumsHint:
       'Chercher aussi les albums, avec la possibilité de télécharger l’album entier.',

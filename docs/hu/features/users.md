@@ -77,6 +77,8 @@ Egy admin az egészet kikapcsolhatja a **Beállítások › Könyvtár › A fel
 
 A párosított alkalmazások ugyanezeket a listákat kapják: a [`GET /api/v1/playlists`](../api-reference.md#get-apiv1playlists) megmondja, kié melyik és csak megtekinthető-e, a WebSocketen a `playlists_changed` pedig frissítésre szólítja őket.
 
+Egyetlen dal fiók nélküli ismerőssel is megosztható nyilvános linkként: lásd [Dal megosztása](song-links.md).
+
 ### Elrejtés a felhasználók elől
 
 Az adminok döntik el, mit látnak a többi fiókok. Minden mindenki számára látható, amíg egy admin el nem rejt valamit: egy **dalt**, egy egész **albumot** vagy egy egész **előadót**. Az elrejtett elemek kikerülnek a Könyvtárból, a keresés „a könyvtárban” jelöléseiből, a lejátszási listák számlistáiból és abból, amit egy párosított telefon szinkronizál — a felhasználóknak, nem az adminoknak.

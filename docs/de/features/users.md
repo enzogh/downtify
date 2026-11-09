@@ -77,6 +77,8 @@ Ein Admin kann das Ganze mit **Einstellungen › Bibliothek › Benutzern das Te
 
 Gekoppelte Apps bekommen dieselben Listen: [`GET /api/v1/playlists`](../api-reference.md#get-apiv1playlists) sagt, wem jede gehört und ob sie nur ansehbar ist, und `playlists_changed` auf dem WebSocket weist sie an, zu aktualisieren.
 
+Ein einzelner Song lässt sich auch mit jemandem ohne Konto teilen, als öffentlicher Link: siehe [Einen Song teilen](song-links.md).
+
 ### Vor Benutzern verbergen
 
 Admins entscheiden, was die anderen Konten sehen. Alles ist für alle sichtbar, bis ein Admin etwas verbirgt: einen **Song**, ein ganzes **Album** oder einen ganzen **Künstler**. Verborgene Elemente verschwinden aus der Bibliothek, aus den „in der Bibliothek“-Markierungen der Suche, aus den Titellisten der Playlists und aus dem, was ein gekoppeltes Handy synchronisiert — für Benutzer, nicht für Admins.

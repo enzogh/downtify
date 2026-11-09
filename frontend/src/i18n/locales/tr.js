@@ -975,6 +975,8 @@ export default {
       'Bu çalma listesindeki şarkılara göre. Eklemek gerekirse indirir.',
     recommendedRefresh: 'Yenile',
     recommendedAdd: 'Ekle',
+    dropTitle: 'Bir çalma listesine ekle',
+    dropHint: 'Şarkıyı bir çalma listesinin üzerine bırakın.',
     recommendedEmpty: 'Şu anda öneri yok.',
     kicker: 'Çalma listesi',
     diagnostics: {
@@ -1391,6 +1393,12 @@ export default {
       unknown: 'Kayıttan önce',
     },
   },
+  songLink: {
+    menu: 'Bağlantıyı paylaş',
+    copied: 'Bağlantı kopyalandı — bağlantıya sahip herkes dinleyebilir',
+    disabled: 'Bu sunucuda herkese açık şarkı bağlantıları kapalı',
+    copyThis: 'Bu bağlantıyı kopyalayın: {url}',
+  },
   sharing: {
     title: '“{name}” paylaş',
     hint: 'Paylaştığın kişiler listeyi çalabilir, takip edebilir ve kopyasını kaydedebilir. Yalnızca düzenlemesine izin verdiklerin şarkı ekleyip çıkarabilir.',
@@ -1477,6 +1485,9 @@ export default {
     allowPlaylistSharing: 'Kullanıcıların liste paylaşmasına izin ver',
     allowPlaylistSharingHint:
       'Kullanıcılar listelerini başkalarıyla paylaşabilir veya herkese açık yapabilir. Kapalıyken paylaşılan tüm listeler, yeniden açana kadar gizli kalır.',
+    allowSongLinks: 'Herkese açık şarkı bağlantılarına izin ver',
+    allowSongLinksHint:
+      'Kullanıcılar, herkesin oturum açmadan dinleyebileceği bir şarkı bağlantısı paylaşabilir. Kapalıyken siz yeniden açana kadar hiçbir bağlantı çalışmaz.',
     searchAlbums: 'Arama sonuçlarında albümleri göster',
     searchAlbumsHint:
       'Aramada albümleri de getir ve albümün tamamını indirme seçeneği sun.',

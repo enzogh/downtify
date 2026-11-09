@@ -77,6 +77,8 @@ An admin can turn the whole thing off with **Settings › Library › Allow user
 
 Paired apps get the same lists: [`GET /api/v1/playlists`](../api-reference.md#get-apiv1playlists) says who owns each and whether it is view-only, and `playlists_changed` on the WebSocket tells them to refresh.
 
+A single song can also be shared with someone who has no account, as a public link: see [Sharing a song](song-links.md).
+
 ### Hiding from users
 
 Admins decide what the other accounts see. Everything is visible to everyone until an admin hides something: a **song**, a whole **album** or a whole **artist**. Hidden items leave the Library, search's "in library" marks, playlists' track lists and what a paired phone syncs — for users, not for admins.

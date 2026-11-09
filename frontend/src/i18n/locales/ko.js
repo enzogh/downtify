@@ -969,6 +969,8 @@ export default {
       '이 플레이리스트의 곡을 바탕으로 합니다. 추가하면 필요할 때 다운로드됩니다.',
     recommendedRefresh: '새로고침',
     recommendedAdd: '추가',
+    dropTitle: '플레이리스트에 추가',
+    dropHint: '노래를 플레이리스트에 놓으세요.',
     recommendedEmpty: '지금은 추천이 없습니다.',
     kicker: '재생목록',
     diagnostics: {
@@ -1388,6 +1390,12 @@ export default {
       unknown: '기록 이전',
     },
   },
+  songLink: {
+    menu: '링크 공유',
+    copied: '링크를 복사했어요 — 링크가 있는 누구나 들을 수 있어요',
+    disabled: '이 서버에서는 노래 공개 링크가 꺼져 있어요',
+    copyThis: '이 링크를 복사하세요: {url}',
+  },
   sharing: {
     title: '“{name}” 공유',
     hint: '공유받은 사람은 재생하고, 팔로우하고, 사본을 저장할 수 있습니다. 편집을 허용한 사람만 곡을 추가하거나 제거할 수 있습니다.',
@@ -1474,6 +1482,9 @@ export default {
     allowPlaylistSharing: '사용자의 재생목록 공유 허용',
     allowPlaylistSharingHint:
       '사용자가 재생목록을 다른 사용자와 공유하거나 공개할 수 있습니다. 끄면 다시 켤 때까지 공유된 재생목록이 모두 숨겨집니다.',
+    allowSongLinks: '노래 공개 링크 허용',
+    allowSongLinksHint:
+      '사용자가 로그인 없이 누구나 들을 수 있는 노래 링크를 공유할 수 있어요. 끄면 다시 켤 때까지 모든 링크가 작동하지 않아요.',
     searchAlbums: '검색 결과에 앨범 표시',
     searchAlbumsHint:
       '검색 시 앨범도 함께 검색하며 전체 앨범 다운로드 옵션을 제공합니다.',

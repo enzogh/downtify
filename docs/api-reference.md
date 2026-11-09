@@ -851,6 +851,7 @@ The `format` setting accepts `mp3`, `flac`, `m4a`, `ogg`, `opus` or `original`. 
 | `navidrome` | object | Navidrome connection. Saving with `enabled: true` but no `url`, `username` or `password` returns `400`. |
 | `sync_navidrome` | boolean | Create/update a Navidrome playlist after playlist downloads, Playlist Monitor sweeps and library changes. |
 | `allow_playlist_sharing` | boolean | Whether users may [share their playlists](features/users.md#sharing-playlists) (default `true`). While `false` every share is hidden from the people it was shared with and nobody can share or follow; the shares come back when it is turned on again. |
+| `allow_song_links` | boolean | Whether users may make [public song links](features/song-links.md) that play without signing in (default `true`). While `false` nobody can make one and every existing link answers `404`; they work again when it is turned back on. |
 | `cache_cover_art` | boolean | Keep extracted cover images under `/data/cover_cache` to speed up `/cover`. Covers fetched for [read-only extra folders](features/external-library.md) are always stored there, even when this is `false`. |
 | `library_upgrade` | object | Defaults a library upgrade scan starts from: `artwork_min_px` (clamped to `100–3000`), `artwork_source` (`highest`, `spotify`, `itunes`, `youtube-music`) and `recheck_days` (`0–3650`, `0` meaning always re-check). A scan request may override them. See [Upgrade library](features/library-upgrade.md#options). |
 | `external_library` | object | Extra folders of already-tagged audio. `folders` is a list of absolute paths (as seen inside the container, max 20). Relative paths are dropped. See [Existing music folders](features/external-library.md). |
@@ -3583,6 +3584,44 @@ Let automatic downloads fetch songs again. Nothing is downloaded by this.
 **Response:** `{ "ok": true }`. `409` (`operation_not_complete`) for an operation that hasn't moved or been restored yet.
 
 ---
+
+## Song links
+
+Public links to one library song (see [Sharing a song](features/song-links.md)). Making and revoking a link needs a signed-in account; opening one doesn't.
+
+### `POST /api/song-links`
+
+Body `{"file": "<library path>"}`. Returns the caller's link to that song — the same one when asked again:
+
+```json
+{"token": "qGrewTfjZV8pqyXK", "path": "/s/qGrewTfjZV8pqyXK", "file": "Massive Attack - Teardrop.mp3", "created_at": 1794261564}
+```
+
+`403` while the admin's `allow_song_links` setting is off. `404` for a file that isn't a library song, or one hidden from the caller.
+
+### `GET /api/song-links`
+
+`{enabled, links}`: whether links are allowed, and the caller's links, newest first, each the object above plus `title`, `artist` and `available` (whether the song still plays).
+
+### `DELETE /api/song-links/{token}`
+
+Revoke a link. Only its maker or an admin (`403` otherwise); `404` for an unknown token.
+
+### `GET /s/{token}`
+
+Public, no sign-in. An HTML page with the song's cover, title, artist, album and a player, with Open Graph tags for link previews and `X-Robots-Tag: noindex`. Like every route below, it answers `404` when the token is unknown, the song is gone or hidden from users, or `allow_song_links` is off.
+
+### `GET /s/{token}/info`
+
+Public. `{title, artist, album, duration, explicit, has_cover, audio_url, cover_url}`.
+
+### `GET /s/{token}/audio`
+
+Public. The audio file as it is, with HTTP `Range` support (also `HEAD`).
+
+### `GET /s/{token}/cover`
+
+Public. The song's embedded cover (`404` when it has none).
 
 ## Mobile API (v1)
 

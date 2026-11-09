@@ -77,6 +77,8 @@ Bir yönetici bunun tamamını **Ayarlar › Kitaplık › Kullanıcıların lis
 
 Eşleştirilmiş uygulamalar aynı listeleri alır: [`GET /api/v1/playlists`](../api-reference.md#get-apiv1playlists) her birinin sahibini ve salt görüntüleme olup olmadığını söyler, WebSocket’teki `playlists_changed` onlara yenilemelerini bildirir.
 
+Tek bir şarkı, hesabı olmayan biriyle de herkese açık bağlantı olarak paylaşılabilir: bkz. [Bir şarkıyı paylaşma](song-links.md).
+
 ### Kullanıcılardan gizleme
 
 Yöneticiler diğer hesapların ne gördüğüne karar verir. Bir yönetici bir şey gizleyene kadar her şey herkese görünürdür: bir **şarkı**, bütün bir **albüm** ya da bütün bir **sanatçı**. Gizlenen öğeler Kitaplıktan, aramanın “kitaplıkta” işaretlerinden, çalma listelerinin parça listelerinden ve eşleştirilmiş bir telefonun eşitlediklerinden çıkar — kullanıcılar için, yöneticiler için değil.

@@ -567,6 +567,19 @@ function renameLibraryPlaylist(name, newName, resetDisplayName = false) {
 
 // `editors`: who of `sharedWith` may also add and remove songs (Library
 // playlists only); left out, the current editors still listed stay.
+// A public link to one library song ({ token, path, file, created_at }).
+function createSongLink(file) {
+  return API.post('/api/song-links', { file })
+}
+
+function getSongLinks() {
+  return API.get('/api/song-links')
+}
+
+function revokeSongLink(token) {
+  return API.delete(`/api/song-links/${encodeURIComponent(token)}`)
+}
+
 function setPlaylistVisibility(name, visibility, sharedWith = [], editors) {
   return API.put('/api/library/playlists/visibility', {
     name,
@@ -1132,6 +1145,9 @@ export default {
   reorderLibraryPlaylist,
   renameLibraryPlaylist,
   setPlaylistVisibility,
+  createSongLink,
+  getSongLinks,
+  revokeSongLink,
   setPlaylistFavorite,
   copyLibraryPlaylist,
   detachLibraryPlaylist,

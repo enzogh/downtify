@@ -900,6 +900,8 @@ export default {
     recommendedHint: '根据此歌单中的歌曲推荐。添加时会按需下载。',
     recommendedRefresh: '刷新',
     recommendedAdd: '添加',
+    dropTitle: '添加到歌单',
+    dropHint: '将歌曲拖放到歌单上。',
     recommendedEmpty: '暂时没有推荐。',
     kicker: '播放列表',
     diagnostics: {
@@ -1291,6 +1293,12 @@ export default {
       unknown: '跟踪之前',
     },
   },
+  songLink: {
+    menu: '分享链接',
+    copied: '链接已复制——任何拿到链接的人都能收听',
+    disabled: '此服务器已关闭歌曲公开链接',
+    copyThis: '复制此链接：{url}',
+  },
   sharing: {
     title: '共享“{name}”',
     hint: '共享对象可以播放、关注并保存副本。只有你授予编辑权限的人才能添加或移除歌曲。',
@@ -1376,6 +1384,9 @@ export default {
     allowPlaylistSharing: '允许用户共享播放列表',
     allowPlaylistSharingHint:
       '用户可向其他用户共享播放列表，或将其公开。关闭后，所有共享列表将隐藏，直到重新开启。',
+    allowSongLinks: '允许歌曲公开链接',
+    allowSongLinksHint:
+      '用户可以分享歌曲链接，任何人无需登录即可收听。关闭后，所有链接都将失效，直到你重新开启。',
     searchAlbums: '在搜索结果中显示专辑',
     searchAlbumsHint: '搜索时同时查找专辑，并提供整张下载选项。',
     shortcutsGroup: '键盘',

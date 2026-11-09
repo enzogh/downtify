@@ -977,6 +977,8 @@ export default {
       'A lejátszási lista dalai alapján. Hozzáadáskor szükség esetén letöltődik.',
     recommendedRefresh: 'Frissítés',
     recommendedAdd: 'Hozzáadás',
+    dropTitle: 'Hozzáadás lejátszási listához',
+    dropHint: 'Engedd el a dalt egy lejátszási listán.',
     recommendedEmpty: 'Most nincs ajánlás.',
     kicker: 'Lejátszási lista',
     diagnostics: {
@@ -1402,6 +1404,12 @@ export default {
       unknown: 'A rögzítés előtt',
     },
   },
+  songLink: {
+    menu: 'Link megosztása',
+    copied: 'Link másolva – bárki meghallgathatja, akinél megvan',
+    disabled: 'A nyilvános dallinkek ki vannak kapcsolva ezen a szerveren',
+    copyThis: 'Másold ki ezt a linket: {url}',
+  },
   sharing: {
     title: '„{name}” megosztása',
     hint: 'Akikkel megosztod, lejátszhatják, követhetik és másolatot menthetnek róla. Számokat csak azok adhatnak hozzá vagy távolíthatnak el, akiknek megengeded a szerkesztést.',
@@ -1488,6 +1496,9 @@ export default {
     allowPlaylistSharing: 'Felhasználók listamegosztásának engedélyezése',
     allowPlaylistSharingHint:
       'A felhasználók megoszthatják listáikat másokkal, vagy nyilvánossá tehetik azokat. Kikapcsolva minden megosztott lista rejtve marad, amíg vissza nem kapcsolod.',
+    allowSongLinks: 'Nyilvános dallinkek engedélyezése',
+    allowSongLinksHint:
+      'A felhasználók megoszthatnak egy linket egy dalhoz, amit bárki bejelentkezés nélkül meghallgathat. Kikapcsolva egyik link sem működik, amíg vissza nem kapcsolod.',
     searchAlbums: 'Albumok a találatok között',
     searchAlbumsHint:
       'Albumokat is keres, és felkínálja a teljes album letöltését.',

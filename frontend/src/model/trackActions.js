@@ -17,6 +17,7 @@ import { saveName } from '/src/lib/paths'
 import { useI18n } from '/src/i18n'
 import API from '/src/model/api'
 import { previewLines, trashError, useTrashCapability } from '/src/lib/trash'
+import { shareSongUrl, songLinkUrl } from '/src/lib/songLinks'
 
 export function useTrackActions() {
   const trashCapability = useTrashCapability()
@@ -163,6 +164,34 @@ export function useTrackActions() {
   }
 
   /** Context-menu items for one track inside `list`. */
+  async function shareSong(track) {
+    // Not awaited first: the copy has to start within the click.
+    const pending = API.createSongLink(track.file).then(({ data }) =>
+      songLinkUrl(data)
+    )
+    try {
+      const how = await shareSongUrl(pending, {
+        title: track.title,
+        text: [track.title, track.artist].filter(Boolean).join(' · '),
+      })
+      if (how === 'copied') {
+        ui.toast(t('songLink.copied'), { kind: 'success' })
+      }
+    } catch (err) {
+      if (err?.url) {
+        // No clipboard (a page served over plain HTTP): show the link.
+        ui.toast(t('songLink.copyThis', { url: err.url }), { timeout: 20000 })
+        return
+      }
+      ui.toast(
+        err?.response?.status === 403
+          ? t('songLink.disabled')
+          : t('toast.actionFailed'),
+        { kind: 'error' }
+      )
+    }
+  }
+
   function menuFor(
     track,
     { list = [track], index = 0, context = null, hide = [] } = {}
@@ -218,6 +247,13 @@ export function useTrackActions() {
         action: () => trackOrigin.open(track),
       },
       {
+        // A public link anyone can listen to without signing in.
+        label: t('songLink.menu'),
+        icon: 'share',
+        hidden: !track.file || hide.includes('share'),
+        action: () => shareSong(track),
+      },
+      {
         label: t('library.saveToDevice'),
         icon: 'download',
         action: () => saveToDevice(track),
@@ -244,5 +280,14 @@ export function useTrackActions() {
     ]
   }
 
-  return { play, playNext, enqueue, saveToDevice, downloadZip, remove, menuFor }
+  return {
+    play,
+    playNext,
+    enqueue,
+    saveToDevice,
+    downloadZip,
+    remove,
+    menuFor,
+    shareSong,
+  }
 }

@@ -347,6 +347,10 @@ downloads are shared, and files are never stored twice.
  * ``POST /api/stream/live/prefetch`` (body ``{video_id}``: resolve
    that video's audio URL in the background and answer ``{queued:
    true}`` at once - how the player warms the next track up)
+* ``GET|POST /api/song-links`` and ``DELETE /api/song-links/{token}``
+  (public links to one song), and the pages they open without signing
+  in, ``GET /s/{token}`` (plus ``/info``, ``/audio``, ``/cover``) - see
+  ``downtify/song_link_routes.py``
 * ``GET  /api/server/info`` (public: server id, name, version,
   ``api_version``, ``require_sign_in`` (always true), capabilities) and
   ``PATCH /api/server`` (``{name}``) - see ``downtify/auth_routes.py``
@@ -762,6 +766,9 @@ DEFAULT_SETTINGS: dict[str, Any] = {
     # Whether users may share their playlists with other users (each user
     # also chooses whether to see public ones: ``show_public_playlists``).
     'allow_playlist_sharing': True,
+    # Whether users may make public links to a song, which anyone can
+    # open and play without signing in (see downtify/song_links.py).
+    'allow_song_links': True,
     'navidrome': {
         'enabled': False,
         'url': '',
@@ -1258,6 +1265,8 @@ class AppState:
     library_visibility: Optional[LibraryVisibility] = None
     manual_playlist_owners: Optional[ManualPlaylistOwners] = None
     playlist_shares: Optional[PlaylistShares] = None
+    # Public links to one song (see downtify/song_links.py).
+    song_links: Any = None
     playlist_hidden: Optional[PlaylistHiddenSongs] = None
     # Songs added to a Library playlist before their download ends
     # (downtify/playlist_pending.py).
@@ -2259,6 +2268,14 @@ def rekey_file_owners(
             logger.opt(exception=True).debug(
                 'Could not rekey the provider of {}', stored_path
             )
+    # And its public links.
+    if state.song_links is not None:
+        try:
+            state.song_links.rekey(old_key, new_key, stored_path)
+        except Exception:
+            logger.opt(exception=True).debug(
+                'Could not rekey the song links of {}', stored_path
+            )
 
 
 def drop_file_owners(content_key: str) -> None:
@@ -2287,6 +2304,13 @@ def drop_file_owners(content_key: str) -> None:
         except Exception:
             logger.opt(exception=True).debug(
                 'Could not drop the provider of a deleted file'
+            )
+    if state.song_links is not None:
+        try:
+            state.song_links.drop(content_key)
+        except Exception:
+            logger.opt(exception=True).debug(
+                'Could not drop the song links of a deleted file'
             )
 
 

@@ -799,6 +799,15 @@
                 />
               </SettingRow>
               <SettingRow
+                :label="t('settings.allowSongLinks')"
+                :description="t('settings.allowSongLinksHint')"
+              >
+                <UiSwitch
+                  v-model="s.allow_song_links"
+                  :aria-label="t('settings.allowSongLinks')"
+                />
+              </SettingRow>
+              <SettingRow
                 :label="t('settings.reconcile')"
                 :description="t('settings.reconcileHint')"
                 stacked

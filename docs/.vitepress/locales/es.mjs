@@ -83,6 +83,7 @@ export default {
       'features/collaborative-playlists.md': 'Playlists colaborativas',
       'features/playlist-order.md': 'Orden y canciones repetidas',
       'features/building-playlists.md': 'Crear playlists',
+      'features/song-links.md': 'Compartir una canción',
       'features/users.md': 'Usuarios e inicio de sesión',
       'features/mobile-apps.md': 'Apps móviles',
       'features/library-only.md': 'Library-only mode',

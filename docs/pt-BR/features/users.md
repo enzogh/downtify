@@ -77,6 +77,8 @@ Um admin pode desligar tudo isso em **Configurações › Biblioteca › Permiti
 
 Os apps pareados recebem as mesmas listas: [`GET /api/v1/playlists`](../api-reference.md#get-apiv1playlists) diz quem é o dono de cada uma e se é só visualização, e `playlists_changed` no WebSocket avisa para atualizar.
 
+Uma única música também pode ser compartilhada com quem não tem conta, como link público: veja [Compartilhar uma música](song-links.md).
+
 ### Ocultando dos usuários
 
 Os admins decidem o que as outras contas veem. Tudo é visível para todos até que um admin oculte algo: uma **música**, um **álbum** inteiro ou um **artista** inteiro. Itens ocultos saem da Biblioteca, das marcações "na biblioteca" da pesquisa, das listas de faixas das playlists e do que um celular pareado sincroniza — para os usuários, não para os admins.

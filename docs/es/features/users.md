@@ -77,6 +77,8 @@ Un admin puede desactivar todo esto con **Ajustes › Biblioteca › Permitir qu
 
 Las apps vinculadas reciben las mismas listas: [`GET /api/v1/playlists`](../api-reference.md#get-apiv1playlists) dice quién es el propietario de cada una y si es de solo lectura, y `playlists_changed` en el WebSocket les avisa de que se actualicen.
 
+Una sola canción también se puede compartir con alguien sin cuenta, como enlace público: consulta [Compartir una canción](song-links.md).
+
 ### Ocultar a los usuarios
 
 Los admins deciden lo que ven las demás cuentas. Todo es visible para todos hasta que un admin oculta algo: una **canción**, un **álbum** entero o un **artista** entero. Lo oculto sale de la Biblioteca, de las marcas «en la biblioteca» de la búsqueda, de las listas de canciones de las playlists y de lo que sincroniza un teléfono vinculado — para los usuarios, no para los admins.

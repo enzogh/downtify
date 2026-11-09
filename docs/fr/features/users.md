@@ -77,6 +77,8 @@ Un admin peut tout désactiver avec **Paramètres › Bibliothèque › Autorise
 
 Les applications associées reçoivent les mêmes listes : [`GET /api/v1/playlists`](../api-reference.md#get-apiv1playlists) indique à qui appartient chacune et si elle est en lecture seule, et `playlists_changed` sur le WebSocket leur dit d’actualiser.
 
+Un seul titre peut aussi être partagé avec quelqu’un qui n’a pas de compte, sous forme de lien public : voir [Partager un titre](song-links.md).
+
 ### Masquer aux utilisateurs
 
 Les admins décident de ce que voient les autres comptes. Tout est visible pour tous jusqu’à ce qu’un admin masque quelque chose : un **morceau**, un **album** entier ou un **artiste** entier. Les éléments masqués quittent la Bibliothèque, les repères « dans la bibliothèque » de la recherche, les listes de morceaux des playlists et ce qu’un téléphone associé synchronise — pour les utilisateurs, pas pour les admins.

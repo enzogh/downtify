@@ -962,6 +962,8 @@ export default {
       'Based on the songs in this playlist. Adding one downloads it if needed.',
     recommendedRefresh: 'Refresh',
     recommendedAdd: 'Add',
+    dropTitle: 'Add to a playlist',
+    dropHint: 'Drop the song on a playlist.',
     recommendedEmpty: 'No recommendations right now.',
     kicker: 'Playlist',
     diagnostics: {
@@ -1368,6 +1370,12 @@ export default {
       unknown: 'Before tracking',
     },
   },
+  songLink: {
+    menu: 'Share link',
+    copied: 'Link copied — anyone with it can listen',
+    disabled: 'Public song links are turned off on this server',
+    copyThis: 'Copy this link: {url}',
+  },
   sharing: {
     title: 'Share “{name}”',
     hint: 'People you share with can play it, follow it and save a copy. Only those you let edit it can add or remove songs.',
@@ -1454,6 +1462,9 @@ export default {
     allowPlaylistSharing: 'Allow users to share playlists',
     allowPlaylistSharingHint:
       'Users can share their playlists with other users, or make them public. When off, every shared playlist stays hidden until you turn it back on.',
+    allowSongLinks: 'Allow public song links',
+    allowSongLinksHint:
+      'Users can share a link to a song that anyone can listen to without signing in. When off, every link stops working until you turn it back on.',
     searchAlbums: 'Show albums in search results',
     searchAlbumsHint:
       'Also look up albums when searching, with an option to download the whole thing.',

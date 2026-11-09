@@ -39,6 +39,7 @@ export const NAV = [
         page: 'features/playlist-order.md',
       },
       { title: 'Building playlists', page: 'features/building-playlists.md' },
+      { title: 'Sharing a song', page: 'features/song-links.md' },
       { title: 'Top Songs', page: 'features/top-songs.md' },
       { title: 'Library Import (CSV)', page: 'features/library-import.md' },
       { title: 'Built-in Player', page: 'features/player.md' },

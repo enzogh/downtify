@@ -1001,6 +1001,8 @@ export default {
       'Basierend auf den Songs dieser Playlist. Beim Hinzufügen wird er bei Bedarf heruntergeladen.',
     recommendedRefresh: 'Aktualisieren',
     recommendedAdd: 'Hinzufügen',
+    dropTitle: 'Zu einer Playlist hinzufügen',
+    dropHint: 'Lege den Song auf einer Playlist ab.',
     recommendedEmpty: 'Gerade keine Empfehlungen.',
     kicker: 'Playlist',
     diagnostics: {
@@ -1433,6 +1435,12 @@ export default {
       unknown: 'Vor der Erfassung',
     },
   },
+  songLink: {
+    menu: 'Link teilen',
+    copied: 'Link kopiert – jeder mit dem Link kann zuhören',
+    disabled: 'Öffentliche Song-Links sind auf diesem Server deaktiviert',
+    copyThis: 'Kopiere diesen Link: {url}',
+  },
   sharing: {
     title: '„{name}“ teilen',
     hint: 'Wer sie bekommt, kann sie abspielen, ihr folgen und eine Kopie speichern. Titel hinzufügen oder entfernen kann nur, wem du das Bearbeiten erlaubst.',
@@ -1520,6 +1528,9 @@ export default {
     allowPlaylistSharing: 'Nutzern das Teilen von Playlists erlauben',
     allowPlaylistSharingHint:
       'Nutzer können ihre Playlists mit anderen teilen oder öffentlich machen. Ausgeschaltet bleiben alle geteilten Playlists verborgen, bis du es wieder einschaltest.',
+    allowSongLinks: 'Öffentliche Song-Links erlauben',
+    allowSongLinksHint:
+      'Nutzer können einen Link zu einem Song teilen, den jeder ohne Anmeldung anhören kann. Wenn aus, funktioniert kein Link mehr, bis du es wieder einschaltest.',
     searchAlbums: 'Alben in Suchergebnissen anzeigen',
     searchAlbumsHint:
       'Suche auch nach Alben und biete die Möglichkeit, das gesamte Album herunterzuladen.',
