@@ -1008,6 +1008,7 @@ export default {
     dropImportedTitle: 'Playlists importées',
     dropImportedHint:
       'Elles suivent leur source : y déposer un titre propose d’abord de la détacher.',
+    dragToMove: 'Déplacer {title}',
     recommendedEmpty: 'Aucune recommandation pour le moment.',
     kicker: 'Playlist',
     diagnostics: {
@@ -1066,17 +1067,9 @@ export default {
     },
     alreadyIn: 'Déjà dans « {name} »',
     removedTrack: 'Retiré de « {name} »',
-    reorder: 'Réorganiser',
-    reorderHint:
-      'Faites glisser les titres ou utilisez les flèches, puis enregistrez le nouvel ordre.',
-    reorderSave: 'Enregistrer l’ordre',
     reordered: 'Ordre enregistré',
     reorderStale:
       'Quelqu’un a modifié cette playlist entre-temps. Elle a été rechargée : réorganisez-la à nouveau.',
-    moveUp: 'Monter',
-    moveDown: 'Descendre',
-    moveTop: 'Placer en premier',
-    moveBottom: 'Placer en dernier',
     repeatTitle: 'Déjà dans cette playlist',
     repeatBody: {
       one: 'Ce titre est déjà dans « {name} ». L’ajouter à nouveau ?',

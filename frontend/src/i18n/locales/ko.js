@@ -974,6 +974,7 @@ export default {
     dropImportedTitle: '가져온 플레이리스트',
     dropImportedHint:
       '원본을 따라가요: 노래를 놓으면 먼저 원본에서 분리할지 물어봐요.',
+    dragToMove: '{title} 이동',
     recommendedEmpty: '지금은 추천이 없습니다.',
     kicker: '재생목록',
     diagnostics: {
@@ -1033,17 +1034,9 @@ export default {
     },
     alreadyIn: '이미 “{name}”에 포함되어 있습니다',
     removedTrack: '“{name}”에서 제거됨',
-    reorder: '순서 변경',
-    reorderHint:
-      '곡을 끌어서 옮기거나 화살표를 사용한 다음 새 순서를 저장하세요.',
-    reorderSave: '순서 저장',
     reordered: '순서를 저장했습니다',
     reorderStale:
       '그 사이에 누군가 이 재생목록을 변경했습니다. 다시 불러왔으니 순서를 다시 정해 주세요.',
-    moveUp: '위로 이동',
-    moveDown: '아래로 이동',
-    moveTop: '맨 위로 이동',
-    moveBottom: '맨 아래로 이동',
     repeatTitle: '이미 이 재생목록에 있습니다',
     repeatBody: {
       one: '이 곡은 이미 “{name}”에 있습니다. 다시 추가할까요?',

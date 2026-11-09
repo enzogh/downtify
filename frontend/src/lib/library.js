@@ -424,6 +424,9 @@ export function buildPlaylists(playlists, tracksByFile, batches = []) {
           ? Boolean(playlist.can_edit_tracks)
           : Boolean(playlist.manual) && playlist.mine !== false,
       owner: String(playlist.owner || ''),
+      // Who it belongs to (0: nobody recorded - from before accounts).
+      // An admin's `mine` covers everyone's; this tells their own apart.
+      ownerId: Number(playlist.owner_id) || 0,
       visibility: playlist.visibility || 'private',
       sharedWith: Array.isArray(playlist.shared_with)
         ? playlist.shared_with
@@ -457,6 +460,7 @@ export function buildPlaylists(playlists, tracksByFile, batches = []) {
       mine: true,
       canEditTracks: false,
       owner: '',
+      ownerId: Number(batch.user_id) || 0,
       visibility: 'private',
       sharedWith: [],
       editors: [],
@@ -475,6 +479,17 @@ export function buildPlaylists(playlists, tracksByFile, batches = []) {
  * user's own, those shared with them by name (new ones first) and other
  * people's public ones (by owner, then name).
  */
+/**
+ * Whether `playlist` is the user's own: theirs, their liked songs, or one
+ * nobody owns (made before accounts). An admin may open and change
+ * everyone's (`mine`), but only these are theirs.
+ */
+export function isOwnPlaylist(playlist, userId) {
+  if (!playlist?.mine) return false
+  if (playlist.liked || !playlist.ownerId || !userId) return true
+  return playlist.ownerId === userId
+}
+
 export function splitPlaylists(playlists) {
   const own = []
   const shared = []

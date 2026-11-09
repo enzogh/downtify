@@ -219,16 +219,10 @@
           v-if="playlist.tracks.length || batch?.missing_count"
           class="flex flex-col gap-3"
         >
-          <PlaylistReorder
-            v-if="reordering"
-            :playlist="playlist"
-            @close="reordering = false"
-            @saved="onReordered"
-          />
           <!-- Search and filters over the whole playlist: the list below
                only renders the rows on screen, so the browser's own find
                can't see the rest. -->
-          <div v-if="!reordering" class="flex flex-wrap items-center gap-2">
+          <div class="flex flex-wrap items-center gap-2">
             <label
               class="flex h-10 min-w-0 flex-1 basis-56 items-center gap-2.5 rounded-control border border-line-2 bg-surface px-3 focus-within:border-accent sm:max-w-xs"
             >
@@ -255,17 +249,9 @@
               playlist-order
               class="ml-auto"
             />
-            <UiButton
-              v-if="canReorder && !isSongView(view)"
-              variant="ghost"
-              icon="grip"
-              @click="reordering = true"
-            >
-              {{ t('playlists.reorder') }}
-            </UiButton>
           </div>
           <p
-            v-if="filtering && !reordering"
+            v-if="filtering"
             class="tabular text-[13px] text-muted"
             aria-live="polite"
           >
@@ -312,7 +298,7 @@
               :body="t('playlistSearch.noMatchHint')"
             />
           </template>
-          <template v-else-if="!reordering">
+          <template v-else>
             <TrackList
               v-if="shownTracks.length"
               v-model:sort="trackSort"
@@ -416,7 +402,6 @@ import UiPanel from '/src/components/ui/UiPanel.vue'
 import CollectionHero from '/src/components/library/CollectionHero.vue'
 import DetailState from '/src/components/library/DetailState.vue'
 import PlayButton from '/src/components/library/PlayButton.vue'
-import PlaylistReorder from '/src/components/library/PlaylistReorder.vue'
 import PlaylistStatus from '/src/components/library/PlaylistStatus.vue'
 import TrackList from '/src/components/library/TrackList.vue'
 import TrackSortSelect from '/src/components/library/TrackSortSelect.vue'
@@ -560,15 +545,17 @@ const views = computed(() => {
 })
 
 const shownTracks = computed(() =>
-  sortTracks(
-    filterPlaylistTracks(playlist.value?.tracks || [], {
-      query: query.value,
-      view: view.value,
-      providers: providers.value,
-      unmatched: unmatched.value,
-    }),
-    trackSort.value
-  )
+  localOrder.value && !filtering.value
+    ? localOrder.value
+    : sortTracks(
+        filterPlaylistTracks(playlist.value?.tracks || [], {
+          query: query.value,
+          view: view.value,
+          providers: providers.value,
+          unmatched: unmatched.value,
+        }),
+        trackSort.value
+      )
 )
 const viewSongs = computed(() =>
   view.value === 'failed' ? failedSongs.value : missing.value
@@ -591,33 +578,43 @@ const positions = computed(
 
 // A Library playlist's songs can be put in another order by whoever may
 // edit them; an imported one's by its owner (or an admin) - that order
-// is kept through the syncs from its source, new songs at the end.
-const reordering = ref(false)
+// is kept through the syncs from its source, new songs at the end. A
+// grip on each row drags a song to its place (mouse or finger).
 const canReorder = computed(() => {
   const p = playlist.value
   if (!p || p.liked || p.tracks.length < 2) return false
   return p.manual ? p.canEditTracks : p.mine
 })
-watch(canReorder, (can) => {
-  if (!can) reordering.value = false
-})
 
-// A song dragged to a new place in the list: the list as shown (sorted
-// or not) with that song moved becomes the playlist's order.
-async function onDragReorder({ from, to }) {
+// A moved song shows in its new place at once; the order is saved behind
+// it (one save at a time, in order) and undone if the server refuses.
+const localOrder = ref(null)
+let saving = Promise.resolve()
+let pendingSaves = 0
+// The reloaded playlist arrived in the saved order: show it instead.
+watch(
+  () => playlist.value?.tracks,
+  () => {
+    if (!pendingSaves) localOrder.value = null
+  }
+)
+
+function onDragReorder({ from, to }) {
   const moved = moveItem(shownTracks.value, from, to)
   trackSort.value = { key: 'order', dir: 'asc' }
-  await playlistActions.reorder(
-    playlist.value,
-    moved.map((track) => track.file)
-  )
+  localOrder.value = moved
+  const target = playlist.value
+  const files = moved.map((track) => track.file)
+  pendingSaves += 1
+  saving = saving
+    .then(() => playlistActions.reorder(target, files, { quiet: true }))
+    .then((ok) => {
+      pendingSaves -= 1
+      // Refused (or stale): back to what the playlist holds.
+      if (!ok) localOrder.value = null
+    })
 }
 
-// Show the order just saved, rather than a sort picked before.
-function onReordered() {
-  reordering.value = false
-  trackSort.value = { key: 'order', dir: 'asc' }
-}
 const shown = computed(() =>
   isSongView(view.value) ? shownSongs.value.length : shownTracks.value.length
 )
@@ -885,7 +882,7 @@ watch(
     hidden.value = []
     query.value = ''
     view.value = 'all'
-    reordering.value = false
+    localOrder.value = null
     details.value = null
     diagnostics.value = null
     expandedDiagnostic.value = ''

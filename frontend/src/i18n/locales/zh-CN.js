@@ -904,6 +904,7 @@ export default {
     dropHint: '将歌曲拖放到歌单上。',
     dropImportedTitle: '导入的歌单',
     dropImportedHint: '它们跟随来源：拖入歌曲时会先询问是否与来源分离。',
+    dragToMove: '移动 {title}',
     recommendedEmpty: '暂时没有推荐。',
     kicker: '播放列表',
     diagnostics: {
@@ -959,16 +960,9 @@ export default {
     },
     alreadyIn: '已在“{name}”中',
     removedTrack: '已从“{name}”移除',
-    reorder: '调整顺序',
-    reorderHint: '拖动歌曲或使用箭头，然后保存新的顺序。',
-    reorderSave: '保存顺序',
     reordered: '顺序已保存',
     reorderStale:
       '在此期间有人修改了这个播放列表。已重新加载，请重新调整顺序。',
-    moveUp: '上移',
-    moveDown: '下移',
-    moveTop: '移到最前',
-    moveBottom: '移到最后',
     repeatTitle: '已在此播放列表中',
     repeatBody: {
       one: '这首歌曲已在“{name}”中。要再次添加吗？',

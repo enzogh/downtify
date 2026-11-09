@@ -974,6 +974,7 @@ export default {
     dropImportedTitle: 'Импортирани плейлисти',
     dropImportedHint:
       'Следват източника си: пускането на песен първо предлага да я откачите.',
+    dragToMove: 'Преместване на {title}',
     recommendedEmpty: 'Няма препоръки в момента.',
     kicker: 'Плейлист',
     diagnostics: {
@@ -1029,17 +1030,9 @@ export default {
     },
     alreadyIn: 'Вече е в „{name}“',
     removedTrack: 'Премахната от „{name}“',
-    reorder: 'Пренареди',
-    reorderHint:
-      'Плъзни песните или използвай стрелките, след което запази новия ред.',
-    reorderSave: 'Запази реда',
     reordered: 'Редът е запазен',
     reorderStale:
       'Някой промени този плейлист междувременно. Той беше презареден: подреди го отново.',
-    moveUp: 'Премести нагоре',
-    moveDown: 'Премести надолу',
-    moveTop: 'Премести в началото',
-    moveBottom: 'Премести в края',
     repeatTitle: 'Вече е в този плейлист',
     repeatBody: {
       one: 'Тази песен вече е в „{name}“. Да се добави ли отново?',

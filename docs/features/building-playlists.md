@@ -26,11 +26,11 @@ In [library-only mode](library-only.md) nothing can be downloaded, so the **+** 
 
 Drag any song from a track list (an album, an artist, the Library, a playlist) or from a search result — the **Top result** card included — to add it to a playlist. To drag several songs at once, select them first.
 
-As soon as you start dragging, an **Add to a playlist** panel opens on the right with every playlist you can add to (yours, empty ones included, and those shared with you as an editor). Drop the songs on one of them, or on **New playlist…** to create a playlist with them. On a wide screen you can also drop onto the playlists in the sidebar.
+As soon as you start dragging, an **Add to a playlist** panel opens on the right with every playlist you can add to (yours, empty ones included, and those shared with you as an editor). Drop the songs on one of them, or on **New playlist…** to create a playlist with them. On a wide screen you can also drop onto the playlists in the sidebar: it lists your own playlists — imported ones included, everyone else's are under **See all** even for an admin.
 
 Your **imported playlists** — the ones that follow a Spotify or YouTube Music playlist, through a link or a [Playlist Monitor](playlist-monitor.md) watch — are listed below, under their own heading. They follow their source, so they can't take songs of their own: dropping a song on one first asks to [detach it from its source](library-catalog.md#detach-an-imported-playlist). Once detached it is a Library playlist like the others and gets the song.
 
-Inside a Library playlist, drag a song up or down its list to [put it in a new place](playlist-order.md#reorder-a-playlist).
+Inside a playlist, drag a song by its grip to [put it in a new place](playlist-order.md#reorder-a-playlist), on a phone too.
 
 ## Recommended songs
 

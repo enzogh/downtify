@@ -79,25 +79,20 @@
         :class="[
           gridClass,
           virtual ? 'absolute inset-x-0 top-0' : '',
-          isSelected(row.track)
-            ? 'bg-accent/10'
-            : isCurrent(row.track)
-              ? 'bg-surface'
-              : 'hover:bg-surface',
+          reorder.dragging.value === row.index
+            ? 'bg-raised shadow-float ring-1 ring-line-2'
+            : isSelected(row.track)
+              ? 'bg-accent/10'
+              : isCurrent(row.track)
+                ? 'bg-surface'
+                : 'hover:bg-surface',
         ]"
         @click="onRowClick($event, row)"
         @dblclick="playRow(row)"
         @contextmenu="openMenu($event, row)"
-        :style="[
-          virtual ? { transform: `translateY(${row.start}px)` } : {},
-          reorderLine(row),
-        ]"
-        draggable="true"
+        :style="rowStyle(row)"
+        :draggable="reorder.dragging.value < 0 ? 'true' : 'false'"
         @dragstart="onDragStart($event, row)"
-        @dragover="onReorderOver($event, row)"
-        @dragleave="onReorderLeave(row)"
-        @drop="onReorderDrop($event, row)"
-        @dragend="onReorderEnd"
       >
         <span v-if="selectable" class="max-md:hidden" @click.stop>
           <Checkbox
@@ -131,6 +126,23 @@
           </template>
         </span>
         <div class="flex min-w-0 items-center gap-3">
+          <!-- The grip: pressed and dragged (mouse or finger) it moves the
+               song; arrow keys move it one place. -->
+          <button
+            v-if="reorderable"
+            type="button"
+            class="-ml-1.5 flex h-10 w-7 shrink-0 cursor-grab touch-none items-center justify-center rounded-control text-faint transition-colors hover:text-fg focus-visible:text-fg active:cursor-grabbing md:w-6 md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100"
+            :class="
+              reorder.dragging.value === row.index ? '!opacity-100 text-fg' : ''
+            "
+            :aria-label="t('playlists.dragToMove', { title: row.track.title })"
+            @pointerdown="reorder.start($event, row.index)"
+            @keydown="reorder.key($event, row.index)"
+            @click.stop
+            @dblclick.stop
+          >
+            <AppIcon name="grip" :size="16" />
+          </button>
           <button
             v-if="showCover"
             type="button"
@@ -248,7 +260,7 @@ import EqBars from '../ui/EqBars.vue'
 import ExplicitBadge from '../ui/ExplicitBadge.vue'
 import UiMenu from '../ui/UiMenu.vue'
 import { setDragSongs } from '/src/lib/dragSongs'
-import { reorderTarget } from '/src/lib/playlistOrder'
+import { useRowReorder } from './useRowReorder'
 import LikeButton from '../player/LikeButton.vue'
 import TrackArtistLinks from './TrackArtistLinks.vue'
 import { useAuth } from '/src/model/auth'
@@ -425,62 +437,26 @@ function onDragStart(event, row) {
       ? [...props.selected]
       : [row.track.file]
   setDragSongs(event, { files }, row.track.title)
-  if (props.reorderable && files.length === 1) {
-    event.dataTransfer.effectAllowed = 'copyMove'
-    event.dataTransfer.setData(REORDER_TYPE, String(row.index))
-    reorderFrom = row.index
-  }
 }
 
-// Reordering: a line above or below the row under the pointer shows
-// where the dragged song lands.
-const REORDER_TYPE = 'application/x-downtify-reorder'
-let reorderFrom = -1
-const reorderAt = ref(null)
+// Reordering a playlist's songs by the grip on each row (mouse or touch).
+const reorder = useRowReorder({
+  rowHeight: ROW_HEIGHT,
+  count: () => props.tracks.length,
+  onMove: (from, to) => emit('reorder', { from, to }),
+})
 
-function isReorder(event) {
-  return (
-    props.reorderable &&
-    reorderFrom >= 0 &&
-    Array.from(event.dataTransfer?.types || []).includes(REORDER_TYPE)
-  )
-}
-
-function onReorderOver(event, row) {
-  if (!isReorder(event)) return
-  event.preventDefault()
-  event.dataTransfer.dropEffect = 'move'
-  const box = event.currentTarget.getBoundingClientRect()
-  const after = event.clientY > box.top + box.height / 2
-  reorderAt.value = { index: row.index, after }
-}
-
-function onReorderLeave(row) {
-  if (reorderAt.value?.index === row.index) reorderAt.value = null
-}
-
-function onReorderDrop(event, row) {
-  if (!isReorder(event)) return
-  event.preventDefault()
-  const at = reorderAt.value || { index: row.index, after: false }
-  const to = reorderTarget(reorderFrom, at.index, at.after)
-  const from = reorderFrom
-  onReorderEnd()
-  if (to !== from) emit('reorder', { from, to })
-}
-
-function onReorderEnd() {
-  reorderFrom = -1
-  reorderAt.value = null
-}
-
-function reorderLine(row) {
-  const at = reorderAt.value
-  if (!at || at.index !== row.index) return {}
-  const color = 'var(--color-accent)'
-  return {
-    boxShadow: at.after ? `inset 0 -2px 0 ${color}` : `inset 0 2px 0 ${color}`,
-  }
+function rowStyle(row) {
+  const shift = reorder.shift(row.index)
+  const y = (virtual.value ? row.start : 0) + shift
+  const dragging = reorder.dragging.value
+  const style = y ? { transform: `translateY(${y}px)` } : {}
+  if (dragging < 0) return style
+  if (row.index === dragging) return { ...style, zIndex: 10 }
+  // The others slide aside to show where it lands.
+  return reorder.settling.value
+    ? style
+    : { ...style, transition: 'transform 160ms cubic-bezier(.2,.8,.2,1)' }
 }
 
 function openMenu(event, row) {

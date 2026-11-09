@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import {
   buildPlaylists,
+  isOwnPlaylist,
   moveItem,
   sortItems,
   trackRowKey,
@@ -70,5 +71,28 @@ describe('moveItem', () => {
     expect(moveItem(list, 0, 3)).toEqual(['b', 'c', 'd', 'a'])
     expect(moveItem(list, 3, 0)).toEqual(['d', 'a', 'b', 'c'])
     expect(list).toEqual(['a', 'b', 'c', 'd'])
+  })
+})
+
+describe("a user's own playlists", () => {
+  const playlist = (extra) => ({
+    mine: true,
+    liked: false,
+    ownerId: 0,
+    ...extra,
+  })
+
+  it("tells an admin their own from everyone else's", () => {
+    expect(isOwnPlaylist(playlist({ ownerId: 1 }), 1)).toBe(true)
+    expect(isOwnPlaylist(playlist({ ownerId: 2 }), 1)).toBe(false)
+  })
+
+  it('keeps liked songs and playlists nobody owns', () => {
+    expect(isOwnPlaylist(playlist({ liked: true, ownerId: 2 }), 1)).toBe(true)
+    expect(isOwnPlaylist(playlist({ ownerId: 0 }), 1)).toBe(true)
+  })
+
+  it('never counts one shared with the user', () => {
+    expect(isOwnPlaylist(playlist({ mine: false, ownerId: 1 }), 1)).toBe(false)
   })
 })

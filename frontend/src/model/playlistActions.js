@@ -441,9 +441,15 @@ export function usePlaylistActions() {
 
   // Saves a Library playlist's new order. False when it changed in the
   // meantime: it is reloaded, so the next try starts from what is there.
-  async function reorder(playlist, files) {
+  // `quiet`: the list already shows the new order (dragged in place) -
+  // no toast, and the library catches up in the background.
+  async function reorder(playlist, files, { quiet = false } = {}) {
     try {
       await API.reorderLibraryPlaylist(playlist.name, files)
+      if (quiet) {
+        library.load({ force: true })
+        return true
+      }
       await library.load({ force: true })
       ui.toast(t('playlists.reordered'), { kind: 'success' })
       return true

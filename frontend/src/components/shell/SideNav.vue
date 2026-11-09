@@ -230,11 +230,13 @@ import { useUpdateCheck } from '/src/model/updateCheck'
 import { usePendingCount } from './navState'
 import { usePlaylistActions } from '/src/model/playlistActions'
 import { isSongDrag, readDragSongs } from '/src/lib/dragSongs'
+import { useMyPlaylists } from '/src/model/myPlaylists'
 
 const { t } = useI18n()
 const playlistActions = usePlaylistActions()
 const route = useRoute()
 const library = useLibrary()
+const myPlaylists = useMyPlaylists()
 const auth = useAuth()
 const pending = usePendingCount()
 const queuePaused = useQueuePause().paused
@@ -309,9 +311,15 @@ async function onDrop(event, playlist) {
 }
 
 const recentPlaylists = computed(() =>
-  [...library.ownPlaylists.value]
-    // An empty Library playlist stays listed: songs can be dropped on it.
-    .filter((playlist) => itemTrackCount(playlist) || playlist.manual)
+  // The user's own only - an admin may open everyone's, but "See all"
+  // is where those are. Watched (imported) ones included.
+  [...myPlaylists.value]
+    // An empty Library playlist stays listed: songs can be dropped on it;
+    // so does a watch still downloading its first songs.
+    .filter(
+      (playlist) =>
+        itemTrackCount(playlist) || playlist.manual || playlist.batch
+    )
     // The liked songs stay at the top; the rest are the newest.
     .sort((a, b) => Number(b.liked) - Number(a.liked) || b.added - a.added)
     .slice(0, 6)

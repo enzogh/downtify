@@ -88,14 +88,14 @@ import CoverArt from '../ui/CoverArt.vue'
 import { isSongDrag, readDragSongs } from '/src/lib/dragSongs'
 import { itemTrackCount } from '/src/lib/library'
 import { usePlaylistActions } from '/src/model/playlistActions'
-import { useLibrary } from '/src/model/library'
+import { useMyPlaylists } from '/src/model/myPlaylists'
 import { useI18n } from '/src/i18n'
 
 const NEW = '\u0000new'
 
 const { t } = useI18n()
 const playlistActions = usePlaylistActions()
-const library = useLibrary()
+const myPlaylists = useMyPlaylists()
 const active = ref(false)
 const target = ref('')
 
@@ -105,10 +105,16 @@ const target = ref('')
 // first - the only way it can take songs of its own.
 const newest = (a, b) => b.added - a.added
 const groups = computed(() => {
+  // The user's own, and those shared with them as an editor - not every
+  // playlist an admin may change.
+  const mine = new Set(myPlaylists.value.map((p) => p.key))
   const editable = [...playlistActions.manuals()]
-    .filter((playlist) => !playlist.liked)
+    .filter(
+      (playlist) =>
+        !playlist.liked && (mine.has(playlist.key) || !playlist.mine)
+    )
     .sort(newest)
-  const imported = library.ownPlaylists.value
+  const imported = myPlaylists.value
     .filter(
       (playlist) =>
         !playlist.canEditTracks && !playlist.liked && !playlist.manual

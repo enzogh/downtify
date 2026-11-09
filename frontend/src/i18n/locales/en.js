@@ -967,6 +967,7 @@ export default {
     dropImportedTitle: 'Imported playlists',
     dropImportedHint:
       'They follow their source: dropping a song asks to detach one first.',
+    dragToMove: 'Move {title}',
     recommendedEmpty: 'No recommendations right now.',
     kicker: 'Playlist',
     diagnostics: {
@@ -1022,16 +1023,9 @@ export default {
     },
     alreadyIn: 'Already in “{name}”',
     removedTrack: 'Removed from “{name}”',
-    reorder: 'Reorder',
-    reorderHint: 'Drag the songs or use the arrows, then save the new order.',
-    reorderSave: 'Save order',
     reordered: 'Order saved',
     reorderStale:
       'Someone changed this playlist meanwhile. It was reloaded: arrange it again.',
-    moveUp: 'Move up',
-    moveDown: 'Move down',
-    moveTop: 'Move to top',
-    moveBottom: 'Move to bottom',
     repeatTitle: 'Already in this playlist',
     repeatBody: {
       one: 'This song is already in “{name}”. Add it again?',

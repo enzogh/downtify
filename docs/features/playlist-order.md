@@ -8,17 +8,13 @@ A playlist you made in the Library — with **New playlist**, **Save a copy**, [
 
 ## Reorder a playlist
 
-With a mouse, the quickest way is to drag a song straight to its new place in the playlist's list: a line shows where it lands, and the new order is saved as soon as you drop it. The list as it is shown becomes the order, even when it was sorted another way, and the page switches back to **Playlist order**. Dragging is off while you search the playlist.
+Each song of a playlist you may reorder has a grip (⋮⋮) at the start of its row — always shown on a phone, on hover with a mouse. Press it and drag the song up or down, with a finger or the mouse: the other songs slide aside to show where it will land, and the page scrolls when you reach the top or bottom of the screen. Let go and the song is in its new place at once; the order is saved in the background. If it can't be saved — someone changed the playlist meanwhile — the list goes back to the playlist's order and says so.
 
-For more than one move, or on a phone:
+With the keyboard, focus a song's grip and press **↑** or **↓** to move it one place.
 
-1. Open the playlist and pick **Reorder**, next to the sort picker above its songs.
-2. Move the songs:
-    - drag a row to its new place (with a mouse);
-    - or use the arrows on each row: **Move up** and **Move down**, and on wider screens **Move to top** and **Move to bottom**. The focus stays on the arrow, so the keyboard can keep moving the same song.
-3. Pick **Save order**, or **Cancel** to leave it as it was.
+The list as it is shown becomes the order, even when it was sorted another way. Dragging is off while you search the playlist.
 
-Saving switches the page's sort to **Playlist order**, so you see the order you just saved. The order is written to the playlist's M3U file, which media servers that read it (Jellyfin, Navidrome, Plex) pick up too.
+Moving a song switches the page's sort to **Playlist order**, so you see the order you just made. The order is written to the playlist's M3U file, which media servers that read it (Jellyfin, Navidrome, Plex) pick up too.
 
 **Imported playlists** — those following a link or a watch — can be reordered the same way by their owner or an admin. They don't stop following their source: Castify remembers the order you chose, and every sync keeps it. Songs the source adds go at the end; songs it removes disappear. Detaching the playlist from its source makes that order its own for good.
 
