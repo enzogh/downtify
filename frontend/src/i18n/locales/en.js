@@ -575,6 +575,8 @@ export default {
       'A CSV export from Soundiiz, TuneMyMusic, Exportify and similar.',
     importButton: 'Choose CSV file',
     importFailed: "Couldn't import that CSV file.",
+    exclusionsHint:
+      'Tracks an admin stopped downloading. Allow one again to let it download.',
   },
   library: {
     title: 'Library',

@@ -596,6 +596,8 @@ export default {
       'Εξαγωγή CSV από Soundiiz, TuneMyMusic, Exportify και παρόμοια.',
     importButton: 'Επιλογή αρχείου CSV',
     importFailed: 'Δεν ήταν δυνατή η εισαγωγή του CSV.',
+    exclusionsHint:
+      'Κομμάτια των οποίων τη λήψη σταμάτησε ένας διαχειριστής. Επιτρέψτε ξανά ένα για να κατέβει.',
   },
   library: {
     title: 'Βιβλιοθήκη',

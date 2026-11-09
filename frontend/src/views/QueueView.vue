@@ -23,43 +23,22 @@
           {{ t('queue.pause') }}
         </UiButton>
       </template>
-      <UiButton
-        v-if="counts.failed"
-        variant="ghost"
-        icon="retry"
-        @click="dm.retryAllFailed()"
-      >
-        {{ t('queue.retryFailed', { count: counts.failed }) }}
-      </UiButton>
-      <UiButton
-        v-if="counts.done"
-        variant="ghost"
-        icon="check"
-        @click="dm.clearCompleted()"
-      >
-        {{ t('queue.clearDone', { count: counts.done }) }}
-      </UiButton>
-      <UiButton
-        v-if="queue.length"
-        variant="danger"
-        icon="trash"
-        @click="clearAll"
-      >
-        <span class="max-sm:sr-only">{{ t('queue.clearAll') }}</span>
-      </UiButton>
     </PageHeader>
 
     <div
       v-if="queuePause.paused.value"
       role="status"
-      class="flex items-start gap-3 rounded-[14px] border border-line-2 bg-surface p-4"
+      class="flex items-start gap-3.5 rounded-panel border border-warn/25 bg-warn/6 p-4 sm:items-center"
     >
-      <AppIcon
-        :name="queuePause.draining.value ? 'clock' : 'pause'"
-        :size="20"
-        class="mt-0.5 text-muted"
-      />
-      <div class="min-w-0">
+      <span
+        class="flex size-10 shrink-0 items-center justify-center rounded-full bg-warn/12 text-warn"
+      >
+        <AppIcon
+          :name="queuePause.draining.value ? 'clock' : 'pause'"
+          :size="18"
+        />
+      </span>
+      <div class="min-w-0 flex-1">
         <p class="text-sm font-semibold">
           {{
             queuePause.draining.value
@@ -84,6 +63,42 @@
 
     <div class="grid items-start gap-8 xl:grid-cols-[minmax(0,1fr)_340px]">
       <div class="flex min-w-0 flex-col gap-3">
+        <div
+          v-if="queue.length"
+          class="flex flex-wrap items-center justify-end gap-2"
+        >
+          <UiButton
+            v-if="counts.failed"
+            size="sm"
+            variant="ghost"
+            icon="retry"
+            @click="dm.retryAllFailed()"
+          >
+            <span class="max-sm:sr-only">{{
+              t('queue.retryFailed', { count: counts.failed })
+            }}</span>
+          </UiButton>
+          <UiButton
+            v-if="counts.done"
+            size="sm"
+            variant="ghost"
+            icon="check"
+            @click="dm.clearCompleted()"
+          >
+            <span class="max-sm:sr-only">{{
+              t('queue.clearDone', { count: counts.done })
+            }}</span>
+          </UiButton>
+          <UiButton
+            v-if="queue.length"
+            size="sm"
+            variant="danger"
+            icon="trash"
+            @click="clearAll"
+          >
+            <span class="max-sm:sr-only">{{ t('queue.clearAll') }}</span>
+          </UiButton>
+        </div>
         <UiEmpty
           v-if="!queue.length"
           icon="download"
@@ -111,18 +126,29 @@
         <div
           v-else
           ref="listRoot"
-          class="relative"
-          :style="{ height: `${totalSize}px` }"
+          class="relative overflow-hidden rounded-panel border border-line-2 bg-surface"
+          :style="{ height: `${totalSize + 2}px` }"
         >
           <div
             v-for="row in rows"
-            :key="row.item.key"
+            :key="row.key"
             :ref="measureRow"
             :data-index="row.index"
-            class="absolute inset-x-0 top-0 pb-2"
+            class="absolute inset-x-0 top-0"
+            :class="row.index ? 'border-t border-line' : ''"
             :style="{ transform: `translateY(${row.start}px)` }"
           >
+            <div
+              v-if="row.header"
+              class="flex h-[43px] items-center gap-2 bg-surface-2/40 px-4"
+            >
+              <span class="eyebrow">{{ sectionLabel(row.header) }}</span>
+              <UiBadge :tone="row.header === 'failed' ? 'danger' : 'neutral'">
+                {{ row.count }}
+              </UiBadge>
+            </div>
             <QueueItem
+              v-else
               :item="row.item"
               :compact="
                 row.item.state === 'queued' || row.item.state === 'done'
@@ -196,6 +222,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useWindowVirtualizer } from '@tanstack/vue-virtual'
 import AppIcon from '/src/components/ui/AppIcon.vue'
 import UiButton from '/src/components/ui/UiButton.vue'
+import UiBadge from '/src/components/ui/UiBadge.vue'
 import UiEmpty from '/src/components/ui/UiEmpty.vue'
 import UiPanel from '/src/components/ui/UiPanel.vue'
 import UiProgress from '/src/components/ui/UiProgress.vue'
@@ -214,7 +241,11 @@ import { useAuth } from '/src/model/auth'
 import { useLibrary } from '/src/model/library'
 import { useQueuePause } from '/src/model/queuePause'
 import { useUi } from '/src/model/ui'
-import { queueRowEstimate } from '/src/lib/queueList'
+import {
+  QUEUE_SECTION_ORDER,
+  queueRowEstimate,
+  queueRows,
+} from '/src/lib/queueList'
 import { shouldJumpToActive } from '/src/lib/queueTab'
 import { useI18n } from '/src/i18n'
 
@@ -276,11 +307,23 @@ const tabs = computed(() =>
   }))
 )
 
-const ORDER = { active: 0, failed: 1, queued: 2, done: 3 }
+const SECTION_LABELS = {
+  active: 'queue.tabActive',
+  queued: 'queue.tabQueued',
+  done: 'queue.tabDone',
+  failed: 'queue.tabFailed',
+}
+function sectionLabel(state) {
+  return t(SECTION_LABELS[state])
+}
 
 const items = computed(() => {
   if (tab.value === 'all') {
-    return [...queue.value].sort((a, b) => ORDER[a.state] - ORDER[b.state])
+    return [...queue.value].sort(
+      (a, b) =>
+        QUEUE_SECTION_ORDER.indexOf(a.state) -
+        QUEUE_SECTION_ORDER.indexOf(b.state)
+    )
   }
   const list = queue.value.filter((item) => item.state === tab.value)
   // Newest finished first.
@@ -289,10 +332,17 @@ const items = computed(() => {
     : list
 })
 
+// The "All" tab splits the list into sections with a heading each.
+const listRows = computed(() => queueRows(items.value, tab.value === 'all'))
+
 const virtualizer = useWindowVirtualizer(
   computed(() => ({
-    count: items.value.length,
-    estimateSize: (index) => queueRowEstimate(items.value[index]?.state),
+    count: listRows.value.length,
+    estimateSize: (index) => {
+      const row = listRows.value[index]
+      return queueRowEstimate(row?.header ? 'header' : row?.item.state)
+    },
+    getItemKey: (index) => listRows.value[index]?.key ?? index,
     overscan: 8,
     scrollMargin: scrollMargin.value,
   }))
@@ -310,7 +360,7 @@ function measureRow(el) {
 
 onMounted(measureOffset)
 watch(
-  () => [tab.value, items.value.length],
+  () => [tab.value, items.value.length, queuePause.paused.value],
   () => requestAnimationFrame(measureOffset)
 )
 
@@ -319,11 +369,11 @@ const rows = computed(() =>
   virtualizer.value
     .getVirtualItems()
     .map((row) => ({
-      item: items.value[row.index],
+      ...listRows.value[row.index],
       index: row.index,
       start: row.start - scrollMargin.value,
     }))
-    .filter((row) => row.item)
+    .filter((row) => row.key)
 )
 
 const subtitle = computed(() => {

@@ -589,6 +589,8 @@ export default {
       'Um CSV exportado do Soundiiz, TuneMyMusic, Exportify e similares.',
     importButton: 'Escolher arquivo CSV',
     importFailed: 'Não foi possível importar esse CSV.',
+    exclusionsHint:
+      'Faixas cujo download um administrador interrompeu. Permita uma de novo para baixá-la.',
   },
   library: {
     title: 'Biblioteca',

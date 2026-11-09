@@ -584,6 +584,8 @@ export default {
       'Soundiiz, TuneMyMusic, Exportify ve benzerlerinden bir CSV dışa aktarımı.',
     importButton: 'CSV dosyası seç',
     importFailed: 'Bu CSV içe aktarılamadı.',
+    exclusionsHint:
+      'Bir yöneticinin indirmesini durdurduğu parçalar. İndirmek için birine yeniden izin verin.',
   },
   library: {
     title: 'Kitaplık',

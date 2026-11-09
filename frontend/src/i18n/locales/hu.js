@@ -587,6 +587,8 @@ export default {
       'CSV export a Soundiiz, TuneMyMusic, Exportify vagy hasonló szolgáltatásból.',
     importButton: 'CSV fájl kiválasztása',
     importFailed: 'Nem sikerült importálni a CSV-t.',
+    exclusionsHint:
+      'Számok, amelyek letöltését egy admin leállította. Engedélyezd újra, hogy letöltődjön.',
   },
   library: {
     title: 'Könyvtár',

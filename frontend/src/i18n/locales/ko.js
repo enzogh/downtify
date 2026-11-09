@@ -582,6 +582,8 @@ export default {
     importHint: 'Soundiiz, TuneMyMusic, Exportify 등에서 내보낸 CSV 파일.',
     importButton: 'CSV 파일 선택',
     importFailed: '해당 CSV 파일을 가져올 수 없습니다.',
+    exclusionsHint:
+      '관리자가 다운로드를 중지한 트랙입니다. 다시 허용하면 다운로드됩니다.',
   },
   library: {
     title: '라이브러리',

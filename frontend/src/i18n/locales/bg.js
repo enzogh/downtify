@@ -577,6 +577,8 @@ export default {
     importHint: 'CSV експорт от Soundiiz, TuneMyMusic, Exportify и подобни.',
     importButton: 'Избери CSV файл',
     importFailed: 'CSV файлът не може да бъде импортиран.',
+    exclusionsHint:
+      'Песни, чието изтегляне администратор е спрял. Разрешете някоя отново, за да се изтегли.',
   },
   library: {
     title: 'Библиотека',

@@ -546,6 +546,7 @@ export default {
     importHint: '支持从 Soundiiz、TuneMyMusic、Exportify 等导出的 CSV 文件。',
     importButton: '选择 CSV 文件',
     importFailed: '无法导入此 CSV 文件。',
+    exclusionsHint: '管理员已停止下载的曲目。重新允许后即可下载。',
   },
   library: {
     title: '音乐库',

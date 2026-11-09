@@ -606,6 +606,8 @@ export default {
       'Un export CSV de Soundiiz, TuneMyMusic, Exportify ou similaire.',
     importButton: 'Choisir un fichier CSV',
     importFailed: 'Impossible d’importer ce CSV.',
+    exclusionsHint:
+      'Titres qu’un admin ne veut plus télécharger. Réautorisez-en un pour le télécharger à nouveau.',
   },
   library: {
     title: 'Bibliothèque',

@@ -1,13 +1,13 @@
 <template>
   <article
-    class="rounded-[14px] border transition-colors"
+    class="transition-colors"
     :class="[
       item.state === 'failed'
-        ? 'border-danger/25 bg-danger/6'
+        ? 'bg-danger/5'
         : item.state === 'active'
-          ? 'border-line-2 bg-surface'
-          : 'border-transparent hover:bg-surface',
-      compact ? 'px-3 py-2' : 'p-3.5',
+          ? ''
+          : 'hover:bg-surface-2/50',
+      compact ? 'px-4 py-2.5' : 'px-4 py-3.5',
     ]"
   >
     <div class="flex items-center gap-3.5">
@@ -21,8 +21,8 @@
       <div class="min-w-0 flex-1">
         <div class="flex min-w-0 items-center gap-2">
           <span
-            class="truncate text-sm font-semibold"
-            :class="compact ? '' : 'text-[15px]'"
+            class="truncate font-semibold"
+            :class="compact ? 'text-sm' : 'text-[15px]'"
             >{{ song.name }}</span
           >
           <SourceBadge
@@ -44,13 +44,13 @@
             <span class="tabular w-9 shrink-0 text-right text-xs text-fg-3">
               {{ item.progress ? `${Math.round(item.progress)}%` : '' }}
             </span>
-            <span
+            <UiBadge
               v-if="item.position != null"
-              class="tabular shrink-0 rounded-full bg-surface-2 px-2 py-0.5 text-[11px] font-semibold text-muted"
+              class="tabular"
               :title="t('queue.statusQueued')"
             >
               #{{ item.position }}
-            </span>
+            </UiBadge>
           </div>
           <p v-if="item.message" class="mt-1 truncate text-xs text-muted">
             {{ item.message }}
@@ -60,28 +60,34 @@
           v-else-if="item.state === 'failed'"
           class="mt-1 flex items-start gap-1.5 text-xs text-danger"
         >
-          <AppIcon name="alert" :size="14" class="mt-px" />
+          <AppIcon name="alert" :size="14" class="mt-px shrink-0" />
           <span class="line-clamp-2">{{ failure }}</span>
         </p>
       </div>
 
-      <div class="flex shrink-0 items-center gap-1">
-        <span
-          v-if="item.state === 'queued' && item.position != null"
-          class="tabular rounded-full bg-surface-2 px-2 py-0.5 text-[11px] font-semibold text-muted max-sm:hidden"
-        >
-          #{{ item.position }}
-        </span>
-        <span
+      <div class="flex shrink-0 items-center gap-1.5">
+        <UiBadge
           v-if="item.state === 'queued'"
-          class="text-xs text-faint max-sm:hidden"
+          :icon="queuePause.paused.value ? 'pause' : 'clock'"
+          class="max-sm:hidden"
         >
+          <span v-if="item.position != null" class="tabular"
+            >#{{ item.position }} ·</span
+          >
           {{
             queuePause.paused.value
               ? t('queue.statusPaused')
               : t('queue.statusQueued')
           }}
-        </span>
+        </UiBadge>
+        <UiBadge
+          v-else-if="item.state === 'done'"
+          tone="accent"
+          icon="check"
+          class="max-md:hidden"
+        >
+          {{ t('queue.statusDone') }}
+        </UiBadge>
         <template v-if="item.state === 'done' && item.filename">
           <UiIconButton
             icon="play"
@@ -106,21 +112,16 @@
           icon="retry"
           @click="dm.retry(song)"
         >
-          {{ t('queue.retry') }}
+          <span class="max-sm:sr-only">{{ t('queue.retry') }}</span>
         </UiButton>
-        <UiButton
-          v-if="
-            auth.isAdmin.value &&
-            (item.state === 'failed' || item.state === 'active')
-          "
+        <UiMenu
+          v-if="canBlock"
+          :items="menuItems"
+          :label="t('common.more')"
           size="sm"
-          variant="secondary"
-          :disabled="suspending"
-          @click="suspendDownload"
-        >
-          {{ t('downloadPolicy.block') }}
-        </UiButton>
+        />
         <UiIconButton
+          v-else
           icon="x"
           :label="t('queue.remove')"
           size="sm"
@@ -164,8 +165,10 @@ import { useUi } from '/src/model/ui'
 import AppIcon from '../ui/AppIcon.vue'
 import CoverArt from '../ui/CoverArt.vue'
 import SourceBadge from '../ui/SourceBadge.vue'
+import UiBadge from '../ui/UiBadge.vue'
 import UiButton from '../ui/UiButton.vue'
 import UiIconButton from '../ui/UiIconButton.vue'
+import UiMenu from '../ui/UiMenu.vue'
 import UiProgress from '../ui/UiProgress.vue'
 import { useDownloadManager } from '/src/model/download'
 import { useLibrary } from '/src/model/library'
@@ -206,6 +209,28 @@ const override = ref('')
 const overrideError = ref('')
 
 const song = computed(() => props.item.song)
+// Admins can stop a song that keeps failing or downloading: that action
+// and "remove" share a menu so the row keeps one button per job.
+const canBlock = computed(
+  () =>
+    auth.isAdmin.value &&
+    (props.item.state === 'failed' || props.item.state === 'active')
+)
+const menuItems = computed(() => [
+  {
+    label: t('downloadPolicy.block'),
+    icon: 'minus',
+    disabled: suspending.value,
+    action: suspendDownload,
+  },
+  { divider: true },
+  {
+    label: t('queue.remove'),
+    icon: 'x',
+    danger: true,
+    action: () => dm.remove(song.value),
+  },
+])
 async function suspendDownload() {
   if (
     !(await ui.confirm({

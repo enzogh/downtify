@@ -1,37 +1,58 @@
 <template>
   <details
     v-if="auth.isAdmin.value"
-    class="rounded-panel border border-line-2 p-4"
+    class="group rounded-panel border border-line-2 bg-surface"
     @toggle="load"
   >
-    <summary class="cursor-pointer font-semibold">
-      {{ t('downloadPolicy.exclusions') }}
-    </summary>
-    <p v-if="error" role="alert" class="mt-3 text-danger">{{ error }}</p>
-    <p v-if="loaded && !items.length" class="mt-3 text-muted">
-      {{ t('downloadPolicy.empty') }}
-    </p>
-    <ul class="mt-3 flex flex-col gap-3">
-      <li
-        v-for="item in items"
-        :key="item.id"
-        class="flex items-center justify-between gap-3"
-      >
-        <div class="min-w-0">
-          <div>{{ item.title }} · {{ item.artist }}</div>
-          <small class="text-muted">{{
-            t(`downloadPolicy.${item.reason}`)
-          }}</small>
-        </div>
-        <UiButton
-          size="sm"
-          variant="secondary"
-          :disabled="busy"
-          @click="resume(item.id)"
-          >{{ t('downloadPolicy.resume') }}</UiButton
+    <summary
+      class="flex cursor-pointer list-none items-center gap-3 rounded-panel p-5 select-none sm:px-6 [&::-webkit-details-marker]:hidden"
+    >
+      <div class="min-w-0 flex-1">
+        <h2
+          class="text-display flex items-center gap-2 text-base font-semibold text-fg"
         >
-      </li>
-    </ul>
+          {{ t('downloadPolicy.exclusions') }}
+          <UiBadge v-if="loaded && items.length">{{ items.length }}</UiBadge>
+        </h2>
+        <p class="mt-1 text-[13px] text-pretty text-muted">
+          {{ t('queue.exclusionsHint') }}
+        </p>
+      </div>
+      <AppIcon
+        name="chevron-down"
+        :size="18"
+        class="shrink-0 text-muted transition-transform group-open:rotate-180"
+      />
+    </summary>
+    <div class="px-5 pb-5 sm:px-6">
+      <p v-if="error" role="alert" class="text-[13px] text-danger">
+        {{ error }}
+      </p>
+      <p v-else-if="loaded && !items.length" class="text-[13px] text-muted">
+        {{ t('downloadPolicy.empty') }}
+      </p>
+      <ul v-if="items.length" class="flex flex-col divide-y divide-line">
+        <li
+          v-for="item in items"
+          :key="item.id"
+          class="flex items-center justify-between gap-3 py-2.5 first:pt-0 last:pb-0"
+        >
+          <div class="min-w-0">
+            <p class="truncate text-sm font-semibold">{{ item.title }}</p>
+            <p class="truncate text-[13px] text-muted">
+              {{ item.artist }} · {{ t(`downloadPolicy.${item.reason}`) }}
+            </p>
+          </div>
+          <UiButton
+            size="sm"
+            variant="secondary"
+            :disabled="busy"
+            @click="resume(item.id)"
+            >{{ t('downloadPolicy.resume') }}</UiButton
+          >
+        </li>
+      </ul>
+    </div>
   </details>
 </template>
 
@@ -40,6 +61,8 @@ import { onMounted, onUnmounted, ref } from 'vue'
 import API from '/src/model/api'
 import { useAuth } from '/src/model/auth'
 import { useI18n } from '/src/i18n'
+import AppIcon from '/src/components/ui/AppIcon.vue'
+import UiBadge from '/src/components/ui/UiBadge.vue'
 import UiButton from '/src/components/ui/UiButton.vue'
 
 const auth = useAuth(),
