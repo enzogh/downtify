@@ -160,6 +160,14 @@
           @click="nowPlaying.open('lyrics')"
         />
         <UiIconButton
+          icon="users"
+          :label="jam.active.value ? t('jam.inJam') : t('jam.start')"
+          :active="jam.active.value"
+          toggle
+          size="sm"
+          @click="router.push({ name: 'Jam' })"
+        />
+        <UiIconButton
           icon="queue"
           :label="t('player.upNext')"
           size="sm"
@@ -191,7 +199,9 @@ import LikeButton from '../player/LikeButton.vue'
 import SliderBar from '../player/SliderBar.vue'
 import { useSmoothTime } from '../player/useSmoothTime'
 import VolumeControl from '../player/VolumeControl.vue'
+import { useRouter } from 'vue-router'
 import { usePlayer } from '/src/model/player'
+import { useJam } from '/src/model/jam'
 import { useDownloadManager, useProgressTracker } from '/src/model/download'
 import { useLibrary } from '/src/model/library'
 import { usePlayerPrefs } from '/src/model/playerPrefs'
@@ -200,6 +210,8 @@ import { formatDuration, widestClock } from '/src/lib/format'
 import { useI18n } from '/src/i18n'
 
 const player = usePlayer()
+const jam = useJam()
+const router = useRouter()
 const { showLyrics } = usePlayerPrefs()
 const nowPlaying = useNowPlaying()
 const { t } = useI18n()

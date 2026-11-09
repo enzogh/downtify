@@ -76,6 +76,7 @@ export default {
       'features/library-import.md': 'Импорт на библиотека (CSV)',
       'features/playback-normalization.md': 'Нормализиране на силата на звука',
       'features/player.md': 'Вграден плейър',
+      'features/jam.md': 'Jam',
       'features/liked-songs.md': 'Харесани песни',
       'features/podcasts.md': 'Подкасти',
       'features/discover.md': 'Откриване',

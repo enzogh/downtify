@@ -260,6 +260,7 @@ const items = [
     match: ['Album', 'Artist', 'Playlist'],
   },
   { name: 'Queue', icon: 'download', label: 'nav.queue' },
+  { name: 'Jam', icon: 'users', label: 'nav.jam' },
   {
     name: 'Discover',
     icon: 'sparkle',

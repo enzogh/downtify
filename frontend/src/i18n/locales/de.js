@@ -308,6 +308,7 @@ export default {
     lengthHours: '{hours} Std. {minutes} Min.',
   },
   nav: {
+    jam: 'Jam',
     main: 'Hauptmenü',
     home: 'Startseite',
     search: 'Suche',
@@ -2289,5 +2290,54 @@ export default {
   },
   source: {
     from: 'Heruntergeladen von {source}',
+  },
+  jam: {
+    title: 'Jam',
+    subtitle:
+      'Gemeinsam hören: eine geteilte Warteschlange, synchron auf jedem Gerät.',
+    start: 'Jam starten',
+    startWithQueue: 'Mit der aktuellen Wiedergabe starten',
+    startTitle: 'Jam starten',
+    startBody:
+      'Alle Eingeladenen fügen Songs zur selben Warteschlange hinzu und hören denselben Song im selben Moment – auf ihrem eigenen Gerät.',
+    joinTitle: 'Jam beitreten',
+    joinBody:
+      'Frag den Host nach dem Code oder öffne den Link, den er geschickt hat.',
+    code: 'Code',
+    codePlaceholder: 'ABC234',
+    join: 'Beitreten',
+    unknownCode: 'Keine Jam hat diesen Code',
+    yourJam: 'Deine Jam',
+    hostedBy: 'Host: {name}',
+    host: 'Host',
+    copyCode: 'Code kopieren',
+    copyLink: 'Link kopieren',
+    copied: 'Kopiert',
+    leave: 'Verlassen',
+    end: 'Jam beenden',
+    leaveConfirm: 'Diese Jam verlassen?',
+    endConfirm: 'Jam für alle beenden?',
+    endConfirmBody:
+      'Niemand hört mehr gemeinsam. Die Songs bleiben in deiner Bibliothek.',
+    listenHere: 'Auf diesem Gerät hören',
+    listenHereBody:
+      'Aus: die Jam hier verfolgen und steuern, während ein anderes Gerät sie abspielt.',
+    guestsControl: 'Gäste dürfen die Wiedergabe steuern',
+    guestsControlBody:
+      'Aus: nur du kannst abspielen, pausieren, überspringen und umsortieren. Gäste können weiter Songs hinzufügen.',
+    hostOnly: 'Nur der Host kann die Wiedergabe steuern',
+    queue: 'Warteschlange',
+    addHint:
+      'Füge Songs überall mit „Zur Warteschlange“ oder „Als Nächstes“ hinzu.',
+    emptyTitle: 'Die Warteschlange ist leer',
+    emptyBody:
+      'Füge Songs aus der Bibliothek hinzu: Sie erscheinen hier für alle.',
+    addedBy: 'Hinzugefügt von {name}',
+    remove: '{name} entfernen',
+    inJam: 'In einer Jam',
+    gone: 'Diese Jam ist beendet',
+    failed: 'Jam nicht erreichbar',
+    libraryOnly: 'Nur Songs aus der Bibliothek können in eine Jam',
+    notInJam: 'Zufall und Wiederholen sind während einer Jam aus',
   },
 }

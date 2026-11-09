@@ -301,6 +301,7 @@ export default {
     lengthHours: '{hours} h {minutes} min',
   },
   nav: {
+    jam: 'Jam',
     main: 'Principal',
     home: 'Início',
     search: 'Buscar',
@@ -2235,5 +2236,52 @@ export default {
   },
   source: {
     from: 'Baixado de {source}',
+  },
+  jam: {
+    title: 'Jam',
+    subtitle:
+      'Ouçam juntos: uma fila compartilhada, sincronizada em cada dispositivo.',
+    start: 'Iniciar uma Jam',
+    startWithQueue: 'Iniciar com o que está tocando',
+    startTitle: 'Iniciar uma Jam',
+    startBody:
+      'Cada convidado adiciona músicas à mesma fila e ouve a mesma música ao mesmo tempo, no próprio dispositivo.',
+    joinTitle: 'Entrar em uma Jam',
+    joinBody: 'Peça o código ao anfitrião ou abra o link que ele enviou.',
+    code: 'Código',
+    codePlaceholder: 'ABC234',
+    join: 'Entrar',
+    unknownCode: 'Nenhuma Jam tem este código',
+    yourJam: 'Sua Jam',
+    hostedBy: 'Organizada por {name}',
+    host: 'anfitrião',
+    copyCode: 'Copiar código',
+    copyLink: 'Copiar link',
+    copied: 'Copiado',
+    leave: 'Sair',
+    end: 'Encerrar Jam',
+    leaveConfirm: 'Sair desta Jam?',
+    endConfirm: 'Encerrar a Jam para todos?',
+    endConfirmBody:
+      'Ninguém mais ouvirá junto. As músicas continuam na sua biblioteca.',
+    listenHere: 'Ouvir neste dispositivo',
+    listenHereBody:
+      'Desligado: acompanhe e controle a Jam aqui enquanto outro dispositivo toca.',
+    guestsControl: 'Convidados podem controlar a reprodução',
+    guestsControlBody:
+      'Desligado: só você pode tocar, pausar, pular e reordenar. Convidados ainda podem adicionar músicas.',
+    hostOnly: 'Só o anfitrião pode controlar a reprodução',
+    queue: 'Fila',
+    addHint:
+      'Adicione músicas de qualquer lugar com Adicionar à fila ou Tocar em seguida.',
+    emptyTitle: 'A fila está vazia',
+    emptyBody: 'Adicione músicas da biblioteca: elas aparecem aqui para todos.',
+    addedBy: 'Adicionada por {name}',
+    remove: 'Remover {name}',
+    inJam: 'Em uma Jam',
+    gone: 'Esta Jam terminou',
+    failed: 'Não foi possível acessar a Jam',
+    libraryOnly: 'Só músicas da biblioteca podem entrar em uma Jam',
+    notInJam: 'Aleatório e repetir ficam desligados durante uma Jam',
   },
 }

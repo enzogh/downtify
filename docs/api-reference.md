@@ -2061,6 +2061,133 @@ Unlike everything of one's own (everything for an admin), which also removes the
 
 ---
 
+## Jam
+
+Listening together to one shared queue — see [Jam](features/jam.md). Any signed-in browser (paired apps don't use these yet). An account is in at most one Jam; starting or joining another leaves the first. Jams live in memory: a restart ends them, and one untouched for 12 hours is dropped.
+
+Every endpoint answers `{ "jam": … }` with the Jam you are in (or `null`), and every change is also sent to each member over the [WebSocket](#websocket):
+
+```json
+{
+  "id": "5f0c1e2a9b3d4c6e",
+  "code": "KYWCBS",
+  "host_id": 1,
+  "members": [
+    { "id": 1, "name": "admin", "host": true },
+    { "id": 2, "name": "guest", "host": false }
+  ],
+  "queue": [
+    {
+      "id": "a1b2c3d4e5f6",
+      "file": "Beta Crew - Second Wind.m4a",
+      "title": "Second Wind",
+      "artist": "Beta Crew",
+      "album": "Jam Test",
+      "duration": 90,
+      "added_by": 2,
+      "added_by_name": "guest"
+    }
+  ],
+  "index": 0,
+  "position": 12.4,
+  "playing": true,
+  "updated": 1794202842.12,
+  "now": 1794202842.12,
+  "guests_can_control": true,
+  "version": 9
+}
+```
+
+`index` is the current song in `queue` (`-1` when it is empty, `queue.length` once the last song has played out). `position` is where that song was, in seconds, at `updated` (server clock, Unix seconds); while `playing`, a client adds the time since then — `now` is the server's clock when the message was made, to correct for a device whose clock is off. `version` goes up with every change, so a late answer can be told from a newer frame.
+
+Playback controls need the host, or any member while `guests_can_control` is on (`403` otherwise). `404` when you are not in a Jam (or the code is unknown); `401` without a signed-in user.
+
+### `GET /api/jam`
+
+The Jam you are in: `{ "jam": {…} }` or `{ "jam": null }`.
+
+---
+
+### `POST /api/jam`
+
+Start a Jam you host (leaving any other). Members of a Jam you hosted get `jam: null`.
+
+---
+
+### `POST /api/jam/join`
+
+**Request body:** `{ "code": "KYWCBS" }` — case, spaces and dashes are ignored, and a whole join link (`…/jam?code=KYWCBS`) works too.
+
+---
+
+### `POST /api/jam/leave`
+
+Leave the Jam. The host leaving ends it for everyone. **Response:** `{ "jam": null }`
+
+---
+
+### `PATCH /api/jam`
+
+Host only. **Request body:** `{ "guests_can_control": false }`
+
+---
+
+### `POST /api/jam/queue`
+
+Add library songs.
+
+**Request body:**
+
+```json
+{
+  "tracks": [{ "file": "Beta Crew - Second Wind.m4a", "title": "Second Wind", "artist": "Beta Crew", "album": "Jam Test", "duration": 90 }],
+  "position": "next",
+  "play": false
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `tracks` | array | yes | Songs to add: `file` (library path) is required; `title`, `artist`, `album`, `duration` are shown to everyone |
+| `position` | `"end"`, `"next"` or integer | no | Where to insert: at the end (default), right after the current song, or at an index |
+| `play` | boolean | no | Jump to the first added song and play it (needs control) |
+
+Songs whose `file` isn't in the library are skipped; `400` when none is left. A queue holds at most 500 songs (`409` when full). The first song added to an empty Jam is cued, paused.
+
+---
+
+### `DELETE /api/jam/queue/{item_id}`
+
+Remove a song (`item_id` is its `queue[].id`). Anyone can remove a song they added; others need control.
+
+---
+
+### `POST /api/jam/queue/move`
+
+Needs control. **Request body:** `{ "item_id": "a1b2c3d4e5f6", "to": 0 }` — the current song stays current.
+
+---
+
+### `POST /api/jam/queue/clear`
+
+Needs control. Drop every song after the current one.
+
+---
+
+### `POST /api/jam/control`
+
+**Request body:** `{ "action": "seek", "position": 42 }`
+
+| `action` | Extra fields | Effect |
+|----------|--------------|--------|
+| `play` | | Play from the current position (an emptied-out Jam starts its last song again) |
+| `pause` | | Pause where the song is |
+| `seek` | `position` | Move within the current song (clamped to its duration) |
+| `next` | | Next song; past the last one the Jam stops |
+| `prev` | | Back to the previous song, or to the start of this one after its first 3 seconds |
+| `jump` | `index` | Play the song at `index` |
+| `ended` | `from_index` | A device reached the end of song `from_index`. Every listening device reports it; only the first report for the song still current moves the Jam on, the rest change nothing. Needs no control. |
+
 ## Discover
 
 Suggested artists, counted listens and hidden artists — see [Discover](features/discover.md).
@@ -3725,6 +3852,12 @@ A change to the [liked songs](features/liked-songs.md) is broadcast as well, so 
 
 ```json
 { "type": "likes", "count": 3 }
+```
+
+Every change to a [Jam](#jam) is sent to its members' sockets only, with the same snapshot the Jam endpoints answer; a member who left, or whose Jam ended, gets `null`:
+
+```json
+{ "type": "jam", "jam": { /* the Jam snapshot, or null */ } }
 ```
 
 A [podcast](features/podcasts.md) episode download reports its progress the same way as a music download, tagged so it can be told apart:

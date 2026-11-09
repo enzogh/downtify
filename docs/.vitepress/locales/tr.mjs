@@ -76,6 +76,7 @@ export default {
       'features/library-import.md': 'Kitaplığı içe aktarma (CSV)',
       'features/playback-normalization.md': 'Ses seviyesi normalleştirme',
       'features/player.md': 'Yerleşik oynatıcı',
+      'features/jam.md': 'Jam',
       'features/liked-songs.md': 'Beğenilen şarkılar',
       'features/podcasts.md': 'Podcast’ler',
       'features/discover.md': 'Keşfet',

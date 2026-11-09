@@ -75,6 +75,7 @@ export default {
       'features/library-import.md': '라이브러리 가져오기(CSV)',
       'features/playback-normalization.md': '볼륨 정규화',
       'features/player.md': '내장 플레이어',
+      'features/jam.md': 'Jam',
       'features/liked-songs.md': '좋아요 표시한 곡',
       'features/podcasts.md': '팟캐스트',
       'features/discover.md': '둘러보기',

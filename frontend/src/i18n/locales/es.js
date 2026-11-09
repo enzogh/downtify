@@ -304,6 +304,7 @@ export default {
     lengthHours: '{hours} h {minutes} min',
   },
   nav: {
+    jam: 'Jam',
     main: 'Principal',
     home: 'Inicio',
     search: 'Buscar',
@@ -2254,5 +2255,52 @@ export default {
   },
   source: {
     from: 'Descargado desde {source}',
+  },
+  jam: {
+    title: 'Jam',
+    subtitle:
+      'Escuchad juntos: una cola compartida, sincronizada en cada dispositivo.',
+    start: 'Iniciar una Jam',
+    startWithQueue: 'Iniciar con lo que suena',
+    startTitle: 'Iniciar una Jam',
+    startBody:
+      'Cada invitado añade canciones a la misma cola y oye la misma canción al mismo tiempo, en su propio dispositivo.',
+    joinTitle: 'Unirse a una Jam',
+    joinBody: 'Pide el código al anfitrión o abre el enlace que te envió.',
+    code: 'Código',
+    codePlaceholder: 'ABC234',
+    join: 'Unirse',
+    unknownCode: 'Ninguna Jam tiene este código',
+    yourJam: 'Tu Jam',
+    hostedBy: 'Organizada por {name}',
+    host: 'anfitrión',
+    copyCode: 'Copiar código',
+    copyLink: 'Copiar enlace',
+    copied: 'Copiado',
+    leave: 'Salir',
+    end: 'Terminar Jam',
+    leaveConfirm: '¿Salir de esta Jam?',
+    endConfirm: '¿Terminar la Jam para todos?',
+    endConfirmBody:
+      'Nadie seguirá escuchando junto. Las canciones siguen en tu biblioteca.',
+    listenHere: 'Escuchar en este dispositivo',
+    listenHereBody:
+      'Desactivado: sigue y controla la Jam aquí mientras otro dispositivo la reproduce.',
+    guestsControl: 'Los invitados pueden controlar la reproducción',
+    guestsControlBody:
+      'Desactivado: solo tú puedes reproducir, pausar, saltar y reordenar. Los invitados pueden seguir añadiendo canciones.',
+    hostOnly: 'Solo el anfitrión puede controlar la reproducción',
+    queue: 'Cola',
+    addHint:
+      'Añade canciones desde cualquier sitio con Añadir a la cola o Reproducir después.',
+    emptyTitle: 'La cola está vacía',
+    emptyBody: 'Añade canciones de la biblioteca: aparecen aquí para todos.',
+    addedBy: 'Añadida por {name}',
+    remove: 'Quitar {name}',
+    inJam: 'En una Jam',
+    gone: 'Esta Jam ha terminado',
+    failed: 'No se pudo contactar con la Jam',
+    libraryOnly: 'Solo las canciones de la biblioteca pueden unirse a una Jam',
+    notInJam: 'Aleatorio y repetir están desactivados durante una Jam',
   },
 }

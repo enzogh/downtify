@@ -648,6 +648,47 @@ function getLikes() {
   return API.get('/api/likes')
 }
 
+// ── Jam: listening together to one shared queue ─────────────────────
+function getJam() {
+  return API.get('/api/jam')
+}
+
+function startJam() {
+  return API.post('/api/jam')
+}
+
+function joinJam(code) {
+  return API.post('/api/jam/join', { code })
+}
+
+function leaveJam() {
+  return API.post('/api/jam/leave')
+}
+
+function configureJam(settings) {
+  return API.patch('/api/jam', settings)
+}
+
+function addToJam(tracks, { position = 'end', play = false } = {}) {
+  return API.post('/api/jam/queue', { tracks, position, play })
+}
+
+function removeFromJam(itemId) {
+  return API.delete(`/api/jam/queue/${encodeURIComponent(itemId)}`)
+}
+
+function moveInJam(itemId, to) {
+  return API.post('/api/jam/queue/move', { item_id: itemId, to })
+}
+
+function clearJam() {
+  return API.post('/api/jam/queue/clear')
+}
+
+function controlJam(action, extra = {}) {
+  return API.post('/api/jam/control', { action, ...extra })
+}
+
 // Idempotent: sending the state you want twice changes nothing.
 function setLike(file, liked) {
   return API.put('/api/likes', { file, liked })
@@ -1109,6 +1150,16 @@ export default {
   getExternalSync,
   unmapExternalFolder,
   getLikes,
+  getJam,
+  startJam,
+  joinJam,
+  leaveJam,
+  configureJam,
+  addToJam,
+  removeFromJam,
+  moveInJam,
+  clearJam,
+  controlJam,
   setLike,
   clearLikes,
   clientId: sessionID,

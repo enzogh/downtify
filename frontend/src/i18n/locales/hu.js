@@ -300,6 +300,7 @@ export default {
     lengthHours: '{hours} óra {minutes} perc',
   },
   nav: {
+    jam: 'Jam',
     main: 'Fő',
     home: 'Kezdőlap',
     search: 'Keresés',
@@ -2243,5 +2244,53 @@ export default {
   },
   source: {
     from: 'Letöltve innen: {source}',
+  },
+  jam: {
+    title: 'Jam',
+    subtitle:
+      'Hallgassátok együtt: egyetlen közös lejátszási sor, minden eszközön szinkronban.',
+    start: 'Jam indítása',
+    startWithQueue: 'Indítás az épp szólóval',
+    startTitle: 'Jam indítása',
+    startBody:
+      'Minden meghívott ugyanabba a sorba tesz dalokat, és ugyanazt a dalt hallja ugyanabban a pillanatban, a saját eszközén.',
+    joinTitle: 'Csatlakozás Jamhez',
+    joinBody:
+      'Kérd el a kódot a házigazdától, vagy nyisd meg a küldött linket.',
+    code: 'Kód',
+    codePlaceholder: 'ABC234',
+    join: 'Csatlakozás',
+    unknownCode: 'Nincs Jam ezzel a kóddal',
+    yourJam: 'A Jamed',
+    hostedBy: 'Házigazda: {name}',
+    host: 'házigazda',
+    copyCode: 'Kód másolása',
+    copyLink: 'Link másolása',
+    copied: 'Másolva',
+    leave: 'Kilépés',
+    end: 'Jam befejezése',
+    leaveConfirm: 'Kilépsz ebből a Jamből?',
+    endConfirm: 'Befejezed a Jamet mindenkinek?',
+    endConfirmBody:
+      'Senki sem hallgat tovább együtt. A dalok a könyvtáradban maradnak.',
+    listenHere: 'Hallgatás ezen az eszközön',
+    listenHereBody:
+      'Ki: kövesd és irányítsd itt a Jamet, miközben egy másik eszköz játssza.',
+    guestsControl: 'A vendégek irányíthatják a lejátszást',
+    guestsControlBody:
+      'Ki: csak te játszhatsz le, szüneteltethetsz, ugorhatsz és rendezhetsz. A vendégek továbbra is adhatnak hozzá dalokat.',
+    hostOnly: 'Csak a házigazda irányíthatja a lejátszást',
+    queue: 'Sor',
+    addHint:
+      'Adj hozzá dalokat bárhonnan a Hozzáadás a sorhoz vagy a Lejátszás következőként opcióval.',
+    emptyTitle: 'A sor üres',
+    emptyBody: 'Adj hozzá dalokat a könyvtárból: itt mindenki látja őket.',
+    addedBy: 'Hozzáadta: {name}',
+    remove: '{name} eltávolítása',
+    inJam: 'Jamben',
+    gone: 'Ez a Jam véget ért',
+    failed: 'A Jam nem érhető el',
+    libraryOnly: 'Csak könyvtárbeli dalok kerülhetnek Jambe',
+    notInJam: 'A keverés és az ismétlés ki van kapcsolva Jam közben',
   },
 }

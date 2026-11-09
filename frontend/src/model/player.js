@@ -93,6 +93,38 @@ let fadeFrame = 0
 let restoreIndex = -1
 let playbackAttempt = 0
 
+// ── Remote control (a Jam) ───────────────────────────────────────────
+// While a hook is set, what the listener asks for (play, skip, seek,
+// queue changes) goes to it instead of the local player; whoever set it
+// applies the shared state back through withoutHook(). The hook answers
+// false to let an action through locally.
+let transportHook = null
+let hookBypass = 0
+const remoteControlled = ref(false)
+// Silences this device without touching the listener's own mute: a Jam
+// member following along without listening here.
+const outputMuted = ref(false)
+
+function setTransportHook(fn) {
+  transportHook = typeof fn === 'function' ? fn : null
+  remoteControlled.value = !!transportHook
+}
+
+function hooked(action, payload = {}) {
+  if (!transportHook || hookBypass > 0) return false
+  return transportHook(action, payload) !== false
+}
+
+/** Run `fn` straight on the local player, past the transport hook. */
+function withoutHook(fn) {
+  hookBypass += 1
+  try {
+    return fn()
+  } finally {
+    hookBypass -= 1
+  }
+}
+
 function ensureAudio() {
   if (audio) return audio
   audio = new Audio()
@@ -100,6 +132,7 @@ function ensureAudio() {
   // the next one is already resolved one track ahead (see prefetchNext).
   audio.preload = 'auto'
   applyVolume()
+  audio.muted = isMuted.value || outputMuted.value
   audio.playbackRate = playbackRate.value
   audio.addEventListener('timeupdate', () => {
     currentTime.value = audio.currentTime
@@ -183,6 +216,14 @@ function sameTrackOrder(a, b) {
 
 // ── Queue ────────────────────────────────────────────────────────────
 function setPlaylist(files, options = {}) {
+  if (
+    (typeof options.startIndex === 'number' || options.autoplay) &&
+    hooked('replace', {
+      tracks: (files || []).map(toTrack),
+      startIndex: options.startIndex || 0,
+    })
+  )
+    return
   const incoming = (files || []).map(toTrack)
   const tracks = incoming.filter((track) => !libraryOnly.value || !track.stream)
   if (libraryOnly.value && typeof options.startIndex === 'number') {
@@ -230,6 +271,7 @@ function playList(files, { context: ctx = null, shuffled = false } = {}) {
     .map(toTrack)
     .filter((track) => !libraryOnly.value || !track.stream)
   if (!tracks.length) return
+  if (hooked('replace', { tracks, startIndex: 0, shuffled })) return
   shuffle.value = shuffled
   playlist.value = tracks
   context.value = ctx
@@ -247,6 +289,7 @@ function insertTracks(files, position) {
     .map(toTrack)
     .filter((track) => !libraryOnly.value || !track.stream)
   if (!tracks.length) return
+  if (hooked('insert', { tracks, position })) return
   if (!playlist.value.length) {
     setPlaylist(tracks, { autoplay: true, context: null })
     return
@@ -289,6 +332,7 @@ function moveTrack(from, to) {
   const list = playlist.value.slice()
   if (from === to || from < 0 || to < 0) return
   if (from >= list.length || to >= list.length) return
+  if (hooked('move', { from, to })) return
   const [track] = list.splice(from, 1)
   list.splice(to, 0, track)
   playlist.value = list
@@ -301,6 +345,7 @@ function moveTrack(from, to) {
 
 function removeAt(index) {
   if (index < 0 || index >= playlist.value.length) return
+  if (hooked('remove', { index })) return
   const list = playlist.value.slice()
   list.splice(index, 1)
   prefetchedFor = -1
@@ -319,6 +364,7 @@ function removeAt(index) {
 
 /** Drop everything after the current track. */
 function clearUpcoming() {
+  if (hooked('clear')) return
   if (currentIndex.value < 0) {
     stop()
     return
@@ -330,6 +376,9 @@ function clearUpcoming() {
 
 /** Remove files that no longer exist (deleted from the library). */
 function forgetFiles(files) {
+  // A Jam's queue is the server's: every member would remove the same
+  // rows at once. It drops deleted songs when they fail to play.
+  if (remoteControlled.value) return
   const gone = new Set(files)
   for (let i = playlist.value.length - 1; i >= 0; i--) {
     if (gone.has(playlist.value[i].file)) removeAt(i)
@@ -351,7 +400,7 @@ function refreshTracks(byFile) {
 }
 
 function stop() {
-  pause()
+  withoutHook(pause)
   if (audio) audio.removeAttribute('src')
   playlist.value = []
   currentIndex.value = -1
@@ -364,6 +413,7 @@ function stop() {
 function playAt(index, { auto = false } = {}) {
   if (libraryOnly.value && playlist.value[index]?.stream) return
   if (index < 0 || index >= playlist.value.length) return
+  if (hooked('jump', { index })) return
   const a = ensureAudio()
   autoAdvanced = auto
   applyVolume()
@@ -545,6 +595,7 @@ function startPlayback(a) {
 }
 
 function play() {
+  if (hooked('play')) return
   if (libraryOnly.value && playlist.value[currentIndex.value]?.stream) return
   if (playlist.value.length === 0) return
   const a = ensureAudio()
@@ -565,6 +616,7 @@ function play() {
 }
 
 function pause() {
+  if (hooked('pause')) return
   playbackAttempt += 1
   isBuffering.value = false
   if (audio) audio.pause()
@@ -576,9 +628,10 @@ function toggle() {
 }
 
 function seek(seconds) {
-  const a = ensureAudio()
   const max = duration.value || 0
   const clamped = Math.max(0, Math.min(max, seconds))
+  if (hooked('seek', { position: clamped })) return
+  const a = ensureAudio()
   a.currentTime = clamped
   currentTime.value = clamped
 }
@@ -603,7 +656,7 @@ function setVolume(v) {
   }
   if (clamped > 0 && isMuted.value) {
     isMuted.value = false
-    if (audio) audio.muted = false
+    applyMuted()
   }
 }
 
@@ -651,7 +704,17 @@ function setFadeSeconds(value) {
 
 function toggleMute() {
   isMuted.value = !isMuted.value
-  if (audio) audio.muted = isMuted.value
+  applyMuted()
+}
+
+function applyMuted() {
+  if (audio) audio.muted = isMuted.value || outputMuted.value
+}
+
+/** Silence (or not) this device's output, the listener's mute aside. */
+function setOutputMuted(muted) {
+  outputMuted.value = !!muted
+  applyMuted()
 }
 
 function setPlaybackRate(rate) {
@@ -697,6 +760,7 @@ function prevIndex() {
 }
 
 function next({ auto = false } = {}) {
+  if (hooked('next')) return
   const i = nextIndex()
   if (i < 0) {
     pause()
@@ -706,6 +770,7 @@ function next({ auto = false } = {}) {
 }
 
 function prev() {
+  if (hooked('prev')) return
   const a = ensureAudio()
   if (a.currentTime > 3) {
     seek(0)
@@ -722,6 +787,7 @@ function onEnded() {
     pause()
     return
   }
+  if (hooked('ended', { index: currentIndex.value })) return
   if (repeatMode.value === 'one') {
     seek(0)
     if (audio) startPlayback(audio)
@@ -731,6 +797,7 @@ function onEnded() {
 }
 
 function setRepeat(mode) {
+  if (hooked('repeat', { mode })) return
   if (['off', 'all', 'one'].includes(mode)) repeatMode.value = mode
 }
 
@@ -741,12 +808,54 @@ function cycleRepeat() {
 }
 
 function setShuffle(v) {
+  if (hooked('shuffle', { on: !!v })) return
   shuffle.value = !!v
   if (shuffle.value) buildShuffleOrder()
 }
 
 function toggleShuffle() {
   setShuffle(!shuffle.value)
+}
+
+// ── Following a shared queue ─────────────────────────────────────────
+/**
+ * Take `tracks` as the queue with `index` current, without restarting
+ * the song already playing when it is still the current one. Returns
+ * true when the current song changed (the caller cues it).
+ */
+function adoptQueue(tracks, index) {
+  const before = playlist.value[currentIndex.value]
+  shuffle.value = false
+  repeatMode.value = 'off'
+  context.value = null
+  if (!sameTrackOrder(tracks, playlist.value)) {
+    playlist.value = tracks
+    prefetchedFor = -1
+  }
+  const after = tracks[index]
+  const same =
+    !!after && !!before && trackIdentity(after) === trackIdentity(before)
+  currentIndex.value = after ? index : -1
+  return !same || !audio?.src
+}
+
+/** Load song `index` at `seconds`, playing or paused. */
+function cueAt(index, seconds = 0, playing = true) {
+  if (index < 0 || index >= playlist.value.length) return
+  withoutHook(() => {
+    restoreTime = Math.max(0, seconds)
+    restoreIndex = index
+    if (playing) {
+      playAt(index)
+      return
+    }
+    const a = ensureAudio()
+    pause()
+    currentIndex.value = index
+    restoreIndex = -1
+    a.src = playlist.value[index].url
+    currentTime.value = restoreTime
+  })
 }
 
 // ── Sleep timer ──────────────────────────────────────────────────────
@@ -1017,5 +1126,12 @@ export function usePlayer() {
     setShuffle,
     toggleShuffle,
     setSleepTimer,
+    remoteControlled,
+    outputMuted,
+    setOutputMuted,
+    setTransportHook,
+    withoutHook,
+    adoptQueue,
+    cueAt,
   }
 }

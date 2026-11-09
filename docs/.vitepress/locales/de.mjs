@@ -76,6 +76,7 @@ export default {
       'features/library-import.md': 'Bibliotheksimport (CSV)',
       'features/playback-normalization.md': 'Lautstärkenormalisierung',
       'features/player.md': 'Integrierter Player',
+      'features/jam.md': 'Jam',
       'features/liked-songs.md': 'Lieblingssongs',
       'features/podcasts.md': 'Podcasts',
       'features/discover.md': 'Entdecken',

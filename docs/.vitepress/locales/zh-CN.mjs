@@ -75,6 +75,7 @@ export default {
       'features/library-import.md': '导入媒体库（CSV）',
       'features/playback-normalization.md': '音量标准化',
       'features/player.md': '内置播放器',
+      'features/jam.md': 'Jam',
       'features/liked-songs.md': '已点赞歌曲',
       'features/podcasts.md': '播客',
       'features/discover.md': '发现',

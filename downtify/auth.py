@@ -967,6 +967,8 @@ RULES: list[tuple[frozenset[str], re.Pattern[str], str]] = [
         # ever touches their own. These come before the admin blocks
         # below on purpose: first match wins.
         (_m('DELETE'), r'^/(delete|delete/batch)$', USER),
+        # Jams: listening together (the routes check membership).
+        (_ALL, r'^/api/jam(/|$)', USER),
         (_ALL, r'^/api/library/playlist', USER),
         (_m('POST'), r'^/api/library/archive', USER),
         (_READ, r'^/api/library/archive/', USER),

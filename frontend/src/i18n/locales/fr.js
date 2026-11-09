@@ -310,6 +310,7 @@ export default {
     lengthHours: '{hours} h {minutes} min',
   },
   nav: {
+    jam: 'Jam',
     main: 'Principal',
     home: 'Accueil',
     search: 'Recherche',
@@ -2274,5 +2275,55 @@ export default {
   },
   source: {
     from: 'Téléchargé depuis {source}',
+  },
+  jam: {
+    title: 'Jam',
+    subtitle:
+      'Écoutez ensemble : une seule file partagée, synchronisée sur chaque appareil.',
+    start: 'Lancer une Jam',
+    startWithQueue: 'Lancer avec la lecture en cours',
+    startTitle: 'Lancer une Jam',
+    startBody:
+      'Chaque invité ajoute des titres à la même file et entend le même titre au même moment, sur son propre appareil.',
+    joinTitle: 'Rejoindre une Jam',
+    joinBody:
+      "Demandez le code à l'hôte, ou ouvrez le lien qu'il vous a envoyé.",
+    code: 'Code',
+    codePlaceholder: 'ABC234',
+    join: 'Rejoindre',
+    unknownCode: "Aucune Jam n'a ce code",
+    yourJam: 'Votre Jam',
+    hostedBy: 'Animée par {name}',
+    host: 'hôte',
+    copyCode: 'Copier le code',
+    copyLink: 'Copier le lien',
+    copied: 'Copié',
+    leave: 'Quitter',
+    end: 'Terminer la Jam',
+    leaveConfirm: 'Quitter cette Jam ?',
+    endConfirm: 'Terminer la Jam pour tout le monde ?',
+    endConfirmBody:
+      "Plus personne n'écoutera ensemble. Les titres restent dans votre bibliothèque.",
+    listenHere: 'Écouter sur cet appareil',
+    listenHereBody:
+      'Désactivé : suivez et pilotez la Jam ici pendant qu’un autre appareil la joue.',
+    guestsControl: 'Les invités peuvent piloter la lecture',
+    guestsControlBody:
+      'Désactivé : vous seul pouvez lire, mettre en pause, passer et réordonner. Les invités peuvent toujours ajouter des titres.',
+    hostOnly: "Seul l'hôte peut piloter la lecture",
+    queue: 'File',
+    addHint:
+      'Ajoutez des titres de partout avec Ajouter à la file ou Lire ensuite.',
+    emptyTitle: 'La file est vide',
+    emptyBody:
+      'Ajoutez des titres de la bibliothèque : ils apparaissent ici pour tout le monde.',
+    addedBy: 'Ajouté par {name}',
+    remove: 'Retirer {name}',
+    inJam: 'En Jam',
+    gone: 'Cette Jam est terminée',
+    failed: 'Impossible de joindre la Jam',
+    libraryOnly:
+      'Seuls les titres de la bibliothèque peuvent rejoindre une Jam',
+    notInJam: 'Aléatoire et répétition sont désactivés pendant une Jam',
   },
 }

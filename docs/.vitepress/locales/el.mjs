@@ -77,6 +77,7 @@ export default {
       'features/library-import.md': 'Εισαγωγή βιβλιοθήκης (CSV)',
       'features/playback-normalization.md': 'Κανονικοποίηση έντασης',
       'features/player.md': 'Ενσωματωμένο πρόγραμμα αναπαραγωγής',
+      'features/jam.md': 'Jam',
       'features/liked-songs.md': 'Αγαπημένα τραγούδια',
       'features/podcasts.md': 'Podcasts',
       'features/discover.md': 'Ανακάλυψη',

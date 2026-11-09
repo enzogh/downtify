@@ -76,6 +76,7 @@ export default {
       'features/library-import.md': 'Könyvtár importálása (CSV)',
       'features/playback-normalization.md': 'Hangerő-normalizálás',
       'features/player.md': 'Beépített lejátszó',
+      'features/jam.md': 'Jam',
       'features/liked-songs.md': 'Kedvelt számok',
       'features/podcasts.md': 'Podcastok',
       'features/discover.md': 'Felfedezés',

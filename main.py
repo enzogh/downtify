@@ -36,6 +36,7 @@ from downtify import (
     api,
     auth_routes,
     download_policy_routes,
+    jam_routes,
     mobile_routes,
     trash_routes,
 )
@@ -861,6 +862,7 @@ def build_app() -> FastAPI:
     app.include_router(account_routes.router)
     app.include_router(mobile_routes.router)
     app.include_router(trash_routes.router)
+    app.include_router(jam_routes.router)
     app.include_router(download_policy_routes.router)
 
     @app.get('/list')

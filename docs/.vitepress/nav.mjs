@@ -42,6 +42,7 @@ export const NAV = [
       { title: 'Top Songs', page: 'features/top-songs.md' },
       { title: 'Library Import (CSV)', page: 'features/library-import.md' },
       { title: 'Built-in Player', page: 'features/player.md' },
+      { title: 'Jam', page: 'features/jam.md' },
       {
         title: 'Volume normalization',
         page: 'features/playback-normalization.md',

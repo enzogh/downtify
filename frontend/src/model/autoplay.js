@@ -55,6 +55,8 @@ function active(player) {
   return (
     enabled.value &&
     !libraryOnly.value &&
+    // A Jam's queue is everyone's: nobody's device fills it on its own.
+    !player.remoteControlled?.value &&
     index >= 0 &&
     list.length > 0 &&
     !list[index]?.isPodcast
@@ -105,6 +107,9 @@ async function refreshSuggestions(player) {
 
 /** Move the suggestions into the queue once it is about to run out. */
 function promote(player) {
+  // Checked again: a Jam may have taken the queue over while the
+  // suggestions were loading.
+  if (!active(player)) return
   if (player.repeatMode.value !== 'off') return
   if (player.upcoming.value.length > AUTOPLAY_THRESHOLD) return
   const tracks = freshSongs(

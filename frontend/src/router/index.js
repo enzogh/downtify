@@ -19,6 +19,12 @@ const routes = [
     component: () => import('/src/views/MixView.vue'),
   },
   {
+    // Listening together: start a Jam, or join one (?code= from a link).
+    path: '/jam',
+    name: 'Jam',
+    component: () => import('/src/views/JamView.vue'),
+  },
+  {
     // A pasted Spotify / YouTube Music link, resolved before downloading.
     path: '/link',
     name: 'Link',

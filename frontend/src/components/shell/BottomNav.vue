@@ -194,6 +194,7 @@ const moreLinks = [
     match: ['MonitorWatch'],
   },
   { name: 'Charts', icon: 'trending', label: 'nav.charts' },
+  { name: 'Jam', icon: 'users', label: 'nav.jam' },
   { name: 'Settings', icon: 'settings', label: 'nav.settings' },
 ]
 

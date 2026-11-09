@@ -41,6 +41,7 @@
 <script setup>
 import { startListeningLog } from '/src/model/listening'
 import { startAutoplay } from '/src/model/autoplay'
+import { startJamSync } from '/src/model/jam'
 import { ref, watch, onMounted, onUnmounted } from 'vue'
 import {
   libraryOnly,
@@ -84,6 +85,7 @@ const { showLyrics } = usePlayerPrefs()
 const route = useRoute()
 startListeningLog()
 startAutoplay()
+startJamSync()
 const router = useRouter()
 const ui = useUi()
 const nowPlaying = useNowPlaying()

@@ -24,7 +24,13 @@ from starlette.testclient import TestClient
 from starlette.websockets import WebSocketDisconnect
 
 import main
-from downtify import account_routes, api, auth_routes, mobile_routes
+from downtify import (
+    account_routes,
+    api,
+    auth_routes,
+    jam_routes,
+    mobile_routes,
+)
 from downtify.auth import (
     ADMIN,
     CLIENT,
@@ -506,6 +512,7 @@ def _all_routes(app: FastAPI):
     yield from auth_routes.router.routes
     yield from account_routes.router.routes
     yield from mobile_routes.router.routes
+    yield from jam_routes.router.routes
 
 
 def _templates(app: FastAPI):
