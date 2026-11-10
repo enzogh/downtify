@@ -476,6 +476,9 @@ export default {
     credits: 'Katkıda bulunanlar',
   },
   link: {
+    serverFailed:
+      'Sunucu bu bağlantıyı okuyamadı: hedef site yanıt vermedi ya da sunucuyu reddetti. Biraz sonra tekrar deneyin; sürerse nedeni sunucu günlüğündedir.',
+    failedHint: 'Bağlantıyı kontrol edip tekrar deneyin.',
     resolving: 'Bağlantı okunuyor…',
     failed: 'Bu bağlantı açılamadı',
     untitled: 'Adsız',

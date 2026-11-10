@@ -468,6 +468,9 @@ export default {
     credits: 'Credits',
   },
   link: {
+    serverFailed:
+      "The server couldn't read this link: the site it points to didn't answer or turned the server away. Try again in a moment; if it keeps failing, the server's log says why.",
+    failedHint: 'Check the link and try again.',
     resolving: 'Reading the link…',
     failed: "Couldn't open this link",
     untitled: 'Untitled',

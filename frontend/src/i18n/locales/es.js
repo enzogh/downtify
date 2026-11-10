@@ -481,6 +481,9 @@ export default {
     credits: 'Créditos',
   },
   link: {
+    serverFailed:
+      'El servidor no pudo leer este enlace: el sitio no respondió o rechazó al servidor. Inténtalo de nuevo en un momento; si sigue fallando, el registro del servidor indica por qué.',
+    failedHint: 'Revisa el enlace e inténtalo de nuevo.',
     resolving: 'Leyendo el enlace…',
     failed: 'No se pudo abrir este enlace',
     untitled: 'Sin título',

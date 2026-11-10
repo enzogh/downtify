@@ -22,7 +22,7 @@ Paste a track link into the search bar and press **Get it**:
 | Track | `soundcloud.com/artist/track-name` |
 | Private track (shared with its secret link) | `soundcloud.com/artist/track-name/s-AbC123` |
 
-`www.` and `m.` links work too, and the `?si=…` part that share buttons add is dropped. Sets (albums and playlists), a user's own pages and short `on.soundcloud.com` links aren't supported: open a short link in the browser first and paste the full link it leads to.
+`www.` and `m.` links work too, and everything after `?` that share buttons add (`?si=…`, `ref=clipboard`, `utm_…`) is dropped. Sets (albums and playlists), a user's own pages and short `on.soundcloud.com` links aren't supported: open a short link in the browser first and paste the full link it leads to.
 
 The track's details come from SoundCloud:
 
@@ -30,6 +30,8 @@ The track's details come from SoundCloud:
 - **Artist** is the artist SoundCloud credits, else the account that uploaded it — so a label's upload is credited to the artist when SoundCloud says who it is.
 - **Album** is the track's own name, like a single, unless SoundCloud names one.
 - **Year** and **genre** come from the release date (or the upload date) and the genre tag.
+
+When SoundCloud turns the server's own lookup away (a blocked address or region), the link still opens from SoundCloud's public preview of it: title, artist and artwork, without the length, year or genre. The server's log then says *SoundCloud lookup failed … trying oEmbed* with the reason.
 
 ### Where the audio comes from
 

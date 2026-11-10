@@ -491,6 +491,9 @@ export default {
     credits: 'Crédits',
   },
   link: {
+    serverFailed:
+      "Le serveur n'a pas pu lire ce lien : le site visé n'a pas répondu ou a refusé le serveur. Réessayez dans un instant ; si ça continue, le journal du serveur indique pourquoi.",
+    failedHint: 'Vérifiez le lien et réessayez.',
     resolving: 'Lecture du lien…',
     failed: 'Impossible d’ouvrir ce lien',
     untitled: 'Sans titre',

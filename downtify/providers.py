@@ -14,6 +14,7 @@ from threading import Lock
 from typing import Any, Optional
 from urllib.parse import quote, unquote, urlparse
 
+import requests
 import yt_dlp
 from loguru import logger
 from ytmusicapi import YTMusic
@@ -1827,6 +1828,64 @@ def _soundcloud_release(info: dict[str, Any]) -> tuple[str, str]:
     return '', ''
 
 
+SOUNDCLOUD_OEMBED_URL = 'https://soundcloud.com/oembed'
+
+
+def soundcloud_song_from_oembed(
+    track_url: str, data: dict[str, Any]
+) -> Optional[dict[str, Any]]:
+    """The song a SoundCloud oEmbed answer describes (no duration or
+    date: oEmbed has none), or ``None`` without a title."""
+
+    author = str(data.get('author_name') or '').strip()
+    title = str(data.get('title') or '').strip()
+    suffix = f' by {author}'
+    if author and title.endswith(suffix):
+        title = title[: -len(suffix)].strip()
+    if not title:
+        return None
+    cover = str(data.get('thumbnail_url') or '').strip()
+    return {
+        'song_id': f'soundcloud:{track_url}',
+        'name': title,
+        'artists': [author] if author else [],
+        'artist': author,
+        'album_name': title,
+        'album_artist': author,
+        'cover_url': cover,
+        'duration': 0,
+        'year': '',
+        'release_date': '',
+        'genre': '',
+        'url': track_url,
+        'soundcloud_url': track_url,
+        'source': 'soundcloud',
+    }
+
+
+def soundcloud_track_from_oembed(track_url: str) -> Optional[dict[str, Any]]:
+    """A SoundCloud track's title, artist and artwork from its public
+    oEmbed endpoint (no API key), or ``None`` when it doesn't answer."""
+
+    try:
+        response = requests.get(
+            SOUNDCLOUD_OEMBED_URL,
+            params={'format': 'json', 'url': track_url},
+            timeout=10,
+        )
+        if response.status_code != 200:
+            return None
+        data = response.json()
+    except Exception:
+        logger.opt(exception=True).debug('SoundCloud oEmbed failed')
+        return None
+    return (
+        soundcloud_song_from_oembed(track_url, data)
+        if isinstance(data, dict)
+        else None
+    )
+
+
 def soundcloud_track_from_url(url: str) -> dict[str, Any]:
     """Resolve a SoundCloud track link into Downtify's song shape.
 
@@ -1837,11 +1896,28 @@ def soundcloud_track_from_url(url: str) -> dict[str, Any]:
     parsed = parse_soundcloud_url(url)
     if parsed is None:
         raise ValueError('Not a SoundCloud track URL')
-    with yt_dlp.YoutubeDL(_soundcloud_ydl_opts()) as ydl:
-        # process=False: the metadata, without picking a format to fetch.
-        info = ydl.extract_info(parsed[1], download=False, process=False)
+    try:
+        with yt_dlp.YoutubeDL(_soundcloud_ydl_opts()) as ydl:
+            # process=False: the metadata, without picking a format.
+            info = ydl.extract_info(parsed[1], download=False, process=False)
+    except Exception as exc:
+        # SoundCloud's API turns some servers away (a blocked address, a
+        # region) while its public oEmbed still answers: the link opens
+        # with its title, artist and artwork instead of failing.
+        logger.warning(
+            'SoundCloud lookup failed for {} ({}); trying oEmbed',
+            parsed[1],
+            str(exc).splitlines()[0][:200] if str(exc) else type(exc).__name__,
+        )
+        song = soundcloud_track_from_oembed(parsed[1])
+        if song is None:
+            raise
+        return song
     if not isinstance(info, dict) or not str(info.get('title') or '').strip():
-        raise ValueError('SoundCloud track metadata is unavailable')
+        song = soundcloud_track_from_oembed(parsed[1])
+        if song is None:
+            raise ValueError('SoundCloud track metadata is unavailable')
+        return song
     title = str(info['title']).strip()
     artist = _soundcloud_artist(info)
     track_url = parse_soundcloud_url(str(info.get('webpage_url') or ''))

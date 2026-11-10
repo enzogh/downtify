@@ -442,6 +442,9 @@ export default {
     credits: '制作人员',
   },
   link: {
+    serverFailed:
+      '服务器无法读取此链接：目标网站没有响应或拒绝了服务器。请稍后重试；如果仍然失败，服务器日志会说明原因。',
+    failedHint: '请检查链接后重试。',
     resolving: '正在读取链接…',
     failed: '无法打开此链接',
     untitled: '未命名',

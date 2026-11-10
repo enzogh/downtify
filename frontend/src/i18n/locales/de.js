@@ -487,6 +487,9 @@ export default {
     credits: 'Mitwirkende',
   },
   link: {
+    serverFailed:
+      'Der Server konnte diesen Link nicht lesen: Die Zielseite hat nicht geantwortet oder den Server abgewiesen. Versuche es gleich noch einmal; wenn es weiter fehlschlägt, steht der Grund im Server-Log.',
+    failedHint: 'Prüfe den Link und versuche es erneut.',
     resolving: 'Link wird gelesen …',
     failed: 'Dieser Link konnte nicht geöffnet werden',
     untitled: 'Ohne Titel',

@@ -232,6 +232,69 @@ def test_soundcloud_track_metadata_falls_back_to_the_uploader(monkeypatch):
     assert not song['cover_url']
 
 
+class _OEmbedResponse:
+    def __init__(self, status: int, data) -> None:
+        self.status_code = status
+        self._data = data
+
+    def json(self):
+        return self._data
+
+
+def test_soundcloud_link_opens_from_oembed_when_yt_dlp_fails(monkeypatch):
+    calls = []
+    monkeypatch.setattr(
+        providers.yt_dlp,
+        'YoutubeDL',
+        _soundcloud_ydl(RuntimeError('HTTP Error 403: Forbidden'), []),
+    )
+
+    def fake_get(url, params=None, timeout=None):
+        calls.append((url, params))
+        return _OEmbedResponse(
+            200,
+            {
+                'title': 'I Follow (Afro Edit) by Dj Harmelo',
+                'author_name': 'Dj Harmelo',
+                'thumbnail_url': 'https://i1.sndcdn.com/art-t500x500.jpg',
+            },
+        )
+
+    monkeypatch.setattr(providers.requests, 'get', fake_get)
+    url = 'https://soundcloud.com/djharmelo/i-follow'
+
+    song = providers.soundcloud_track_from_url(
+        f'{url}?ref=clipboard&si=ABC&utm_source=clipboard'
+    )
+
+    assert calls == [
+        (providers.SOUNDCLOUD_OEMBED_URL, {'format': 'json', 'url': url})
+    ]
+    assert song['name'] == 'I Follow (Afro Edit)'
+    assert song['artists'] == ['Dj Harmelo']
+    assert song['cover_url'] == 'https://i1.sndcdn.com/art-t500x500.jpg'
+    assert song['soundcloud_url'] == url
+    assert song['source'] == 'soundcloud'
+
+
+def test_soundcloud_failure_stands_when_oembed_fails_too(monkeypatch):
+    monkeypatch.setattr(
+        providers.yt_dlp,
+        'YoutubeDL',
+        _soundcloud_ydl(RuntimeError('HTTP Error 403: Forbidden'), []),
+    )
+    monkeypatch.setattr(
+        providers.requests,
+        'get',
+        lambda *a, **k: _OEmbedResponse(404, {}),
+    )
+
+    with pytest.raises(RuntimeError, match='403'):
+        providers.soundcloud_track_from_url(
+            'https://soundcloud.com/someone/song'
+        )
+
+
 def test_soundcloud_track_metadata_refuses_other_links():
     with pytest.raises(ValueError, match='Not a SoundCloud track'):
         providers.soundcloud_track_from_url(

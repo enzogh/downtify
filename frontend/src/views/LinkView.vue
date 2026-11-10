@@ -285,6 +285,7 @@ import { useUi } from '/src/model/ui'
 import { classifyInput } from '/src/lib/input'
 import { playableQueue } from '/src/lib/topSongs'
 import { formatDuration, splitLength } from '/src/lib/format'
+import { requestErrorText } from '/src/lib/httpError'
 import { useI18n } from '/src/i18n'
 
 const { t } = useI18n()
@@ -329,7 +330,10 @@ async function resolve() {
     details.value = res.data
     library.lookupSongs(res.data?.tracks || [])
   } catch (err) {
-    error.value = err?.response?.data?.detail || err?.message || ''
+    error.value = requestErrorText(err, {
+      gatewayText: t('link.serverFailed'),
+      fallback: t('link.failedHint'),
+    })
   } finally {
     loading.value = false
   }

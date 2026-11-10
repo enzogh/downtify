@@ -477,6 +477,9 @@ export default {
     credits: 'Közreműködők',
   },
   link: {
+    serverFailed:
+      'A szerver nem tudta beolvasni ezt a linket: a cél oldal nem válaszolt vagy elutasította a szervert. Próbáld újra kicsit később; ha továbbra sem megy, a szervernapló megmondja, miért.',
+    failedHint: 'Ellenőrizd a linket, és próbáld újra.',
     resolving: 'Link beolvasása…',
     failed: 'Nem sikerült megnyitni a linket',
     untitled: 'Névtelen',
