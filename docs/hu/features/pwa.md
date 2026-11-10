@@ -20,6 +20,12 @@ A Castify ikonja megjelenik a kezdőképernyőn, és önálló ablakban indul.
 2. Koppints a **⋮** menüre
 3. Koppints a **Hozzáadás a kezdőképernyőhöz** lehetőségre (vagy az **Alkalmazás telepítése** lehetőségre, ha a Chrome közvetlenül felkínálja)
 
+## A telepítési útmutató
+
+Telefonon a Castify röviddel az oldal betöltése után rövid útmutatót mutat, amíg böngészőlapon fut, nem a kezdőképernyőről. A lépések a böngészőhöz igazodnak: Safari, másik iOS-böngésző, alkalmazáson belüli böngésző (először nyisd meg Safariban) vagy Android, ahol egyetlen **Alkalmazás telepítése** gomb nyitja meg a Chrome telepítőablakát, ha a Chrome felajánlja.
+
+A **Később** egy napra elrejti; visszatér, amíg az app nincs telepítve. A **Kész, telepítve** leállítja abban a böngészőben. A fiókmenü (avatar, jobb felül) megtart egy **Alkalmazás telepítése** bejegyzést az újranyitáshoz. Számítógépen sosem jelenik meg.
+
 ## Hogyan működik
 
 A `frontend/index.html` egy [web app manifestre](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest) (`/manifest.json`) hivatkozik, amely beállítja a `"display": "standalone"` és a `start_url: "/"` értéket, valamint az ikonokat, amelyeket az Android a kezdőképernyő-parancsikonhoz és az alkalmazásváltóhoz használ. Ezt olvassa a Chrome/Android, hogy az alkalmazást teljes képernyősen, saját ikonnal telepítse.

@@ -39,6 +39,7 @@
     <AddTracksToPlaylistModal />
     <PlaylistDropDock />
     <DefaultPasswordPrompt />
+    <InstallPrompt />
     <ReplaceAudioDialog v-if="auth.isAdmin.value" />
     <BuyLinksDialog />
     <TrackOriginDialog />
@@ -60,6 +61,7 @@ import SideNav from './SideNav.vue'
 import TopBar from './TopBar.vue'
 import BottomNav from './BottomNav.vue'
 import MiniPlayer from './MiniPlayer.vue'
+import InstallPrompt from './InstallPrompt.vue'
 import RemotePlaybackBar from './RemotePlaybackBar.vue'
 import DevicePicker from '../player/DevicePicker.vue'
 import JamSheet from '../jam/JamSheet.vue'

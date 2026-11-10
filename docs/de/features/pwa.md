@@ -20,6 +20,12 @@ Das Castify-Symbol erscheint auf dem Home-Bildschirm und startet in einem eigene
 2. Tippe auf das Menü **⋮**
 3. Tippe auf **Zum Startbildschirm hinzufügen** (oder **App installieren**, falls Chrome das direkt anbietet)
 
+## Die Installationsanleitung
+
+Auf dem Handy zeigt Castify kurz nach dem Laden eine kleine Anleitung, solange die Seite in einem Browser-Tab läuft und nicht vom Home-Bildschirm. Die Schritte passen sich dem Browser an: Safari, ein anderer iOS-Browser, ein In-App-Browser (zuerst in Safari öffnen) oder Android, wo ein einziger Button **App installieren** Chromes Installationsdialog öffnet, wenn Chrome ihn anbietet.
+
+**Später** blendet sie für einen Tag aus; sie kommt wieder, bis die App installiert ist. **Fertig, sie ist installiert** beendet sie in diesem Browser. Das Kontomenü (Avatar, oben rechts) behält einen Eintrag **App installieren**, um sie erneut zu öffnen. Computer sehen sie nie.
+
 ## So funktioniert es
 
 `frontend/index.html` verweist auf ein [Web-App-Manifest](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest) (`/manifest.json`), das `"display": "standalone"` und `start_url: "/"` festlegt, dazu die Symbole, die Android für die Verknüpfung auf dem Startbildschirm und den App-Umschalter nutzt. Das liest Chrome/Android, um die App im Vollbild und mit eigenem Symbol zu installieren.

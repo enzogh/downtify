@@ -34,6 +34,7 @@ import { useRouter } from 'vue-router'
 import UiMenu from '../ui/UiMenu.vue'
 import { useAuth } from '/src/model/auth'
 import { useTheme } from '/src/model/theme'
+import { useInstall } from '/src/model/install'
 import { useI18n } from '/src/i18n'
 import { avatarLetter } from '/src/lib/viewMode'
 
@@ -41,6 +42,7 @@ const { t } = useI18n()
 const auth = useAuth()
 const theme = useTheme()
 const router = useRouter()
+const install = useInstall()
 
 const items = computed(() => [
   {
@@ -68,6 +70,13 @@ const items = computed(() => [
         : t('settings.themeDark'),
     icon: theme.resolved.value === 'dark' ? 'sun' : 'moon',
     action: () => theme.toggle(),
+  },
+  {
+    // Phones in a browser tab: reopens the add-to-home-screen guide.
+    hidden: !install.available.value,
+    label: t('install.menu'),
+    icon: 'smartphone',
+    action: () => install.show(),
   },
   { divider: true, hidden: auth.authDisabled.value },
   {

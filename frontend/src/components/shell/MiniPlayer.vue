@@ -26,8 +26,11 @@
 
       <!-- The heart sits beside the button that opens Now playing, not
            inside it, so tapping it never opens the overlay. -->
+      <!-- Desktop: three columns like Spotify's (28 / 40 / 32 %, the
+           right one holds more), so the sides grow and shrink with the
+           window instead of overflowing. -->
       <div
-        class="flex min-w-0 flex-1 items-center gap-1 md:w-[300px] md:flex-none"
+        class="flex min-w-0 flex-1 items-center gap-1 md:w-[28%] md:min-w-[180px] md:flex-none"
       >
         <button
           type="button"
@@ -70,13 +73,15 @@
         /></span>
       </div>
 
-      <div class="flex items-center justify-center gap-1 md:flex-1 md:gap-3">
+      <div
+        class="flex items-center justify-center gap-1 md:min-w-0 md:flex-1 md:gap-2 lg:gap-3"
+      >
         <UiIconButton
           icon="shuffle"
           :label="t('player.shuffle')"
           :active="player.shuffle.value"
           toggle
-          class="max-md:hidden"
+          class="max-lg:hidden"
           @click="player.toggleShuffle()"
         />
         <UiIconButton
@@ -114,7 +119,7 @@
           :label="repeatLabel"
           :active="player.repeatMode.value !== 'off'"
           toggle
-          class="max-md:hidden"
+          class="max-lg:hidden"
           @click="player.cycleRepeat()"
         />
         <UiIconButton
@@ -138,12 +143,17 @@
         </span>
       </div>
 
-      <div class="hidden items-center justify-end gap-1 md:flex md:w-[300px]">
+      <!-- A size container: the clock and the volume slider only show
+           once this column is wide enough for them, so nothing here ever
+           overlaps (the slider used to slide under the expand button). -->
+      <div
+        class="@container hidden items-center justify-end gap-1 md:flex md:w-[32%] md:min-w-[180px] md:flex-none"
+      >
         <!-- Never wraps, and keeps one width for the whole track: the
              invisible copy is the widest the text will get, so the
              controls beside it don't shift as it ticks past 10:00. -->
         <span
-          class="tabular mr-2 hidden shrink-0 text-xs whitespace-nowrap text-muted lg:inline-grid"
+          class="tabular mr-2 hidden shrink-0 text-xs whitespace-nowrap text-muted @min-[380px]:inline-grid"
         >
           <span class="invisible col-start-1 row-start-1" aria-hidden="true">{{
             clockSizer
@@ -175,9 +185,11 @@
           @click="nowPlaying.open('queue')"
         />
         <DevicesButton v-if="auth.user.value" />
-        <!-- The slider is what gives when the row is tight, so the time
-             next to it never has to. -->
-        <VolumeControl class="hidden min-w-0 lg:flex" width="w-20 min-w-8" />
+        <!-- mr leaves room for the slider's thumb at 100 %. -->
+        <VolumeControl
+          class="mr-1.5 hidden shrink-0 @min-[275px]:flex"
+          width="w-12 @min-[300px]:w-16 @min-[400px]:w-20 @min-[460px]:w-24"
+        />
         <UiIconButton
           icon="expand"
           :label="t('player.openNowPlaying')"

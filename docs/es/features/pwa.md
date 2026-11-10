@@ -20,6 +20,12 @@ El icono de Castify aparece en tu pantalla de inicio y se abre en su propia vent
 2. Pulsa el menú **⋮**
 3. Pulsa **Añadir a la pantalla de inicio** (o **Instalar aplicación**, si Chrome la ofrece directamente)
 
+## La guía de instalación
+
+En un teléfono, Castify muestra una breve guía poco después de abrir la página, mientras se ejecute en una pestaña del navegador y no desde la pantalla de inicio. Los pasos se adaptan al navegador: Safari, otro navegador de iOS, un navegador dentro de una app (ábrelo primero en Safari) o Android, donde un solo botón **Instalar la app** abre el diálogo de instalación de Chrome cuando lo ofrece.
+
+**Más tarde** la oculta durante un día; vuelve hasta que la app esté instalada. **Listo, ya está instalada** la detiene en ese navegador. El menú de la cuenta (avatar, arriba a la derecha) mantiene una entrada **Instalar la app** para reabrirla. Los ordenadores nunca la ven.
+
 ## Cómo funciona
 
 `frontend/index.html` enlaza un [web app manifest](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest) (`/manifest.json`) que establece `"display": "standalone"` y `start_url: "/"`, además de los iconos que Android usa para el acceso directo de la pantalla de inicio y el selector de apps. Es lo que Chrome/Android lee para instalar la app a pantalla completa y con su propio icono.

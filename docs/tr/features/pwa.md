@@ -20,6 +20,12 @@ Castify simgesi ana ekranınızda belirir ve bağımsız bir pencerede açılır
 2. **⋮** menüsüne dokunun
 3. **Ana ekrana ekle**’ye dokunun (Chrome doğrudan sunuyorsa **Uygulamayı yükle**)
 
+## Kurulum rehberi
+
+Telefonda Castify, sayfa ana ekrandan değil bir tarayıcı sekmesinde açıldığı sürece, yüklendikten kısa süre sonra kısa bir rehber gösterir. Adımlar tarayıcıya göre değişir: Safari, başka bir iOS tarayıcısı, uygulama içi tarayıcı (önce Safari’de açın) veya Android; Android’de Chrome sunduğunda tek bir **Uygulamayı yükle** düğmesi Chrome’un kurulum penceresini açar.
+
+**Sonra** rehberi bir gün gizler; uygulama yüklenene kadar geri gelir. **Tamam, yüklendi** onu o tarayıcıda durdurur. Hesap menüsü (avatar, sağ üst) yeniden açmak için **Uygulamayı yükle** girişini tutar. Bilgisayarlar onu hiç görmez.
+
 ## Nasıl çalışır
 
 `frontend/index.html`, `"display": "standalone"` ve `start_url: "/"` değerlerini belirleyen bir [web app manifest](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest) dosyasına (`/manifest.json`) bağlanır; ayrıca Android’in ana ekran kısayolu ve uygulama değiştirici için kullandığı simgeleri içerir. Chrome/Android uygulamayı tam ekran ve kendi simgesiyle yüklemek için bunu okur.
