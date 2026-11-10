@@ -130,7 +130,7 @@ Whatever comes next is prepared as soon as it is queued, and again 30 seconds be
 
 Shortcuts are ignored while you type in a field or while a dialog is open.
 
-The player also reports the current track to the operating system (Media Session), so lock-screen controls, headset buttons and keyboard media keys work, with the cover shown where the system supports it.
+The player also reports the current track to the operating system (Media Session), so lock-screen controls, headset buttons and keyboard media keys work, with the cover shown where the system supports it. As on Spotify, the lock screen of an iPhone or an Android phone (the installed app too) shows **previous** and **next** for a song, never 10-second jumps, with a progress bar you can drag; a podcast episode gets **back 15 s** and **forward 15 s** instead.
 
 ## How it works
 

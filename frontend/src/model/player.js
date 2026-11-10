@@ -15,6 +15,7 @@ import {
   prefetchTrackNormalization,
   applyTrackNormalization,
 } from '/src/model/normalization'
+import { mediaSessionHandlers, positionState } from '/src/lib/mediaSession'
 
 const VOLUME_KEY = 'downtify-player-volume'
 const RATE_KEY = 'downtify-player-rate'
@@ -940,16 +941,17 @@ function updateMediaSession(track) {
       artwork,
     })
   }
-  const handlers = {
+  // Previous / next on the lock screen, like Spotify - never the
+  // 10-second jumps iOS shows instead when seeking is handled (see
+  // lib/mediaSession.js; a podcast keeps them).
+  const handlers = mediaSessionHandlers(track, {
     play,
     pause,
-    previoustrack: prev,
-    nexttrack: next,
-    seekbackward: () => seekBy(-10),
-    seekforward: () => seekBy(10),
-    seekto: (details) => seek(details.seekTime || 0),
-    stop: pause,
-  }
+    prev,
+    next,
+    seek,
+    seekBy,
+  })
   for (const [action, handler] of Object.entries(handlers)) {
     try {
       session.setActionHandler(action, handler)
@@ -957,9 +959,37 @@ function updateMediaSession(track) {
       // Unsupported action on this browser.
     }
   }
+  updatePositionState()
+}
+
+// The lock screen's progress bar follows the song (and can be dragged).
+let lastPositionSync = 0
+function updatePositionState() {
+  if (typeof navigator === 'undefined' || !('mediaSession' in navigator)) {
+    return
+  }
+  const session = navigator.mediaSession
+  if (typeof session.setPositionState !== 'function') return
+  lastPositionSync = Date.now()
+  const state = positionState(
+    duration.value,
+    currentTime.value,
+    playbackRate.value
+  )
+  try {
+    session.setPositionState(state || undefined)
+  } catch {
+    // An invalid moment (a length not known yet): the next update fixes it.
+  }
 }
 
 watch(currentTrack, (track) => updateMediaSession(track))
+watch([duration, isPlaying, playbackRate], () => updatePositionState())
+watch(currentTime, (now, before) => {
+  // A seek, or every few seconds while playing.
+  const jumped = Math.abs((Number(now) || 0) - (Number(before) || 0)) > 2
+  if (jumped || Date.now() - lastPositionSync > 5000) updatePositionState()
+})
 
 // Switched on mid-song: level the current one too (the equalizer ramps
 // to it), instead of waiting for the next.
