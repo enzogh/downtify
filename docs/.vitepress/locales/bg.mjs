@@ -108,6 +108,7 @@ export default {
       'features/youtube-cookies.md': 'Бисквитки на YouTube',
       'features/internationalization.md': 'Интернационализация',
       'features/pwa.md': 'Инсталиране като приложение (PWA)',
+      'features/offline.md': 'Слушане офлайн',
       'features/updates.md': 'Известия за обновяване',
       'how-it-works.md': 'Как работи',
       'troubleshooting.md': 'Отстраняване на проблеми',

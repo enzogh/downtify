@@ -110,6 +110,7 @@ export default {
       'features/youtube-cookies.md': 'Cookies του YouTube',
       'features/internationalization.md': 'Διεθνοποίηση',
       'features/pwa.md': 'Εγκατάσταση ως εφαρμογή (PWA)',
+      'features/offline.md': 'Ακρόαση εκτός σύνδεσης',
       'features/updates.md': 'Ειδοποιήσεις ενημέρωσης',
       'how-it-works.md': 'Πώς λειτουργεί',
       'troubleshooting.md': 'Αντιμετώπιση προβλημάτων',

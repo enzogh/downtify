@@ -205,6 +205,11 @@ export default {
     length: 'Áttűnés hossza',
     seconds: { one: '{count} másodperc', other: '{count} másodperc' },
     off: 'Ki',
+    gapless: 'Szünet nélküli lejátszás',
+    gaplessHint:
+      'A következő dal abban a pillanatban indul, ahogy ez véget ér, csend nélkül – koncert- és konceptalbumokhoz.',
+    gaplessFading:
+      'Áttűnés mellett nincs használatban: az áttűnés már összeköti a dalokat.',
   },
   normalization: {
     level: 'Hangerőszint',
@@ -2355,5 +2360,61 @@ export default {
     androidInstallHint: 'Vagy „Hozzáadás a kezdőképernyőhöz”.',
     androidConfirm: 'Erősítsd meg a „Telepítés” gombbal',
     androidConfirmHint: 'A Castify ezután az ikonjáról nyílik.',
+  },
+  offline: {
+    title: 'Ezen az eszközön',
+    subtitle:
+      'Az itt mentett lejátszási listák és albumok kapcsolat nélkül is szólnak.',
+    save: 'Letöltés az eszközre',
+    saving: 'Letöltés {done}/{total}',
+    saved: 'Az eszközön',
+    saveHint: 'A dalok megtartása ezen az eszközön offline hallgatáshoz',
+    savedHint: 'Ezen az eszközön mentve. Kattints, hogy innen eltávolítsd.',
+    full: 'Elfogyott a hely ezen az eszközön',
+    someFailed: {
+      one: '{count} dalt nem sikerült menteni – próbáld újra',
+      other: '{count} dalt nem sikerült menteni – próbáld újra',
+    },
+    done: '„{name}” offline is kész',
+    needsHttps:
+      'Az offline hallgatáshoz a Castify-t HTTPS-en (vagy localhoston) kell megnyitni: a böngészők csak ott engedik a tárolást.',
+    unavailable: 'Az offline hallgatás itt nem érhető el',
+    unsupported:
+      'Ez a böngésző nem tud dalokat megtartani offline hallgatáshoz.',
+    removeTitle: 'Eltávolítod erről az eszközről?',
+    removeBody:
+      '„{name}” ({size}) lekerül erről az eszközről. A szerveren lévő könyvtáradban megmarad.',
+    remove: 'Eltávolítás az eszközről',
+    removed: '„{name}” eltávolítva erről az eszközről',
+    storage: 'Tárhely',
+    used: { one: '{size} · {count} dal', other: '{size} · {count} dal' },
+    room: 'Még {size} áll a Castify rendelkezésére',
+    persisted:
+      'A böngésző megtartja ezeket a dalokat, amíg el nem távolítod őket.',
+    notPersisted:
+      'A böngésző törölheti ezeket a dalokat, ha kevés a hely az eszközön. Ha a Castify-t a kezdőképernyőre telepíted, az segít megtartani őket.',
+    removeAll: 'Minden eltávolítása',
+    removeAllTitle: 'Eltávolítod az összes dalt erről az eszközről?',
+    removeAllBody:
+      '{size} szabadul fel. A szerveren lévő könyvtárad nem változik.',
+    empty: 'Még nincs semmi ezen az eszközön',
+    emptyHint:
+      'Nyiss meg egy lejátszási listát vagy albumot, és válaszd a „Letöltés az eszközre” lehetőséget a kapcsolat nélküli hallgatáshoz.',
+    open: 'Megnyitás',
+    album: 'Album',
+    playlist: 'Lejátszási lista',
+    banner: 'Nincs kapcsolat',
+    bannerAction: 'Letöltött zene',
+  },
+  shareCard: {
+    menu: 'Megosztás képként',
+    title: 'Megosztás képként',
+    hint: 'Kép a történeteidhez, QR-kóddal a meghallgatáshoz.',
+    alt: '„{title}” megosztási képe',
+    noLink:
+      'Nem sikerült nyilvános linket készíteni, ezért a képen nincs QR-kód.',
+    save: 'Kép mentése',
+    share: 'Megosztás',
+    listen: 'Olvasd be a meghallgatáshoz',
   },
 }

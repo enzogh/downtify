@@ -198,6 +198,11 @@ export default {
     length: '페이드 길이',
     seconds: { one: '{count}초', other: '{count}초' },
     off: '끔',
+    gapless: '끊김 없는 재생',
+    gaplessHint:
+      '이 곡이 끝나는 순간 다음 곡을 사이 공백 없이 시작해요 — 라이브 앨범과 콘셉트 앨범에 좋아요.',
+    gaplessFading:
+      '페이드가 설정되어 있으면 사용하지 않아요: 페이드가 이미 곡을 이어 줘요.',
   },
   normalization: {
     level: '재생 음량',
@@ -2327,5 +2332,56 @@ export default {
     androidInstallHint: '또는 ‘홈 화면에 추가’.',
     androidConfirm: '‘설치’로 확인하세요',
     androidConfirmHint: '이제 아이콘으로 Castify가 열려요.',
+  },
+  offline: {
+    title: '이 기기',
+    subtitle: '여기에 저장한 플레이리스트와 앨범은 연결 없이도 재생돼요.',
+    save: '기기에 다운로드',
+    saving: '다운로드 중 {done}/{total}',
+    saved: '기기에 있음',
+    saveHint: '오프라인으로 듣도록 이 곡들을 이 기기에 보관해요',
+    savedHint: '이 기기에 저장됨. 클릭하면 여기서 삭제해요.',
+    full: '이 기기에 공간이 부족해요',
+    someFailed: {
+      one: '{count}곡을 저장하지 못했어요 — 다시 시도하세요',
+      other: '{count}곡을 저장하지 못했어요 — 다시 시도하세요',
+    },
+    done: '“{name}”을(를) 오프라인으로 들을 수 있어요',
+    needsHttps:
+      '오프라인 듣기는 Castify를 HTTPS(또는 localhost)로 열어야 해요: 브라우저는 그곳에서만 저장을 허용해요.',
+    unavailable: '여기서는 오프라인 듣기를 쓸 수 없어요',
+    unsupported: '이 브라우저는 오프라인 듣기용 곡을 보관할 수 없어요.',
+    removeTitle: '이 기기에서 삭제할까요?',
+    removeBody:
+      '“{name}”({size})이(가) 이 기기에서 삭제돼요. 서버의 보관함에는 그대로 남아요.',
+    remove: '기기에서 삭제',
+    removed: '“{name}”을(를) 이 기기에서 삭제했어요',
+    storage: '저장 공간',
+    used: { one: '{size} · {count}곡', other: '{size} · {count}곡' },
+    room: 'Castify가 아직 {size}를 더 쓸 수 있어요',
+    persisted: '삭제할 때까지 브라우저가 이 곡들을 보관해요.',
+    notPersisted:
+      '기기 공간이 부족하면 브라우저가 이 곡들을 지울 수 있어요. Castify를 홈 화면에 설치하면 보관하는 데 도움이 돼요.',
+    removeAll: '모두 삭제',
+    removeAllTitle: '이 기기의 모든 곡을 삭제할까요?',
+    removeAllBody: '{size}를 확보해요. 서버의 보관함은 그대로예요.',
+    empty: '아직 이 기기에 아무것도 없어요',
+    emptyHint:
+      '플레이리스트나 앨범을 열고 “기기에 다운로드”를 선택하면 연결 없이 들을 수 있어요.',
+    open: '열기',
+    album: '앨범',
+    playlist: '플레이리스트',
+    banner: '오프라인 상태예요',
+    bannerAction: '다운로드한 음악',
+  },
+  shareCard: {
+    menu: '이미지로 공유',
+    title: '이미지로 공유',
+    hint: '스토리용 이미지예요. 들을 수 있는 QR 코드가 함께 들어가요.',
+    alt: '“{title}” 공유 이미지',
+    noLink: '공개 링크를 만들지 못해 이미지에 QR 코드가 없어요.',
+    save: '이미지 저장',
+    share: '공유',
+    listen: '스캔해서 듣기',
   },
 }

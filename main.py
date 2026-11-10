@@ -262,13 +262,19 @@ class LibraryAudioFiles(StaticFiles):
             return FileResponse(full)
 
 
+#: The PWA's service worker, at the root so it can serve every page.
+SERVICE_WORKER = 'sw.js'
+
+
 class SPAStaticFiles(StaticFiles):
     """Serve ``index.html`` for unknown paths so SPA routing works.
 
     Vite puts a content hash in the name of everything under ``assets/``, so
     the browser may keep those for good. ``index.html`` names the current
     ones, so it is checked on every load: that is what lets an upgrade reach
-    the browser without a forced reload.
+    the browser without a forced reload. The service worker (``sw.js``, the
+    PWA's offline support) is checked the same way, so a new version of it
+    is picked up on the next visit.
     """
 
     async def get_response(self, path: str, scope):
@@ -280,7 +286,9 @@ class SPAStaticFiles(StaticFiles):
             if path.startswith('assets/'):
                 response.headers['Cache-Control'] = IMMUTABLE_ASSET
                 return response
-        if response.headers.get('content-type', '').startswith('text/html'):
+        if path == SERVICE_WORKER or response.headers.get(
+            'content-type', ''
+        ).startswith('text/html'):
             response.headers['Cache-Control'] = 'no-cache'
         return response
 

@@ -94,6 +94,16 @@ Aynı eylemler Kitaplıktaki çok parçalı bir seçim için de geçerlidir.
 
 Kuyruk, geçerli parça, konumu, karıştır ve tekrarla hatırlanır; böylece Castify’ı yeniden açmak kaldığınız yerden sürdürür (2000’den fazla parçalık kuyruklar hatırlanmaz). Silinen dosyalar kuyruktan otomatik olarak düşer.
 
+## Boşluksuz çalma
+
+**Boşluksuz çalma** (Ayarlar → Genel, **Şarkılar arası geçiş** altında; varsayılan olarak açık, cihaz başına kaydedilir) şarkıları aralarında sessizlik olmadan birbirine bağlar; tıpkı bir canlı albümün ya da konsept albümün kaydedildiği gibi. Bir şarkının bitmesine yaklaşık 30 saniye kala sonraki şarkı ikinci, sessiz bir oynatıcıya yüklenir ve ilki durmadan birkaç milisaniye önce başlar. Eskiden sonraki şarkıyı ilkinin bitiminden sonra yüklemek kısa bir sessizlik bırakırken, artık en fazla birkaç milisaniyelik bir boşluk kalır.
+
+- Yalnızca kuyruk kendiliğinden ilerlediğinde ve **Şarkılar arası geçiş** kapalıyken geçerlidir: geçiş şarkıları bilerek üst üste bindirir, bu yüzden anahtar o sırada soluk görünür.
+- Kodlayıcıların MP3 ve M4A dosyalarının başına ve sonuna eklediği dolgu, dosyaların boşluksuz başlıklarına göre tarayıcı tarafından kırpılır. Bu başlığı olmayan dosyalarda, dosyanın kendisinde bulunan birkaç milisaniyelik sessizlik kalabilir.
+- Tek şarkıyı tekrarlama, şarkı bitince duracak şekilde ayarlanmış uyku zamanlayıcısı ve sunucunun cihazları eşit tuttuğu bir [Jam](jam.md) olağan geçişi kullanır.
+- iPhone’da Safari, dokunmadan ikinci oynatıcıyı başlatmayı reddedebilir. Şarkı o zaman olağan oynatıcıda, eskisi gibi kısa bir duraklamayla yüklenir.
+- [Ses seviyesi](playback-normalization.md) henüz bilinmeyen bir şarkı da olağan şekilde geçer; böylece bir an bile yanlış seviyede çalmaz.
+
 ## Klavye ve medya tuşları
 
 | Tuş | Eylem |

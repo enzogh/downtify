@@ -94,6 +94,16 @@ As mesmas ações valem para uma seleção de várias faixas na Biblioteca.
 
 A fila, a faixa atual, a posição, o aleatório e a repetição são lembrados, então reabrir o Castify retoma de onde você parou (filas com mais de 2000 faixas não são lembradas). Arquivos excluídos saem da fila automaticamente.
 
+## Reprodução sem intervalo
+
+**Reprodução sem intervalo** (Configurações → Geral, abaixo de **Transição entre músicas**; ligada por padrão, salva por dispositivo) emenda as músicas sem silêncio entre elas, como um álbum ao vivo ou conceitual foi gravado. Uns 30 segundos antes de uma música terminar, a próxima carrega num segundo player, mudo, que começa alguns milissegundos antes de o primeiro parar. Sobra no máximo um intervalo de poucos milissegundos, onde carregar a próxima música depois do fim da primeira deixava um breve silêncio.
+
+- Só vale quando a fila avança sozinha, e só enquanto **Transição entre músicas** está desligada: uma transição sobrepõe as músicas de propósito, então o botão fica desativado.
+- O preenchimento que os codificadores colocam no início e no fim de arquivos MP3 e M4A é cortado pelo navegador a partir dos cabeçalhos sem intervalo dos arquivos. Arquivos sem esse cabeçalho podem manter alguns milissegundos de silêncio que estão no próprio arquivo.
+- Repetir uma música, um timer que para depois da faixa e uma [Jam](jam.md) (em que o servidor mantém os dispositivos em sincronia) usam a troca de sempre.
+- No iPhone, o Safari pode recusar iniciar o segundo player sem um toque. A música então carrega no player de sempre, com a breve pausa de antes.
+- Uma música cujo [nível de volume](playback-normalization.md) ainda não é conhecido também troca do jeito de sempre, para nunca tocar um instante no nível errado.
+
 ## Teclado e teclas de mídia
 
 | Tecla | Ação |

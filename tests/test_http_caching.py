@@ -99,6 +99,7 @@ def spa(tmp_path):
     (tmp_path / 'assets' / 'index-abc123.js').write_text('let a = 1')
     (tmp_path / 'index.html').write_text('<html></html>')
     (tmp_path / 'icon.png').write_bytes(b'\x89PNG')
+    (tmp_path / 'sw.js').write_text('self.addEventListener("fetch", f)')
     app = Starlette(
         routes=[Mount('/', main.SPAStaticFiles(directory=tmp_path, html=True))]
     )
@@ -124,6 +125,14 @@ def test_a_missing_hashed_file_is_not_kept(spa):
     answer must not be remembered as the file."""
 
     response = spa.get('/assets/index-gone.js')
+    assert response.headers['cache-control'] == 'no-cache'
+
+
+def test_the_service_worker_is_always_checked(spa):
+    """A kept ``sw.js`` would hold the offline support back a version."""
+
+    response = spa.get('/sw.js')
+    assert response.status_code == 200
     assert response.headers['cache-control'] == 'no-cache'
 
 

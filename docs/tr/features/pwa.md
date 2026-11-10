@@ -32,4 +32,4 @@ Telefonda Castify, sayfa ana ekrandan değil bir tarayıcı sekmesinde açıldı
 
 iOS Safari, “Ana Ekrana Ekle” için manifest’teki `display` veya simge alanlarını hiç okumaz — `index.html` içinde kendi `apple-mobile-web-app-capable` ve `apple-touch-icon` `<meta>`/`<link>` etiketlerine ihtiyaç duyar. Bunlar manifest ile birlikte ayarlanır; böylece iki platform da Castify simgesiyle aynı bağımsız, tam ekran davranışını alır.
 
-Çevrimdışı destek ya da service worker yoktur — Castify arayüzü yalnızca eşleştiği arka uca ulaşabildiği sürece işe yarar; yani bu “yüklenebilir, tam ekran bir web uygulaması”dır, çevrimdışı çalışan bir uygulama değil.
+Bir service worker (`/sw.js`) uygulamanın kendisini cihazda tutar: yüklü uygulama bağlantı olmadan açılır ve cihaza kaydettiğin çalma listelerini ve albümleri çalar — bkz. [Çevrimdışı dinleme](offline.md). Geri kalan her şey sunucuya ihtiyaç duyar, bu yüzden uygulamanın geri kalanı çevrimdışıyken yüklenemez.

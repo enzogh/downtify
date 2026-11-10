@@ -74,6 +74,13 @@ const routes = [
     component: () => import('/src/views/TrashView.vue'),
   },
   {
+    // What is saved on this device for offline listening; opens with no
+    // connection (see model/offline.js).
+    path: '/library/offline',
+    name: 'Offline',
+    component: () => import('/src/views/OfflineView.vue'),
+  },
+  {
     path: '/library/album',
     name: 'Album',
     component: () => import('/src/views/AlbumView.vue'),

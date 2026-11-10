@@ -32,4 +32,4 @@ Castify 图标会出现在主屏幕上，点击后将在独立窗口中启动。
 
 iOS Safari 在“添加到主屏幕”时不会读取清单中的 `display` 或图标字段，因此 `index.html` 还需设置独立的 `apple-mobile-web-app-capable` 和 `apple-touch-icon` `<meta>` / `<link>` 标签。这些标签与清单同时配置，使两个平台都能以带 Castify 图标的全屏独立模式运行。
 
-此应用不支持离线使用，也没有 service worker。Castify 界面只有在能够连接已配对的后端时才有用，因此它是“可安装的全屏 Web 应用”，而不是可离线使用的应用。
+Service worker（`/sw.js`）会把应用本身保存在设备上：已安装的应用无需联网即可打开，并能播放你保存到设备上的歌单和专辑——参见[离线收听](offline.md)。其他一切都需要服务器，因此离线时应用的其余部分无法加载。

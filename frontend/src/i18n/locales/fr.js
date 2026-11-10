@@ -213,6 +213,10 @@ export default {
     length: 'Durée du fondu',
     seconds: { one: '{count} seconde', other: '{count} secondes' },
     off: 'Désactivé',
+    gapless: 'Lecture sans blanc',
+    gaplessHint:
+      'Enchaîne le titre suivant dès la fin de celui-ci, sans silence entre les deux — pour les albums live et les albums concept.',
+    gaplessFading: 'Inutile avec un fondu : le fondu relie déjà les titres.',
   },
   normalization: {
     level: 'Niveau sonore',
@@ -2391,5 +2395,61 @@ export default {
     androidInstallHint: 'Ou « Ajouter à l’écran d’accueil ».',
     androidConfirm: 'Confirmez avec « Installer »',
     androidConfirmHint: 'Castify s’ouvre ensuite depuis son icône.',
+  },
+  offline: {
+    title: 'Sur cet appareil',
+    subtitle:
+      'Les playlists et albums enregistrés ici s’écoutent sans connexion.',
+    save: 'Télécharger sur l’appareil',
+    saving: 'Téléchargement {done}/{total}',
+    saved: 'Sur l’appareil',
+    saveHint:
+      'Garder ces titres sur cet appareil pour les écouter hors connexion',
+    savedHint: 'Enregistré sur cet appareil. Cliquez pour l’en retirer.',
+    full: 'Plus d’espace sur cet appareil',
+    someFailed: {
+      one: '{count} titre n’a pas pu être enregistré — réessayez',
+      other: '{count} titres n’ont pas pu être enregistrés — réessayez',
+    },
+    done: '« {name} » est prêt hors connexion',
+    needsHttps:
+      'L’écoute hors connexion demande d’ouvrir Castify en HTTPS (ou sur localhost) : les navigateurs ne permettent le stockage que là.',
+    unavailable: 'L’écoute hors connexion n’est pas disponible ici',
+    unsupported:
+      'Ce navigateur ne peut pas garder de titres pour l’écoute hors connexion.',
+    removeTitle: 'Retirer de cet appareil ?',
+    removeBody:
+      '« {name} » ({size}) sera retiré de cet appareil. Il reste dans votre bibliothèque sur le serveur.',
+    remove: 'Retirer de l’appareil',
+    removed: '« {name} » retiré de cet appareil',
+    storage: 'Stockage',
+    used: { one: '{size} · {count} titre', other: '{size} · {count} titres' },
+    room: 'Encore {size} disponibles pour Castify',
+    persisted:
+      'Le navigateur garde ces titres jusqu’à ce que vous les retiriez.',
+    notPersisted:
+      'Le navigateur peut effacer ces titres si l’appareil manque de place. Installer Castify sur l’écran d’accueil aide à les garder.',
+    removeAll: 'Tout retirer',
+    removeAllTitle: 'Retirer tous les titres de cet appareil ?',
+    removeAllBody:
+      'Libère {size}. Votre bibliothèque sur le serveur ne change pas.',
+    empty: 'Rien sur cet appareil pour l’instant',
+    emptyHint:
+      'Ouvrez une playlist ou un album et choisissez « Télécharger sur l’appareil » pour écouter sans connexion.',
+    open: 'Ouvrir',
+    album: 'Album',
+    playlist: 'Playlist',
+    banner: 'Vous êtes hors connexion',
+    bannerAction: 'Musique téléchargée',
+  },
+  shareCard: {
+    menu: 'Partager en image',
+    title: 'Partager en image',
+    hint: 'Une image pour vos stories, avec un QR code pour écouter.',
+    alt: 'Image de partage de « {title} »',
+    noLink: 'Aucun lien public n’a pu être créé : l’image n’a pas de QR code.',
+    save: 'Enregistrer l’image',
+    share: 'Partager',
+    listen: 'Scannez pour écouter',
   },
 }

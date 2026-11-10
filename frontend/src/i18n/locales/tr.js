@@ -200,6 +200,11 @@ export default {
     length: 'Geçiş süresi',
     seconds: { one: '{count} saniye', other: '{count} saniye' },
     off: 'Kapalı',
+    gapless: 'Boşluksuz çalma',
+    gaplessHint:
+      'Bu şarkı biter bitmez sonrakini aralarında sessizlik olmadan başlatır — canlı ve konsept albümler için.',
+    gaplessFading:
+      'Geçiş efekti ayarlıyken kullanılmaz: geçiş zaten şarkıları birleştirir.',
   },
   normalization: {
     level: 'Ses seviyesi',
@@ -2333,5 +2338,58 @@ export default {
     androidInstallHint: 'Ya da “Ana ekrana ekle”.',
     androidConfirm: '“Yükle” ile onayla',
     androidConfirmHint: 'Castify artık simgesinden açılır.',
+  },
+  offline: {
+    title: 'Bu cihazda',
+    subtitle:
+      'Buraya kaydedilen çalma listeleri ve albümler bağlantı olmadan çalar.',
+    save: 'Cihaza indir',
+    saving: 'İndiriliyor {done}/{total}',
+    saved: 'Cihazda',
+    saveHint: 'Çevrimdışı dinlemek için bu şarkıları bu cihazda tut',
+    savedHint: 'Bu cihaza kaydedildi. Buradan kaldırmak için tıkla.',
+    full: 'Bu cihazda yer kalmadı',
+    someFailed: {
+      one: '{count} şarkı kaydedilemedi — tekrar dene',
+      other: '{count} şarkı kaydedilemedi — tekrar dene',
+    },
+    done: '“{name}” çevrimdışı hazır',
+    needsHttps:
+      'Çevrimdışı dinleme için Castify’ın HTTPS (veya localhost) üzerinden açılması gerekir: tarayıcılar depolamaya yalnızca orada izin verir.',
+    unavailable: 'Çevrimdışı dinleme burada kullanılamıyor',
+    unsupported: 'Bu tarayıcı çevrimdışı dinleme için şarkı saklayamıyor.',
+    removeTitle: 'Bu cihazdan kaldırılsın mı?',
+    removeBody:
+      '“{name}” ({size}) bu cihazdan kaldırılacak. Sunucudaki kitaplığında kalır.',
+    remove: 'Cihazdan kaldır',
+    removed: '“{name}” bu cihazdan kaldırıldı',
+    storage: 'Depolama',
+    used: { one: '{size} · {count} şarkı', other: '{size} · {count} şarkı' },
+    room: 'Castify için hâlâ {size} kullanılabilir',
+    persisted: 'Tarayıcı bu şarkıları sen kaldırana kadar saklar.',
+    notPersisted:
+      'Cihazda yer azalırsa tarayıcı bu şarkıları silebilir. Castify’ı ana ekrana yüklemek onları korumaya yardımcı olur.',
+    removeAll: 'Tümünü kaldır',
+    removeAllTitle: 'Bu cihazdaki tüm şarkılar kaldırılsın mı?',
+    removeAllBody: '{size} boşaltır. Sunucudaki kitaplığın olduğu gibi kalır.',
+    empty: 'Bu cihazda henüz bir şey yok',
+    emptyHint:
+      'Bağlantı olmadan dinlemek için bir çalma listesi veya albüm açıp “Cihaza indir”i seç.',
+    open: 'Aç',
+    album: 'Albüm',
+    playlist: 'Çalma listesi',
+    banner: 'Çevrimdışısın',
+    bannerAction: 'İndirilen müzik',
+  },
+  shareCard: {
+    menu: 'Görsel olarak paylaş',
+    title: 'Görsel olarak paylaş',
+    hint: 'Hikâyelerin için bir görsel, dinlemek için QR kodlu.',
+    alt: '“{title}” paylaşım görseli',
+    noLink:
+      'Herkese açık bağlantı oluşturulamadı, bu yüzden görselde QR kod yok.',
+    save: 'Görseli kaydet',
+    share: 'Paylaş',
+    listen: 'Dinlemek için tara',
   },
 }

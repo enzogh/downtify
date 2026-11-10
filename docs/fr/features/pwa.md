@@ -32,4 +32,4 @@ Sur un téléphone, Castify affiche un court guide quelques instants après l’
 
 Safari sous iOS ne lit pas du tout les champs `display` ni les icônes du manifest pour « Sur l’écran d’accueil » : il lui faut ses propres balises `<meta>`/`<link>` `apple-mobile-web-app-capable` et `apple-touch-icon` dans `index.html`, définies à côté du manifest pour que les deux plateformes aient le même comportement autonome, en plein écran, avec l’icône de Castify.
 
-Il n’y a ni mode hors ligne ni service worker — l’interface de Castify n’est utile que tant qu’elle peut joindre le backend auquel elle est associée ; c’est donc une « application web installable en plein écran », pas une application utilisable hors ligne.
+Un service worker (`/sw.js`) garde l’application elle-même sur l’appareil : l’application installée s’ouvre sans connexion et lit les playlists et albums que vous y avez enregistrés — voir [Écoute hors connexion](offline.md). Tout le reste a besoin du serveur, donc le reste de l’application ne peut pas se charger hors connexion.

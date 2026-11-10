@@ -32,4 +32,4 @@ Auf dem Handy zeigt Castify kurz nach dem Laden eine kleine Anleitung, solange d
 
 iOS-Safari liest für „Zum Home-Bildschirm“ weder das Feld `display` noch die Symbolfelder des Manifests — er braucht eigene `<meta>`-/`<link>`-Tags (`apple-mobile-web-app-capable` und `apple-touch-icon`) in `index.html`. Sie werden zusammen mit dem Manifest gesetzt, damit beide Plattformen dasselbe eigenständige Vollbildverhalten mit dem Castify-Symbol bekommen.
 
-Es gibt weder Offline-Unterstützung noch einen Service Worker — die Oberfläche von Castify ist nur nützlich, solange sie das Backend erreicht, mit dem sie verbunden ist. Es ist also eine „installierbare Vollbild-Web-App“, keine offlinefähige.
+Ein Service Worker (`/sw.js`) behält die App selbst auf dem Gerät: Die installierte App öffnet sich ohne Verbindung und spielt die Playlists und Alben, die du darauf gespeichert hast — siehe [Offline hören](offline.md). Alles andere braucht den Server, daher kann der Rest der App offline nicht laden.

@@ -108,6 +108,7 @@ export default {
       'features/youtube-cookies.md': 'YouTube çerezleri',
       'features/internationalization.md': 'Uluslararasılaştırma',
       'features/pwa.md': 'Uygulama olarak yükle (PWA)',
+      'features/offline.md': 'Çevrimdışı dinleme',
       'features/updates.md': 'Güncelleme bildirimleri',
       'how-it-works.md': 'Nasıl çalışır',
       'troubleshooting.md': 'Sorun giderme',

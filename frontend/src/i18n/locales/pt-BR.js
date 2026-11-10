@@ -206,6 +206,11 @@ export default {
     length: 'Duração da transição',
     seconds: { one: '{count} segundo', other: '{count} segundos' },
     off: 'Desligado',
+    gapless: 'Reprodução sem intervalo',
+    gaplessHint:
+      'Começa a próxima música no instante em que esta termina, sem silêncio entre elas — para álbuns ao vivo e conceituais.',
+    gaplessFading:
+      'Não é usada enquanto houver transição: a transição já une as músicas.',
   },
   normalization: {
     level: 'Nível de volume',
@@ -2348,5 +2353,59 @@ export default {
     androidInstallHint: 'Ou “Adicionar à tela inicial”.',
     androidConfirm: 'Confirme em “Instalar”',
     androidConfirmHint: 'O Castify abre pelo ícone.',
+  },
+  offline: {
+    title: 'Neste dispositivo',
+    subtitle: 'Playlists e álbuns salvos aqui tocam sem conexão.',
+    save: 'Baixar no dispositivo',
+    saving: 'Baixando {done}/{total}',
+    saved: 'No dispositivo',
+    saveHint: 'Manter estas músicas neste dispositivo para ouvir offline',
+    savedHint: 'Salvo neste dispositivo. Clique para remover daqui.',
+    full: 'Sem espaço neste dispositivo',
+    someFailed: {
+      one: '{count} música não pôde ser salva — tente de novo',
+      other: '{count} músicas não puderam ser salvas — tente de novo',
+    },
+    done: '“{name}” está pronto offline',
+    needsHttps:
+      'Ouvir offline exige abrir o Castify por HTTPS (ou em localhost): os navegadores só permitem armazenamento ali.',
+    unavailable: 'Ouvir offline não está disponível aqui',
+    unsupported:
+      'Este navegador não consegue guardar músicas para ouvir offline.',
+    removeTitle: 'Remover deste dispositivo?',
+    removeBody:
+      '“{name}” ({size}) será removido deste dispositivo. Continua na sua biblioteca no servidor.',
+    remove: 'Remover do dispositivo',
+    removed: '“{name}” removido deste dispositivo',
+    storage: 'Armazenamento',
+    used: { one: '{size} · {count} música', other: '{size} · {count} músicas' },
+    room: 'Ainda há {size} disponíveis para o Castify',
+    persisted: 'O navegador mantém estas músicas até você removê-las.',
+    notPersisted:
+      'O navegador pode apagar estas músicas se faltar espaço no dispositivo. Instalar o Castify na tela inicial ajuda a mantê-las.',
+    removeAll: 'Remover tudo',
+    removeAllTitle: 'Remover todas as músicas deste dispositivo?',
+    removeAllBody:
+      'Libera {size}. Sua biblioteca no servidor continua como está.',
+    empty: 'Nada neste dispositivo ainda',
+    emptyHint:
+      'Abra uma playlist ou um álbum e escolha “Baixar no dispositivo” para ouvir sem conexão.',
+    open: 'Abrir',
+    album: 'Álbum',
+    playlist: 'Playlist',
+    banner: 'Você está offline',
+    bannerAction: 'Músicas baixadas',
+  },
+  shareCard: {
+    menu: 'Compartilhar como imagem',
+    title: 'Compartilhar como imagem',
+    hint: 'Uma imagem para seus stories, com um QR code para ouvir.',
+    alt: 'Imagem de compartilhamento de “{title}”',
+    noLink:
+      'Não foi possível criar um link público, então a imagem não tem QR code.',
+    save: 'Salvar imagem',
+    share: 'Compartilhar',
+    listen: 'Escaneie para ouvir',
   },
 }

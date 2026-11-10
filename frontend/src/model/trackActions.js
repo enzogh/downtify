@@ -9,6 +9,7 @@ import { useAuth } from '/src/model/auth'
 import { useReplaceAudio } from '/src/model/replaceAudio'
 import { useBuyLinks } from '/src/model/buyLinks'
 import { useTrackOrigin } from '/src/model/trackOrigin'
+import { useShareCard } from '/src/model/shareCard'
 import { buyTargetForTrack } from '/src/lib/buyLinks'
 import { useVisibility } from '/src/model/visibility'
 import { canReplace } from '/src/lib/replaceAudio'
@@ -35,6 +36,7 @@ export function useTrackActions() {
   const replaceAudio = useReplaceAudio()
   const buyLinks = useBuyLinks()
   const trackOrigin = useTrackOrigin()
+  const shareCard = useShareCard()
   const visibility = useVisibility()
   const router = useRouter()
   const { t } = useI18n()
@@ -215,6 +217,26 @@ export function useTrackActions() {
     }
   }
 
+  function shareImage(track) {
+    shareCard.open(
+      {
+        title: track.title || track.name || '',
+        artist:
+          track.artist ||
+          (Array.isArray(track.artists) ? track.artists[0] : ''),
+        album: track.album || '',
+        cover: track.cover || '',
+        hasCover: track.hasCover,
+      },
+      // The public link when the server allows them; the card goes
+      // without its QR code otherwise.
+      () =>
+        libraryOnly.value && !track.file
+          ? Promise.resolve('')
+          : createLink(track).then(({ data }) => songLinkUrl(data))
+    )
+  }
+
   function menuFor(
     track,
     { list = [track], index = 0, context = null, hide = [] } = {}
@@ -277,6 +299,13 @@ export function useTrackActions() {
         action: () => shareSong(track),
       },
       {
+        // A story-sized picture of the song, with its link as a QR code.
+        label: t('shareCard.menu'),
+        icon: 'image',
+        hidden: hide.includes('share'),
+        action: () => shareImage(track),
+      },
+      {
         label: t('library.saveToDevice'),
         icon: 'download',
         action: () => saveToDevice(track),
@@ -312,5 +341,6 @@ export function useTrackActions() {
     remove,
     menuFor,
     shareSong,
+    shareImage,
   }
 }

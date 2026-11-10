@@ -112,6 +112,16 @@ Whatever comes next is prepared as soon as it is queued, and again 30 seconds be
 
 **Fade between songs** (Settings → General) fades a song out over its last seconds and the next one in, from off up to 12 seconds. It applies when the queue moves on by itself. A song you pick yourself starts at full volume, and nothing fades when no song follows (the end of the queue, repeat one, or a sleep timer set to stop after the track). The setting is saved per device, like the volume.
 
+## Gapless playback
+
+**Gapless playback** (Settings → General, under **Fade between songs**; on by default, saved per device) runs songs into each other with no silence between them, the way a live album or a concept album was recorded. About 30 seconds before a song ends, the next one loads in a second, silent player, which starts a few milliseconds before the first one stops. The gap that remains is a few milliseconds at most, where loading the next song after the end of the first one used to leave a short silence.
+
+- It only applies when the queue moves on by itself, and only while **Fade between songs** is off: a fade overlaps the songs on purpose, so the switch is greyed out then.
+- The padding encoders add at the start and end of MP3 and M4A files is cut by the browser from the files' own gapless headers. Files without that header can keep a few milliseconds of silence that is in the file itself.
+- Repeat one, a sleep timer set to stop after the track, and a [Jam](jam.md) (where the server keeps the devices in step) use the usual change.
+- On an iPhone, Safari may refuse to start the second player without a tap. The song then loads in the usual player, with the short pause there was before.
+- A song whose [volume level](playback-normalization.md) isn't known yet changes the usual way too, so it never plays a moment at the wrong level.
+
 ## Keyboard and media keys
 
 | Key | Action |

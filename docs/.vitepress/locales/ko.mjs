@@ -107,6 +107,7 @@ export default {
       'features/youtube-cookies.md': 'YouTube 쿠키',
       'features/internationalization.md': '다국어 지원',
       'features/pwa.md': '앱으로 설치(PWA)',
+      'features/offline.md': '오프라인 듣기',
       'features/updates.md': '업데이트 알림',
       'how-it-works.md': '작동 방식',
       'troubleshooting.md': '문제 해결',

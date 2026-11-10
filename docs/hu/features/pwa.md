@@ -32,4 +32,4 @@ A `frontend/index.html` egy [web app manifestre](https://developer.mozilla.org/e
 
 Az iOS Safari a „Főképernyőhöz adás” során egyáltalán nem olvassa a manifest `display` és ikonmezőit — saját `apple-mobile-web-app-capable` és `apple-touch-icon` `<meta>`/`<link>` címkékre van szüksége az `index.html`-ben, amelyeket a manifest mellett állítunk be, hogy mindkét platform ugyanazt az önálló, teljes képernyős viselkedést kapja a Castify ikonjával.
 
-Nincs offline támogatás vagy service worker — a Castify felülete csak addig hasznos, amíg eléri a hozzá tartozó backendet, ezért ez egy „telepíthető, teljes képernyős webalkalmazás”, nem offline is működő.
+Egy service worker (`/sw.js`) magát az alkalmazást is az eszközön tartja: a telepített alkalmazás kapcsolat nélkül is megnyílik, és lejátssza az eszközre mentett lejátszási listákat és albumokat — lásd [Offline hallgatás](offline.md). Minden más a szerverhez kötött, ezért az alkalmazás többi része offline nem töltődik be.

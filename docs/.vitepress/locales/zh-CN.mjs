@@ -107,6 +107,7 @@ export default {
       'features/youtube-cookies.md': 'YouTube Cookie',
       'features/internationalization.md': '国际化',
       'features/pwa.md': '安装为应用（PWA）',
+      'features/offline.md': '离线收听',
       'features/updates.md': '更新通知',
       'how-it-works.md': '工作原理',
       'troubleshooting.md': '故障排查',

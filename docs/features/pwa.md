@@ -39,4 +39,4 @@ iOS Safari doesn't read the manifest's `display` or icon fields at all for "Add 
 
 The page never zooms, like an app: the viewport sets `maximum-scale=1, user-scalable=no` (which also stops iOS from zooming into a focused input), `touch-action: manipulation` drops double-tap zoom, and since iOS ignores `user-scalable=no`, `src/lib/noZoom.js` cancels its pinch gesture.
 
-There's no offline support or service worker — Castify's UI is only useful while it can reach the backend it's paired with, so this is "installable, full-screen web app," not an offline-capable one.
+A service worker (`/sw.js`) keeps the app itself on the device, so the installed app opens without a connection, and plays the playlists and albums you saved on it — see [Offline listening](offline.md). Everything else needs the server, so the rest of the app can't load while you're offline.

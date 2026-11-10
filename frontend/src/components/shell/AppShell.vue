@@ -20,6 +20,7 @@
       <div
         class="sticky bottom-[calc(5.25rem+env(safe-area-inset-bottom))] z-40 mx-2 mb-2 flex flex-col gap-2 md:bottom-5 md:mx-6 md:mb-5"
       >
+        <OfflineBanner />
         <JamStrip />
         <RemotePlaybackBar />
         <MiniPlayer />
@@ -42,6 +43,7 @@
     <InstallPrompt />
     <ReplaceAudioDialog v-if="auth.isAdmin.value" />
     <BuyLinksDialog />
+    <ShareCardDialog />
     <TrackOriginDialog />
   </div>
 </template>
@@ -63,6 +65,7 @@ import BottomNav from './BottomNav.vue'
 import MiniPlayer from './MiniPlayer.vue'
 import InstallPrompt from './InstallPrompt.vue'
 import RemotePlaybackBar from './RemotePlaybackBar.vue'
+import OfflineBanner from './OfflineBanner.vue'
 import DevicePicker from '../player/DevicePicker.vue'
 import JamSheet from '../jam/JamSheet.vue'
 import JamStrip from '../jam/JamStrip.vue'
@@ -79,6 +82,7 @@ import SignIn from './SignIn.vue'
 import DefaultPasswordPrompt from './DefaultPasswordPrompt.vue'
 import ReplaceAudioDialog from '../library/ReplaceAudioDialog.vue'
 import BuyLinksDialog from '../library/BuyLinksDialog.vue'
+import ShareCardDialog from '../library/ShareCardDialog.vue'
 import TrackOriginDialog from '../monitor/TrackOriginDialog.vue'
 import API from '/src/model/api'
 import { useAccount } from '/src/model/account'

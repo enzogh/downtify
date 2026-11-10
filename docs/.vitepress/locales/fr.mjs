@@ -108,6 +108,7 @@ export default {
       'features/youtube-cookies.md': 'Cookies YouTube',
       'features/internationalization.md': 'Internationalisation',
       'features/pwa.md': 'Installer comme application (PWA)',
+      'features/offline.md': 'Écoute hors connexion',
       'features/updates.md': 'Notifications de mise à jour',
       'how-it-works.md': 'Comment ça marche',
       'troubleshooting.md': 'Dépannage',

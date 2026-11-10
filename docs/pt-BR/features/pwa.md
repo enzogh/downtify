@@ -32,4 +32,4 @@ O `frontend/index.html` aponta para um [web app manifest](https://developer.mozi
 
 O Safari do iOS não lê os campos `display` nem os de ícone do manifest ao usar "Adicionar à Tela de Início" — ele precisa das próprias tags `<meta>`/`<link>` `apple-mobile-web-app-capable` e `apple-touch-icon` no `index.html`, que são definidas junto com o manifest para que as duas plataformas tenham o mesmo comportamento em tela cheia e com o ícone do Castify.
 
-Não há suporte offline nem service worker — a interface do Castify só serve enquanto consegue falar com o backend ao qual está ligada, então isto é um "app web instalável em tela cheia", não um app que funciona offline.
+Um service worker (`/sw.js`) guarda o próprio app no dispositivo: o app instalado abre sem conexão e toca as playlists e álbuns que você salvou nele — veja [Ouvir offline](offline.md). Todo o resto precisa do servidor, então o restante do app não carrega offline.

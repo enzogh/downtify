@@ -108,6 +108,7 @@ export default {
       'features/youtube-cookies.md': 'YouTube-sütik',
       'features/internationalization.md': 'Nemzetköziesítés',
       'features/pwa.md': 'Telepítés alkalmazásként (PWA)',
+      'features/offline.md': 'Offline hallgatás',
       'features/updates.md': 'Frissítési értesítések',
       'how-it-works.md': 'Hogyan működik',
       'troubleshooting.md': 'Hibaelhárítás',

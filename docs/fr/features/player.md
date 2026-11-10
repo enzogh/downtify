@@ -94,6 +94,16 @@ Les mêmes actions s’appliquent à une sélection de plusieurs morceaux dans l
 
 La file, le morceau actuel, sa position, l’aléatoire et la répétition sont mémorisés, si bien que rouvrir Castify reprend là où vous vous étiez arrêté (les files de plus de 2000 morceaux ne sont pas mémorisées). Les fichiers supprimés sortent automatiquement de la file.
 
+## Lecture sans blanc
+
+**Lecture sans blanc** (Réglages → Général, sous **Fondu entre les titres** ; activée par défaut, enregistrée par appareil) enchaîne les titres sans silence entre eux, comme un album live ou un album concept a été enregistré. Environ 30 secondes avant la fin d’un titre, le suivant se charge dans un second lecteur, muet, qui démarre quelques millisecondes avant que le premier s’arrête. Il reste au plus quelques millisecondes d’écart, là où charger le titre suivant après la fin du premier laissait un court silence.
+
+- Elle ne s’applique que quand la file avance d’elle-même, et seulement quand **Fondu entre les titres** est désactivé : un fondu fait se chevaucher les titres exprès, l’interrupteur est donc grisé.
+- Le remplissage que les encodeurs ajoutent au début et à la fin des fichiers MP3 et M4A est retiré par le navigateur grâce aux en-têtes sans blanc des fichiers. Un fichier sans cet en-tête peut garder quelques millisecondes de silence qui sont dans le fichier lui-même.
+- Répéter un titre, un minuteur réglé pour s’arrêter après le titre et une [Jam](jam.md) (où le serveur garde les appareils synchronisés) utilisent le changement habituel.
+- Sur iPhone, Safari peut refuser de lancer le second lecteur sans un toucher. Le titre se charge alors dans le lecteur habituel, avec la courte pause d’avant.
+- Un titre dont le [niveau de volume](playback-normalization.md) n’est pas encore connu change aussi de la façon habituelle, pour ne jamais jouer un instant au mauvais niveau.
+
 ## Clavier et touches multimédias
 
 | Touche | Action |

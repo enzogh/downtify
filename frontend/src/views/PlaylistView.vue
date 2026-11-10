@@ -45,6 +45,10 @@
             :disabled="!playlist.tracks.length"
             @click="playlistActions.play(playlist, { shuffled: true })"
           />
+          <OfflineButton
+            :collection="offlineCollection"
+            :tracks="playlist.tracks"
+          />
           <UiButton
             v-if="batch?.missing_count"
             variant="primary"
@@ -406,6 +410,7 @@ import PlaylistStatus from '/src/components/library/PlaylistStatus.vue'
 import TrackList from '/src/components/library/TrackList.vue'
 import TrackSortSelect from '/src/components/library/TrackSortSelect.vue'
 import DownloadState from '/src/components/search/DownloadState.vue'
+import OfflineButton from '/src/components/library/OfflineButton.vue'
 import API from '/src/model/api'
 import { useAccount } from '/src/model/account'
 import { useProgressTracker } from '/src/model/download'
@@ -451,6 +456,13 @@ const playlist = computed(() =>
   library.findPlaylist(String(route.query.name || ''))
 )
 const batch = computed(() => playlist.value?.batch || null)
+// What "Download to this device" keeps (see model/offline.js).
+const offlineCollection = computed(() => ({
+  kind: 'playlist',
+  id: playlist.value?.name || '',
+  title: playlist.value?.title || '',
+  route: { name: 'Playlist', query: { name: playlist.value?.name || '' } },
+}))
 
 // How the songs are ordered: the playlist's own order until picked
 // otherwise (remembered for every playlist).

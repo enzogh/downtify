@@ -197,6 +197,11 @@ export default {
     length: 'Fade length',
     seconds: { one: '{count} second', other: '{count} seconds' },
     off: 'Off',
+    gapless: 'Gapless playback',
+    gaplessHint:
+      'Starts the next song the moment this one ends, with no silence in between — for live and concept albums.',
+    gaplessFading:
+      'Not used while a fade is set: the fade already joins the songs.',
   },
   normalization: {
     level: 'Playback level',
@@ -2297,5 +2302,56 @@ export default {
     androidInstallHint: 'Or “Add to Home screen”.',
     androidConfirm: 'Confirm with “Install”',
     androidConfirmHint: 'Castify then opens from its icon.',
+  },
+  offline: {
+    title: 'On this device',
+    subtitle: 'Playlists and albums saved here play without a connection.',
+    save: 'Download to device',
+    saving: 'Downloading {done}/{total}',
+    saved: 'On this device',
+    saveHint: 'Keep these songs on this device to listen offline',
+    savedHint: 'Saved on this device. Click to remove it from here.',
+    full: 'Out of space on this device',
+    someFailed: {
+      one: '{count} song couldn’t be saved — try again',
+      other: '{count} songs couldn’t be saved — try again',
+    },
+    done: '“{name}” is ready offline',
+    needsHttps:
+      'Offline listening needs Castify to be opened over HTTPS (or on localhost): browsers only allow storage there.',
+    unavailable: 'Offline listening isn’t available here',
+    unsupported: 'This browser can’t keep songs for offline listening.',
+    removeTitle: 'Remove from this device?',
+    removeBody:
+      '“{name}” ({size}) will be removed from this device. It stays in your library on the server.',
+    remove: 'Remove from device',
+    removed: '“{name}” removed from this device',
+    storage: 'Storage',
+    used: { one: '{size} · {count} song', other: '{size} · {count} songs' },
+    room: '{size} still available to Castify',
+    persisted: 'The browser keeps these songs until you remove them.',
+    notPersisted:
+      'The browser may clear these songs if the device runs low on space. Installing Castify on the home screen helps keep them.',
+    removeAll: 'Remove everything',
+    removeAllTitle: 'Remove every song from this device?',
+    removeAllBody: 'Frees {size}. Your library on the server stays as it is.',
+    empty: 'Nothing on this device yet',
+    emptyHint:
+      'Open a playlist or an album and choose “Download to device” to listen without a connection.',
+    open: 'Open',
+    album: 'Album',
+    playlist: 'Playlist',
+    banner: 'You’re offline',
+    bannerAction: 'Downloaded music',
+  },
+  shareCard: {
+    menu: 'Share as image',
+    title: 'Share as image',
+    hint: 'A picture for your stories, with a QR code to listen.',
+    alt: 'Share picture of “{title}”',
+    noLink: 'No public link could be made, so the picture has no QR code.',
+    save: 'Save image',
+    share: 'Share',
+    listen: 'Scan to listen',
   },
 }

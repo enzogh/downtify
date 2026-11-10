@@ -94,6 +94,16 @@ Ugyanezek a műveletek érvényesek a Könyvtárban egy többszámos kijelölés
 
 A sor, az aktuális szám, annak pozíciója, a véletlen sorrend és az ismétlés megmarad, így a Castify újranyitása ott folytatja, ahol abbahagytad (a 2000-nél több számos sorok nem maradnak meg). A törölt fájlok automatikusan kiesnek a sorból.
 
+## Szünet nélküli lejátszás
+
+A **Szünet nélküli lejátszás** (Beállítások → Általános, az **Áttűnés a dalok között** alatt; alapból be van kapcsolva, eszközönként mentődik) csend nélkül fűzi egymás után a dalokat, ahogy egy koncert- vagy konceptalbumot felvettek. Egy dal vége előtt nagyjából 30 másodperccel a következő betöltődik egy második, néma lejátszóba, amely néhány ezredmásodperccel az első leállása előtt indul. Legfeljebb néhány ezredmásodperces rés marad, ahol korábban a következő dal betöltése az első vége után rövid csendet hagyott.
+
+- Csak akkor érvényes, ha a sor magától lép tovább, és csak amíg az **Áttűnés a dalok között** ki van kapcsolva: az áttűnés szándékosan átfedi a dalokat, ezért a kapcsoló ilyenkor szürke.
+- A kódolók által az MP3 és M4A fájlok elejére és végére tett kitöltést a böngésző a fájlok gapless fejlécei alapján levágja. A fejléc nélküli fájlokban maradhat néhány ezredmásodpercnyi csend, ami magában a fájlban van.
+- Egy dal ismétlése, a dal után leálló alvásidőzítő és a [Jam](jam.md) (ahol a szerver tartja szinkronban az eszközöket) a szokásos váltást használja.
+- iPhone-on a Safari koppintás nélkül megtagadhatja a második lejátszó indítását. Ilyenkor a dal a szokásos lejátszóban töltődik be, a korábbi rövid szünettel.
+- Az a dal, amelynek [hangerőszintje](playback-normalization.md) még nem ismert, szintén a szokásos módon vált, hogy egy pillanatig se szóljon rossz szinten.
+
 ## Billentyűzet és médiabillentyűk
 
 | Billentyű | Művelet |

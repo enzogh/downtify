@@ -207,6 +207,11 @@ export default {
     length: 'Duración del fundido',
     seconds: { one: '{count} segundo', other: '{count} segundos' },
     off: 'Desactivado',
+    gapless: 'Reproducción sin pausas',
+    gaplessHint:
+      'Empieza la siguiente canción justo cuando termina esta, sin silencio entre ellas: para álbumes en directo y conceptuales.',
+    gaplessFading:
+      'No se usa mientras haya un fundido: el fundido ya une las canciones.',
   },
   normalization: {
     level: 'Nivel de volumen',
@@ -2367,5 +2372,62 @@ export default {
     androidInstallHint: 'O «Añadir a pantalla de inicio».',
     androidConfirm: 'Confirma con «Instalar»',
     androidConfirmHint: 'Castify se abre luego desde su icono.',
+  },
+  offline: {
+    title: 'En este dispositivo',
+    subtitle: 'Las listas y álbumes guardados aquí se reproducen sin conexión.',
+    save: 'Descargar al dispositivo',
+    saving: 'Descargando {done}/{total}',
+    saved: 'En el dispositivo',
+    saveHint:
+      'Guardar estas canciones en este dispositivo para escucharlas sin conexión',
+    savedHint: 'Guardado en este dispositivo. Haz clic para quitarlo de aquí.',
+    full: 'No queda espacio en este dispositivo',
+    someFailed: {
+      one: 'No se pudo guardar {count} canción: inténtalo de nuevo',
+      other: 'No se pudieron guardar {count} canciones: inténtalo de nuevo',
+    },
+    done: '«{name}» está listo sin conexión',
+    needsHttps:
+      'Escuchar sin conexión requiere abrir Castify por HTTPS (o en localhost): los navegadores solo permiten el almacenamiento ahí.',
+    unavailable: 'Escuchar sin conexión no está disponible aquí',
+    unsupported:
+      'Este navegador no puede guardar canciones para escucharlas sin conexión.',
+    removeTitle: '¿Quitar de este dispositivo?',
+    removeBody:
+      '«{name}» ({size}) se quitará de este dispositivo. Sigue en tu biblioteca del servidor.',
+    remove: 'Quitar del dispositivo',
+    removed: '«{name}» quitado de este dispositivo',
+    storage: 'Almacenamiento',
+    used: {
+      one: '{size} · {count} canción',
+      other: '{size} · {count} canciones',
+    },
+    room: 'Quedan {size} disponibles para Castify',
+    persisted: 'El navegador guarda estas canciones hasta que las quites.',
+    notPersisted:
+      'El navegador puede borrar estas canciones si el dispositivo se queda sin espacio. Instalar Castify en la pantalla de inicio ayuda a conservarlas.',
+    removeAll: 'Quitar todo',
+    removeAllTitle: '¿Quitar todas las canciones de este dispositivo?',
+    removeAllBody: 'Libera {size}. Tu biblioteca del servidor no cambia.',
+    empty: 'Todavía no hay nada en este dispositivo',
+    emptyHint:
+      'Abre una lista o un álbum y elige «Descargar al dispositivo» para escuchar sin conexión.',
+    open: 'Abrir',
+    album: 'Álbum',
+    playlist: 'Lista',
+    banner: 'Estás sin conexión',
+    bannerAction: 'Música descargada',
+  },
+  shareCard: {
+    menu: 'Compartir como imagen',
+    title: 'Compartir como imagen',
+    hint: 'Una imagen para tus historias, con un código QR para escuchar.',
+    alt: 'Imagen para compartir de «{title}»',
+    noLink:
+      'No se pudo crear un enlace público, así que la imagen no tiene código QR.',
+    save: 'Guardar imagen',
+    share: 'Compartir',
+    listen: 'Escanea para escuchar',
   },
 }

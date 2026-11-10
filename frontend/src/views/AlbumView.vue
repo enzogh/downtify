@@ -46,6 +46,10 @@
           >
             {{ t('actions.addToQueue') }}
           </UiButton>
+          <OfflineButton
+            :collection="offlineCollection"
+            :tracks="album.tracks"
+          />
           <UiButton
             v-if="auth.isAdmin.value"
             variant="ghost"
@@ -119,6 +123,7 @@ import { useRoute, useRouter } from 'vue-router'
 import UiButton from '/src/components/ui/UiButton.vue'
 import UiIconButton from '/src/components/ui/UiIconButton.vue'
 import UiMenu from '/src/components/ui/UiMenu.vue'
+import OfflineButton from '/src/components/library/OfflineButton.vue'
 import CollectionHero from '/src/components/library/CollectionHero.vue'
 import DetailState from '/src/components/library/DetailState.vue'
 import MediaTile from '/src/components/library/MediaTile.vue'
@@ -171,6 +176,21 @@ const album = computed(() =>
     String(route.query.title || '')
   )
 )
+
+// What "Download to this device" keeps (see model/offline.js).
+const offlineCollection = computed(() => ({
+  kind: 'album',
+  id: album.value?.key || '',
+  title: album.value?.title || '',
+  subtitle: album.value?.artist || '',
+  route: {
+    name: 'Album',
+    query: {
+      artist: String(route.query.artist || ''),
+      title: String(route.query.title || ''),
+    },
+  },
+}))
 
 function albumContext(item) {
   return {

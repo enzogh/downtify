@@ -32,4 +32,4 @@ En un teléfono, Castify muestra una breve guía poco después de abrir la pági
 
 Safari en iOS no lee los campos `display` ni los de iconos del manifest al usar «Añadir a pantalla de inicio»: necesita sus propias etiquetas `<meta>`/`<link>` `apple-mobile-web-app-capable` y `apple-touch-icon` en `index.html`, que se definen junto al manifest para que ambas plataformas tengan el mismo comportamiento independiente, a pantalla completa y con el icono de Castify.
 
-No hay soporte sin conexión ni service worker: la interfaz de Castify solo sirve mientras alcanza el backend al que está vinculada, así que esto es una «app web instalable a pantalla completa», no una que funcione sin conexión.
+Un service worker (`/sw.js`) guarda la propia app en el dispositivo: la app instalada se abre sin conexión y reproduce las listas y álbumes que guardaste en él — consulta [Escuchar sin conexión](offline.md). Todo lo demás necesita el servidor, así que el resto de la app no puede cargarse sin conexión.

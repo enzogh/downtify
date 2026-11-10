@@ -94,6 +94,16 @@ Dieselben Aktionen gelten für eine Mehrfachauswahl in der Bibliothek.
 
 Warteschlange, aktueller Titel, seine Position, Zufall und Wiederholen werden gemerkt, sodass das erneute Öffnen von Castify dort fortsetzt, wo du aufgehört hast (Warteschlangen mit mehr als 2000 Titeln werden nicht gemerkt). Gelöschte Dateien fallen automatisch aus der Warteschlange.
 
+## Lückenlose Wiedergabe
+
+**Lückenlose Wiedergabe** (Einstellungen → Allgemein, unter **Überblenden zwischen Songs**; standardmäßig an, pro Gerät gespeichert) lässt Songs ohne Stille ineinander übergehen, so wie ein Live- oder Konzeptalbum aufgenommen wurde. Etwa 30 Sekunden vor dem Ende eines Songs lädt der nächste in einem zweiten, stummen Player, der ein paar Millisekunden vor dem Ende des ersten startet. Es bleibt höchstens eine Lücke von wenigen Millisekunden, wo das Laden des nächsten Songs nach dem Ende des ersten eine kurze Stille hinterließ.
+
+- Sie greift nur, wenn die Warteschlange von selbst weiterläuft, und nur, solange **Überblenden zwischen Songs** aus ist: Eine Überblendung lässt die Songs absichtlich überlappen, deshalb ist der Schalter dann ausgegraut.
+- Das Padding, das Encoder am Anfang und Ende von MP3- und M4A-Dateien einfügen, entfernt der Browser anhand der Gapless-Header der Dateien. Dateien ohne diesen Header können ein paar Millisekunden Stille behalten, die in der Datei selbst stecken.
+- Einen Song wiederholen, ein Sleep-Timer, der nach dem Song stoppt, und ein [Jam](jam.md) (bei dem der Server die Geräte im Takt hält) nutzen den üblichen Wechsel.
+- Auf dem iPhone kann Safari den zweiten Player ohne Tippen verweigern. Der Song lädt dann im üblichen Player, mit der kurzen Pause von früher.
+- Ein Song, dessen [Lautstärkepegel](playback-normalization.md) noch nicht bekannt ist, wechselt ebenfalls auf die übliche Weise, damit er nie einen Moment im falschen Pegel spielt.
+
 ## Tastatur und Medientasten
 
 | Taste | Aktion |

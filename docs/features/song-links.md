@@ -21,6 +21,15 @@ Asking again for the same song gives the same link back. The link looks like `ht
 A link points at the address you opened Castify with. If that is `http://192.168.1.20:8000`, it only works on your home network. To share with people outside, open Castify through the public address you set up (see [Behind a reverse proxy](mobile-apps.md#behind-a-reverse-proxy)) before you copy the link.
 :::
 
+## Sharing as an image
+
+**Share as image**, in the same **⋯** menu, makes a picture for your stories (Instagram, WhatsApp, Snapchat…): 1080 × 1920 pixels, with the song's cover on its own colours, its title, artist and album, and a QR code of its link with **Scan to listen**. A preview opens first:
+
+- **Share** (on phones and browsers that can share files) hands the picture to an app, with the link in the text.
+- **Save image** downloads it as a PNG (`castify-artist-title.png`).
+
+The QR code opens the same page as the link. When no link can be made (links are [turned off](#turning-it-off), or the server can't be reached), the picture is made without the QR code and the preview says so. The cover of a song that isn't downloaded is only drawn when its host allows it.
+
 ## What the person you send it to sees
 
 A page drawn like Castify's own full-screen player: the cover large over a blurred backdrop of its colours, the title, artist and album, the same wave seek bar, and play, back 10 s and forward 10 s. It plays in the background and from a phone's lock screen too. Messaging apps that show link previews show the cover and title.

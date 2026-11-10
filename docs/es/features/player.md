@@ -94,6 +94,16 @@ Las mismas acciones valen para una selección de varias canciones en la Bibliote
 
 La cola, la canción actual, su posición, el aleatorio y la repetición se recuerdan, así que al reabrir Castify se retoma donde lo dejaste (las colas de más de 2000 canciones no se recuerdan). Los archivos eliminados salen de la cola automáticamente.
 
+## Reproducción sin pausas
+
+**Reproducción sin pausas** (Ajustes → General, bajo **Fundido entre canciones**; activada por defecto, guardada por dispositivo) encadena las canciones sin silencio entre ellas, como se grabó un álbum en directo o conceptual. Unos 30 segundos antes de que termine una canción, la siguiente se carga en un segundo reproductor, en silencio, que arranca unos milisegundos antes de que pare el primero. Queda como mucho un hueco de pocos milisegundos, donde cargar la siguiente canción tras el final de la primera dejaba un breve silencio.
+
+- Solo se aplica cuando la cola avanza sola, y solo mientras **Fundido entre canciones** está desactivado: un fundido superpone las canciones a propósito, así que el interruptor aparece atenuado.
+- El relleno que los codificadores añaden al principio y al final de los archivos MP3 y M4A lo quita el navegador gracias a las cabeceras sin pausas de los archivos. Un archivo sin esa cabecera puede conservar unos milisegundos de silencio que están en el propio archivo.
+- Repetir una canción, un temporizador que se detiene al acabar la canción y una [Jam](jam.md) (donde el servidor mantiene sincronizados los dispositivos) usan el cambio habitual.
+- En iPhone, Safari puede negarse a iniciar el segundo reproductor sin un toque. La canción se carga entonces en el reproductor habitual, con la breve pausa de antes.
+- Una canción cuyo [nivel de volumen](playback-normalization.md) aún no se conoce también cambia de la forma habitual, para no sonar nunca un instante al nivel equivocado.
+
 ## Teclado y teclas multimedia
 
 | Tecla | Acción |

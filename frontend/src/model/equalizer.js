@@ -1,5 +1,7 @@
-// The player's equalizer: a Web Audio filter bank between the shared
-// <audio> element and the speakers, plus its saved settings.
+// The player's equalizer: a Web Audio filter bank between the player's
+// <audio> elements and the speakers, plus its saved settings. The player
+// keeps two elements (the second one loads the next song ahead of time
+// for gapless playback); both feed the same filters.
 //
 // The audio graph is only built once the equalizer (or volume
 // normalization, which uses its output gain) is on and the user switches
@@ -59,7 +61,7 @@ const supported =
 const sampleRate = ref(48000)
 const headroom = computed(() => headroomDb(gains.value, sampleRate.value))
 
-let element = null
+let elements = []
 let context = null
 let filters = []
 let output = null
@@ -99,12 +101,11 @@ function apply(immediate = false) {
 }
 
 function build() {
-  if (context || failed || !element || !supported) return
+  if (context || failed || !elements.length || !supported) return
   try {
     const Context = window.AudioContext || window.webkitAudioContext
     context = new Context()
     sampleRate.value = context.sampleRate
-    const source = context.createMediaElementSource(element)
     filters = BANDS.map((band) => {
       const filter = context.createBiquadFilter()
       filter.type = band.type
@@ -114,13 +115,14 @@ function build() {
       return filter
     })
     output = context.createGain()
-    let node = source
-    for (const filter of filters) {
+    let node = filters[0]
+    for (const filter of filters.slice(1)) {
       node.connect(filter)
       node = filter
     }
     node.connect(output)
     output.connect(context.destination)
+    elements.forEach(route)
     context.addEventListener('statechange', () => {
       graphState.value = context.state
     })
@@ -134,9 +136,25 @@ function build() {
   }
 }
 
-/** Called by the player once it has created its <audio> element. */
+// An element can only be routed into Web Audio once, for good.
+function route(audio) {
+  context.createMediaElementSource(audio).connect(filters[0])
+}
+
+function allPaused() {
+  return elements.every((audio) => audio.paused)
+}
+
+/** Called by the player for each <audio> element it creates. */
 export function attachEqualizer(audio) {
-  element = audio
+  if (!audio || elements.includes(audio)) return
+  elements.push(audio)
+  if (!context) return
+  try {
+    route(audio)
+  } catch (error) {
+    console.error('Equalizer could not route an element', error)
+  }
 }
 
 /**
@@ -218,7 +236,7 @@ if (
 watch(headroom, () => apply())
 // A new song's gain is set before its first sample (the element is
 // paused while it loads); a change during playback ramps like the rest.
-watch(normalizationGain, () => apply(!element || element.paused), {
+watch(normalizationGain, () => apply(allPaused()), {
   flush: 'sync',
 })
 watch(normalizationEnabled, (on) => {
@@ -227,7 +245,7 @@ watch(normalizationEnabled, (on) => {
   // the context couldn't start and the song would go silent): on the
   // next play.
   const gesture = globalThis.navigator?.userActivation?.isActive === true
-  if (on && gesture && element && !element.paused) resumeEqualizer()
+  if (on && gesture && !allPaused()) resumeEqualizer()
   apply()
 })
 

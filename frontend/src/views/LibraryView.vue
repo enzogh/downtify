@@ -303,6 +303,7 @@ import API from '/src/model/api'
 import { useAccount } from '/src/model/account'
 import { useAuth } from '/src/model/auth'
 import { useLibrary } from '/src/model/library'
+import { useOffline } from '/src/model/offline'
 import { usePlayer } from '/src/model/player'
 import { useTrackActions } from '/src/model/trackActions'
 import { usePlaylistActions } from '/src/model/playlistActions'
@@ -331,6 +332,7 @@ const trashCapability = useTrashCapability()
 const playlistActions = usePlaylistActions()
 const ui = useUi()
 const auth = useAuth()
+const offline = useOffline()
 const account = useAccount()
 const visibility = useVisibility()
 
@@ -496,6 +498,12 @@ const toolsMenu = computed(() => [
     label: t('externalPlaylistImport.open'),
     icon: 'folder',
     action: () => importer.value?.show(),
+  },
+  {
+    hidden: offline.support === 'unsupported',
+    label: t('offline.title'),
+    icon: 'arrow-down-to-line',
+    action: () => router.push({ name: 'Offline' }),
   },
   { divider: true, hidden: !auth.isAdmin.value },
   {

@@ -87,6 +87,7 @@ export const NAV = [
         page: 'features/internationalization.md',
       },
       { title: 'Install as an App (PWA)', page: 'features/pwa.md' },
+      { title: 'Offline listening', page: 'features/offline.md' },
       { title: 'Update Notifications', page: 'features/updates.md' },
     ],
   },

@@ -1,6 +1,8 @@
 // The built-in player: one <audio> element shared by the mini player and
 // the Now playing view, with its queue, shuffle/repeat, sleep timer and
-// OS media controls (Media Session).
+// OS media controls (Media Session). A second, silent element loads the
+// next song ahead of time and takes over at the end of this one, so an
+// album plays without a gap between tracks (see "Gapless playback").
 import { ref, computed, watch } from 'vue'
 import { libraryOnly } from '/src/model/musicPolicy'
 
@@ -21,6 +23,7 @@ const VOLUME_KEY = 'downtify-player-volume'
 const RATE_KEY = 'downtify-player-rate'
 const SESSION_KEY = 'downtify-player-session'
 const FADE_KEY = 'downtify-player-fade'
+const GAPLESS_KEY = 'downtify-player-gapless'
 // How long before a track ends its successor is prepared at the latest.
 const PREPARE_BEFORE_END_SECONDS = 30
 // Queues past this size aren't persisted across reloads (localStorage
@@ -65,6 +68,9 @@ const playbackRate = ref(parseFloat(storage()?.getItem(RATE_KEY) || '1'))
 // "Fade between songs" (Settings > Playback), per device like volume:
 // seconds of fade out at a song's end and fade in at the next one's start.
 const fadeSeconds = ref(clampFade(storage()?.getItem(FADE_KEY)))
+// "Gapless playback" (Settings > Playback), per device; on unless turned
+// off. Only used while no fade is set: a fade overlaps songs on purpose.
+const gapless = ref(storage()?.getItem(GAPLESS_KEY) !== '0')
 const repeatMode = ref('off') // 'off' | 'all' | 'one'
 const shuffle = ref(false)
 // Where the queue came from: { type: 'album'|'playlist'|'artist'|
@@ -92,6 +98,12 @@ const isAdvancing = computed(() => isPlaying.value && !isBuffering.value)
 const shuffleVersion = ref(0)
 
 let audio = null
+// The element that loads the next song for a gapless change (see the
+// "Gapless playback" section), and the queue slot it holds.
+let standby = null
+let standbyIndex = -1
+let standbyTrack = null
+let gaplessTimer = 0
 let shuffleOrder = []
 let shufflePos = 0
 let sleepTimer = null
@@ -185,66 +197,79 @@ function withoutHook(fn) {
 
 function ensureAudio() {
   if (audio) return audio
-  audio = new Audio()
-  // Buffer aggressively: a stream starts while it is still arriving, and
-  // the next one is already resolved one track ahead (see prefetchNext).
-  audio.preload = 'auto'
+  audio = createElement()
   applyVolume()
   audio.muted = isMuted.value || outputMuted.value
   audio.playbackRate = playbackRate.value
-  audio.addEventListener('timeupdate', () => {
+  return audio
+}
+
+function createElement() {
+  const el = new Audio()
+  // Buffer aggressively: a stream starts while it is still arriving, and
+  // the next one is already resolved one track ahead (see prefetchNext).
+  el.preload = 'auto'
+  // Every event is the current song's only while this element plays it:
+  // the standby one loads the next song in silence.
+  const on = (name, fn) =>
+    el.addEventListener(name, (event) => {
+      if (el === audio) fn(event)
+    })
+  on('timeupdate', () => {
     currentTime.value = audio.currentTime
     noteAdvance(audio.currentTime)
     // Safety net near the end: whatever is next by now (a track queued
     // late, a prefetch that failed) gets prepared before it is due.
     if (duration.value - audio.currentTime < PREPARE_BEFORE_END_SECONDS) {
       prefetchNext()
+      prepareStandby()
     }
+    scheduleGaplessChange()
   })
-  audio.addEventListener('progress', () => {
+  on('progress', () => {
     // The current track finished loading: warm the next one now, so a
     // skip starts instantly instead of waiting on the network.
     if (fullyBuffered()) maybePrefetch()
   })
-  audio.addEventListener('loadedmetadata', () => {
+  on('loadedmetadata', () => {
     duration.value = isFinite(audio.duration) ? audio.duration : 0
     if (restoreTime) {
       audio.currentTime = Math.min(restoreTime, duration.value || 0)
       restoreTime = 0
     }
   })
-  audio.addEventListener('durationchange', () => {
+  on('durationchange', () => {
     duration.value = isFinite(audio.duration) ? audio.duration : 0
   })
-  audio.addEventListener('ended', onEnded)
-  audio.addEventListener('play', () => {
+  on('ended', onEnded)
+  on('play', () => {
     isPlaying.value = true
     startStallWatch()
     scheduleFade()
   })
-  audio.addEventListener('pause', () => {
+  on('pause', () => {
     isPlaying.value = false
     stopStallWatch()
     // Paused by the system (a call, headphones out) mid-stall: nothing
     // is loading for the listener any more.
     if (!holdingStart && !resolving.value) isBuffering.value = false
   })
-  audio.addEventListener('waiting', () => {
+  on('waiting', () => {
     isBuffering.value = true
   })
-  audio.addEventListener('playing', () => {
+  on('playing', () => {
     stalledByWatchdog = false
     lastAdvanceAt = Date.now()
     isBuffering.value = false
     playError.value = ''
   })
-  audio.addEventListener('error', () => {
+  on('error', () => {
     stopStallWatch()
     isBuffering.value = false
     playError.value = 'unplayable'
   })
-  attachEqualizer(audio)
-  return audio
+  attachEqualizer(el)
+  return el
 }
 
 function toTrack(item) {
@@ -468,6 +493,7 @@ function refreshTracks(byFile) {
 
 function stop() {
   withoutHook(pause)
+  releaseStandby()
   if (audio) audio.removeAttribute('src')
   playlist.value = []
   currentIndex.value = -1
@@ -482,24 +508,28 @@ function playAt(index, { auto = false } = {}) {
   if (index < 0 || index >= playlist.value.length) return
   if (hooked('jump', { index })) return
   const a = ensureAudio()
+  releaseStandby()
   autoAdvanced = auto
   applyVolume()
   if (index !== restoreIndex) restoreTime = 0
   restoreIndex = -1
   currentIndex.value = index
   prefetchedFor = -1
-  if (shuffle.value) {
-    if (shuffleOrder.length !== playlist.value.length) buildShuffleOrder()
-    const pos = shuffleOrder.indexOf(index)
-    if (pos >= 0) shufflePos = pos
-    shuffleVersion.value += 1
-  }
+  syncShufflePos(index)
   playError.value = ''
   if (needsStreamUrl(playlist.value[index])) {
     void playUnresolved(index)
     return
   }
   startAudio(a, index)
+}
+
+function syncShufflePos(index) {
+  if (!shuffle.value) return
+  if (shuffleOrder.length !== playlist.value.length) buildShuffleOrder()
+  const pos = shuffleOrder.indexOf(index)
+  if (pos >= 0) shufflePos = pos
+  shuffleVersion.value += 1
 }
 
 // Unresolved stream failures in a row before giving up on the queue
@@ -713,6 +743,8 @@ function seek(seconds) {
   const clamped = Math.max(0, Math.min(max, seconds))
   if (hooked('seek', { position: clamped })) return
   const a = ensureAudio()
+  clearTimeout(gaplessTimer)
+  gaplessTimer = 0
   a.currentTime = clamped
   currentTime.value = clamped
 }
@@ -779,6 +811,7 @@ function setFadeSeconds(value) {
   } catch {
     // ignore
   }
+  if (fadeSeconds.value) releaseStandby()
   applyVolume()
   if (isPlaying.value) scheduleFade()
 }
@@ -874,7 +907,159 @@ function onEnded() {
     if (audio) startPlayback(audio)
     return
   }
+  // The timed change didn't happen (a background tab's throttled timers,
+  // a song that ended early): the loaded next song still starts at once.
+  if (swapToStandby({ requireBuffered: false })) return
   next({ auto: true })
+}
+
+// ── Gapless playback ─────────────────────────────────────────────────
+// The next song loads in the standby element while this one plays, and
+// is started a moment before this one ends instead of after its `ended`
+// event and a fresh load. Encoder padding (MP3, AAC) is trimmed by the
+// browser from the files' own gapless headers.
+//
+// How early the next song is started: about what a browser needs to get
+// sound out of an element that is already loaded.
+const GAPLESS_LEAD_SECONDS = 0.03
+// Within this much of the end, the change is timed by a timer instead of
+// the (coarse) timeupdate events.
+const GAPLESS_WINDOW_SECONDS = 1
+
+function gaplessActive() {
+  return (
+    gapless.value &&
+    !fadeSeconds.value &&
+    !transportHook &&
+    repeatMode.value !== 'one' &&
+    sleepAt.value !== 'track'
+  )
+}
+
+/** Whether the standby element holds the song that comes next. */
+function standbyReady({ requireBuffered = true } = {}) {
+  const index = nextIndex()
+  if (!standby || index < 0 || index !== standbyIndex) return false
+  if (playlist.value[index] !== standbyTrack || standby.error) return false
+  // HAVE_FUTURE_DATA: it can start playing right away.
+  return !requireBuffered || standby.readyState >= 3
+}
+
+/** Load what comes next into the standby element, once. */
+function prepareStandby() {
+  if (!audio || !gaplessActive() || !(duration.value > 0)) return
+  const index = nextIndex()
+  const track = playlist.value[index]
+  if (index < 0 || index === currentIndex.value || !track?.url) return
+  if (track.isPodcast || (libraryOnly.value && track.stream)) return
+  if (standbyIndex === index && standbyTrack === track) return
+  if (!standby) standby = createElement()
+  standbyIndex = index
+  standbyTrack = track
+  standby.muted = true
+  standby.src = track.url
+  standby.load()
+  prefetchTrackNormalization(track)
+}
+
+/** Drop what the standby element holds (the queue went elsewhere). */
+function releaseStandby() {
+  clearTimeout(gaplessTimer)
+  gaplessTimer = 0
+  standbyIndex = -1
+  standbyTrack = null
+  if (standby?.src) {
+    standby.pause()
+    standby.removeAttribute('src')
+    standby.load()
+  }
+}
+
+/** Near the end of the song, time the change to the standby element. */
+function scheduleGaplessChange() {
+  if (gaplessTimer || !audio || audio.paused || !gaplessActive()) return
+  if (!standbyReady()) return
+  const left = (duration.value - audio.currentTime) / (audio.playbackRate || 1)
+  if (!(left > 0) || left > GAPLESS_WINDOW_SECONDS) return
+  gaplessTimer = setTimeout(
+    () => {
+      gaplessTimer = 0
+      if (!audio || audio.paused) return
+      const rest =
+        (duration.value - audio.currentTime) / (audio.playbackRate || 1)
+      // Held up by a stall or moved by a seek: look again on the next tick.
+      if (rest > GAPLESS_LEAD_SECONDS + 0.1) return
+      swapToStandby()
+    },
+    Math.max(0, (left - GAPLESS_LEAD_SECONDS) * 1000)
+  )
+}
+
+/**
+ * Hand playback to the standby element, which already holds the next
+ * song. Returns false (nothing changed) when it can't: the normal path
+ * then loads the song as usual.
+ */
+function swapToStandby({ requireBuffered = true } = {}) {
+  if (!gaplessActive() || !standbyReady({ requireBuffered })) return false
+  // Normalized but not measured yet: the normal path holds the start.
+  const known = knownTrackNormalization(standbyTrack)
+  if (known === undefined) return false
+  const index = standbyIndex
+  const previous = audio
+  const nextElement = standby
+  audio = nextElement
+  standby = previous
+  standbyIndex = -1
+  standbyTrack = null
+  clearTimeout(gaplessTimer)
+  gaplessTimer = 0
+  previous.pause()
+  autoAdvanced = true
+  restoreTime = 0
+  restoreIndex = -1
+  currentIndex.value = index
+  prefetchedFor = -1
+  syncShufflePos(index)
+  playError.value = ''
+  currentTime.value = 0
+  duration.value = isFinite(audio.duration) ? audio.duration : 0
+  audio.playbackRate = playbackRate.value
+  applyMuted()
+  applyVolume()
+  holdingStart = false
+  const attempt = ++playbackAttempt
+  applyTrackNormalization(known)
+  resumeEqualizer()
+  audio.play().then(
+    () => {
+      if (standby === previous && previous !== audio) {
+        previous.removeAttribute('src')
+        previous.load()
+      }
+    },
+    () => {
+      // Refused outside a gesture (iPhones want one per element): load
+      // the song in the element that was playing instead.
+      if (attempt !== playbackAttempt || audio !== nextElement) return
+      nextElement.pause()
+      audio = previous
+      standby = nextElement
+      playAt(index, { auto: true })
+    }
+  )
+  maybePrefetch()
+  return true
+}
+
+function setGapless(on) {
+  gapless.value = !!on
+  try {
+    storage()?.setItem(GAPLESS_KEY, gapless.value ? '1' : '0')
+  } catch {
+    // ignore
+  }
+  if (!gapless.value) releaseStandby()
 }
 
 function setRepeat(mode) {
@@ -1087,6 +1272,7 @@ watch(normalizationEnabled, (on) => {
 watch(libraryOnly, (enabled) => {
   if (!enabled) return
   const selected = playlist.value[currentIndex.value]
+  releaseStandby()
   if (selected?.stream) {
     pause()
     if (audio) {
@@ -1209,6 +1395,8 @@ export function usePlayer() {
     playbackRate,
     fadeSeconds,
     setFadeSeconds,
+    gapless,
+    setGapless,
     repeatMode,
     shuffle,
     sleepAt,
