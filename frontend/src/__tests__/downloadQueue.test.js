@@ -13,6 +13,7 @@ const fixture = vi.hoisted(() => ({
     removeQueueItem: vi.fn(),
     clearQueue: vi.fn(),
     clearCompletedQueue: vi.fn(),
+    clearOthersQueue: vi.fn(),
     replaceAudio: vi.fn(),
   },
 }))
@@ -57,6 +58,7 @@ beforeEach(async () => {
   fixture.api.removeQueueItem.mockResolvedValue({})
   fixture.api.clearQueue.mockResolvedValue({})
   fixture.api.clearCompletedQueue.mockResolvedValue({})
+  fixture.api.clearOthersQueue.mockResolvedValue({})
   fixture.api.replaceAudio.mockResolvedValue({})
   model = await import('../model/download')
   await model.syncQueueFromServer()
@@ -389,4 +391,72 @@ it('shows a reused file as completed library content without a stale audio-provi
   expect(item.state).toBe('done')
   expect(item.provider).toBe('')
   expect(item.message).toBe('Already downloaded')
+})
+
+describe('jobs taken off the server queue', () => {
+  it('drops an active row the server no longer lists', async () => {
+    fixture.jobs = [job('gone', { status: 'downloading', progress: 100 })]
+    await model.syncQueueFromServer()
+    expect(tracker.getBySong({ song_id: 'gone' })).toBeTruthy()
+    vi.advanceTimersByTime(1000)
+    fixture.jobs = []
+    await model.syncQueueFromServer()
+    expect(tracker.getBySong({ song_id: 'gone' })).toBeNull()
+  })
+
+  it('keeps rows only this page added and finished ones', async () => {
+    fixture.jobs = [job('done', { status: 'done', filename: 'd.mp3' })]
+    await model.syncQueueFromServer()
+    tracker.appendSong({ song_id: 'new' })
+    vi.advanceTimersByTime(1000)
+    fixture.jobs = []
+    await model.syncQueueFromServer()
+    expect(tracker.getBySong({ song_id: 'new' })).toBeTruthy()
+    expect(tracker.getBySong({ song_id: 'done' })).toBeTruthy()
+  })
+
+  it('ignores progress frames of a removed job', async () => {
+    fixture.jobs = [job('x', { status: 'downloading', progress: 10 })]
+    await model.syncQueueFromServer()
+    manager.remove({ song_id: 'x' })
+    send({ song: { song_id: 'x' }, status: 'downloading', progress: 60 })
+    expect(tracker.getBySong({ song_id: 'x' })).toBeNull()
+  })
+
+  it('keeps a finished row finished when a late progress frame lands', async () => {
+    send({ song: { song_id: 'y' }, status: 'done', filename: 'y.mp3' })
+    send({ song: { song_id: 'y' }, status: 'downloading', progress: 99 })
+    expect(tracker.getBySong({ song_id: 'y' }).state).toBe('done')
+  })
+
+  it("names who asked and removes the other accounts' rows", async () => {
+    fixture.jobs = [
+      job('mine', { mine: true, users: ['boss'] }),
+      job('theirs', { mine: false, users: ['maria'], status: 'downloading' }),
+    ]
+    await model.syncQueueFromServer()
+    expect(tracker.getBySong({ song_id: 'theirs' }).users).toEqual(['maria'])
+    await manager.clearOthers()
+    expect(fixture.api.clearOthersQueue).toHaveBeenCalled()
+    expect(tracker.getBySong({ song_id: 'theirs' })).toBeNull()
+    expect(tracker.getBySong({ song_id: 'mine' })).toBeTruthy()
+    send({ song: { song_id: 'theirs' }, status: 'downloading', progress: 5 })
+    expect(tracker.getBySong({ song_id: 'theirs' })).toBeNull()
+  })
+})
+
+describe('finished downloads after a reload', () => {
+  it('orders finished rows by the server end time', async () => {
+    fixture.jobs = [
+      job('old', { status: 'done', filename: 'o.mp3', finished_at: 1000 }),
+      job('new', { status: 'error', message: 'x', finished_at: 2000 }),
+    ]
+    await model.syncQueueFromServer()
+    const old = tracker.getBySong({ song_id: 'old' })
+    const recent = tracker.getBySong({ song_id: 'new' })
+    expect(old.finishedAt).toBe(1000 * 1000)
+    expect(old.updatedAt).toBe(1000 * 1000)
+    expect(recent.updatedAt).toBeGreaterThan(old.updatedAt)
+    expect(recent.state).toBe('failed')
+  })
 })

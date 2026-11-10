@@ -10,8 +10,52 @@ const status = ref(null)
 const mustSignIn = ref(false)
 const loaded = ref(false)
 
+// An admin can look at the app as a plain user ("User view"): every
+// admin-only control, page and badge goes away until they switch back.
+// Only what this browser shows changes - the server still answers them
+// as an admin. Remembered per browser.
+const USER_VIEW_KEY = 'downtify-user-view'
+
+function store() {
+  try {
+    return globalThis.localStorage || null
+  } catch {
+    return null
+  }
+}
+
+function readUserView() {
+  try {
+    return store()?.getItem(USER_VIEW_KEY) === '1'
+  } catch {
+    return false
+  }
+}
+
 const user = computed(() => status.value?.user || null)
-const isAdmin = computed(() => user.value?.role === ROLE_ADMIN)
+const realIsAdmin = computed(() => user.value?.role === ROLE_ADMIN)
+const userView = ref(readUserView())
+const isAdmin = computed(() => realIsAdmin.value && !userView.value)
+/** The role the interface is drawn for (`user` while in User view). */
+const viewRole = computed(() => {
+  if (isAdmin.value) return ROLE_ADMIN
+  return realIsAdmin.value ? 'user' : user.value?.role || ''
+})
+
+/** Switch between the admin's own view and User view. */
+function setUserView(on) {
+  userView.value = Boolean(on)
+  try {
+    if (userView.value) store()?.setItem(USER_VIEW_KEY, '1')
+    else store()?.removeItem(USER_VIEW_KEY)
+  } catch {
+    // Private mode: the switch lasts until the page closes.
+  }
+}
+
+function toggleUserView() {
+  setUserView(!userView.value)
+}
 // DOWNTIFY_DISABLE_AUTH: nobody signs in, so there is nothing to sign out
 // of and no accounts to manage.
 const authDisabled = computed(() => Boolean(status.value?.auth_disabled))
@@ -66,6 +110,11 @@ export function useAuth() {
     mustSignIn,
     user,
     isAdmin,
+    realIsAdmin,
+    userView,
+    viewRole,
+    setUserView,
+    toggleUserView,
     authDisabled,
     load,
     signIn,

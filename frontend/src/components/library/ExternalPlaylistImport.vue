@@ -1,5 +1,5 @@
 <template>
-  <UiButton variant="ghost" icon="folder" @click="show">{{
+  <UiButton v-if="trigger" variant="ghost" icon="folder" @click="show">{{
     t('externalPlaylistImport.open')
   }}</UiButton>
   <UiModal
@@ -115,6 +115,10 @@ const truncated = ref(false)
 const selected = ref([])
 const error = ref('')
 const result = ref('')
+
+// `trigger` false: no button of its own - a menu opens it with show().
+defineProps({ trigger: { type: Boolean, default: true } })
+defineExpose({ show })
 
 async function show() {
   open.value = true

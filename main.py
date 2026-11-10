@@ -55,6 +55,7 @@ from downtify.deemix_upgrade import DeemixLibraryUpgrade, alias_file
 from downtify.deemix_upgrade_store import AudioReplacementStore
 from downtify.discover import DiscoverStore
 from downtify.discovery import Announcer, discovery_enabled
+from downtify.download_history import DownloadHistory
 from downtify.download_log import DownloadLog
 from downtify.download_queue import PendingDownloads, queue_pause
 from downtify.downloader import Downloader
@@ -451,6 +452,10 @@ def _open_library_stores(monitor_db_path: Path) -> None:
     )
     api.state.playlist_batch_store = PlaylistBatchStore(library_db)
     api.state.pending_downloads = PendingDownloads(library_db)
+    api.state.download_history = DownloadHistory(library_db)
+    restored = api.restore_finished_jobs()
+    if restored:
+        logger.info('Download queue: {} finished job(s) kept', restored)
     # Restore the gate before monitors or upgrade recovery can start work.
     if api.state.pending_downloads.paused():
         queue_pause.pause()

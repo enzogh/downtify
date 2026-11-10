@@ -14,6 +14,12 @@ A cím mellett egy szív van a [dal kedveléséhez](liked-songs.md); a telefon k
 
 Kattints a címre vagy a borítóra, vagy a kibontás gombra a **Most szól** megnyitásához.
 
+## Lejátszás másik eszközön
+
+Ha ugyanazzal a fiókkal máshol is be vagy jelentkezve — másik böngésző, második lap, az alkalmazás —, és ott szól a zene, miközben itt semmi, a lejátszó fölötti sáv kiírja: **Lejátszás itt:** az az eszköz (vagy **Szüneteltetve itt:**), a dallal együtt. A **Hallgatás itt** onnan folytatja a dalt ezen az oldalon, ahol tartott, és megállítja a másik eszközön; a lejátszás/szünet gomb ott vezérli, az X pedig elrejti a sávot, amíg az eszköz másik dalt nem játszik. Csak a saját eszközeid jelennek meg.
+
+A lejátszási listáid változásai is azonnal megjelennek a többi eszközödön: a hozzáadott, eltávolított vagy átrendezett dalok újratöltés nélkül látszanak.
+
 ## Most szól
 
 Teljes képernyős nézet, az aktuális albumborítóból vett színekkel színezve:

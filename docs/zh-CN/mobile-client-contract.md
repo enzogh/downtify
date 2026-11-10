@@ -206,6 +206,8 @@ Authorization: Bearer <token>
 | `{ "song": {…}, "progress": 42.5, "status": "downloading"\|"done"\|"error", "message", "filename", "provider" }` | 服务器下载进度（没有 `type`）；仅推送当前用户自己的任务（管理员设备可查看所有任务）。 |
 | `{ "type": "podcasts" }` / `{ "type": "podcast_progress", … }` | 播客剧集下载或进度更新。 |
 | `{ "type": "device_paired", … }` | 新设备已配对（此消息供网页使用；客户端可忽略）。 |
+| `{ "type": "now_playing", "players": [ … ] }` | 本账户的某个播放器（浏览器、本应用或另一台设备上的应用）报告了正在播放的内容，内容同 `GET /api/activity/devices`；请排除自己的 `player` id。可选：用于“在其他设备上播放”提示栏。 |
+| `{ "type": "player_command", "player": "<id>", "action": "pause"\|"play" }` | 本账户的另一台设备请求 id 为 `player` 的播放器暂停或继续——仅当 `player` 是本应用的 id 时执行。可选。 |
 
 “服务器正在下载 N 首歌曲”：调用 `GET /api/queue`，统计 `status` 为 `queued` 或 `downloading` 的行数，并根据进度消息更新。等待中的行包含 `position`（队列中的 1 起始位置；完成后为 `null`）和 `user_ids`（所有等待该任务的账户；多个账户同时请求同一曲目时，共享一个任务行）。关闭代码 `4401` 表示已取消配对。
 

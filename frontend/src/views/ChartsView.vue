@@ -52,6 +52,7 @@
         :queue="trackQueue"
         :collection-name="t('charts.title')"
         selectable
+        ranked
         :toolbar-mode="TOOLBAR_LAZY"
       />
     </template>

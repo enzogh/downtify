@@ -159,7 +159,10 @@ downloads are shared, and files are never stored twice.
   upload)
 * ``POST /api/playlist/m3u``
 * ``GET  /api/queue``, ``DELETE /api/queue``, ``DELETE /api/queue/item``
-  and ``DELETE /api/queue/completed`` (drop finished jobs only)
+  and ``DELETE /api/queue/completed`` (drop finished jobs only); rows
+  carry ``mine`` and, for an admin, ``users`` (who asked for it).
+  ``DELETE /api/queue/others`` (admin: drop every job they aren't
+  waiting on)
 * ``GET  /api/queue/state``, ``POST /api/queue/pause`` and ``POST
   /api/queue/resume`` (``{paused, state, active}``: a paused queue starts
   nothing new and lets running downloads finish - ``state`` is
@@ -479,6 +482,7 @@ from .discover import (
     recommendations,
     spotify_collections,
 )
+from .download_history import FINISHED, DownloadHistory
 from .download_log import OUTCOME_COMPLETED, OUTCOME_SKIPPED, DownloadLog
 from .download_queue import PendingDownload, PendingDownloads, queue_pause
 from .downloader import (
@@ -1096,6 +1100,9 @@ class ConnectionManager:
         self._users: dict[str, int] = {}
         # Sockets that see every download job event (admins).
         self._admins: set[str] = set()
+        # client_id -> what it is ("Web (Chrome on macOS)", an app's
+        # name), for the account's device list.
+        self._labels: dict[str, str] = {}
 
     async def connect(
         self,
@@ -1104,9 +1111,11 @@ class ConnectionManager:
         device_id: str = '',
         user_id: int = 0,
         is_admin: bool = False,
+        label: str = '',
     ) -> None:
         await ws.accept()
         self._clients[client_id] = ws
+        self._labels[client_id] = label
         if device_id:
             self._devices[client_id] = device_id
         else:
@@ -1125,6 +1134,27 @@ class ConnectionManager:
         self._devices.pop(client_id, None)
         self._users.pop(client_id, None)
         self._admins.discard(client_id)
+        self._labels.pop(client_id, None)
+
+    def connected_ids(self) -> set[str]:
+        """Every open socket's ``client_id``."""
+
+        return set(self._clients)
+
+    def user_sockets(self, user_id: int) -> list[dict[str, str]]:
+        """*user_id*'s open sockets: ``{player, client, device_id}`` -
+        a web page's ``player`` is its ``client_id`` (the id it reports
+        playback with)."""
+
+        return [
+            {
+                'player': cid,
+                'client': self._labels.get(cid, ''),
+                'device_id': self._devices.get(cid, ''),
+            }
+            for cid, uid in self._users.items()
+            if uid == user_id and cid in self._clients
+        ]
 
     async def send_user(self, user_id: int, message: dict[str, Any]) -> None:
         """Send *message* to every socket of *user_id*."""
@@ -1178,17 +1208,23 @@ class ConnectionManager:
 
         The titles in job events would otherwise tell every connected
         client what someone else is downloading (``GET /api/queue`` is
-        filtered the same way). Ownerless jobs keep the old broadcast.
+        filtered the same way). An ownerless job (a watch's, a retry's)
+        goes to the admins and to sockets of no account (sign-in off) -
+        never to a signed-in user, whose queue could not list it and so
+        would show it downloading forever.
         """
 
         targets_set = {int(uid) for uid in user_ids if uid}
-        if not targets_set:
-            await self.broadcast(message)
-            return
         targets = [
             cid for cid, uid in self._users.items() if uid in targets_set
         ]
         targets += [cid for cid in self._admins if cid not in targets]
+        if not targets_set:
+            targets += [
+                cid
+                for cid in self._clients
+                if cid not in self._users and cid not in targets
+            ]
         for client_id in targets:
             await self.send(client_id, message)
 
@@ -1247,6 +1283,9 @@ class AppState:
     # The unfinished jobs and the pause switch, for the next start
     # (downtify/download_queue.py).
     pending_downloads: Optional[PendingDownloads] = None
+    # The recently finished jobs, for the queue's Done/Failed tabs after
+    # a restart (downtify/download_history.py).
+    download_history: Optional[DownloadHistory] = None
     # Fire-and-forget work owned by the process (import batches, monitor
     # loops, playlist refresh). Cancelled in :func:`shutdown_resources`.
     background_tasks: set[asyncio.Task[Any]] = set()
@@ -1925,7 +1964,9 @@ def request_ip(request: Request) -> str:
     return client_ip(request.scope, _TRUSTED_PROXIES)
 
 
-def client_label(request: Request, principal: Optional[Principal]) -> str:
+def client_label(
+    request: HTTPConnection, principal: Optional[Principal]
+) -> str:
     """What a request came from, for the activity log: a paired app's
     name, or ``Web (Firefox on Linux)``."""
 
@@ -4221,6 +4262,7 @@ def _register_job(
             message='',
             provider='',
             filename=None,
+            finished_at=None,
         )
     if user_id:
         users = job.setdefault('user_ids', set())
@@ -4310,6 +4352,58 @@ def _pending_download(
         },
         user_ids=sorted(users),
     )
+
+
+async def _remember_finished(song_id: str, job: dict[str, Any]) -> None:
+    """Keep an ended job for the queue's history (best effort): it is
+    shown again after a restart, newest first by ``finished_at``."""
+
+    if job.get('status') not in FINISHED:
+        return
+    if not job.get('finished_at'):
+        job['finished_at'] = time.time()
+    store = state.download_history
+    if store is None or state.download_jobs.get(song_id) is not job:
+        return
+    try:
+        await asyncio.to_thread(store.record, song_id, dict(job))
+    except Exception:
+        logger.exception('Could not save the download history')
+
+
+def _forget_history(song_ids: Optional[Collection[str]] = None) -> None:
+    """Drop history rows taken off the queue (all when ``None``)."""
+
+    store = state.download_history
+    if store is None:
+        return
+    try:
+        if song_ids is None:
+            store.clear()
+        else:
+            store.forget(song_ids)
+    except Exception:
+        logger.exception('Could not update the download history')
+
+
+def restore_finished_jobs() -> int:
+    """Put the kept finished jobs back in the queue after a start; how
+    many. Jobs already there (a restored unfinished one) win."""
+
+    store = state.download_history
+    if store is None:
+        return 0
+    try:
+        jobs = store.jobs()
+    except Exception:
+        logger.exception('Could not read the download history')
+        return 0
+    restored = 0
+    for song_id, job in jobs:
+        if song_id not in state.download_jobs:
+            state.download_jobs[song_id] = job
+            restored += 1
+    return restored
 
 
 def _drop_pending(song_ids: Optional[Collection[str]] = None) -> None:
@@ -4604,6 +4698,7 @@ async def _run_download(
             _download_locks.pop(song_id, None)
         if not keep_pending:
             await _forget_pending([song_id])
+            await _remember_finished(song_id, job)
 
 
 #: Waits before trying a song YouTube blocked again (one per retry).
@@ -4673,6 +4768,19 @@ async def _finish_with_existing(
     return existing
 
 
+async def _send_progress(job: dict[str, Any], message: dict[str, Any]) -> None:
+    """Send a download's progress frame - unless the job ended first.
+
+    The downloader's thread queues these; one still waiting when the
+    ``done`` frame went out would put the row back to "downloading" at
+    100 % on every page that got it.
+    """
+
+    if job.get('status') != 'downloading':
+        return
+    await state.connections.broadcast_job(_job_users(job), message)
+
+
 async def _run_download_locked(
     song: dict[str, Any],
     song_id: str,
@@ -4733,8 +4841,8 @@ async def _run_download_locked(
                         if provider:
                             j['provider'] = provider
                     asyncio.run_coroutine_threadsafe(
-                        state.connections.broadcast_job(
-                            _job_users(j or {}),
+                        _send_progress(
+                            job,
                             {
                                 'song': song,
                                 'progress': pct,
@@ -7542,9 +7650,7 @@ async def edit_library_playlist_tracks_endpoint(
             if saved:
                 await asyncio.to_thread(keep_explicit_cover, path)
     invalidate_library_paths_cache()
-    if entry.get('visibility', PRIVATE) != PRIVATE:
-        # Others have it open: the owner and its other editors.
-        await announce_playlists_changed()
+    await announce_playlist_edited(entry, request)
     return result
 
 
@@ -7717,8 +7823,7 @@ async def reorder_library_playlist_endpoint(
             status_code=exc.status_code, detail=str(exc)
         ) from exc
     invalidate_library_paths_cache()
-    if entry.get('visibility', PRIVATE) != PRIVATE:
-        await announce_playlists_changed()
+    await announce_playlist_edited(entry, request)
     return result
 
 
@@ -7815,6 +7920,29 @@ async def announce_playlists_changed() -> None:
     detached, renamed or deleted, so they list them again."""
 
     await state.connections.broadcast({'type': 'playlists_changed'})
+
+
+async def announce_playlist_edited(
+    entry: dict[str, Any], request: Request
+) -> None:
+    """A playlist's songs were added, removed or put in another order.
+
+    A shared one is announced to everyone (its editors and followers
+    have it open); a private one to its owner's and the editor's own
+    pages and apps only - the same account on another device sees the
+    change at once instead of at the next library refresh.
+    """
+
+    if entry.get('visibility', PRIVATE) != PRIVATE:
+        await announce_playlists_changed()
+        return
+    message = {'type': 'playlists_changed'}
+    for user_id in sorted({
+        int(entry.get('owner_id') or 0),
+        request_user_id(request),
+    }):
+        if user_id:
+            await state.connections.send_user(user_id, message)
 
 
 @router.put('/api/library/playlists/favorite')
@@ -8784,9 +8912,17 @@ def get_queue(request: Request) -> list[dict[str, Any]]:
     ``None`` once finished. An admin's positions are global, a user's
     count their own slice. ``user_ids`` is the sorted waiter list; a
     shared job shows the same row (and the same position) to everyone
-    waiting on it.
+    waiting on it. A finished row carries ``finished_at`` (epoch
+    seconds); the last :data:`downtify.download_history.KEEP_PER_ACCOUNT`
+    of each account's survive a restart. ``mine`` says whether the
+    caller is one of them, and
+    an admin's rows name them too (``users``: usernames, empty for a
+    job nobody asked for - a watch's or a retry's).
     """
 
+    admin = request_is_admin(request)
+    me = request_user_id(request)
+    names = _usernames() if admin else {}
     rows: list[dict[str, Any]] = []
     position = 0
     for job in state.download_jobs.values():
@@ -8798,7 +8934,11 @@ def get_queue(request: Request) -> list[dict[str, Any]]:
             row['position'] = position
         else:
             row['position'] = None
-        row['user_ids'] = sorted(_job_users(job))
+        waiters = sorted(_job_users(job))
+        row['user_ids'] = waiters
+        row['mine'] = bool(me and me in waiters)
+        if admin:
+            row['users'] = [names[uid] for uid in waiters if uid in names]
         rows.append(row)
     return rows
 
@@ -8811,6 +8951,7 @@ def clear_queue(request: Request) -> dict:
     if request_is_admin(request):
         state.download_jobs.clear()
         _drop_pending()
+        _forget_history()
         return {'cleared': True}
     removed = [
         key
@@ -8820,6 +8961,7 @@ def clear_queue(request: Request) -> dict:
     for song_id in removed:
         del state.download_jobs[song_id]
     _drop_pending(removed)
+    _forget_history(removed)
     return {'cleared': True}
 
 
@@ -8833,6 +8975,30 @@ def clear_completed_queue(request: Request) -> dict:
     ]
     for song_id in removed:
         del state.download_jobs[song_id]
+    _forget_history(removed)
+    return {'removed': len(removed)}
+
+
+@router.delete('/api/queue/others')
+def clear_others_queue(request: Request) -> dict:
+    """An admin takes the jobs they aren't waiting on off their queue:
+    other accounts' downloads and the ones nobody asked for. One that
+    hasn't started never starts; one already running finishes for the
+    accounts waiting on it. ``403`` for anyone else (they only ever see
+    their own)."""
+
+    if not request_is_admin(request):
+        raise HTTPException(status_code=403, detail='Admins only')
+    me = request_user_id(request)
+    removed = [
+        song_id
+        for song_id, job in list(state.download_jobs.items())
+        if not (me and me in _job_users(job))
+    ]
+    for song_id in removed:
+        del state.download_jobs[song_id]
+    _drop_pending(removed)
+    _forget_history(removed)
     return {'removed': len(removed)}
 
 
@@ -8842,6 +9008,7 @@ def remove_queue_item(request: Request, song_id: str = Query(...)) -> dict:
     if job is not None and _queue_job_visible(job, request):
         del state.download_jobs[song_id]
         _drop_pending([song_id])
+        _forget_history([song_id])
         return {'removed': True}
     return {'removed': False}
 
@@ -10585,13 +10752,21 @@ async def websocket_endpoint(
     ws: WebSocket, client_id: str = Query(...)
 ) -> None:
     principal = (ws.scope.get('state') or {}).get('principal')
+    user_id = getattr(principal, 'user_id', 0) or 0
+    try:
+        label = await asyncio.to_thread(client_label, ws, principal)
+    except Exception:
+        label = ''
     await state.connections.connect(
         client_id,
         ws,
         getattr(principal, 'device_id', '') or '',
-        getattr(principal, 'user_id', 0) or 0,
+        user_id,
         bool(getattr(principal, 'is_admin', False)),
+        label,
     )
+    # The account's other pages list this one as a device now.
+    await announce_devices(user_id)
     try:
         while True:
             await ws.receive_text()
@@ -10599,6 +10774,65 @@ async def websocket_endpoint(
         state.connections.disconnect(client_id)
     except Exception:
         state.connections.disconnect(client_id)
+    # A web page plays as its client_id: closed or reloaded, it's gone
+    # from the device list at once (not 90 s later).
+    if user_id and client_id not in state.connections.connected_ids():
+        state.now_playing.forget_player(user_id, client_id)
+    await announce_devices(user_id)
+
+
+def devices_for_user(user_id: int) -> list[dict[str, Any]]:
+    """*user_id*'s own players and open pages, Spotify Connect style.
+
+    The players heard from lately come first (most recent first, see
+    :meth:`NowPlaying.for_user`), then every other open page or app of
+    the account as an ``idle`` row (no ``track``) - somewhere playback
+    can be sent. ``app`` tells a paired app from a browser.
+    """
+
+    if not user_id:
+        return []
+    rows = [
+        {**row, 'idle': False, 'app': bool(row.get('device_id'))}
+        for row in state.now_playing.for_user(user_id)
+    ]
+    players = {row['player'] for row in rows}
+    devices = {row['device_id'] for row in rows if row.get('device_id')}
+    for sock in state.connections.user_sockets(user_id):
+        if sock['player'] in players:
+            continue
+        if sock['device_id'] and sock['device_id'] in devices:
+            continue
+        rows.append({
+            'player': sock['player'],
+            'client': sock['client'],
+            'device_id': sock['device_id'],
+            'track': None,
+            'paused': True,
+            'position': 0,
+            'started_at': None,
+            'seconds_ago': 0,
+            'idle': True,
+            'app': bool(sock['device_id']),
+        })
+    for row in rows:
+        row.pop('device_id', None)
+    return rows
+
+
+async def announce_devices(user_id: int) -> None:
+    """Tell every open page and app of *user_id* their device list
+    (``now_playing`` frame, same rows as ``GET /api/activity/devices``)."""
+
+    if not user_id:
+        return
+    try:
+        await state.connections.send_user(
+            user_id,
+            {'type': 'now_playing', 'players': devices_for_user(user_id)},
+        )
+    except Exception:
+        logger.opt(exception=True).debug('Could not announce devices')
 
 
 # ---------------------------------------------------------------------------

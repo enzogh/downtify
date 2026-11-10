@@ -368,6 +368,7 @@
               </div>
 
               <div class="hidden flex-1 items-center justify-end gap-2 lg:flex">
+                <DevicesButton v-if="auth.user.value" size="lg" on-dark />
                 <UiMenu
                   v-if="track?.isPodcast"
                   :items="speedMenu"
@@ -412,8 +413,9 @@
             </div>
 
             <!-- Phone extras -->
-            <div class="mt-4 flex items-center justify-between lg:hidden">
-              <div class="flex items-center gap-1">
+            <div class="mt-4 flex items-center justify-between gap-2 lg:hidden">
+              <div class="flex shrink-0 items-center gap-1">
+                <DevicesButton v-if="auth.user.value" size="lg" on-dark />
                 <UiMenu
                   v-if="track?.isPodcast"
                   :items="speedMenu"
@@ -453,12 +455,18 @@
                   </template>
                 </UiMenu>
               </div>
-              <div class="flex gap-2">
+              <!-- More tabs than a phone's width: they scroll sideways
+                   under a finger instead of spilling off the screen. -->
+              <div
+                ref="mobileTabs"
+                class="-my-1 flex min-w-0 touch-pan-x gap-2 overflow-x-auto overscroll-x-contain py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              >
                 <button
                   v-for="tab in panels"
                   :key="tab.id"
                   type="button"
-                  class="flex h-10 items-center gap-2 rounded-full px-3.5 text-[13px] font-semibold transition-colors"
+                  :data-panel="tab.id"
+                  class="flex h-10 shrink-0 items-center gap-2 rounded-full px-3.5 text-[13px] font-semibold whitespace-nowrap transition-colors"
                   :class="
                     panel === tab.id && mobilePanel
                       ? 'bg-white text-[#0b0c0e]'
@@ -488,6 +496,8 @@ import CoverArt from '../ui/CoverArt.vue'
 import ExplicitBadge from '../ui/ExplicitBadge.vue'
 import UiMenu from '../ui/UiMenu.vue'
 import WaveSeekBar from '../player/WaveSeekBar.vue'
+import DevicesButton from '../player/DevicesButton.vue'
+import { useAuth } from '/src/model/auth'
 import VolumeControl from '../player/VolumeControl.vue'
 import LikeButton from '../player/LikeButton.vue'
 import LyricsPanel from '../player/LyricsPanel.vue'
@@ -518,6 +528,7 @@ const tracker = useProgressTracker()
 const ui = useUi()
 const { showLyrics } = usePlayerPrefs()
 const nowPlaying = useNowPlaying()
+const auth = useAuth()
 const buyLinks = useBuyLinks()
 const route = useRoute()
 const router = useRouter()
@@ -599,6 +610,20 @@ const mobilePanel = computed(() => isMobile.value && !!requested.value)
 function setPanel(id) {
   router.replace({ query: { ...route.query, panel: id } })
 }
+
+// The open tab is scrolled into sight (one off the edge opened by
+// ?panel= or picked after a scroll).
+const mobileTabs = ref(null)
+watch(
+  () => [panel.value, mobilePanel.value, nowPlaying.isOpen.value],
+  () =>
+    nextTick(() => {
+      const button = mobileTabs.value?.querySelector(
+        `[data-panel="${panel.value}"]`
+      )
+      button?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' })
+    })
+)
 
 function toggleMobilePanel(id) {
   if (mobilePanel.value && panel.value === id) {

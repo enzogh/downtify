@@ -35,6 +35,18 @@
           {{ artists
           }}<span v-if="song.album_name"> · {{ song.album_name }}</span>
         </p>
+        <p
+          v-if="requester || finishedAgo"
+          class="mt-0.5 flex min-w-0 items-center gap-1 text-xs text-fg-3"
+          :title="requester"
+        >
+          <template v-if="requester">
+            <AppIcon name="user" :size="12" class="shrink-0" />
+            <span class="truncate">{{ requester }}</span>
+          </template>
+          <span v-if="requester && finishedAgo" aria-hidden="true">·</span>
+          <span v-if="finishedAgo" class="shrink-0">{{ finishedAgo }}</span>
+        </p>
         <template v-if="item.state === 'active'">
           <div class="mt-2 flex items-center gap-3">
             <UiProgress
@@ -130,8 +142,18 @@
       </div>
     </div>
 
+    <!-- Fixing a failed song by hand is rare: the link field opens on
+         request instead of sitting under every failure. -->
+    <button
+      v-if="item.state === 'failed' && !linkOpen"
+      type="button"
+      class="mt-2 ml-[70px] text-[13px] font-semibold text-muted underline-offset-2 hover:text-fg hover:underline max-sm:ml-0"
+      @click="linkOpen = true"
+    >
+      {{ t('queue.useOtherLink') }}
+    </button>
     <form
-      v-if="item.state === 'failed'"
+      v-if="item.state === 'failed' && linkOpen"
       class="mt-3 flex flex-wrap items-center gap-2 pl-[70px] max-sm:pl-0"
       @submit.prevent="useLink"
     >
@@ -179,7 +201,9 @@ import { deezerImage } from '/src/lib/deezerImage'
 import { normalizeTrack } from '/src/lib/library'
 import { saveName } from '/src/lib/paths'
 import { classifyInput } from '/src/lib/input'
-import { useI18n } from '/src/i18n'
+import { currentLocale, useI18n } from '/src/i18n'
+import { timeAgo } from '/src/lib/format'
+import { useNow } from '@vueuse/core'
 
 const props = defineProps({
   item: { type: Object, required: true },
@@ -206,9 +230,28 @@ const library = useLibrary()
 const actions = useTrackActions()
 const queuePause = useQueuePause()
 const override = ref('')
+const linkOpen = ref(false)
 const overrideError = ref('')
 
 const song = computed(() => props.item.song)
+// "5 minutes ago" on a finished row - it outlives a reload and a
+// server restart, so it says when, not just that.
+const now = useNow({ interval: 60000 })
+const finishedAgo = computed(() => {
+  const state = props.item.state
+  if (!props.item.finishedAt || (state !== 'done' && state !== 'failed'))
+    return ''
+  return timeAgo(props.item.finishedAt, currentLocale.value, now.value)
+})
+// An admin's queue holds everyone's jobs: name who asked for the ones
+// that aren't theirs (or say nobody did - a watch, a retry).
+const requester = computed(() => {
+  if (!auth.isAdmin.value || props.item.mine) return ''
+  const users = props.item.users || []
+  return users.length
+    ? t('queue.requestedBy', { name: users.join(', ') })
+    : t('queue.requestedByNobody')
+})
 // Admins can stop a song that keeps failing or downloading: that action
 // and "remove" share a menu so the row keeps one button per job.
 const canBlock = computed(

@@ -14,6 +14,12 @@ Junto al título hay un corazón para [marcar la canción como me gusta](liked-s
 
 Haz clic en el título o la portada, o en el botón de expandir, para abrir **Reproduciendo**.
 
+## Sonando en otro dispositivo
+
+Si has iniciado sesión con la misma cuenta en otro sitio — otro navegador, otra pestaña, la app — y allí suena música mientras aquí no suena nada, una barra encima del reproductor dice **Sonando en** ese dispositivo (o **En pausa en**) con la canción. **Escuchar aquí** sigue con esa canción en esta página desde donde iba y la pausa en el otro dispositivo; el botón de reproducir/pausar la controla allí, y la cruz oculta la barra hasta que ese dispositivo reproduzca otra canción. Solo aparecen tus propios dispositivos.
+
+Los cambios en tus listas también llegan al instante a tus otros dispositivos: canciones añadidas, quitadas o movidas aparecen sin recargar.
+
 ## Reproduciendo
 
 Una vista a pantalla completa teñida con colores tomados de la portada del álbum actual:

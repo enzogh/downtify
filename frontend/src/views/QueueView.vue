@@ -63,41 +63,24 @@
 
     <div class="grid items-start gap-8 xl:grid-cols-[minmax(0,1fr)_340px]">
       <div class="flex min-w-0 flex-col gap-3">
-        <div
-          v-if="queue.length"
-          class="flex flex-wrap items-center justify-end gap-2"
-        >
+        <!-- One action in plain words (retry what failed), the rest
+             named in a menu - no row of bare icons. -->
+        <div v-if="queue.length" class="flex items-center gap-2">
           <UiButton
             v-if="counts.failed"
             size="sm"
-            variant="ghost"
+            variant="secondary"
             icon="retry"
             @click="dm.retryAllFailed()"
           >
-            <span class="max-sm:sr-only">{{
-              t('queue.retryFailed', { count: counts.failed })
-            }}</span>
+            {{ t('queue.retryFailed', { count: counts.failed }) }}
           </UiButton>
-          <UiButton
-            v-if="counts.done"
+          <UiMenu
+            class="ml-auto"
+            :items="queueMenu"
+            :label="t('common.more')"
             size="sm"
-            variant="ghost"
-            icon="check"
-            @click="dm.clearCompleted()"
-          >
-            <span class="max-sm:sr-only">{{
-              t('queue.clearDone', { count: counts.done })
-            }}</span>
-          </UiButton>
-          <UiButton
-            v-if="queue.length"
-            size="sm"
-            variant="danger"
-            icon="trash"
-            @click="clearAll"
-          >
-            <span class="max-sm:sr-only">{{ t('queue.clearAll') }}</span>
-          </UiButton>
+          />
         </div>
         <UiEmpty
           v-if="!queue.length"
@@ -224,6 +207,7 @@ import AppIcon from '/src/components/ui/AppIcon.vue'
 import UiButton from '/src/components/ui/UiButton.vue'
 import UiBadge from '/src/components/ui/UiBadge.vue'
 import UiEmpty from '/src/components/ui/UiEmpty.vue'
+import UiMenu from '/src/components/ui/UiMenu.vue'
 import UiPanel from '/src/components/ui/UiPanel.vue'
 import UiProgress from '/src/components/ui/UiProgress.vue'
 import UiTabs from '/src/components/ui/UiTabs.vue'
@@ -264,14 +248,20 @@ const scrollMargin = ref(0)
 syncQueueFromServer().catch(() => {})
 queuePause.refresh().catch(() => {})
 
+// In User view an admin's queue shows only their own downloads, like
+// any user's.
 const queue = computed(() => {
   tracker.queueVersion.value
-  return tracker.downloadQueue.value
+  const all = tracker.downloadQueue.value
+  return auth.isAdmin.value ? all : all.filter((item) => item.mine)
 })
 
 const counts = computed(() => {
-  const result = { active: 0, queued: 0, done: 0, failed: 0 }
-  for (const item of queue.value) result[item.state] += 1
+  const result = { active: 0, queued: 0, done: 0, failed: 0, others: 0 }
+  for (const item of queue.value) {
+    result[item.state] += 1
+    if (!item.mine) result.others += 1
+  }
   return result
 })
 
@@ -417,6 +407,42 @@ async function toggleQueue(change) {
     await change()
   } catch {
     ui.toast(t('queue.pauseFailed'), { kind: 'error' })
+  }
+}
+
+const queueMenu = computed(() => [
+  {
+    hidden: !counts.value.done,
+    label: t('queue.clearDone', { count: counts.value.done }),
+    icon: 'check',
+    action: () => dm.clearCompleted(),
+  },
+  {
+    hidden: !(auth.isAdmin.value && counts.value.others),
+    label: t('queue.clearOthers', { count: counts.value.others }),
+    icon: 'users',
+    action: clearOthers,
+  },
+  { divider: true, hidden: !counts.value.done && !counts.value.others },
+  {
+    label: t('queue.clearAll'),
+    icon: 'trash',
+    danger: true,
+    action: clearAll,
+  },
+])
+
+async function clearOthers() {
+  const ok = await ui.confirm({
+    title: t('queue.clearOthersTitle'),
+    body: t('queue.clearOthersBody'),
+    confirmLabel: t('queue.clearOthers', { count: counts.value.others }),
+  })
+  if (!ok) return
+  try {
+    await dm.clearOthers()
+  } catch {
+    ui.toast(t('queue.clearOthersFailed'), { kind: 'error' })
   }
 }
 

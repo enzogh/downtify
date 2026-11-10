@@ -186,10 +186,6 @@
             </p>
             <p class="truncate text-[13px] text-muted">
               <span
-                class="mr-1.5 inline-block rounded-[4px] border border-line-3 px-1 text-[10px] font-semibold text-faint md:hidden"
-                >{{ row.track.format }}</span
-              >
-              <span
                 v-if="guestOf && isGuestOn(row.track, guestOf)"
                 class="mr-1.5 inline-block rounded-[4px] border border-line-3 px-1 text-[10px] font-semibold text-faint"
                 >{{ t('artist.guest') }}</span

@@ -3,6 +3,10 @@
 // the UI renders the same on an offline home server.
 
 export const STROKE = {
+  devices:
+    '<rect x="3" y="3" width="11" height="15" rx="2"/><circle cx="8.5" cy="12.5" r="2.5"/><path d="M8.5 6.5h.01M17 7h3a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-8a1 1 0 0 1-1-1v-1"/>',
+  smartphone:
+    '<rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/>',
   home: '<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>',
   search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
   library: '<path d="M4 4v16M9 4v16M14 4l6 16"/>',

@@ -783,6 +783,24 @@ function reportPlayback(report) {
   return API.post('/api/activity/playback', report, { quiet: true })
 }
 
+/** What this account's other browsers and apps are playing. */
+function getMyPlayers() {
+  return API.get('/api/activity/devices', { quiet: true })
+}
+
+/**
+ * Ask another of this account's devices to `pause`, `play`, `load`
+ * (`extra`: `{files, index, position, playing}`) or `transfer` (`extra`:
+ * `{to}`: send what it plays to that device).
+ */
+function commandPlayer(player, action, extra = {}) {
+  return API.post(
+    '/api/activity/devices/command',
+    { ...extra, player, action },
+    { quiet: true }
+  )
+}
+
 function listDevices() {
   return API.get('/api/auth/devices')
 }
@@ -1004,6 +1022,11 @@ function clearCompletedQueue() {
   return API.delete('/api/queue/completed')
 }
 
+// Admins: every job they aren't waiting on (other accounts', watches').
+function clearOthersQueue() {
+  return API.delete('/api/queue/others')
+}
+
 function getQueueState() {
   return API.get('/api/queue/state')
 }
@@ -1198,6 +1221,8 @@ export default {
   getActivity,
   getNowPlaying,
   reportPlayback,
+  getMyPlayers,
+  commandPlayer,
   listDevices,
   renameDevice,
   revokeDevice,
@@ -1247,6 +1272,7 @@ export default {
   removeQueueItem,
   clearQueue,
   clearCompletedQueue,
+  clearOthersQueue,
   getQueueState,
   pauseQueue,
   resumeQueue,

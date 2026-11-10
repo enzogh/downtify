@@ -640,7 +640,7 @@ Returns `400` if the CSV has no recognizable title/artist columns, is empty, or 
 
 List download jobs (queued, in progress, done, error): one's own for a user, everyone's for an admin. Download progress events on the WebSocket follow the same rule.
 
-**Response:** Array of job objects (`song`, `status`, `progress`, `message`, `filename`, `user_ids` — the sorted accounts waiting on the job — `position`, and `provider` — the audio source that served it: `youtube-music`, `youtube` or `slskd`).
+**Response:** Array of job objects (`song`, `status`, `progress`, `message`, `filename`, `user_ids` — the sorted accounts waiting on the job — `mine` — whether the caller is one of them — `position`, and `provider` — the audio source that served it: `youtube-music`, `youtube` or `slskd`). An admin's rows also carry `users`: the usernames of the accounts waiting on it, empty for a job nobody asked for (a [Playlist Monitor](features/playlist-monitor.md) watch's, a retry's). A finished row (`done` or `error`) carries `finished_at` (epoch seconds): the 50 most recent finished jobs of each account are kept in the database and come back after a restart, until they are cleared or removed from the queue.
 
 `position` is the 1-based place among the still-waiting jobs (`queued` + `downloading`) in the order shown, `null` once finished. An admin's positions span the whole queue; a user's count their own slice. When two accounts ask for the same track at once they share one job row (and one download): the second waiter joins `user_ids` and gets the finished file with an ownership row of their own, and both see the same `position`.
 
@@ -651,6 +651,14 @@ List download jobs (queued, in progress, done, error): one's own for a user, eve
 Remove finished (`done`) jobs, keeping queued, in-progress and failed ones. A user clears their own only.
 
 **Response:** `{ "removed": 3 }`
+
+---
+
+### `DELETE /api/queue/others`
+
+Admin. Take off the queue every job the admin isn't waiting on: other accounts' downloads and the ones nobody asked for. One that hasn't started never starts; one already downloading finishes for the accounts waiting on it, and its progress no longer reaches the admin's pages. `403` for a user (they only ever see their own jobs).
+
+**Response:** `{ "removed": 12 }`
 
 ---
 
@@ -3101,7 +3109,7 @@ Who this server is, signing in, and pairing apps — see [Users & Sign-in](featu
 | Scope | Credentials | Covers |
 |-------|-------------|--------|
 | Public | none | The web app's own files, `GET /api/health`, `GET /api/version`, `GET /api/server/info`, `GET /api/auth/status`, `GET /api/auth/oidc` and `/api/auth/oidc/callback` (when configured), `POST /api/auth/login`, `POST /api/auth/logout`, `POST /api/auth/pair`, `POST /api/auth/token` |
-| Client | a device token (`Authorization: Bearer dtfy_…`), a signed URL (reads only), a WebSocket ticket, or any web session | Library and media reads (`/tracks`, `/list`, `/playlists`, `/lyrics`, `/cover`, `/playlist-cover`, `/downloads/…`, `/media/…`), `/api/v1/…`, search and link resolving, previews, `POST /api/download/url\|batch\|album`, likes, Discover and listens, podcast reads, episode downloads and playback, the queue and monitor lists (read), `GET /api/me`, `POST /api/activity/playback`, `POST /api/auth/ws-ticket`, `WS /api/ws` |
+| Client | a device token (`Authorization: Bearer dtfy_…`), a signed URL (reads only), a WebSocket ticket, or any web session | Library and media reads (`/tracks`, `/list`, `/playlists`, `/lyrics`, `/cover`, `/playlist-cover`, `/downloads/…`, `/media/…`), `/api/v1/…`, search and link resolving, previews, `POST /api/download/url\|batch\|album`, likes, Discover and listens, podcast reads, episode downloads and playback, the queue and monitor lists (read), `GET /api/me`, `POST /api/activity/playback`, `GET /api/activity/devices`, `POST /api/activity/devices/command`, `POST /api/auth/ws-ticket`, `WS /api/ws` |
 | User | a web session of any user (the `downtify_session` cookie) | Client, plus your own account (`/api/me…`), your paired devices and pairing (`/api/auth/devices…`, `/api/auth/pairing…`) |
 | Admin | a web session of an **admin** | Everything else: settings, cookies, deleting files and playlists, library upgrade/reconcile/archive, hiding songs from users, queue changes, monitor and podcast subscription changes, artist photo/bio edits, CSV import, renaming the server, users, the activity log, signing everyone out |
 
@@ -3442,7 +3450,56 @@ Admin. What each browser tab and app is playing — the players that reported in
 
 ### `POST /api/activity/playback`
 
-Client. A player says what it plays: `{ "player": "<id stable for this player>", "state": "playing" | "paused" | "stopped", "track": { "title", "artist", "album", "file" or "track_id", "duration" }, "position": 42 }`. Send it when a song starts, on pause/resume and stop, and about every 30 seconds while playing. A new song adds a `playback` entry to the log; the rest only update `GET /api/activity/now`. `400` for an unknown `state`, or no `file`/`track_id` (except for `stopped`). **Response:** `{ "ok": true }`.
+Client. A player says what it plays: `{ "player": "<id stable for this player>", "state": "playing" | "paused" | "stopped", "track": { "title", "artist", "album", "file" or "track_id", "duration" }, "position": 42 }`. Send it when a song starts, on pause/resume and stop, and about every 30 seconds while playing. A new song adds a `playback` entry to the log; the rest only update `GET /api/activity/now`. Every report is also sent to the same account's other pages and apps as a [`now_playing`](#ws-apiws) frame. `400` for an unknown `state`, or no `file`/`track_id` (except for `stopped`). **Response:** `{ "ok": true }`.
+
+---
+
+### `GET /api/activity/devices`
+
+Client. The signed-in account's own devices, like Spotify Connect: first the players heard from in the last 90 seconds (most recent first), then every other open page or app of the account as an `idle` row with `track: null` — somewhere playback can be sent. `player` is the id a page reports with (its WebSocket `client_id`), so a page can leave itself out; `position` is where the song was at that report and `seconds_ago` how long ago it came; `app` tells a paired app from a browser. A web page leaves the list as soon as it closes or reloads. Other accounts' devices are never listed.
+
+**Response:**
+
+```json
+[
+  {
+    "player": "4f0c…",
+    "client": "Pixel 8",
+    "track": { "title": "Roads", "artist": "Portishead", "file": "Portishead - Roads.mp3", "duration": 305 },
+    "paused": false,
+    "position": 42,
+    "started_at": "2026-11-10T06:08:36+00:00",
+    "seconds_ago": 3.5,
+    "idle": false,
+    "app": true
+  },
+  {
+    "player": "9a41…",
+    "client": "Web (Firefox on Linux)",
+    "track": null,
+    "paused": true,
+    "position": 0,
+    "started_at": null,
+    "seconds_ago": 0,
+    "idle": true,
+    "app": false
+  }
+]
+```
+
+---
+
+### `POST /api/activity/devices/command`
+
+Client. Ask another of your own devices to do something: `{ "player": "<its id>", "action": … }`.
+
+| `action` | Extra fields | What the device does |
+|----------|--------------|----------------------|
+| `pause` / `play` | — | Pauses or resumes what it plays. |
+| `load` | `files` (library paths, 500 at most), `index`, `position` (seconds), `playing` (default `true`) | Plays that queue from `index` at `position` — playback moved there. |
+| `transfer` | `to` (another device's `player`) | Sends what it plays (its queue and place) to `to` as a `load`, then pauses — "Listen here". |
+
+It goes out as a [`player_command`](#ws-apiws) frame, with the extra fields, to your own pages and apps only; the one whose id is `player` obeys. `400` for another action, a `load` without a song or a `transfer` without `to`; `404` when that device isn't listed by [`GET /api/activity/devices`](#get-apiactivitydevices). **Response:** `{ "ok": true }`.
 
 ---
 
@@ -3860,7 +3917,7 @@ The handshake needs a device token (`Authorization: Bearer …`), a web session 
 }
 ```
 
-`status` on a per-track event is `downloading`, `done`, or `error` (or `queued` for a job a paused queue holds back, see below). `filename` is set (non-null) on the final `done` event. A row that is still waiting has `status: "queued"` on [`GET /api/queue`](#get-apiqueue), not as its own socket event.
+`status` on a per-track event is `downloading`, `done`, or `error` (or `queued` for a job a paused queue holds back, see below). `filename` is set (non-null) on the final `done` event. A job's events go to the accounts waiting on it and to admins; a job nobody asked for (a watch's, a retry's) goes to admins only (and to every page when sign-in is off). No `downloading` event follows a job's `done` one. A row that is still waiting has `status: "queued"` on [`GET /api/queue`](#get-apiqueue), not as its own socket event.
 
 Queuing a playlist batch or a CSV import registers every job, then broadcasts one reload so open pages fetch that list once:
 
@@ -3922,6 +3979,15 @@ When a playlist is shared, unshared, followed, copied, detached, renamed or dele
 
 ```json
 { "type": "playlists_changed" }
+```
+
+Adding, removing or reordering songs sends it too: to everyone for a shared playlist, and to its owner's (and the editor's) own pages and apps for a private one, so the same account on another device sees the change at once.
+
+Each [playback report](#post-apiactivityplayback), and each page or app of the account that opens or closes, sends the same account's pages and apps their device list (the rows of [`GET /api/activity/devices`](#get-apiactivitydevices)), and a [command](#post-apiactivitydevicescommand) from one of them reaches the others — only the device whose id is `player` acts on it:
+
+```json
+{ "type": "now_playing", "players": [ { "player": "4f0c…", "client": "Pixel 8", "track": { "…": "…" }, "paused": false, "position": 42, "seconds_ago": 0 } ] }
+{ "type": "player_command", "player": "4f0c…", "action": "pause" }
 ```
 
 When an app is paired, the web page showing the code learns it at once:

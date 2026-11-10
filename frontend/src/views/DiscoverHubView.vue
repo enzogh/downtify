@@ -1,6 +1,11 @@
 <template>
   <div>
-    <div class="mx-auto max-w-[1680px] px-4 pt-6 sm:px-6 md:pt-8 lg:px-10">
+    <!-- While a search is on, the box stays on top of its results; the
+         rest of the time it sits under Discover's title. -->
+    <div
+      v-if="query || artist"
+      class="mx-auto max-w-[1680px] px-4 pt-6 sm:px-6 md:pt-8 lg:px-10"
+    >
       <div
         class="grid gap-4 lg:grid-cols-[minmax(0,42rem)_minmax(0,1fr)] lg:items-start lg:gap-10"
       >
@@ -21,7 +26,25 @@
         :artist="artist"
         :search-links="false"
       />
-      <DiscoverView v-else key="discover" />
+      <DiscoverView v-else key="discover">
+        <template #search>
+          <div
+            class="-mt-2 grid gap-4 lg:grid-cols-[minmax(0,42rem)_minmax(0,1fr)] lg:items-start lg:gap-10"
+          >
+            <FinderSearchBar
+              v-model="text"
+              @submit="search"
+              @clear="clearSearch"
+            />
+            <FinderRecentSearches
+              v-if="recent.length"
+              :terms="recent"
+              :active="query"
+              @clear="clearRecent"
+            />
+          </div>
+        </template>
+      </DiscoverView>
     </Transition>
   </div>
 </template>

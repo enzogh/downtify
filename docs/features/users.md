@@ -44,6 +44,8 @@ Browsers signed in before the upgrade sign in again. Phones paired before it sta
 
 A user who tries something that needs an admin gets a message saying so.
 
+An admin sees an **Admin view** button at the top right of every page, on a phone too (a shield icon there). One tap switches to **User view**: Castify looks exactly as it does for a user — no admin settings, tools, queue controls or other accounts' downloads — and another tap brings the admin view back. The choice is remembered in that browser. It only changes what the page shows: the server still treats you as an admin. The round avatar next to it opens your account menu (settings, light or dark theme, sign out).
+
 ## Your library
 
 The library is shared: every account sees every song anyone downloaded — in the Library, in search results marked as downloaded, and on a paired phone. Files are never stored twice: when two people download the same song it lands on disk once, with one owner each.

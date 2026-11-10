@@ -12,7 +12,9 @@
       >
         {{ t('monitor.checkAll') }}
       </UiButton>
-      <GlobalQueueControl compact />
+      <!-- The server-wide pause is the admins' (also on the Queue
+           page): not the first thing a phone shows. -->
+      <GlobalQueueControl compact class="max-md:hidden" />
     </PageHeader>
 
     <UiTabs :items="tabs" :model-value="tab" />
@@ -34,13 +36,13 @@
           class="h-full min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-faint"
         />
       </label>
-      <div class="flex gap-2 px-1 pb-1 sm:p-0">
+      <div class="flex flex-col gap-2 px-1 pb-1 min-[440px]:flex-row sm:p-0">
         <UiSelect
           v-model="newInterval"
           :options="intervalOptions(t)"
           :label="t('monitor.interval')"
           icon="clock"
-          class="flex-1 sm:flex-none"
+          class="min-w-0 flex-1 sm:flex-none"
         />
         <UiButton
           type="submit"

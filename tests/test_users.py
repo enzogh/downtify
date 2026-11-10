@@ -493,6 +493,146 @@ def test_playback_reports_show_up_for_admins(client):
     assert entries[0]['username'] == 'maria'
 
 
+def test_now_playing_lists_ones_own_players():
+    now = NowPlaying()
+    track = {'title': 'Roads', 'file': 'a.mp3'}
+    base = {'username': 'maria', 'client': 'Web', 'track': track}
+    now.report(
+        user_id=2,
+        player='dev:tab-1',
+        player_id='tab-1',
+        state='playing',
+        position=12,
+        **base,
+    )
+    now.report(
+        user_id=2,
+        player='dev:tab-2',
+        player_id='tab-2',
+        state='paused',
+        **base,
+    )
+    now.report(
+        user_id=3,
+        player='dev:tab-3',
+        player_id='tab-3',
+        state='playing',
+        **base,
+    )
+
+    mine = now.for_user(2)
+
+    assert {row['player'] for row in mine} == {'tab-1', 'tab-2'}
+    playing = next(row for row in mine if row['player'] == 'tab-1')
+    assert playing['position'] == 12
+    assert playing['paused'] is False
+    assert 'username' not in playing
+    assert now.for_user(9) == []
+
+    assert now.forget_player(2, 'tab-1') is True
+    assert [row['player'] for row in now.for_user(2)] == ['tab-2']
+    assert now.forget_player(2, 'tab-1') is False
+
+
+def test_ones_own_devices_and_commands(client, monkeypatch):
+    store = api.state.auth
+    maria = store.users.create('maria', PASSWORD)
+    _device, token = store.create_device('Pixel 8', user_id=maria['id'])
+    phone = {'Authorization': f'Bearer {token}'}
+    sent: list[tuple[int, dict]] = []
+
+    async def fake_send_user(user_id, message):
+        sent.append((user_id, message))
+
+    monkeypatch.setattr(api.state.connections, 'send_user', fake_send_user)
+    track = {'title': 'Roads', 'artist': 'Portishead', 'file': 'a.mp3'}
+    client.post(
+        '/api/activity/playback',
+        json={
+            'player': 'app',
+            'state': 'playing',
+            'track': track,
+            'position': 40,
+        },
+        headers=phone,
+    )
+
+    # Every page and app of the account hears about it at once.
+    assert sent[-1][0] == maria['id']
+    assert sent[-1][1]['type'] == 'now_playing'
+    assert sent[-1][1]['players'][0]['player'] == 'app'
+
+    devices = client.get('/api/activity/devices', headers=phone).json()
+    assert [row['player'] for row in devices] == ['app']
+    assert devices[0]['client'] == 'Pixel 8'
+    assert devices[0]['position'] == 40
+    assert devices[0]['app'] is True
+    assert devices[0]['idle'] is False
+    assert 'device_id' not in devices[0]
+
+    ok = client.post(
+        '/api/activity/devices/command',
+        json={'player': 'app', 'action': 'pause'},
+        headers=phone,
+    )
+    assert ok.status_code == 200
+    assert sent[-1] == (
+        maria['id'],
+        {'type': 'player_command', 'player': 'app', 'action': 'pause'},
+    )
+    unknown = client.post(
+        '/api/activity/devices/command',
+        json={'player': 'nope', 'action': 'pause'},
+        headers=phone,
+    )
+    assert unknown.status_code == 404
+    bad = client.post(
+        '/api/activity/devices/command',
+        json={'player': 'app', 'action': 'delete'},
+        headers=phone,
+    )
+    assert bad.status_code == 400
+
+    load = client.post(
+        '/api/activity/devices/command',
+        json={
+            'player': 'app',
+            'action': 'load',
+            'files': ['a.mp3', '', 'b.mp3'],
+            'index': 9,
+            'position': 12.5,
+        },
+        headers=phone,
+    )
+    assert load.status_code == 200
+    assert sent[-1][1] == {
+        'type': 'player_command',
+        'player': 'app',
+        'action': 'load',
+        'files': ['a.mp3', 'b.mp3'],
+        'index': 1,
+        'position': 12.5,
+        'playing': True,
+    }
+    empty = client.post(
+        '/api/activity/devices/command',
+        json={'player': 'app', 'action': 'load', 'files': []},
+        headers=phone,
+    )
+    assert empty.status_code == 400
+    moved = client.post(
+        '/api/activity/devices/command',
+        json={'player': 'app', 'action': 'transfer', 'to': 'tab-9'},
+        headers=phone,
+    )
+    assert moved.status_code == 200
+    assert sent[-1][1]['to'] == 'tab-9'
+
+    # Another account sees none of maria's players.
+    _sign_in(client)
+    assert client.get('/api/activity/devices').json() == []
+
+
 def test_sign_ins_are_logged(client):
     client.post('/api/auth/login', json={'username': 'admin', 'password': 'x'})
     _sign_in(client)

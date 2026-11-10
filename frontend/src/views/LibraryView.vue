@@ -2,45 +2,31 @@
   <div
     class="mx-auto flex max-w-[1680px] flex-col gap-6 px-4 pt-6 sm:px-6 md:pt-8 lg:px-10"
   >
+    <!-- Spotify's "Your Library": the title, "+" to make a playlist,
+         and every other tool named in one menu instead of bare icons. -->
     <PageHeader :title="t('library.title')" :subtitle="summary">
-      <ExternalPlaylistImport v-if="tab === 'playlists'" />
       <UiButton
-        v-if="library.trackCount.value"
-        variant="ghost"
-        icon="wand"
-        :to="{ name: 'Upgrade' }"
+        variant="primary"
+        icon="plus"
+        @click="playlistActions.openCreate()"
       >
-        <span class="max-sm:sr-only">{{ t('library.upgrade') }}</span>
+        {{ t('playlists.create') }}
       </UiButton>
-      <UiButton
+      <UiMenu :items="toolsMenu" :label="t('common.more')" />
+      <ExternalPlaylistImport
         v-if="auth.isAdmin.value"
-        variant="ghost"
-        icon="hard-drive"
-        :to="{ name: 'Storage' }"
-      >
-        <span class="max-sm:sr-only">{{ t('library.storage') }}</span>
-      </UiButton>
-      <UiButton
-        v-if="auth.isAdmin.value && trashCapability.canManage.value"
-        variant="ghost"
-        icon="trash"
-        :to="{ name: 'Trash' }"
-      >
-        <span class="max-sm:sr-only">{{ t('trash.title') }}</span>
-      </UiButton>
-      <UiButton
-        variant="ghost"
-        icon="refresh"
-        :loading="library.loading.value"
-        @click="library.load({ force: true })"
-      >
-        <span class="max-sm:sr-only">{{ t('common.refresh') }}</span>
-      </UiButton>
+        ref="importer"
+        :trigger="false"
+      />
     </PageHeader>
 
     <UiTabs :items="tabs" :model-value="tab" />
 
-    <div class="flex flex-wrap items-center gap-2">
+    <!-- Nothing to filter or sort yet: the empty state speaks alone. -->
+    <div
+      v-if="items.length || filter || tab !== 'playlists'"
+      class="flex flex-wrap items-center gap-2"
+    >
       <label
         class="flex h-10 min-w-0 flex-1 basis-56 items-center gap-2.5 rounded-control border border-line-2 bg-surface px-3 focus-within:border-accent sm:max-w-xs"
       >
@@ -60,14 +46,6 @@
         class="max-w-full"
       />
       <div class="ml-auto flex items-center gap-2">
-        <UiButton
-          v-if="tab === 'playlists'"
-          variant="primary"
-          icon="plus"
-          @click="playlistActions.openCreate()"
-        >
-          {{ t('playlists.create') }}
-        </UiButton>
         <UiSelect
           v-if="tab !== 'tracks'"
           v-model="sortKey"
@@ -121,6 +99,28 @@
     >
       <UiButton variant="primary" icon="search" @click="ui.focusSearch()">
         {{ t('library.emptyAction') }}
+      </UiButton>
+    </UiEmpty>
+
+    <!-- No playlist yet: Spotify's nudge to make the first one. -->
+    <UiEmpty
+      v-else-if="
+        tab === 'playlists' &&
+        !filter &&
+        !items.length &&
+        library.loaded.value &&
+        !hasSharedPlaylists
+      "
+      icon="playlist"
+      :title="t('library.noPlaylistsTitle')"
+      :body="t('library.noPlaylistsBody')"
+    >
+      <UiButton
+        variant="primary"
+        icon="plus"
+        @click="playlistActions.openCreate()"
+      >
+        {{ t('playlists.create') }}
       </UiButton>
     </UiEmpty>
 
@@ -441,7 +441,14 @@ watch(tab, () => {
   selected.value = new Set()
 })
 
+// Spotify's order: playlists first, then albums, artists and songs.
 const tabs = computed(() => [
+  {
+    id: 'playlists',
+    label: t('library.playlists'),
+    count: library.ownPlaylists.value.length,
+    to: { name: 'Library', params: { tab: 'playlists' } },
+  },
   {
     id: 'albums',
     label: t('library.albums'),
@@ -453,12 +460,6 @@ const tabs = computed(() => [
     label: t('library.artists'),
     count: library.artistCount.value,
     to: { name: 'Library', params: { tab: 'artists' } },
-  },
-  {
-    id: 'playlists',
-    label: t('library.playlists'),
-    count: library.ownPlaylists.value.length,
-    to: { name: 'Library', params: { tab: 'playlists' } },
   },
   {
     id: 'tracks',
@@ -474,9 +475,48 @@ const summary = computed(() => {
     t('common.tracks', { count: library.trackCount.value }),
     t('common.albums', { count: library.albumCount.value }),
     t('common.artists', { count: library.artistCount.value }),
-    formatBytes(library.totalSize.value),
-  ].join(' · ')
+    // Disk size is the admin's business, not a listener's.
+    auth.isAdmin.value ? formatBytes(library.totalSize.value) : '',
+  ]
+    .filter(Boolean)
+    .join(' · ')
 })
+
+const importer = ref(null)
+// The tools that used to sit as bare icons in the header, named.
+const toolsMenu = computed(() => [
+  {
+    label: t('common.refresh'),
+    icon: 'refresh',
+    disabled: library.loading.value,
+    action: () => library.load({ force: true }),
+  },
+  {
+    hidden: !auth.isAdmin.value,
+    label: t('externalPlaylistImport.open'),
+    icon: 'folder',
+    action: () => importer.value?.show(),
+  },
+  { divider: true, hidden: !auth.isAdmin.value },
+  {
+    hidden: !auth.isAdmin.value || !library.trackCount.value,
+    label: t('library.upgrade'),
+    icon: 'wand',
+    action: () => router.push({ name: 'Upgrade' }),
+  },
+  {
+    hidden: !auth.isAdmin.value,
+    label: t('library.storage'),
+    icon: 'hard-drive',
+    action: () => router.push({ name: 'Storage' }),
+  },
+  {
+    hidden: !auth.isAdmin.value || !trashCapability.canManage.value,
+    label: t('trash.title'),
+    icon: 'trash',
+    action: () => router.push({ name: 'Trash' }),
+  },
+])
 
 const sortOptions = computed(() => {
   const base = [
@@ -556,6 +596,12 @@ const publicItems = computed(() =>
 )
 const followedItems = computed(() =>
   library.publicPlaylists.value.filter((playlist) => playlist.followed)
+)
+// Someone else's playlists to show: the page isn't empty after all.
+const hasSharedPlaylists = computed(
+  () =>
+    library.sharedPlaylists.value.length > 0 ||
+    library.publicPlaylists.value.length > 0
 )
 
 const selectedTracks = computed(() =>

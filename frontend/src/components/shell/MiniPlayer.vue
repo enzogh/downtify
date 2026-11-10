@@ -53,7 +53,7 @@
               <EqBars
                 v-if="player.isPlaying.value"
                 :size="10"
-                class="hidden md:inline-flex"
+                class="max-md:hidden"
               />
             </span>
             <span class="truncate text-xs text-muted">
@@ -76,15 +76,16 @@
           :label="t('player.shuffle')"
           :active="player.shuffle.value"
           toggle
-          class="hidden md:inline-flex"
+          class="max-md:hidden"
           @click="player.toggleShuffle()"
         />
         <UiIconButton
           icon="prev"
           :label="t('player.previous')"
-          class="hidden md:inline-flex"
+          class="max-md:hidden"
           @click="player.prev()"
         />
+        <DevicesButton v-if="auth.user.value" class="md:hidden" />
         <button
           type="button"
           class="flex size-11 items-center justify-center rounded-full text-fg md:bg-invert md:text-on-invert md:transition-transform md:hover:scale-105"
@@ -113,7 +114,7 @@
           :label="repeatLabel"
           :active="player.repeatMode.value !== 'off'"
           toggle
-          class="hidden md:inline-flex"
+          class="max-md:hidden"
           @click="player.cycleRepeat()"
         />
         <UiIconButton
@@ -165,7 +166,7 @@
           :active="jam.active.value"
           toggle
           size="sm"
-          @click="router.push({ name: 'Jam' })"
+          @click="openJamSheet()"
         />
         <UiIconButton
           icon="queue"
@@ -173,6 +174,7 @@
           size="sm"
           @click="nowPlaying.open('queue')"
         />
+        <DevicesButton v-if="auth.user.value" />
         <!-- The slider is what gives when the row is tight, so the time
              next to it never has to. -->
         <VolumeControl class="hidden min-w-0 lg:flex" width="w-20 min-w-8" />
@@ -196,6 +198,9 @@ import EqBars from '../ui/EqBars.vue'
 import ExplicitBadge from '../ui/ExplicitBadge.vue'
 import UiIconButton from '../ui/UiIconButton.vue'
 import LikeButton from '../player/LikeButton.vue'
+import DevicesButton from '../player/DevicesButton.vue'
+import { useAuth } from '/src/model/auth'
+import { useJamSheet } from '/src/model/jamSheet'
 import SliderBar from '../player/SliderBar.vue'
 import { useSmoothTime } from '../player/useSmoothTime'
 import VolumeControl from '../player/VolumeControl.vue'
@@ -215,6 +220,8 @@ const router = useRouter()
 const { showLyrics } = usePlayerPrefs()
 const nowPlaying = useNowPlaying()
 const { t } = useI18n()
+const auth = useAuth()
+const { openJamSheet } = useJamSheet()
 const library = useLibrary()
 const dm = useDownloadManager()
 const tracker = useProgressTracker()

@@ -48,6 +48,7 @@
         :selected="selected.has(keyOf(song, i))"
         :marked="!!markedKey && keyOf(song, i) === markedKey"
         :hide-album="hideAlbum"
+        :ranked="ranked"
         :search-links="searchLinks"
         @toggle="toggleSelected(keyOf(song, i))"
       />
@@ -153,6 +154,8 @@ const props = defineProps({
   collectionName: { type: String, default: '' },
   markedKey: { type: String, default: '' },
   hideAlbum: { type: Boolean, default: false },
+  // Rank numbers on phones (charts), see TrackDownPlay.
+  ranked: { type: Boolean, default: false },
   // Forwarded to every TrackDownPlay as-is (see its own `searchLinks`).
   searchLinks: { type: Boolean, default: true },
 })

@@ -6,20 +6,11 @@
       :title="t('discover.title')"
       :subtitle="libraryOnly ? t('libraryOnly.active') : t('discover.subtitle')"
     >
-      <UiButton variant="ghost" icon="eye" @click="hiddenOpen = true">
-        {{
-          t('discover.hiddenButton', { count: discover.blocked.value.length })
-        }}
-      </UiButton>
-      <UiButton
-        icon="refresh"
-        :loading="discover.loading.value"
-        :disabled="!canSuggest"
-        @click="refresh"
-      >
-        {{ t('discover.refresh') }}
-      </UiButton>
+      <UiMenu :items="headerMenu" :label="t('common.more')" />
     </PageHeader>
+
+    <!-- The Finder's search box, right under the title (DiscoverHubView). -->
+    <slot name="search" />
 
     <div
       v-if="!library.loaded.value || (discover.loading.value && !items.length)"
@@ -317,6 +308,23 @@ const showAllArtists = ref(false)
 const shownArtists = computed(() =>
   showAllArtists.value ? items.value : items.value.slice(0, ARTISTS_SHOWN)
 )
+
+// Refreshing and the hidden artists, named in one menu.
+const headerMenu = computed(() => [
+  {
+    label: t('discover.refresh'),
+    icon: 'refresh',
+    disabled: !canSuggest.value || discover.loading.value,
+    action: refresh,
+  },
+  {
+    label: t('discover.hiddenButton', {
+      count: discover.blocked.value.length,
+    }),
+    icon: 'eye',
+    action: () => (hiddenOpen.value = true),
+  },
+])
 
 const PLATFORMS = { deezer: 'Deezer', spotify: 'Spotify' }
 

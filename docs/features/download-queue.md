@@ -8,6 +8,14 @@ Everything you download goes through the **Queue** page: what is downloading (**
 
 The **All** tab lists every song, grouped under those same four headings. **Retry failed**, **Clear done** and **Clear queue** sit just above the list (icons only on a phone); each song has its own button to remove it. An admin also gets **Stop downloading** in a downloading or failed song's **More** menu, and lists those songs under **Suspended tracks** in the side column, where **Allow again** lets them download.
 
+## Other accounts' downloads
+
+Each account's queue holds its own downloads; an admin's holds everyone's. On an admin's queue, a song someone else asked for says who under its title (**Asked for by** *name*), and one nobody asked for — a [Playlist Monitor](playlist-monitor.md) watch's, a retry's — reads **Added automatically**. **Remove others'** (above the list, admins only, with how many there are) takes all of those off the admin's queue at once: a waiting one never starts, and one already downloading finishes for the accounts that asked for it without showing up again on the admin's page.
+
+A song taken off the queue somewhere else — by another device, another account or **Clear queue** — leaves the list on the next refresh instead of staying **In progress** forever.
+
+Finished songs stay listed when you reload the page, and when Castify restarts or updates: the last 50 of each account (downloaded or failed) are kept, newest first, each with when it ended (*5 minutes ago*). **Clear done**, **Clear queue** or a song's remove button take them away for good.
+
 ## Pausing and resuming
 
 **Pause downloads**, at the top of the Queue page, stops the queue from starting anything new — handy before you change settings, look into a problem, or update and restart Castify while a long queue is waiting.

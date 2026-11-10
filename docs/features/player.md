@@ -14,6 +14,18 @@ Next to the title there is a heart to [like the song](liked-songs.md); phones le
 
 Click the title or cover, or the expand button, to open **Now playing**.
 
+## Playing on another device
+
+Castify works like Spotify Connect between the places you're signed in to with the same account — browsers, tabs, the phone app. The **Devices** button in the player bar and in Now playing (green while music plays on another of them) opens **Connect to a device**:
+
+- **This device**, with what plays here, and every other open device below it: playing ones first with their song, then paused ones, then idle ones.
+- Pick another device to **send what plays here** there — the whole queue, the song and the spot in it — and this page pauses. Its own button pauses or resumes it from here.
+- When music plays elsewhere and nothing plays here, a bar above the player shows that song with a green strip, **Playing on** *device*. **Listen here** (or **This device** in the list) brings the music — queue, song and spot — to this page and pauses the other device. A device that can't send its queue (the phone app) hands over its song alone. The cross hides the bar until that device plays another song.
+
+Only your own devices show up, and a closed or reloaded tab leaves the list at once.
+
+Changes to your playlists reach your other devices at once too: songs added, removed or put in another order show there without a reload.
+
 ## Now playing
 
 A full-screen view tinted with colours picked from the current album cover:
@@ -25,7 +37,7 @@ A full-screen view tinted with colours picked from the current album cover:
 - **Sleep timer** — stop playback in 15, 30, 45, 60 or 90 minutes, or at the end of the current track. The remaining time shows next to the timer button
 - **File info** — format and size of the playing file
 
-Four panels sit next to the cover on wide screens, or replace it on phones:
+Four panels sit next to the cover on wide screens, or replace it on phones — their buttons sit under the controls there, in a row you can slide sideways with a finger when they don't all fit:
 
 - **Lyrics** — time-synced lyrics highlight the current line and scroll with the song; click a line to jump there. Plain lyrics are shown as-is. Lyrics come from the `.lrc` file next to the track, or those embedded in its tags — see [Lyrics](lyrics.md). You can hide this panel — see [Hiding the lyrics](#hiding-the-lyrics).
 - **Up next** — the play queue. Drag tracks to reorder them, remove single tracks, or clear everything after the current one.

@@ -17,13 +17,19 @@
       </main>
       <!-- Sticky at the end of the content column, so it floats over the
            page yet lines up with the content next to the sidebar. -->
-      <MiniPlayer
-        class="sticky bottom-[calc(5.25rem+env(safe-area-inset-bottom))] z-40 mx-2 mb-2 md:bottom-5 md:mx-6 md:mb-5"
-      />
+      <div
+        class="sticky bottom-[calc(5.25rem+env(safe-area-inset-bottom))] z-40 mx-2 mb-2 flex flex-col gap-2 md:bottom-5 md:mx-6 md:mb-5"
+      >
+        <JamStrip />
+        <RemotePlaybackBar />
+        <MiniPlayer />
+      </div>
       <div class="h-[calc(4.75rem+env(safe-area-inset-bottom))] md:hidden" />
     </div>
     <BottomNav class="md:hidden" />
     <NowPlaying />
+    <DevicePicker v-if="auth.user.value" />
+    <JamSheet v-if="auth.user.value" />
     <ShortcutsDialog v-model:open="shortcutsOpen" />
     <UiToasts />
     <UiDialog />
@@ -54,6 +60,10 @@ import SideNav from './SideNav.vue'
 import TopBar from './TopBar.vue'
 import BottomNav from './BottomNav.vue'
 import MiniPlayer from './MiniPlayer.vue'
+import RemotePlaybackBar from './RemotePlaybackBar.vue'
+import DevicePicker from '../player/DevicePicker.vue'
+import JamSheet from '../jam/JamSheet.vue'
+import JamStrip from '../jam/JamStrip.vue'
 import NowPlaying from './NowPlaying.vue'
 import ShortcutsDialog from './ShortcutsDialog.vue'
 import UiToasts from '../ui/UiToasts.vue'
@@ -77,6 +87,7 @@ import { usePlayerPrefs } from '/src/model/playerPrefs'
 import { useLibrary } from '/src/model/library'
 import { useDiscover } from '/src/model/discover'
 import { useNowPlaying, useUi } from '/src/model/ui'
+import { useRemotePlayback } from '/src/model/remotePlayback'
 import { useShortcuts } from './shortcuts'
 
 const auth = useAuth()
@@ -113,6 +124,7 @@ watch(
     if (!id) return
     account.start()
     account.startPlaybackReports()
+    useRemotePlayback().start()
   },
   { immediate: true }
 )

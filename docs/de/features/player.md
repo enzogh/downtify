@@ -14,6 +14,12 @@ Neben dem Titel ist ein Herz, um den [Song zu liken](liked-songs.md); das Handy 
 
 Klicke auf Titel oder Cover oder auf die Schaltfläche zum Vergrößern, um **Wiedergabe** zu öffnen.
 
+## Wiedergabe auf einem anderen Gerät
+
+Bist du woanders mit demselben Konto angemeldet — ein anderer Browser, ein zweiter Tab, die App — und dort läuft Musik, während hier nichts spielt, zeigt eine Leiste über dem Player **Läuft auf** diesem Gerät (oder **Pausiert auf**) mit dem Titel. **Hier hören** spielt den Titel auf dieser Seite an derselben Stelle weiter und pausiert ihn auf dem anderen Gerät; die Wiedergabe-/Pause-Taste steuert ihn dort, und das Kreuz blendet die Leiste aus, bis das Gerät einen anderen Titel spielt. Nur deine eigenen Geräte erscheinen.
+
+Änderungen an deinen Playlists erreichen deine anderen Geräte sofort: hinzugefügte, entfernte oder verschobene Titel erscheinen ohne Neuladen.
+
 ## Wiedergabe
 
 Eine Vollbildansicht, getönt mit Farben aus dem Cover des aktuellen Albums:

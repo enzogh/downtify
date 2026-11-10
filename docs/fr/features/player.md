@@ -14,6 +14,12 @@ Tant qu’un morceau est chargé, une barre du lecteur flotte en bas de chaque p
 
 Cliquez sur le titre ou la pochette, ou sur le bouton d’agrandissement, pour ouvrir **Lecture en cours**.
 
+## Lecture sur un autre appareil
+
+Quand vous êtes connecté au même compte ailleurs — un autre navigateur, un deuxième onglet, l'application mobile — et que la musique y joue alors que rien ne joue ici, une barre au-dessus du lecteur indique **En lecture sur** cet appareil (ou **En pause sur**) avec le titre. **Écouter ici** reprend ce titre sur cette page là où il en était et le met en pause sur l'autre appareil ; le bouton lecture/pause le met en pause ou le relance là-bas sans toucher à cette page, et la croix masque la barre jusqu'à ce que cet appareil joue un autre titre. Seuls vos propres appareils apparaissent.
+
+Les modifications de vos playlists arrivent aussi tout de suite sur vos autres appareils : titres ajoutés, retirés ou déplacés s'affichent sans recharger.
+
 ## Lecture en cours
 
 Une vue plein écran teintée de couleurs tirées de la pochette de l’album actuel :

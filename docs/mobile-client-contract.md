@@ -201,12 +201,14 @@ Messages the app can rely on:
 | Message | When |
 |---------|------|
 | `{ "type": "library_changed" }` | Tracks were added, removed or moved (debounced ~2 s) — sync |
-| `{ "type": "playlists_changed" }` | A playlist was shared, unshared, followed, copied, detached, renamed or deleted, or songs were hidden from it or shown again — refetch `GET /api/v1/playlists` |
+| `{ "type": "playlists_changed" }` | A playlist was shared, unshared, followed, copied, detached, renamed or deleted, songs were hidden from it or shown again, or its songs were added, removed or reordered (a private one: only on its owner's devices) — refetch `GET /api/v1/playlists` |
 | `{ "type": "likes", "count": 3 }` | Likes changed somewhere — refetch `GET /api/v1/likes` |
 | `{ "type": "queue_reload" }` | Many downloads were queued at once — refetch `GET /api/queue` |
 | `{ "song": {…}, "progress": 42.5, "status": "downloading"\|"done"\|"error", "message", "filename", "provider" }` | A server download's progress (no `type`) — one’s own jobs only (every job on an admin’s device) |
 | `{ "type": "podcasts" }` / `{ "type": "podcast_progress", … }` | Podcast episodes downloaded / progress |
 | `{ "type": "device_paired", … }` | A device was paired (for the web page; ignore) |
+| `{ "type": "now_playing", "players": [ … ] }` | One of this account's players (a browser, this or another install) reported what it plays — the rows of `GET /api/activity/devices`; leave out your own `player` id. Optional: for a "playing on another device" bar |
+| `{ "type": "player_command", "player": "<id>", "action": "pause"\|"play"\|"load"\|"transfer", … }` | Another device of this account asks the player whose id is `player` to pause, resume, play a queue (`load`: `files`, `index`, `position`, `playing`) or send its own queue to the device `to` (`transfer`) — act on it only when `player` is this install's id; ignore actions you don't support. Optional |
 
 "The server is downloading N songs": `GET /api/queue` (count rows with `status` `queued` or `downloading`), kept fresh by the progress messages. A waiting row carries `position` (1-based place in the queue, `null` once finished) and `user_ids` (every account waiting on that job — one shared row when two accounts ask for the same track at once). Close code `4401` = unpaired.
 
@@ -231,6 +233,7 @@ POST /api/activity/playback
 
 - Send it when a song starts, on pause/resume (`state: "paused"`/`"playing"`), on stop (`"stopped"`, `track` may be `{}`), and about every 30 s while playing. Only while online; don't queue these.
 - `player` is any id stable for this install. The app shows up by its device name.
+- The account's other devices see these reports (`now_playing` frames, `GET /api/activity/devices`) and may send this install `player_command` frames through `POST /api/activity/devices/command` — `{ "player", "action": "pause" | "play" }`; `404` when that player went quiet for 90 s.
 
 Podcast episodes: `PUT /api/podcasts/episodes/{id}/playback` with `{ "position_seconds", "played" }` (see the API reference), roughly every 10 s while playing and on pause.
 

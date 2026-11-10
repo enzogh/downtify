@@ -5,7 +5,10 @@
 * ``/api/users...`` - admins manage every account.
 * ``/api/activity...`` - admins read the activity log and see what is
   playing; every player reports what it plays to
-  ``POST /api/activity/playback``.
+  ``POST /api/activity/playback``. Anyone sees their own players
+  (``GET /api/activity/devices``, also pushed as ``now_playing``
+  frames) and can pause or resume one from another
+  (``POST /api/activity/devices/command``).
 
 Who may call what is in :data:`downtify.auth.RULES`; the routes here
 only check *whose* data it is. Stores: :mod:`downtify.users`,
@@ -490,9 +493,98 @@ async def report_playback(request: Request) -> dict[str, Any]:
         track=track,
         position=position,
         ip=api.request_ip(request),
+        player_id=player,
     )
     if started:
         await api.log_activity(
             request, 'playback', track_label(track), {'track': track}
         )
+    await api.announce_devices(me.user_id)
+    return {'ok': True}
+
+
+@router.get('/api/activity/devices')
+def my_devices(request: Request) -> list[dict[str, Any]]:
+    """The signed-in account's own devices, Spotify Connect style: the
+    players heard from in the last 90 seconds (most recent first), then
+    every other open page or app as an ``idle`` row (``track`` null).
+    ``[{player, client, track, paused, position, started_at,
+    seconds_ago, idle, app}]`` - ``player`` is the id a page reports
+    with (its WebSocket ``client_id``), so a page can leave itself out."""
+
+    me = _me(request)
+    return api.devices_for_user(me.user_id)
+
+
+#: What one of your players can be asked to do from another.
+DEVICE_COMMANDS = frozenset({'pause', 'play', 'load', 'transfer'})
+#: The most songs a ``load`` command carries (the rest of a long queue
+#: stays behind).
+MAX_LOAD_FILES = 500
+
+
+def _load_fields(payload: dict[str, Any]) -> dict[str, Any]:
+    """A ``load`` command's queue: ``files`` (library paths), ``index``
+    (the one to start), ``position`` (seconds into it) and
+    ``playing``. ``400`` without a usable song."""
+
+    raw = payload.get('files')
+    files = (
+        [str(item)[:1024] for item in raw if str(item or '').strip()]
+        if isinstance(raw, list)
+        else []
+    )[:MAX_LOAD_FILES]
+    if not files:
+        raise HTTPException(status_code=400, detail='files is required')
+    try:
+        index = int(payload.get('index') or 0)
+        position = float(payload.get('position') or 0)
+    except (TypeError, ValueError) as exc:
+        raise HTTPException(status_code=400, detail='Bad position') from exc
+    return {
+        'files': files,
+        'index': min(max(index, 0), len(files) - 1),
+        'position': max(0.0, position),
+        'playing': payload.get('playing') is not False,
+    }
+
+
+@router.post('/api/activity/devices/command')
+async def command_device(request: Request) -> dict[str, Any]:
+    """Ask another of your own devices to do something: ``{player,
+    action, ...}``.
+
+    * ``pause`` / ``play`` - pause or resume what it plays.
+    * ``load`` - play ``files`` from ``index`` at ``position`` seconds
+      (``playing`` false: cue it paused) - playback moved there.
+    * ``transfer`` - send what it plays (its queue and place) to the
+      device ``to`` (as a ``load``), then pause.
+
+    Sent as a ``player_command`` frame to your own pages and apps only;
+    the one whose id is ``player`` obeys. ``404`` when that device isn't
+    listed by ``GET /api/activity/devices``.
+    """
+
+    me = _me(request)
+    payload = await _json(request)
+    action = str(payload.get('action') or '')
+    if action not in DEVICE_COMMANDS:
+        raise HTTPException(status_code=400, detail='Unknown action')
+    player = str(payload.get('player') or '')[:64]
+    known = {row['player'] for row in api.devices_for_user(me.user_id)}
+    if not player or player not in known:
+        raise HTTPException(status_code=404, detail='Player not found')
+    message: dict[str, Any] = {
+        'type': 'player_command',
+        'player': player,
+        'action': action,
+    }
+    if action == 'load':
+        message.update(_load_fields(payload))
+    elif action == 'transfer':
+        target = str(payload.get('to') or '')[:64]
+        if not target:
+            raise HTTPException(status_code=400, detail='to is required')
+        message['to'] = target
+    await api.state.connections.send_user(me.user_id, message)
     return {'ok': True}

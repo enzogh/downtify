@@ -1,57 +1,64 @@
 <template>
-  <!-- The line is the wrapper's border, and the tabs scroll sideways in
-       their own box: the active tab's bar hangs 1px below its tab, over that
-       line, so the box needs 1px of room there (pb-px, pulled back by -mb-px).
-       Without it the bar was 1px of vertical overflow, which
-       overflow-x-auto turns into a scrollbar-less vertical scroll: the wheel
-       moved the tabs by a pixel and cut the counter's top border. -->
-  <div class="border-b border-line">
-    <div
-      role="tablist"
-      class="-mb-px flex gap-6 overflow-x-auto overflow-y-hidden pb-px [scrollbar-width:none] sm:gap-7"
+  <!-- Spotify's filter pills: one row that slides sideways under a
+       finger when it doesn't fit, the current one filled in green. -->
+  <div
+    ref="root"
+    role="tablist"
+    class="-mx-4 flex snap-x scroll-px-4 gap-2 overflow-x-auto px-4 py-0.5 [scrollbar-width:none] sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden"
+  >
+    <component
+      :is="item.to ? RouterLink : 'button'"
+      v-for="item in items"
+      :key="item.id"
+      :to="item.to || undefined"
+      :type="item.to ? undefined : 'button'"
+      role="tab"
+      :aria-selected="item.id === modelValue"
+      :data-tab="item.id"
+      class="inline-flex h-9 shrink-0 snap-start items-center gap-1.5 rounded-full px-4 text-[13px] whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+      :class="
+        item.id === modelValue
+          ? 'bg-accent font-semibold text-on-accent'
+          : 'bg-surface-2 font-medium text-fg-2 hover:bg-raised hover:text-fg'
+      "
+      @click="$emit('update:modelValue', item.id)"
     >
-      <component
-        :is="item.to ? RouterLink : 'button'"
-        v-for="item in items"
-        :key="item.id"
-        :to="item.to || undefined"
-        :type="item.to ? undefined : 'button'"
-        role="tab"
-        :aria-selected="item.id === modelValue"
-        class="group relative flex shrink-0 items-center gap-2 pb-3 whitespace-nowrap transition-colors"
-        @click="$emit('update:modelValue', item.id)"
+      {{ item.label }}
+      <span
+        v-if="item.count !== undefined && item.count !== null"
+        class="tabular text-[12px]"
+        :class="item.id === modelValue ? 'opacity-70' : 'text-faint'"
+        >{{ item.count }}</span
       >
-        <span
-          class="eyebrow"
-          :class="
-            item.id === modelValue
-              ? '!text-fg'
-              : '!text-muted group-hover:!text-fg-3'
-          "
-          >{{ item.label }}</span
-        >
-        <UiBadge
-          v-if="item.count !== undefined && item.count !== null"
-          :tone="item.id === modelValue ? 'accent' : 'neutral'"
-        >
-          {{ item.count }}
-        </UiBadge>
-        <span
-          v-if="item.id === modelValue"
-          class="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-accent"
-        />
-      </component>
-    </div>
+    </component>
   </div>
 </template>
 
 <script setup>
+import { nextTick, onMounted, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
-import UiBadge from './UiBadge.vue'
 
-defineProps({
+const props = defineProps({
   items: { type: Array, required: true },
   modelValue: { type: String, default: '' },
 })
 defineEmits(['update:modelValue'])
+
+// The selected pill is never left off the edge of a phone's screen.
+const root = ref(null)
+function reveal() {
+  nextTick(() => {
+    const box = root.value
+    const pill = box?.querySelector(`[data-tab="${props.modelValue}"]`)
+    if (!box || !pill) return
+    const left = pill.offsetLeft - box.offsetLeft
+    if (
+      left < box.scrollLeft ||
+      left + pill.offsetWidth > box.scrollLeft + box.clientWidth
+    )
+      box.scrollTo({ left: Math.max(0, left - 16), behavior: 'smooth' })
+  })
+}
+onMounted(reveal)
+watch(() => props.modelValue, reveal)
 </script>

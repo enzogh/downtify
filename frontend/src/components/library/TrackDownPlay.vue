@@ -17,11 +17,12 @@
       :aria-checked="selected"
       :aria-label="t('library.selectTrack', { title: song.name })"
       class="flex size-[18px] shrink-0 items-center justify-center rounded-[5px] border-[1.5px] transition-colors"
-      :class="
+      :class="[
         selected
           ? 'border-accent bg-accent text-on-accent'
-          : 'border-line-3 hover:border-fg-3'
-      "
+          : 'border-line-3 hover:border-fg-3',
+        ranked ? 'max-sm:hidden' : '',
+      ]"
       @click.stop="emit('toggle')"
       @dblclick.stop
     >
@@ -29,7 +30,10 @@
     </button>
     <span
       v-if="index !== null"
-      class="flex w-6 items-center justify-center text-[13px] text-faint max-sm:hidden"
+      class="flex w-6 shrink-0 items-center justify-center text-[13px] text-faint"
+      :class="
+        ranked ? 'max-sm:font-semibold max-sm:text-fg-2' : 'max-sm:hidden'
+      "
     >
       <EqBars v-if="isCurrent" :size="12" :playing="player.isPlaying.value" />
       <!-- A stream being resolved, where the number was. -->
@@ -144,7 +148,7 @@
          progress bar is w-28 on its own), so nothing ever overlaps the
          duration column; the header spacer below matches this width. -->
     <div
-      class="flex w-40 shrink-0 items-center justify-end gap-2"
+      class="flex shrink-0 items-center justify-end gap-2 sm:w-40"
       @click.stop
       @dblclick.stop
     >
@@ -186,6 +190,8 @@ import { albumLinkFor } from '/src/lib/library'
 import { useI18n } from '/src/i18n'
 
 const props = defineProps({
+  // A chart: the rank shows on phones too, in place of the checkbox.
+  ranked: { type: Boolean, default: false },
   // A song from a search/link/top-songs result.
   song: { type: Object, required: true },
   // Its position in the list, shown as the number; `null` hides it.

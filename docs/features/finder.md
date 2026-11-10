@@ -8,7 +8,7 @@ icon: lucide/columns-3
 
 ## Searching
 
-Open **Discover** from the sidebar (on phones: **More → Discover**): the Finder's search box is at the top of the page, with your recent Finder searches beside it. Searching replaces Discover's suggestions with what was found — songs, albums and artists with **All / Songs / Albums / Artists** chips, as on the regular Search page, but from Deezer only. Clear the box (the **×**) or go back to see the suggestions again; a recent search runs again with one click, and **Clear** forgets them all. Recent searches are kept in this browser only.
+Open **Discover** from the sidebar (on phones: **More → Discover**, or the **Discover** tile on the Search page): the Finder's search box sits right under the page title, with your recent Finder searches beside it. Searching replaces Discover's suggestions with what was found — songs, albums and artists with **All / Songs / Albums / Artists** chips, as on the regular Search page, but from Deezer only. Clear the box (the **×**) or go back to see the suggestions again; a recent search runs again with one click, and **Clear** forgets them all. Recent searches are kept in this browser only.
 
 **Find songs** on an artist Discover suggests (its **⋯** menu) shows that artist's songs here, as a search: Deezer is searched for the artist's name, and only the songs by that very artist — matched by their Deezer id, so a namesake or a song merely called that is left out — are listed, up to the first few hundred.
 

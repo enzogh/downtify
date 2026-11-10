@@ -29,22 +29,26 @@
         />
       </div>
       <GlobalSearch class="min-w-0 flex-1 md:max-w-xl" />
-      <div class="ml-auto hidden items-center gap-1 sm:flex">
+      <div class="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
         <UiIconButton
           icon="keyboard"
           :label="t('shortcuts.title')"
-          class="hidden lg:inline-flex"
+          class="max-lg:hidden"
           @click="openShortcuts"
         />
         <UiIconButton
+          v-if="!auth.user.value"
           :icon="theme.resolved.value === 'dark' ? 'sun' : 'moon'"
           :label="
             theme.resolved.value === 'dark'
               ? t('settings.themeLight')
               : t('settings.themeDark')
           "
+          class="max-sm:hidden"
           @click="theme.toggle()"
         />
+        <ViewModeToggle />
+        <AccountMenu />
       </div>
     </div>
   </header>
@@ -56,6 +60,9 @@ import { useRoute, useRouter } from 'vue-router'
 import AppLogo from '../ui/AppLogo.vue'
 import UiIconButton from '../ui/UiIconButton.vue'
 import GlobalSearch from './GlobalSearch.vue'
+import AccountMenu from './AccountMenu.vue'
+import ViewModeToggle from './ViewModeToggle.vue'
+import { useAuth } from '/src/model/auth'
 import { useTheme } from '/src/model/theme'
 import { useI18n } from '/src/i18n'
 
@@ -63,6 +70,7 @@ const { t } = useI18n()
 const router = useRouter()
 const route = useRoute()
 const theme = useTheme()
+const auth = useAuth()
 
 // vue-router records where history can go in history.state.
 const canGoBack = computed(() => {

@@ -166,14 +166,16 @@ def test_run_download_announces_downloading_only_inside_the_slot(
 
     broadcasts: list[dict] = []
 
-    async def fake_broadcast(message):
+    async def fake_broadcast_job(_users, message):
         broadcasts.append(message)
 
     async def _noop_record(*_args, **_kwargs):
         return None
 
     monkeypatch.setattr(api.state, 'downloader', _Downloader())
-    monkeypatch.setattr(api.state.connections, 'broadcast', fake_broadcast)
+    monkeypatch.setattr(
+        api.state.connections, 'broadcast_job', fake_broadcast_job
+    )
     monkeypatch.setattr(api, '_record_finished_download', _noop_record)
 
     songs = [{'song_id': str(i), 'name': f'Song {i}'} for i in range(3)]

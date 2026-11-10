@@ -3,22 +3,29 @@
     class="mx-auto flex max-w-[1680px] flex-col gap-8 px-4 pt-6 sm:px-6 md:pt-8 lg:px-10"
   >
     <template v-if="!query">
-      <PageHeader :title="t('search.title')" :subtitle="t('search.subtitle')" />
-      <div class="grid gap-4 md:grid-cols-3">
-        <div
-          v-for="tip in tips"
-          :key="tip.title"
-          class="flex flex-col gap-2 rounded-panel border border-line-2 bg-surface p-5"
+      <!-- Spotify's Search page: a big box, then everything to browse. -->
+      <h1 class="text-display text-3xl font-bold sm:text-4xl">
+        {{ t('search.title') }}
+      </h1>
+      <div class="-mt-4 flex flex-col gap-2.5">
+        <button
+          type="button"
+          class="flex h-12 w-full max-w-2xl items-center gap-3 rounded-[10px] bg-invert px-4 text-left text-[15px] font-semibold text-on-invert/60 shadow-float transition-transform active:scale-[0.99]"
+          @click="ui.focusSearch()"
         >
-          <span
-            class="flex size-10 items-center justify-center rounded-[10px]"
-            :class="tip.tone"
-          >
-            <AppIcon :name="tip.icon" :size="20" />
+          <AppIcon name="search" :size="22" class="text-on-invert" />
+          {{ t('search.whatToPlay') }}
+        </button>
+        <p class="flex flex-wrap items-center gap-1.5 text-[13px] text-muted">
+          <AppIcon name="link" :size="14" class="shrink-0" />
+          {{ t('search.linkHint') }}
+          <span class="inline-flex items-center gap-1" aria-hidden="true">
+            <AppIcon name="spotify" :size="14" class="text-spotify" />
+            <AppIcon name="youtube-music" :size="14" class="text-src-ytm" />
+            <AppIcon name="deezer" :size="14" class="text-deezer" />
+            <AppIcon name="soundcloud" :size="14" class="text-src-soundcloud" />
           </span>
-          <p class="mt-1 text-[15px] font-semibold">{{ tip.title }}</p>
-          <p class="text-[13px] text-pretty text-muted">{{ tip.body }}</p>
-        </div>
+        </p>
       </div>
       <section v-if="recent.length" class="flex flex-col gap-3">
         <div class="flex items-center justify-between">
@@ -42,6 +49,37 @@
           >
             <AppIcon name="clock" :size="14" class="text-faint" />{{ term }}
           </RouterLink>
+        </div>
+      </section>
+
+      <section class="flex flex-col gap-3">
+        <h2 class="text-display text-lg font-semibold">
+          {{ t('search.browseAll') }}
+        </h2>
+        <div
+          class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+        >
+          <component
+            :is="tile.open ? 'button' : RouterLink"
+            v-for="tile in browseTiles"
+            :key="tile.id"
+            :to="tile.open ? undefined : tile.to"
+            :type="tile.open ? 'button' : undefined"
+            @click="tile.open && openJamSheet()"
+            class="group relative h-24 overflow-hidden rounded-[10px] p-3.5 text-left text-white transition-transform active:scale-[0.98] sm:h-28"
+            :style="{ backgroundColor: tile.color }"
+          >
+            <span
+              class="text-display relative z-10 block max-w-[75%] text-[17px] leading-tight font-bold text-balance"
+              >{{ tile.label }}</span
+            >
+            <span
+              class="absolute -right-2 -bottom-2 flex size-16 rotate-[25deg] items-center justify-center rounded-[8px] bg-black/20 shadow-lg transition-transform duration-300 group-hover:rotate-[18deg] sm:size-[4.5rem]"
+              aria-hidden="true"
+            >
+              <AppIcon :name="tile.icon" :size="30" />
+            </span>
+          </component>
         </div>
       </section>
     </template>
@@ -213,7 +251,7 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
 import { useLocalStorage } from '@vueuse/core'
 import AppIcon from '/src/components/ui/AppIcon.vue'
 import UiButton from '/src/components/ui/UiButton.vue'
@@ -228,6 +266,8 @@ import TrackList from '/src/components/library/TrackList.vue'
 import { pickTopResult } from '/src/lib/topResult'
 import { useSearch } from '/src/model/search'
 import { useLibrary } from '/src/model/library'
+import { useUi } from '/src/model/ui'
+import { useJamSheet } from '/src/model/jamSheet'
 import { knownArtistPhoto } from '/src/lib/artistPhotoProxy'
 import { useI18n } from '/src/i18n'
 
@@ -235,6 +275,8 @@ const { t } = useI18n()
 const route = useRoute()
 const search = useSearch()
 const library = useLibrary()
+const ui = useUi()
+const { openJamSheet } = useJamSheet()
 const filter = ref('all')
 const recent = useLocalStorage('downtify-recent-searches', [])
 
@@ -350,24 +392,58 @@ function withPhoto(artist) {
   }
 }
 
-const tips = computed(() => [
+// "Browse all": every place to go, each its own colour like Spotify's
+// genre tiles - the way to Discover, Charts, Jam... on a phone too.
+const browseTiles = computed(() => [
   {
-    icon: 'search',
-    tone: 'bg-accent/12 text-accent',
-    title: t('search.tipSearchTitle'),
-    body: t('search.tipSearchBody'),
+    id: 'discover',
+    label: t('nav.discover'),
+    icon: 'sparkle',
+    color: '#8d67ab',
+    to: { name: 'Discover' },
   },
   {
-    icon: 'spotify',
-    tone: 'bg-spotify/12 text-spotify',
-    title: t('search.tipSpotifyTitle'),
-    body: t('search.tipSpotifyBody'),
+    id: 'charts',
+    label: t('nav.charts'),
+    icon: 'trending',
+    color: '#e8115b',
+    to: { name: 'Charts' },
   },
   {
-    icon: 'youtube',
-    tone: 'bg-src-ytm/12 text-src-ytm',
-    title: t('search.tipYoutubeTitle'),
-    body: t('search.tipYoutubeBody'),
+    id: 'jam',
+    label: t('nav.jam'),
+    icon: 'users',
+    color: '#1e3264',
+    to: { name: 'Jam' },
+    open: true,
+  },
+  {
+    id: 'liked',
+    label: t('search.browseLibrary'),
+    icon: 'library',
+    color: '#148a08',
+    to: { name: 'Library' },
+  },
+  {
+    id: 'podcasts',
+    label: t('nav.podcasts'),
+    icon: 'mic',
+    color: '#006450',
+    to: { name: 'Podcasts' },
+  },
+  {
+    id: 'monitor',
+    label: t('nav.monitor'),
+    icon: 'radar',
+    color: '#b06239',
+    to: { name: 'Monitor' },
+  },
+  {
+    id: 'queue',
+    label: t('nav.queue'),
+    icon: 'download',
+    color: '#509bf5',
+    to: { name: 'Queue' },
   },
 ])
 </script>

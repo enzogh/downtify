@@ -259,6 +259,7 @@ class NowPlaying:
         track: dict[str, Any],
         position: float = 0.0,
         ip: str = '',
+        player_id: str = '',
     ) -> bool:
         """Note a player's report; whether it started a new song (the
         caller logs that). *state* ``stopped`` removes the player."""
@@ -275,6 +276,7 @@ class NowPlaying:
             started = previous is None or previous['song'] != song
             self._players[key] = {
                 'user_id': int(user_id),
+                'player_id': player_id or player,
                 'username': username,
                 'client': client,
                 'ip': ip,
@@ -294,10 +296,50 @@ class NowPlaying:
             if now - entry['seen'] > self._timeout:
                 del self._players[key]
 
+    def forget_player(self, user_id: int, player_id: str) -> bool:
+        """Drop *user_id*'s player *player_id* (a web page that closed or
+        reloaded); whether there was one."""
+
+        with self._lock:
+            doomed = [
+                key
+                for key, entry in self._players.items()
+                if key[0] == int(user_id)
+                and (entry.get('player_id') or key[1]) == player_id
+            ]
+            for key in doomed:
+                del self._players[key]
+        return bool(doomed)
+
     def forget_user(self, user_id: int) -> None:
         with self._lock:
             for key in [k for k in self._players if k[0] == user_id]:
                 del self._players[key]
+
+    def for_user(self, user_id: int) -> list[dict[str, Any]]:
+        """*user_id*'s own players heard from lately (their browsers and
+        apps), most recently heard first - for the "playing on another
+        device" bar. ``position`` is where it was at the last report;
+        ``seconds_ago`` says how long ago that was."""
+
+        now = time.monotonic()
+        with self._lock:
+            self._drop_stale(now)
+            entries = [
+                {
+                    'player': e.get('player_id') or key[1],
+                    'device_id': key[1].split(':', 1)[0],
+                    'client': e['client'],
+                    'track': e['track'],
+                    'paused': e['paused'],
+                    'position': e['position'],
+                    'started_at': e['started_at'],
+                    'seconds_ago': round(now - e['seen'], 1),
+                }
+                for key, e in self._players.items()
+                if key[0] == int(user_id)
+            ]
+        return sorted(entries, key=lambda e: e['seconds_ago'])
 
     def active(self) -> list[dict[str, Any]]:
         """Players heard from lately, playing ones first."""

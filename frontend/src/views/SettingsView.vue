@@ -1037,7 +1037,7 @@ const version = localStorage.getItem('version')
 // an admin's to change.
 const sections = computed(() =>
   settingsSectionsFor(
-    auth.user.value?.role,
+    auth.viewRole.value,
     [
       { id: 'general', icon: 'sliders', label: t('settings.general') },
       {

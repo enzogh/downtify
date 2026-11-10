@@ -14,6 +14,12 @@ Başlığın yanında [şarkıyı beğenmek](liked-songs.md) için bir kalp vard
 
 **Şimdi çalıyor**’u açmak için başlığa veya kapağa ya da genişlet düğmesine tıklayın.
 
+## Başka bir cihazda çalıyor
+
+Aynı hesapla başka bir yerde — başka bir tarayıcı, ikinci bir sekme, uygulama — oturum açtıysanız ve burada hiçbir şey çalmazken orada müzik çalıyorsa, oynatıcının üstündeki bir çubuk şarkıyla birlikte o cihazda **çalıyor** (veya **duraklatıldı**) der. **Burada dinle** şarkıyı bu sayfada kaldığı yerden sürdürür ve diğer cihazda duraklatır; oynat/duraklat düğmesi onu orada kontrol eder, çarpı ise o cihaz başka bir şarkı çalana kadar çubuğu gizler. Yalnızca kendi cihazlarınız görünür.
+
+Çalma listelerinizdeki değişiklikler de diğer cihazlarınıza hemen ulaşır: eklenen, kaldırılan veya yeri değiştirilen şarkılar yenilemeden görünür.
+
 ## Şimdi çalıyor
 
 Geçerli albüm kapağından alınan renklerle tonlanmış tam ekran bir görünüm:

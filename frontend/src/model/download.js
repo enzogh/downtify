@@ -20,6 +20,10 @@ const queueVersion = ref(0)
 const itemsByKey = new Map()
 let queueBatchDepth = 0
 let queueDirty = false
+// Jobs taken off this queue while they still ran: their late progress
+// frames must not bring the row back. Forgotten once the song is asked
+// for again here or the server lists it again.
+const dismissed = new Set()
 
 function touchQueue() {
   queueDirty = true
@@ -67,6 +71,16 @@ class DownloadItem {
     this.filename = null
     // 1-based place among the waiting jobs (`GET /api/queue`), or null.
     this.position = null
+    // Who asked for it (`GET /api/queue`: an admin sees usernames) and
+    // whether this account is one of them.
+    this.users = []
+    this.mine = true
+    // Last time the server mentioned the job (list or frame), 0 = never:
+    // a row the server knew and no longer lists was taken off its queue.
+    this.seenAt = 0
+    // When it ended (ms; `finished_at` from the server, kept across its
+    // restarts), 0 while it hasn't.
+    this.finishedAt = 0
     this.updatedAt = Date.now()
   }
   get key() {
@@ -91,10 +105,14 @@ class DownloadItem {
   setDownloaded() {
     batchQueueChanges(() => {
       this.patch({ progress: 100 })
+      if (!this.isDownloaded() && !this.finishedAt)
+        this.patch({ finishedAt: Date.now() })
       this.setStatus(STATUS.DOWNLOADED)
     })
   }
   setError() {
+    if (!this.isErrored() && !this.finishedAt)
+      this.patch({ finishedAt: Date.now() })
     this.setStatus(STATUS.ERROR)
   }
   resetForRetry() {
@@ -106,6 +124,7 @@ class DownloadItem {
       web_download_url: null,
       filename: null,
       position: null,
+      finishedAt: 0,
       updatedAt: Date.now(),
     })
   }
@@ -148,12 +167,20 @@ class DownloadItem {
   }
 }
 
+function sameUsers(a, b) {
+  return a.length === b.length && a.every((name, i) => name === b[i])
+}
+
 function applyServerJob(item, job) {
+  const users = Array.isArray(job.users) ? job.users.map(String) : []
+  item.seenAt = Date.now()
   item.patch({
     ...(job.provider ? { provider: job.provider } : {}),
     message: job.message || '',
     progress: job.status === 'done' ? 100 : job.progress || 0,
     position: job.position ?? null,
+    mine: job.mine !== false,
+    ...(sameUsers(users, item.users) ? {} : { users }),
   })
   if (job.status === 'done') {
     item.setFile(job.filename)
@@ -164,6 +191,11 @@ function applyServerJob(item, job) {
     item.setDownloading()
   } else {
     item.setStatus(STATUS.QUEUED)
+  }
+  const ended = Number(job.finished_at) * 1000
+  if ((job.status === 'done' || job.status === 'error') && ended > 0) {
+    // The server's own time: a reload keeps "newest first" right.
+    item.patch({ finishedAt: ended, updatedAt: ended })
   }
 }
 
@@ -183,6 +215,7 @@ function appendSong(song) {
 }
 
 function upsertSong(song) {
+  dismissed.delete(jobSongKey(song))
   const existing = findItem(song)
   if (existing) {
     existing.song = { ...existing.song, ...song }
@@ -233,14 +266,40 @@ function ensureQueuePoll() {
   }, 3000)
 }
 
+/**
+ * Rows still waiting or downloading here that the server knew of and no
+ * longer lists: taken off its queue (by another device, another account
+ * or "remove"), so no frame will ever finish them. Rows only this page
+ * has added so far (`seenAt` 0), or heard of since the list was asked
+ * for, stay.
+ */
+export function staleActiveItems(items, listedKeys, askedAt) {
+  return items.filter(
+    (item) =>
+      (item.isDownloading() || item.isQueued()) &&
+      item.seenAt &&
+      item.seenAt < askedAt &&
+      !listedKeys.has(item.key)
+  )
+}
+
 export async function syncQueueFromServer() {
+  const askedAt = Date.now()
   const res = await API.getQueue()
+  const listed = new Set()
   batchQueueChanges(() => {
     for (const job of res.data || []) {
       if (!job.song) continue
+      const key = jobSongKey(job.song)
+      listed.add(key)
+      dismissed.delete(key)
       const item = findItem(job.song) || appendSong(job.song)
       applyServerJob(item, job)
     }
+    const stale = new Set(
+      staleActiveItems(downloadQueue.value, listed, askedAt)
+    )
+    if (stale.size) removeItems((item) => stale.has(item))
   })
   if (queueHasActiveItems()) ensureQueuePoll()
   else stopQueuePoll()
@@ -253,8 +312,15 @@ API.onMessage((data) => {
     return
   }
   if (!data.song) return
+  if (dismissed.has(jobSongKey(data.song))) return
+  const known = findItem(data.song)
+  // A progress frame sent before the job ended, arriving after it: the
+  // row stays finished (a new download starts again from 0).
+  if (known?.isDownloaded() && data.status === 'downloading' && data.progress)
+    return
   batchQueueChanges(() => {
-    const item = findItem(data.song) || appendSong(data.song)
+    const item = known || appendSong(data.song)
+    item.seenAt = Date.now()
     item.wsUpdate(data.status === 'done' ? { ...data, progress: 100 } : data)
     if (data.status === 'done') {
       item.setFile(data.filename)
@@ -367,6 +433,7 @@ export function useDownloadManager() {
   }
 
   async function download(song) {
+    dismissed.delete(jobSongKey(song))
     const item = findItem(song) || appendSong(song)
     item.setDownloading()
     try {
@@ -421,12 +488,28 @@ export function useDownloadManager() {
 
   function remove(song) {
     const songId = jobSongKey(song)
+    if (songId) dismissed.add(songId)
     removeItems((item) => item.key === songId)
     if (songId) API.removeQueueItem(songId).catch(() => {})
   }
 
+  /** Admins: take every job they didn't ask for off the queue. */
+  async function clearOthers() {
+    await API.clearOthersQueue()
+    removeItems((item) => {
+      if (item.mine) return false
+      if (item.key && (item.isDownloading() || item.isQueued()))
+        dismissed.add(item.key)
+      return true
+    })
+  }
+
   async function clearAll() {
     await API.clearQueue()
+    for (const item of downloadQueue.value) {
+      if (item.key && (item.isDownloading() || item.isQueued()))
+        dismissed.add(item.key)
+    }
     removeItems(() => true)
   }
 
@@ -460,6 +543,7 @@ export function useDownloadManager() {
     remove,
     clearAll,
     clearCompleted,
+    clearOthers,
     loading,
   }
 }

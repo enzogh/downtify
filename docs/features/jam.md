@@ -10,16 +10,16 @@ Jams need [accounts](users.md): every member signs in to the same Castify server
 
 ## Starting a Jam
 
-Open **Jam** in the side menu (on phones: **More → Jam**), or the people button in the player bar, then:
+The Jam opens in a sheet over whatever you're listening to, like Spotify's — no page to leave. Open it from the **Devices** button in the player (**Start a Jam**), the people button in the player bar, the **Jam** tile on the Search page or **Jam** in the side menu (on phones: **More → Jam**), then:
 
 - **Start a Jam** opens an empty one.
 - **Start with what's playing** takes the song playing now (at the same position) and the songs after it in your queue into the new Jam.
 
-The page then shows the Jam's six-character code. **Copy code** and **Copy link** give you something to send: the link opens the Jam page with the code already filled in.
+The sheet then shows a QR code to scan with a phone's camera and the Jam's six-character code. **Invite** opens the phone's share menu (**Copy link** where there is none) and **Copy code** copies the code: the link opens the Jam sheet with the code already filled in. While you're in a Jam, a blue strip above the player shows who's in and the code; tap it to open the sheet again.
 
 ## Joining a Jam
 
-On the Jam page, type the code under **Join a Jam** (case, spaces and dashes don't matter; a pasted join link works too) and press **Join**. Joining another Jam leaves the one you were in.
+In the Jam sheet, type the code under **Join a Jam** (case, spaces and dashes don't matter; a pasted join link works too) and press **Join**. Joining another Jam leaves the one you were in.
 
 As soon as you join, your player switches to the Jam's queue and catches up with the song and the position everyone else is at.
 
@@ -31,7 +31,7 @@ While you are in a Jam, the usual queue actions feed the Jam instead of your own
 - **Play next** puts them right after the current song.
 - **Play** on a song, album or playlist puts it right after the current song and starts it, for everyone.
 
-The Jam page lists the shared queue with who added each song. Anyone can remove a song they added.
+The Jam sheet lists the shared queue with who added each song. Anyone can remove a song they added.
 
 ::: info Streams don't join
 Songs that are only streamed (search results, Discover, charts) can't go into a Jam: everybody plays the same file from the library. Download a song first to share it.
@@ -39,9 +39,9 @@ Songs that are only streamed (search results, Discover, charts) can't go into a 
 
 ## Controlling playback
 
-Play, pause, previous, next and seeking — from the player bar, the full-screen player, media keys or the Jam page — act on the Jam for everyone. A song that ends moves the whole Jam on to the next one.
+Play, pause, previous, next and seeking — from the player bar, the full-screen player, media keys or the Jam sheet — act on the Jam for everyone. A song that ends moves the whole Jam on to the next one.
 
-The host can turn **Guests can control playback** off on the Jam page. Then only the host can play, pause, skip, seek, reorder or remove other people's songs; guests can still add songs and remove their own.
+The host can turn **Guests can control playback** off in the Jam sheet. Then only the host can play, pause, skip, seek, reorder or remove other people's songs; guests can still add songs and remove their own.
 
 Shuffle, repeat and autoplay are off during a Jam: the shared queue plays in its order.
 

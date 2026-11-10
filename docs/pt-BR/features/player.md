@@ -14,6 +14,12 @@ Ao lado do título há um coração para [curtir a música](liked-songs.md); o c
 
 Clique no título ou na capa, ou no botão de expandir, para abrir **Tocando agora**.
 
+## Tocando em outro dispositivo
+
+Quando você está conectado com a mesma conta em outro lugar — outro navegador, outra aba, o app — e a música toca lá enquanto nada toca aqui, uma barra acima do player mostra **Tocando em** esse dispositivo (ou **Pausado em**) com a música. **Ouvir aqui** continua a música nesta página de onde parou e a pausa no outro dispositivo; o botão tocar/pausar a controla lá, e o X esconde a barra até esse dispositivo tocar outra música. Só os seus dispositivos aparecem.
+
+Mudanças nas suas playlists também chegam na hora aos seus outros dispositivos: músicas adicionadas, removidas ou reordenadas aparecem sem recarregar.
+
 ## Tocando agora
 
 Uma visão em tela cheia, tingida com cores tiradas da capa do álbum atual:

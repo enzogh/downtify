@@ -134,7 +134,8 @@ function startPlaybackReports() {
     lastState = state
     lastFile = track?.file || ''
     API.reportPlayback(report).catch(() => {
-      // Best effort: it only feeds the admins' Activity page.
+      // Best effort: it feeds the admins' Activity page and this
+      // account's other devices.
     })
   }
 
@@ -150,9 +151,12 @@ function startPlaybackReports() {
       if (file !== lastFile || state !== lastState) send(state)
     }
   )
-  watch(player.currentTime, () => {
-    if (player.isPlaying.value && Date.now() - lastSent > HEARTBEAT_MS)
-      send('playing')
+  watch(player.currentTime, (now, before) => {
+    if (!player.isPlaying.value) return
+    // A jump (a seek) is told at once, so another device picking the
+    // song up starts where it is - not where it was 30 s ago.
+    const jumped = Math.abs((Number(now) || 0) - (Number(before) || 0)) > 4
+    if (jumped || Date.now() - lastSent > HEARTBEAT_MS) send('playing')
   })
   window.addEventListener('pagehide', () => {
     if (lastFile) send('stopped')
