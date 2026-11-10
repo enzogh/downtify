@@ -84,7 +84,12 @@ def _post_rotation(url: str) -> None:
     response.raise_for_status()
 
 
-def rotate_exit_ip(seen_generation: int, now: Optional[float] = None) -> bool:
+def rotate_exit_ip(
+    seen_generation: int,
+    now: Optional[float] = None,
+    *,
+    reason: str = 'YouTube',
+) -> bool:
     """Make sure the exit IP changed since *seen_generation*.
 
     Returns ``True`` when a retry is worth it: another download already
@@ -104,8 +109,9 @@ def rotate_exit_ip(seen_generation: int, now: Optional[float] = None) -> bool:
             _recent.popleft()
         if len(_recent) >= MAX_ROTATIONS_PER_HOUR:
             logger.warning(
-                'YouTube blocked this IP but {} new IPs were already '
+                '{} blocked this IP but {} new IPs were already '
                 'tried this hour; not rotating again',
+                reason,
                 len(_recent),
             )
             return False
@@ -116,7 +122,7 @@ def rotate_exit_ip(seen_generation: int, now: Optional[float] = None) -> bool:
             logger.warning('Could not get a new exit IP: {}', exc)
             return False
         _generation += 1
-        logger.info('YouTube blocked the exit IP; switched to a new one')
+        logger.info('{} blocked the exit IP; switched to a new one', reason)
         return True
 
 
