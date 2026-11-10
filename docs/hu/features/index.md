@@ -23,7 +23,6 @@ A Castify mindent lefed, amire szükséged van egy helyi zenekönyvtár felépí
 | [Beépített lejátszó](player.md) | Játszd le a könyvtárad a böngészőben: sorkezelés, időzített dalszövegek, elalvási időzítő, billentyűzet és médiabillentyűk |
 | [Hangerő-normalizálás](playback-normalization.md) | Minden dal hasonló hangerővel szól, egy rendszergazda által indított mérések alapján; a hangfájlok sosem változnak |
 | [Kedvelt számok](liked-songs.md) | Szívvel kedvelj egy számot; a kedvelt számokból magától megjelenik egy lejátszási lista |
-| [Podcastok](podcasts.md) | Iratkozz fel egy műsorra RSS-csatornával, Spotify-hivatkozással vagy névvel; az új epizódok maguktól letöltődnek és címkézést kapnak |
 | [Felhasználók és bejelentkezés](users.md) | Bejelentkezés felhasználónévvel és jelszóval (`admin` / `downtify` új szerveren), adminisztrátori és normál felhasználói fiókok, felhasználónkénti beállítások és tevékenységnapló a bejelentkezésekről és arról, ki mit hallgat |
 | [Explicit jelölés](explicit-marker.md) | Az „E” az explicit szövegű dalok mellett — a keresésben, a Könyvtárban és a lejátszóban — és a fájl címkéiben |
 | [Hang cseréje](replace-audio.md) | Rossz dal vagy verzió? Válaszd ki a helyeset a YouTube Musicon vagy a YouTube-on; a fájl megtartja nevét, címkéit és lejátszási listáit |

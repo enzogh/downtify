@@ -84,6 +84,10 @@ Aynı anda kaç şarkının indirileceğini belirler. Bir hazır değer (1, 2, 3
 
 Sınır her toplu indirmeye — çalma listesi/albüm indirmeleri, toplu kuyruk uç noktası ve CSV [kitaplık içe aktarmaları](library-import.md) — ve **[Mevcut müzik klasörleri](external-library.md)** eşitleme aramalarına (sözler, kapaklar, tür) uygulanır. Yeni parçaları tek tek indiren Çalma Listesi İzleyici taramalarına **uygulanmaz**. Bu değeri Ayarlar’da değiştirmek yeniden başlatmadan hemen etkili olur; sunucu `1–30` dışındaki her değeri bu aralığa çeker.
 
+Yuvalar hesaplar arasında adil biçimde paylaştırılır. Her boş yuva, o anda en az şarkı indiren hesaba gider; böylece birinin sıraya koyduğu uzun bir çalma listesi, başkasının sonradan istediği tek bir şarkıyı bekletmez: şarkı bir sonraki boş yuvada başlar. Her hesabın şarkıları kendi sırasını korur. Tek hesaplı (ya da oturum açmanın kapalı olduğu) bir sunucuda kuyruk sırayla ilerler. Değeri düşürmek, süren indirmelerin bitmesine izin verir; hiçbir şey yarıda kesilmez.
+
+Bir çalma listesinde ya da albümde şarkılar inerken Castify sıradaki birkaç şarkıyı (tüm ayrıntılarını ve YouTube Music eşleşmesini) şimdiden arar; böylece her şarkı yuva bulur bulmaz inmeye başlayabilir. Bu yalnızca YouTube Music (ya da YouTube) ilk [ses kaynağı](#audio-provider) olduğunda olur; Soulseek, Deezer ve SoundCloud yine şarkının sırası geldiğinde arar. Hiçbir zaman *Paralel indirmeler* + 2 şarkıdan fazla ileriye bakmaz ve bu arada ses kaynaklarını değiştirmek şarkının yeniden aranmasını sağlar.
+
 ## İndirmeler arası bekleme
 
 Castify’ın, istekleri arka arkaya ateşlemek yerine bir şarkıyı bitirdikten sonra sonrakine başlamadan önce yapılandırılabilir sayıda saniye beklemesini sağlar.

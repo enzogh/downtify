@@ -190,12 +190,35 @@
                   </UiMenu>
                 </div>
               </div>
-              <p
+              <!-- A song that won't play: say so, and offer the two ways
+                   out instead of leaving the listener stuck on it. -->
+              <div
                 v-if="player.playError.value"
-                class="flex items-center gap-2 text-sm text-danger"
+                class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm"
+                role="alert"
               >
-                <AppIcon name="alert" :size="16" />{{ t('player.cannotPlay') }}
-              </p>
+                <span class="flex min-w-0 items-center gap-2 text-danger">
+                  <AppIcon name="alert" :size="16" class="shrink-0" />{{
+                    t('player.cannotPlaySong')
+                  }}
+                </span>
+                <span class="flex items-center gap-2">
+                  <button
+                    type="button"
+                    class="flex h-9 items-center gap-1.5 rounded-full bg-white px-4 text-xs font-semibold text-[#0b0c0e] transition-transform active:scale-95"
+                    @click="player.retry()"
+                  >
+                    <AppIcon name="refresh" :size="14" />{{ t('common.retry') }}
+                  </button>
+                  <button
+                    type="button"
+                    class="flex h-9 items-center gap-1.5 rounded-full border border-white/25 px-4 text-xs font-semibold text-white transition-colors hover:bg-white/10 active:scale-95"
+                    @click="player.next()"
+                  >
+                    <AppIcon name="next" :size="14" />{{ t('player.skipSong') }}
+                  </button>
+                </span>
+              </div>
             </div>
 
             <!-- Main panel -->
@@ -227,17 +250,39 @@
               <span class="tabular w-12 text-xs text-white/65">{{
                 formatDuration(scrub ?? player.currentTime.value)
               }}</span>
-              <WaveSeekBar
-                class="flex-1"
-                :model-value="scrub ?? player.currentTime.value"
-                :max="player.duration.value || 1"
-                :label="t('player.seek')"
-                :value-text="formatDuration(player.currentTime.value)"
-                :playing="player.isPlaying.value"
-                :palette="palette"
-                @update:model-value="(v) => (scrub = v)"
-                @commit="commitSeek"
-              />
+              <div class="relative min-w-0 flex-1">
+                <WaveSeekBar
+                  :model-value="scrub ?? player.currentTime.value"
+                  :max="player.duration.value || 1"
+                  :label="t('player.seek')"
+                  :value-text="formatDuration(player.currentTime.value)"
+                  :playing="player.isAdvancing.value"
+                  :palette="palette"
+                  @update:model-value="(v) => (scrub = v)"
+                  @commit="commitSeek"
+                />
+                <!-- Waiting on the song: say so over the (still) bar,
+                     so a silent moment never looks like a frozen app. -->
+                <Transition name="fade">
+                  <div
+                    v-if="loading.labelKey.value"
+                    class="pointer-events-none absolute inset-0 flex items-center justify-center"
+                  >
+                    <span
+                      class="flex max-w-full items-center gap-2 rounded-full border border-white/15 bg-black/45 px-3 py-1.5 text-xs font-medium text-white shadow-[0_8px_24px_rgba(0,0,0,0.3)] backdrop-blur-md"
+                      role="status"
+                    >
+                      <span
+                        class="size-3 shrink-0 animate-spin rounded-full border-2 border-accent border-r-transparent"
+                        aria-hidden="true"
+                      />
+                      <span class="truncate">{{
+                        t(loading.labelKey.value)
+                      }}</span>
+                    </span>
+                  </div>
+                </Transition>
+              </div>
               <span class="tabular w-12 text-right text-xs text-white/65">{{
                 formatDuration(player.duration.value)
               }}</span>
@@ -258,15 +303,6 @@
               <div
                 class="flex flex-1 items-center justify-between lg:flex-none lg:justify-center lg:gap-7"
               >
-                <button
-                  v-if="track?.isPodcast"
-                  type="button"
-                  class="flex size-11 items-center justify-center rounded-full text-white/80 transition-colors hover:bg-white/10"
-                  :aria-label="t('podcasts.skipBack')"
-                  @click="player.seekBy(-15)"
-                >
-                  <AppIcon name="skip-back" :size="22" />
-                </button>
                 <button
                   type="button"
                   class="flex size-11 items-center justify-center rounded-full transition-colors hover:bg-white/10"
@@ -295,9 +331,16 @@
                       ? t('player.pause')
                       : t('player.play')
                   "
+                  :aria-busy="loading.visible.value"
                   @click="player.toggle()"
                 >
+                  <span
+                    v-if="loading.visible.value"
+                    class="size-6 animate-spin rounded-full border-[3px] border-current border-r-transparent"
+                    aria-hidden="true"
+                  />
                   <AppIcon
+                    v-else
                     :name="player.isPlaying.value ? 'pause' : 'play'"
                     :size="26"
                   />
@@ -311,16 +354,6 @@
                   <AppIcon name="next" :size="28" />
                 </button>
                 <button
-                  v-if="track?.isPodcast"
-                  type="button"
-                  class="flex size-11 items-center justify-center rounded-full text-white/80 transition-colors hover:bg-white/10"
-                  :aria-label="t('podcasts.skipForward')"
-                  @click="player.seekBy(30)"
-                >
-                  <AppIcon name="skip-forward" :size="22" />
-                </button>
-                <button
-                  v-else
                   type="button"
                   class="relative flex size-11 items-center justify-center rounded-full transition-colors hover:bg-white/10"
                   :class="
@@ -369,22 +402,6 @@
 
               <div class="hidden flex-1 items-center justify-end gap-2 lg:flex">
                 <DevicesButton v-if="auth.user.value" size="lg" on-dark />
-                <UiMenu
-                  v-if="track?.isPodcast"
-                  :items="speedMenu"
-                  :label="t('podcasts.playbackSpeed')"
-                >
-                  <template #trigger>
-                    <button
-                      type="button"
-                      class="flex h-10 items-center gap-2 rounded-full px-3 text-xs font-semibold text-white/75 transition-colors hover:bg-white/10"
-                      :aria-label="t('podcasts.playbackSpeed')"
-                    >
-                      <AppIcon name="gauge" :size="20" />
-                      <span class="tabular">{{ speedLabel }}</span>
-                    </button>
-                  </template>
-                </UiMenu>
                 <UiMenu :items="sleepMenu" :label="t('player.sleepTimer')">
                   <template #trigger>
                     <button
@@ -416,23 +433,6 @@
             <div class="mt-4 flex items-center justify-between gap-2 lg:hidden">
               <div class="flex shrink-0 items-center gap-1">
                 <DevicesButton v-if="auth.user.value" size="lg" on-dark />
-                <UiMenu
-                  v-if="track?.isPodcast"
-                  :items="speedMenu"
-                  :label="t('podcasts.playbackSpeed')"
-                  align="start"
-                >
-                  <template #trigger>
-                    <button
-                      type="button"
-                      class="flex h-10 items-center gap-2 rounded-full px-3 text-xs font-semibold text-white/75"
-                      :aria-label="t('podcasts.playbackSpeed')"
-                    >
-                      <AppIcon name="gauge" :size="20" />
-                      <span class="tabular">{{ speedLabel }}</span>
-                    </button>
-                  </template>
-                </UiMenu>
                 <UiMenu
                   :items="sleepMenu"
                   :label="t('player.sleepTimer')"
@@ -505,6 +505,7 @@ import UpNextPanel from '../player/UpNextPanel.vue'
 import TrackDetails from '../player/TrackDetails.vue'
 import TrackArtistLinks from '../library/TrackArtistLinks.vue'
 import EqualizerPanel from '../player/EqualizerPanel.vue'
+import { usePlaybackLoading } from '../player/usePlaybackLoading'
 import { usePlayer } from '/src/model/player'
 import { useDownloadManager, useProgressTracker } from '/src/model/download'
 import { useLibrary } from '/src/model/library'
@@ -536,6 +537,7 @@ const { t } = useI18n()
 const isMobile = useMediaQuery('(max-width: 1023px)')
 const now = useNow({ interval: 15000 })
 const scrub = ref(null)
+const loading = usePlaybackLoading(() => player.loadingPhase.value)
 const closeButton = ref(null)
 
 const track = computed(() => player.currentTrack.value)
@@ -660,16 +662,6 @@ const sleepLabel = computed(() => {
   const minutes = Math.max(1, Math.ceil((at - now.value.getTime()) / 60000))
   return t('player.minutesLeft', { count: minutes })
 })
-
-const SPEEDS = [0.75, 1, 1.25, 1.5, 1.75, 2]
-const speedLabel = computed(() => `${player.playbackRate.value}×`)
-const speedMenu = computed(() =>
-  SPEEDS.map((rate) => ({
-    label: `${rate}×`,
-    checked: player.playbackRate.value === rate,
-    action: () => player.setPlaybackRate(rate),
-  }))
-)
 
 const sleepMenu = computed(() => [
   { heading: t('player.sleepTimer') },

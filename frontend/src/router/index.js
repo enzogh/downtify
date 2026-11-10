@@ -119,16 +119,6 @@ const routes = [
     component: () => import('/src/views/FinderBrowseView.vue'),
   },
   {
-    path: '/podcasts',
-    name: 'Podcasts',
-    component: () => import('/src/views/PodcastsView.vue'),
-  },
-  {
-    path: '/podcasts/show',
-    name: 'PodcastShow',
-    component: () => import('/src/views/PodcastShowView.vue'),
-  },
-  {
     // Deezer's own "what's trending" chart: tracks, albums, artists and
     // playlists, one tab each.
     path: `/charts/:tab(${CHARTS_TABS})?`,

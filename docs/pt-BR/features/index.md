@@ -23,7 +23,6 @@ O Castify cobre tudo de que você precisa para montar e manter uma biblioteca de
 | [Player integrado](player.md) | Toque sua biblioteca no navegador: gerenciamento da fila, letras sincronizadas, timer de sono, teclado e teclas de mídia |
 | [Normalização de volume](playback-normalization.md) | Toque todas as músicas com volume parecido, a partir de medições que um admin inicia; os arquivos de áudio nunca são alterados |
 | [Músicas curtidas](liked-songs.md) | Dê um coração a uma música para curti-la; uma playlist com tudo o que você curtiu aparece sozinha |
-| [Podcasts](podcasts.md) | Assine um programa por feed RSS, link do Spotify ou nome; os novos episódios são baixados e etiquetados sozinhos |
 | [Usuários e login](users.md) | Login com usuário e senha (`admin` / `downtify` em um servidor novo), contas de administrador e de usuário comum, preferências por usuário e um registro de atividade com logins e o que cada um ouve |
 | [Marca de conteúdo explícito](explicit-marker.md) | O "E" ao lado de músicas com letra explícita — na busca, na Biblioteca e no player — e nas tags do arquivo |
 | [Substituir áudio](replace-audio.md) | Música ou versão errada? Escolha a certa no YouTube Music ou no YouTube; o arquivo mantém nome, tags e playlists |

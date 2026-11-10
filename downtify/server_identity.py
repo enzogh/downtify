@@ -164,7 +164,8 @@ def server_info(
                 if password_sign_in is None
                 else password_sign_in
             ),
-            'podcasts': True,
+            # Podcasts were removed; False hides them in the apps.
+            'podcasts': False,
             'discover': True,
             'lyrics': True,
             'library_sync': True,

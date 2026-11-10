@@ -23,7 +23,6 @@ Castify, Spotify’dan yerel bir müzik kitaplığı oluşturmak ve sürdürmek 
 | [Yerleşik oynatıcı](player.md) | Kitaplığınızı tarayıcıda çalın: kuyruk yönetimi, eşzamanlı sözler, uyku zamanlayıcısı, klavye ve medya tuşları |
 | [Ses seviyesi normalleştirme](playback-normalization.md) | Bir yöneticinin başlattığı ölçümlerle tüm şarkıları benzer ses seviyesinde çalın; ses dosyaları asla değiştirilmez |
 | [Beğenilen şarkılar](liked-songs.md) | Bir şarkıyı kalple beğenin; beğendiğiniz her şeyin çalma listesi kendiliğinden belirir |
-| [Podcast’ler](podcasts.md) | Bir programa RSS akışı, Spotify bağlantısı veya adla abone olun; yeni bölümler kendiliğinden indirilir ve etiketlenir |
 | [Kullanıcılar ve oturum açma](users.md) | Kullanıcı adı ve parolayla oturum açma (yeni sunucuda `admin` / `downtify`), yönetici ve normal kullanıcı hesapları, kullanıcı başına tercihler ve oturum açmaların ve herkesin ne dinlediğinin etkinlik günlüğü |
 | [Müstehcen içerik işareti](explicit-marker.md) | Açık sözlü şarkıların yanındaki “E” — aramada, Kitaplıkta ve oynatıcıda — ve dosyanın etiketlerinde |
 | [Sesi değiştir](replace-audio.md) | Yanlış şarkı ya da sürüm mü? Doğrusunu YouTube Music veya YouTube’da seçin; dosya adını, etiketlerini ve çalma listelerini korur |

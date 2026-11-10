@@ -49,7 +49,7 @@ Everything is kept for a week like the similar artists, and a Spotify album's ma
 
 ## What counts as a listen
 
-A song counts once per play, after **half of it** (or **four minutes**, for long songs) has actually played — skipping ahead to the middle doesn't count, and songs shorter than 30 seconds never do. Podcast episodes don't count.
+A song counts once per play, after **half of it** (or **four minutes**, for long songs) has actually played — skipping ahead to the middle doesn't count, and songs shorter than 30 seconds never do.
 
 Listens are kept on the server, so what you play on your phone shapes the suggestions on your desktop too. To start over, open **Hidden artists → Clear listening history**; your library and liked songs stay as they are.
 

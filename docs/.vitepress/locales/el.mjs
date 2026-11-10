@@ -79,7 +79,6 @@ export default {
       'features/player.md': 'Ενσωματωμένο πρόγραμμα αναπαραγωγής',
       'features/jam.md': 'Jam',
       'features/liked-songs.md': 'Αγαπημένα τραγούδια',
-      'features/podcasts.md': 'Podcasts',
       'features/discover.md': 'Ανακάλυψη',
       'features/collaborative-playlists.md': 'Συνεργατικές λίστες',
       'features/playlist-order.md': 'Σειρά και επαναλαμβανόμενα κομμάτια',

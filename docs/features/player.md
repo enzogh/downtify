@@ -14,6 +14,10 @@ Next to the title there is a heart to [like the song](liked-songs.md); phones le
 
 Click the title or cover, or the expand button, to open **Now playing**.
 
+On a phone, swipe the song in the bar to the left for the next song or to the right for the previous one, and hold it to open its menu (album, artist, lyrics, **Up next** and details).
+
+When a song can't be played, the bar and **Now playing** say so and offer **Try again** — a song that isn't downloaded is looked up again — and **Skip**. A song that goes silent while it loads shows the loading state even when the browser doesn't report the wait (iPhones in particular), as soon as the progress stops moving for a couple of seconds.
+
 ## Playing on another device
 
 Castify works like Spotify Connect between the places you're signed in to with the same account — browsers, tabs, the phone app. The **Devices** button in the player bar and in Now playing (green while music plays on another of them) opens **Connect to a device**:
@@ -44,7 +48,7 @@ Four panels sit next to the cover on wide screens, or replace it on phones — t
 - **Details** — title, artist, album, track number, year, length, format, size, date added and file path.
 - **Equalizer** — shape the sound with ten frequency bands; see [Equalizer](#equalizer).
 
-When the song changes, Now playing doesn't jump: the new cover fades in over the old one, the blurred background follows, and the title and lyrics slide out and back in. While Now playing is open, the lyrics of the next three library songs in **Up next** load ahead of time, so a song's lyrics are on screen as soon as it starts. Streamed songs and podcast episodes have no saved lyrics and are skipped. With the system's *reduce motion* setting on, the change is instant.
+When the song changes, Now playing doesn't jump: the new cover fades in over the old one, the blurred background follows, and the title and lyrics slide out and back in. While Now playing is open, the lyrics of the next three library songs in **Up next** load ahead of time, so a song's lyrics are on screen as soon as it starts. Streamed songs have no saved lyrics and are skipped. With the system's *reduce motion* setting on, the change is instant.
 
 Now playing is part of the page address (`?np=1`, plus `&panel=lyrics|queue|details|equalizer`), so the browser's Back button closes it and a reload keeps it open.
 
@@ -88,7 +92,7 @@ iOS may pause Web Audio when the screen locks or you switch apps, which stops pl
 
 ## Building the queue
 
-Playing an album, artist, playlist or the track list queues those tracks in order, starting from the one you picked. **Shuffle** on a collection starts it in a random order. Tracks you haven't downloaded play in full right in the queue, streamed live: the server relays YouTube's audio as it arrives, so a song starts within a second or two instead of after a download, and seeking works at once. While one plays, the next one is already being prepared one track ahead, so playback runs through undownloaded rows without stopping — even where the browser itself can't reach YouTube. When matching an undownloaded track, the player skips search results more than 10 seconds away from its known duration. A streamed track is never saved or liked, but it stays in the remembered queue: after a reload it is matched again when it plays. To keep one, add it to a playlist: it downloads and moves in.
+Playing an album, artist, playlist or the track list queues those tracks in order, starting from the one you picked. **Shuffle** on a collection starts it in a random order. Tracks you haven't downloaded play in full right in the queue, streamed live: the server relays YouTube's audio as it arrives, so a song starts within a second or two instead of after a download, and seeking works at once. While one plays, the next one is already being prepared one track ahead, so playback runs through undownloaded rows without stopping — even where the browser itself can't reach YouTube. When a song still isn't playing after a moment — being found, or waiting on a slow connection — the player bar and Now playing say so (**Finding the song…**, **Loading…**, then **Still loading…**) with a spinner on the play button, and the progress bar holds still until the sound actually starts. When matching an undownloaded track, the player skips search results more than 10 seconds away from its known duration. A streamed track is never saved or liked, but it stays in the remembered queue: after a reload it is matched again when it plays. To keep one, add it to a playlist: it downloads and moves in.
 
 Every track's menu (the **⋯** button, or right-click on desktop) has:
 
@@ -102,11 +106,11 @@ The same actions apply to a multi-track selection in the Library.
 
 The queue, the current track, its position, shuffle and repeat are remembered, so reopening Castify resumes where you left off (queues of more than 2000 tracks aren't remembered). Deleted files drop out of the queue automatically.
 
-**Autoplay** (Settings → General, or the switch at the top of **Up next**; on by default, saved per device) keeps the music going when the queue runs out. As soon as something plays, Up next lists ten songs like the last ones in the queue, under **Recommended · Autoplay**, right after it. Click one to play it now. When the queue reaches its last track they join it, and the next suggestions are fetched from its new end. Songs you haven't downloaded stream, and the next one is prepared ahead like any other streamed track, so playback carries on without a pause. With repeat on they stay listed but don't join the queue until you turn repeat off. Autoplay doesn't run for podcasts or in library-only mode.
+**Autoplay** (Settings → General, or the switch at the top of **Up next**; on by default, saved per device) keeps the music going when the queue runs out. As soon as something plays, Up next lists ten songs like the last ones in the queue, under **Recommended · Autoplay**, right after it. Click one to play it now. When the queue reaches its last track they join it, and the next suggestions are fetched from its new end. Songs you haven't downloaded stream, and the next one is prepared ahead like any other streamed track, so playback carries on without a pause. With repeat on they stay listed but don't join the queue until you turn repeat off. Autoplay doesn't run in library-only mode.
 
 Whatever comes next is prepared as soon as it is queued, and again 30 seconds before the current track ends if it still isn't ready, so a song added late (by autoplay or by hand) also starts without waiting.
 
-**Fade between songs** (Settings → General) fades a song out over its last seconds and the next one in, from off up to 12 seconds. It applies when the queue moves on by itself. A song you pick yourself starts at full volume, and nothing fades when no song follows (the end of the queue, repeat one, or a sleep timer set to stop after the track). Podcast episodes never fade. The setting is saved per device, like the volume.
+**Fade between songs** (Settings → General) fades a song out over its last seconds and the next one in, from off up to 12 seconds. It applies when the queue moves on by itself. A song you pick yourself starts at full volume, and nothing fades when no song follows (the end of the queue, repeat one, or a sleep timer set to stop after the track). The setting is saved per device, like the volume.
 
 ## Keyboard and media keys
 
@@ -130,7 +134,7 @@ Whatever comes next is prepared as soon as it is queued, and again 30 seconds be
 
 Shortcuts are ignored while you type in a field or while a dialog is open.
 
-The player also reports the current track to the operating system (Media Session), so lock-screen controls, headset buttons and keyboard media keys work, with the cover shown where the system supports it. As on Spotify, the lock screen of an iPhone or an Android phone (the installed app too) shows **previous** and **next** for a song, never 10-second jumps, with a progress bar you can drag; a podcast episode gets **back 15 s** and **forward 15 s** instead.
+The player also reports the current track to the operating system (Media Session), so lock-screen controls, headset buttons and keyboard media keys work, with the cover shown where the system supports it. As on Spotify, the lock screen of an iPhone or an Android phone (the installed app too) shows **previous** and **next** for a song, never 10-second jumps, with a progress bar you can drag.
 
 ## How it works
 

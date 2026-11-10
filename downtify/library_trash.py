@@ -284,10 +284,32 @@ def _renameat2() -> Callable[[int, bytes, int, bytes, int], int]:
     return via_syscall
 
 
+#: macOS's ``renameatx_np`` flag for "fail if the target exists".
+_RENAME_EXCL = 0x00000004
+
+
+def _renameatx_np() -> Callable[[int, bytes, int, bytes, int], int]:
+    """macOS's no-replace rename, the counterpart of Linux's renameat2."""
+    libc = ctypes.CDLL(None, use_errno=True)
+    rename = getattr(libc, 'renameatx_np', None)
+    if rename is None:
+        raise TrashError('atomic_move_unsupported')
+    rename.argtypes = [
+        ctypes.c_int,
+        ctypes.c_char_p,
+        ctypes.c_int,
+        ctypes.c_char_p,
+        ctypes.c_uint,
+    ]
+    rename.restype = ctypes.c_int
+    return rename
+
+
 def _rename_no_replace(source: Path, target: Path) -> None:
     """Same-mount atomic rename which never replaces a concurrent file."""
-    if sys.platform == 'linux':
-        rename = _renameat2()
+    if sys.platform in {'linux', 'darwin'}:
+        linux = sys.platform == 'linux'
+        rename = _renameat2() if linux else _renameatx_np()
         with (
             _directory_fd(source.parent) as source_fd,
             _directory_fd(target.parent) as target_fd,
@@ -297,7 +319,7 @@ def _rename_no_replace(source: Path, target: Path) -> None:
                 os.fsencode(source.name),
                 target_fd,
                 os.fsencode(target.name),
-                _RENAME_NOREPLACE,
+                _RENAME_NOREPLACE if linux else _RENAME_EXCL,
             ):
                 code = ctypes.get_errno()
                 if code == errno.EEXIST:

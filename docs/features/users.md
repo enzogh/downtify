@@ -33,12 +33,12 @@ Browsers signed in before the upgrade sign in again. Phones paired before it sta
 
 | | Admin | User |
 |---|---|---|
-| Listen, search, download, like, Discover, Charts, Finder, podcasts | ✓ | ✓ |
+| Listen, search, download, like, Discover, Charts, Finder | ✓ | ✓ |
 | Pair phone apps (to their own account) | ✓ | ✓ |
 | Settings → General (their own account and preferences), Apps, About | ✓ | ✓ |
 | Every other setting (sources, files, tags, Navidrome, library, server), renaming the server | ✓ | |
 | [Share their own playlists](#sharing-playlists) (view-only), follow public ones, save copies | ✓ | ✓ (when the admin allows it) |
-| Delete files and playlists (a user only [what they downloaded](#deleting-songs) and their own playlists), manage their own playlist watches and podcast subscriptions, replace a track's audio, edit artist photos | ✓ | ✓ (own only) |
+| Delete files and playlists (a user only [what they downloaded](#deleting-songs) and their own playlists), manage their own playlist watches, replace a track's audio, edit artist photos | ✓ | ✓ (own only) |
 | [Hide songs, albums and artists from users](#hiding-from-users) | ✓ | |
 | Manage users, see the activity log | ✓ | |
 
@@ -52,7 +52,7 @@ The library is shared: every account sees every song anyone downloaded — in th
 
 Likes, playlists (downloaded and Library-created) and the download queue stay yours, unless you are an admin — or you [share a playlist](#sharing-playlists) so others can see it. Listening is shared — anyone can play, preview or stream any track, and add anything to their own playlists. Asking for a track someone else is already downloading joins their job instead of fetching it twice: one queue row, one download, and an ownership each — each waiter sees their place in the queue.
 
-Podcasts, playlist watches and Discover history work the same way: each account subscribes to its own shows, follows its own playlists and artists, and trains its own suggestions. An admin sees every account’s rows. Listening itself stays shared — anyone can play, preview or stream any track.
+Playlist watches and Discover history work the same way: each account follows its own playlists and artists, and trains its own suggestions. An admin sees every account’s rows. Listening itself stays shared — anyone can play, preview or stream any track.
 
 ### Sharing playlists
 
@@ -119,7 +119,7 @@ In **Settings → Users** an admin can:
 
 - **Add a user** — username (3 to 32 letters, digits, `.`, `-` or `_`), password (at least 8 characters) and role.
 - **Edit** a user — rename them, make them an admin or a user, or give them a new password (which signs them out of their browsers; their apps stay paired).
-- **Delete** a user — their apps are unpaired and their browsers signed out. Their files stay on disk (admins can still see them); their likes, playlists, podcast subscriptions, watches, suggestions history and traffic counters go with them.
+- **Delete** a user — their apps are unpaired and their browsers signed out. Their files stay on disk (admins can still see them); their likes, playlists, watches, suggestions history and traffic counters go with them.
 - **Sign out everyone** — every app of every user is unpaired and every browser signed out, yours too.
 
 There's always at least one admin: the last one can't be deleted or made a user, and you can't delete your own account.

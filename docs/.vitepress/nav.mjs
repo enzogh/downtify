@@ -49,7 +49,6 @@ export const NAV = [
         page: 'features/playback-normalization.md',
       },
       { title: 'Liked Songs', page: 'features/liked-songs.md' },
-      { title: 'Podcasts', page: 'features/podcasts.md' },
       { title: 'Discover', page: 'features/discover.md' },
       { title: 'Users & Sign-in', page: 'features/users.md' },
       { title: 'Mobile Apps', page: 'features/mobile-apps.md' },

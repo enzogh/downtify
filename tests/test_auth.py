@@ -455,11 +455,6 @@ def test_the_signing_key_is_private_and_kept(tmp_path):
         ('POST', '/api/stream/live/prefetch', CLIENT),
         ('POST', '/api/finder/search', ADMIN),
         ('PUT', '/api/likes', CLIENT),
-        ('PUT', '/api/podcasts/episodes/12/playback', CLIENT),
-        ('DELETE', '/api/podcasts/episodes/12', USER),
-        ('POST', '/api/podcasts/subscribe', USER),
-        ('PATCH', '/api/podcasts/shows/3', USER),
-        ('DELETE', '/api/podcasts/shows/3', USER),
         ('POST', '/api/monitor/playlists', USER),
         ('PATCH', '/api/monitor/playlists/3', USER),
         ('DELETE', '/api/monitor/playlists/3', USER),
@@ -954,9 +949,6 @@ def test_auth_routes_are_served(client):
 @pytest.mark.parametrize(
     ('method', 'path', 'scope'),
     [
-        ('POST', '/api/podcasts/resolve', CLIENT),
-        ('POST', '/api/podcasts/episodes/3/download', CLIENT),
-        ('POST', '/api/podcasts/subscribe', USER),
         ('POST', '/api/artists/art/bulk', CLIENT),
         ('POST', '/api/artists/profile/ensure', CLIENT),
         ('POST', '/api/artists/art/upload', ADMIN),

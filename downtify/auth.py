@@ -978,9 +978,6 @@ RULES: list[tuple[frozenset[str], re.Pattern[str], str]] = [
         (_m('POST'), r'^/api/playlist/m3u$', USER),
         (_m('POST', 'DELETE'), r'^/api/playlists/(incomplete|batches)', USER),
         (_m('DELETE'), r'^/api/discover/listens$', USER),
-        (_m('POST'), r'^/api/podcasts/subscribe$', USER),
-        (_m('PATCH', 'DELETE'), r'^/api/podcasts/shows/\d+$', USER),
-        (_m('DELETE'), r'^/api/podcasts/episodes/\d+$', USER),
         (_m('POST', 'PATCH', 'DELETE'), r'^/api/monitor/playlists', USER),
         # Where a song came from and what each watch added (own
         # watches; every one for an admin).
@@ -1046,13 +1043,6 @@ RULES: list[tuple[frozenset[str], re.Pattern[str], str]] = [
         (_ALL, r'^/api/discover/blocked$', CLIENT),
         (_m('GET', 'POST'), r'^/api/song-links$', CLIENT),
         (_m('DELETE'), r'^/api/song-links/[A-Za-z0-9_-]+$', CLIENT),
-        (_READ, r'^/api/podcasts/', CLIENT),
-        (
-            _m('POST'),
-            r'^/api/podcasts/(resolve|episodes/\d+/download)$',
-            CLIENT,
-        ),
-        (_m('PUT'), r'^/api/podcasts/episodes/\d+/playback$', CLIENT),
         (_m('POST'), r'^/api/activity/playback$', CLIENT),
         # One's own players, and pausing one from another.
         (_READ, r'^/api/activity/devices$', CLIENT),
@@ -1069,7 +1059,6 @@ RULES: list[tuple[frozenset[str], re.Pattern[str], str]] = [
         (_m('POST'), r'^/api/queue/(pause|resume)$', ADMIN),
         (_m('POST'), r'^/api/likes/clear$', ADMIN),
         (_m('DELETE'), r'^/api/discover/listens$', ADMIN),
-        (_m('POST', 'PATCH', 'DELETE'), r'^/api/podcasts/', ADMIN),
         (_m('POST', 'PATCH', 'DELETE'), r'^/api/monitor/', ADMIN),
         (_ALL, r'^/api/(users|activity)(/|$)', ADMIN),
     ]

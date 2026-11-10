@@ -84,6 +84,10 @@ Contrôle combien de morceaux sont téléchargés en même temps. Choisissez une
 
 La limite s’applique à tout téléchargement par lot — téléchargements de playlists/albums, endpoint de file par lot et [imports de bibliothèque](library-import.md) CSV — et aux recherches de la synchronisation des **[Dossiers de musique existants](external-library.md)** (paroles, pochettes, genre). Elle ne s’applique **pas** aux passages du Suivi de playlists, qui téléchargent les nouveaux morceaux un par un. Modifier cette valeur dans les Paramètres prend effet immédiatement sans redémarrage ; le serveur ramène toute valeur hors de `1–30` dans cet intervalle.
 
+Les emplacements sont partagés équitablement entre les comptes. Chaque emplacement libre revient au compte qui a le moins de morceaux en cours de téléchargement à ce moment-là : une longue playlist lancée par une personne ne bloque donc pas un morceau demandé ensuite par quelqu’un d’autre, qui démarre au prochain emplacement libre. Les morceaux de chaque compte gardent leur ordre. Sur un serveur avec un seul compte (ou sans connexion), la file avance simplement dans l’ordre. Baisser la valeur laisse se terminer les téléchargements déjà en cours ; rien n’est interrompu.
+
+Dans une playlist ou un album, pendant les téléchargements, Castify cherche déjà les deux morceaux suivants (leurs détails complets et leur correspondance YouTube Music), pour que chaque morceau puisse démarrer dès qu’il obtient un emplacement. Cela n’a lieu que si YouTube Music (ou YouTube) est la première [source audio](#audio-provider) ; Soulseek, Deezer et SoundCloud cherchent toujours au moment où vient le tour du morceau. Castify ne cherche jamais plus de *Téléchargements parallèles* + 2 morceaux à l’avance, et modifier les sources audio entre-temps relance la recherche d’un morceau.
+
 ## Pause entre téléchargements
 
 Fait attendre Castify un nombre de secondes configurable après avoir terminé un morceau avant de commencer le suivant, au lieu d’enchaîner les requêtes.

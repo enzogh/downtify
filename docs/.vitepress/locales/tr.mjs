@@ -78,7 +78,6 @@ export default {
       'features/player.md': 'Yerleşik oynatıcı',
       'features/jam.md': 'Jam',
       'features/liked-songs.md': 'Beğenilen şarkılar',
-      'features/podcasts.md': 'Podcast’ler',
       'features/discover.md': 'Keşfet',
       'features/collaborative-playlists.md': 'Birlikte düzenlenen listeler',
       'features/playlist-order.md': 'Sıralama ve tekrarlanan şarkılar',

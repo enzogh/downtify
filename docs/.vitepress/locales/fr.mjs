@@ -78,7 +78,6 @@ export default {
       'features/player.md': 'Lecteur intégré',
       'features/jam.md': 'Jam',
       'features/liked-songs.md': 'Titres likés',
-      'features/podcasts.md': 'Podcasts',
       'features/discover.md': 'Découvrir',
       'features/collaborative-playlists.md': 'Playlists collaboratives',
       'features/playlist-order.md': 'Ordre et titres répétés',

@@ -40,7 +40,6 @@ from .navidrome_index import NavidromeIndex
 from .playlist_catalog import PlaylistCatalog
 from .playlist_hidden import HiddenSongs, PlaylistHiddenSongs
 from .playlist_spotify_cache import PlaylistSpotifyCache
-from .podcasts import PodcastStore, sync_show
 from .release_files import matches_release
 from .sqlite_utils import ClosingConnection
 from .track_index import TrackIndex, normalize_spotify_track_id
@@ -146,11 +145,9 @@ def _is_due(last_checked: Optional[str], interval_minutes: int) -> bool:
 
 KIND_PLAYLIST = 'playlist'
 KIND_ARTIST = 'artist'
-#: A podcast watch. ``spotify_id`` (the watch table's generic unique-key
-#: column) holds the show's RSS feed URL for this kind — there is no
-#: Spotify id involved. See ``downtify.podcasts`` for everything else
-#: about the show (retention, episodes, tags): this table only knows
-#: how to schedule the check.
+#: A podcast watch, from when Castify followed podcasts. Podcasts were
+#: removed: rows of this kind left in old databases are never listed
+#: or checked.
 KIND_PODCAST = 'podcast'
 
 SOURCE_SPOTIFY = 'spotify'
@@ -527,14 +524,16 @@ class PlaylistMonitorDB:
         with self._connect() as conn:
             if user_id is None:
                 rows = conn.execute(
-                    'SELECT * FROM monitored_playlists '
-                    'ORDER BY created_at DESC'
+                    'SELECT * FROM monitored_playlists WHERE kind != ? '
+                    'ORDER BY created_at DESC',
+                    (KIND_PODCAST,),
                 ).fetchall()
             else:
                 rows = conn.execute(
-                    'SELECT * FROM monitored_playlists WHERE user_id = ? '
+                    'SELECT * FROM monitored_playlists '
+                    'WHERE user_id = ? AND kind != ? '
                     'ORDER BY created_at DESC',
-                    (int(user_id),),
+                    (int(user_id), KIND_PODCAST),
                 ).fetchall()
         return [_row_to_playlist(r) for r in rows]
 
@@ -1875,62 +1874,6 @@ def _download_cover_for_watch(
 _checks_running: set[int] = set()
 
 
-async def check_podcast_watch(
-    playlist: MonitoredPlaylist,
-    db: PlaylistMonitorDB,
-    podcasts: PodcastStore,
-    download_dir: Path,
-    broadcast: Callable[[dict[str, Any]], Any],
-    loop: asyncio.AbstractEventLoop,
-) -> int:
-    """Sync one podcast watch: ``playlist.spotify_id`` is its feed URL.
-
-    Only the scheduling row lives here; the show itself, its retention
-    policy and its episodes are ``podcasts.py``'s job — this is just the
-    glue ``check_watch`` needs to treat a podcast like any other kind of
-    watch. Returns the number of episodes downloaded.
-    """
-
-    show = await asyncio.to_thread(
-        podcasts.get_show_by_feed_url, playlist.spotify_id
-    )
-    if show is None:
-        logger.warning(
-            'Podcast watch "{}" has no matching show row (feed {})',
-            playlist.name,
-            playlist.spotify_id,
-        )
-        await asyncio.to_thread(
-            db.update_playlist, playlist.id, last_checked=_now_iso()
-        )
-        return 0
-
-    def _progress(info: dict[str, Any]) -> None:
-        asyncio.run_coroutine_threadsafe(
-            broadcast({'type': 'podcast_progress', **info}), loop
-        )
-
-    try:
-        async with queue_pause.running():
-            count = await asyncio.to_thread(
-                sync_show,
-                podcasts,
-                show,
-                download_dir,
-                progress=_progress,
-                should_continue=lambda: not queue_pause.paused,
-            )
-    except Exception:
-        logger.exception('Podcast sync failed for "{}"', playlist.name)
-        count = 0
-    await asyncio.to_thread(
-        db.update_playlist, playlist.id, last_checked=_now_iso()
-    )
-    if count:
-        asyncio.run_coroutine_threadsafe(broadcast({'type': 'podcasts'}), loop)
-    return count
-
-
 async def check_watch(
     playlist: MonitoredPlaylist,
     db: PlaylistMonitorDB,
@@ -1939,7 +1882,6 @@ async def check_watch(
     loop: asyncio.AbstractEventLoop,
     settings: Optional[dict[str, Any]] = None,
     library: Optional[LibraryStores] = None,
-    podcasts: Optional[PodcastStore] = None,
 ) -> int:
     saved = settings if settings is not None else {}
     if enabled(saved):
@@ -1954,7 +1896,6 @@ async def check_watch(
             loop,
             settings,
             library,
-            podcasts,
         )
 
 
@@ -1966,7 +1907,6 @@ async def _check_watch_online(
     loop: asyncio.AbstractEventLoop,
     settings: Optional[dict[str, Any]] = None,
     library: Optional[LibraryStores] = None,
-    podcasts: Optional[PodcastStore] = None,
 ) -> int:
     """Run the right check for a watch by kind, unless one is already running."""
     if playlist.id in _checks_running:
@@ -1975,20 +1915,7 @@ async def _check_watch_online(
     _checks_running.add(playlist.id)
     try:
         if playlist.kind == KIND_PODCAST:
-            if podcasts is None:
-                logger.warning(
-                    'Podcast watch "{}" but podcast store not ready',
-                    playlist.name,
-                )
-                return 0
-            return await check_podcast_watch(
-                playlist,
-                db,
-                podcasts,
-                Path(downloader.download_dir),
-                broadcast,
-                loop,
-            )
+            return 0  # podcasts were removed; old rows are ignored
         if playlist.kind == KIND_ARTIST:
             return await check_artist(
                 playlist, db, downloader, broadcast, loop, settings, library
@@ -2007,7 +1934,6 @@ async def monitor_loop(
     loop: asyncio.AbstractEventLoop,
     settings: Optional[dict[str, Any]] = None,
     get_library: Optional[Callable[[], LibraryStores]] = None,
-    get_podcasts: Optional[Callable[[], Optional[PodcastStore]]] = None,
 ) -> None:
     """Background task: sweep all enabled playlists that are due for checking."""
     while True:
@@ -2032,7 +1958,6 @@ async def monitor_loop(
                         loop,
                         settings,
                         get_library() if get_library else None,
-                        get_podcasts() if get_podcasts else None,
                     )
                     if count > 0:
                         logger.info(

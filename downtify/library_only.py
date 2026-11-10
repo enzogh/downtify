@@ -50,9 +50,6 @@ REMOTE_PREFIXES = (
 )
 REMOTE_ACTIONS = {
     '/api/artists/profile/bio',
-    '/api/podcasts/search',
-    '/api/podcasts/resolve',
-    '/api/podcasts/subscribe',
     '/api/library/upgrade/scan',
     '/api/library/upgrade/start',
     '/api/library/upgrade/resume',
@@ -73,7 +70,6 @@ def remote_route(path: str, method: str) -> bool:
         or path.startswith(REMOTE_PREFIXES)
         or (path in REMOTE_ACTIONS and method not in {'DELETE', 'PUT'})
         or (path.startswith('/api/monitor') and method in {'POST', 'PATCH'})
-        or (path.startswith('/api/podcasts/') and path.endswith('/download'))
     )
 
 

@@ -77,6 +77,16 @@ const playError = ref('')
 // queue advancing into it) - rows spin on it. Prefetches don't land
 // here: they resolve silently one track ahead.
 const resolving = ref(null)
+// What playback waits on right now, for the loading state the players
+// show: 'finding' while an unstored stream resolves, 'loading' while the
+// audio waits for data, '' otherwise.
+const loadingPhase = computed(() => {
+  if (resolving.value) return 'finding'
+  return isBuffering.value ? 'loading' : ''
+})
+// Whether the playhead really moves: playing, and not stalled waiting
+// for data. Progress bars glide on this, never on isPlaying alone.
+const isAdvancing = computed(() => isPlaying.value && !isBuffering.value)
 
 // shuffleOrder is a plain array; this makes `upcoming` notice changes.
 const shuffleVersion = ref(0)
@@ -93,6 +103,53 @@ let fadeFrame = 0
 // The track restoreTime belongs to: any other one starts at 0.
 let restoreIndex = -1
 let playbackAttempt = 0
+// Start held until the track's loudness is known (startPlayback): the
+// pause that hold causes isn't the listener's, so it keeps the spinner.
+let holdingStart = false
+
+// Stall watchdog: some browsers (iOS Safari above all) can go silent on
+// a slow stream without ever firing `waiting`. Playing, yet the playhead
+// hasn't moved for this long, counts as loading until it moves again.
+export const STALL_MS = 2500
+let lastAdvanceAt = 0
+let lastSeenTime = -1
+let stallTimer = 0
+let stalledByWatchdog = false
+
+function noteAdvance(time) {
+  if (time === lastSeenTime) return
+  lastSeenTime = time
+  lastAdvanceAt = Date.now()
+  if (stalledByWatchdog) {
+    stalledByWatchdog = false
+    isBuffering.value = false
+  }
+}
+
+function checkStall() {
+  if (!audio || audio.paused || !isPlaying.value || isBuffering.value) return
+  // A hidden page gets throttled timers and timeupdates: no guessing then.
+  if (typeof document !== 'undefined' && document.hidden) return
+  if (Date.now() - lastAdvanceAt > STALL_MS) {
+    stalledByWatchdog = true
+    isBuffering.value = true
+  }
+}
+
+function startStallWatch() {
+  lastAdvanceAt = Date.now()
+  if (stallTimer || typeof setInterval !== 'function') return
+  stallTimer = setInterval(checkStall, 500)
+}
+
+function stopStallWatch() {
+  clearInterval(stallTimer)
+  stallTimer = 0
+  if (stalledByWatchdog) {
+    stalledByWatchdog = false
+    isBuffering.value = false
+  }
+}
 
 // ── Remote control (a Jam) ───────────────────────────────────────────
 // While a hook is set, what the listener asks for (play, skip, seek,
@@ -137,6 +194,7 @@ function ensureAudio() {
   audio.playbackRate = playbackRate.value
   audio.addEventListener('timeupdate', () => {
     currentTime.value = audio.currentTime
+    noteAdvance(audio.currentTime)
     // Safety net near the end: whatever is next by now (a track queued
     // late, a prefetch that failed) gets prepared before it is due.
     if (duration.value - audio.currentTime < PREPARE_BEFORE_END_SECONDS) {
@@ -161,19 +219,27 @@ function ensureAudio() {
   audio.addEventListener('ended', onEnded)
   audio.addEventListener('play', () => {
     isPlaying.value = true
+    startStallWatch()
     scheduleFade()
   })
   audio.addEventListener('pause', () => {
     isPlaying.value = false
+    stopStallWatch()
+    // Paused by the system (a call, headphones out) mid-stall: nothing
+    // is loading for the listener any more.
+    if (!holdingStart && !resolving.value) isBuffering.value = false
   })
   audio.addEventListener('waiting', () => {
     isBuffering.value = true
   })
   audio.addEventListener('playing', () => {
+    stalledByWatchdog = false
+    lastAdvanceAt = Date.now()
     isBuffering.value = false
     playError.value = ''
   })
   audio.addEventListener('error', () => {
+    stopStallWatch()
     isBuffering.value = false
     playError.value = 'unplayable'
   })
@@ -571,6 +637,7 @@ function startPlayback(a) {
     // plays at the wrong level.
     const identity = trackIdentity(track)
     const url = a.src
+    holdingStart = true
     a.pause()
     applyTrackNormalization(null)
     // Build/resume during the user gesture, before awaiting the measurement.
@@ -583,6 +650,7 @@ function startPlayback(a) {
         trackIdentity(playlist.value[currentIndex.value]) !== identity
       )
         return
+      holdingStart = false
       applyTrackNormalization(profile)
       isBuffering.value = false
       resumeEqualizer()
@@ -590,6 +658,7 @@ function startPlayback(a) {
     })
     return
   }
+  holdingStart = false
   applyTrackNormalization(known)
   resumeEqualizer()
   a.play().catch(() => {})
@@ -616,9 +685,20 @@ function play() {
   startPlayback(a)
 }
 
+/** Try the current song again; a stream looks its audio up afresh. */
+function retry() {
+  const index = currentIndex.value
+  const track = playlist.value[index]
+  if (!track) return
+  if (track.stream) playlist.value[index] = { ...track, url: '' }
+  resolveFailures = 0
+  playAt(index)
+}
+
 function pause() {
   if (hooked('pause')) return
   playbackAttempt += 1
+  holdingStart = false
   isBuffering.value = false
   if (audio) audio.pause()
 }
@@ -984,7 +1064,7 @@ function updatePositionState() {
 }
 
 watch(currentTrack, (track) => updateMediaSession(track))
-watch([duration, isPlaying, playbackRate], () => updatePositionState())
+watch([duration, isAdvancing, playbackRate], () => updatePositionState())
 watch(currentTime, (now, before) => {
   // A seek, or every few seconds while playing.
   const jumped = Math.abs((Number(now) || 0) - (Number(before) || 0)) > 2
@@ -1020,9 +1100,11 @@ watch(libraryOnly, (enabled) => {
   currentIndex.value = playlist.value.indexOf(selected)
   if (shuffle.value) buildShuffleOrder()
 })
-watch(isPlaying, (playing) => {
+// Stalled on the network counts as paused there too, or the lock
+// screen's bar would run ahead of the silent song.
+watch(isAdvancing, (advancing) => {
   if (typeof navigator !== 'undefined' && 'mediaSession' in navigator) {
-    navigator.mediaSession.playbackState = playing ? 'playing' : 'paused'
+    navigator.mediaSession.playbackState = advancing ? 'playing' : 'paused'
   }
 })
 
@@ -1115,6 +1197,9 @@ export function usePlayer() {
     context,
     isPlaying,
     isBuffering,
+    isAdvancing,
+    loadingPhase,
+    retry,
     playError,
     currentTime,
     duration,

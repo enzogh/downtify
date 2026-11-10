@@ -8,6 +8,17 @@
       <div class="absolute inset-x-3 bottom-0 h-0.5 bg-line-2 md:hidden">
         <div class="h-full bg-accent" :style="{ width: `${smoothPercent}%` }" />
       </div>
+      <!-- Waiting on the song: a sweep along the progress line says it's
+           on its way (the bar itself holds still meanwhile). -->
+      <Transition name="fade">
+        <div
+          v-if="loading.visible.value"
+          class="pointer-events-none absolute inset-x-3 bottom-0 h-0.5 overflow-hidden md:inset-x-0 md:top-0 md:bottom-auto"
+          aria-hidden="true"
+        >
+          <div class="mini-loading-sweep h-full w-1/3 rounded-full bg-accent" />
+        </div>
+      </Transition>
       <div class="absolute inset-x-0 -top-2 hidden md:block">
         <SliderBar
           :model-value="scrub ?? player.currentTime.value"
@@ -15,7 +26,7 @@
           :label="t('player.seek')"
           :value-text="formatDuration(player.currentTime.value)"
           :hit-height="16"
-          :playing="player.isPlaying.value"
+          :playing="player.isAdvancing.value"
           track-class="bg-transparent"
           fill-class="bg-accent"
           thumb-class="bg-accent"
@@ -32,11 +43,22 @@
       <div
         class="flex min-w-0 flex-1 items-center gap-1 md:w-[28%] md:min-w-[180px] md:flex-none"
       >
+        <!-- Phones: swipe this sideways to skip, hold it for the
+             song's menu (useMiniGestures). -->
         <button
           type="button"
-          class="flex min-w-0 flex-1 items-center gap-3 text-left"
+          class="flex min-w-0 flex-1 touch-pan-y items-center gap-3 text-left transition-transform duration-150 select-none [-webkit-touch-callout:none]"
+          :style="
+            gestures.shift.value
+              ? {
+                  transform: `translateX(${gestures.shift.value}px)`,
+                  transition: 'none',
+                }
+              : null
+          "
           :aria-label="t('player.openNowPlaying')"
-          @click="nowPlaying.open()"
+          v-on="gestures.handlers"
+          @click="gestures.allowClick() && nowPlaying.open()"
         >
           <CoverArt
             :thumb="150"
@@ -56,14 +78,36 @@
               <EqBars
                 v-if="player.isPlaying.value"
                 :size="10"
+                :playing="player.isAdvancing.value"
                 class="max-md:hidden"
               />
             </span>
-            <span class="truncate text-xs text-muted">
+            <span
+              v-if="player.playError.value"
+              class="truncate text-xs font-medium text-danger"
+              role="alert"
+            >
+              {{ t('player.cannotPlaySong') }}
+            </span>
+            <span
+              v-else-if="loading.labelKey.value"
+              class="truncate text-xs font-medium text-accent"
+              role="status"
+            >
+              {{ t(loading.labelKey.value) }}
+            </span>
+            <span v-else class="truncate text-xs text-muted">
               {{ [track.artist, track.album].filter(Boolean).join(' · ') }}
             </span>
           </span>
         </button>
+        <span class="hidden">
+          <UiMenu
+            ref="songMenu"
+            :items="songMenuItems"
+            :label="t('common.more')"
+          />
+        </span>
         <!-- Phones have no room for it beside the transport buttons;
              the rows and the full player carry the heart there. -->
         <span
@@ -95,12 +139,23 @@
           type="button"
           class="flex size-11 items-center justify-center rounded-full text-fg md:bg-invert md:text-on-invert md:transition-transform md:hover:scale-105"
           :aria-label="
-            player.isPlaying.value ? t('player.pause') : t('player.play')
+            player.playError.value
+              ? t('common.retry')
+              : player.isPlaying.value
+                ? t('player.pause')
+                : t('player.play')
           "
-          @click="player.toggle()"
+          :aria-busy="loading.visible.value"
+          @click="player.playError.value ? player.retry() : player.toggle()"
         >
+          <AppIcon
+            v-if="player.playError.value"
+            name="refresh"
+            :size="18"
+            class="text-danger md:text-current"
+          />
           <span
-            v-if="player.isBuffering.value && player.isPlaying.value"
+            v-else-if="loading.visible.value"
             class="size-4 animate-spin rounded-full border-2 border-current border-r-transparent"
           />
           <AppIcon
@@ -209,12 +264,16 @@ import CoverArt from '../ui/CoverArt.vue'
 import EqBars from '../ui/EqBars.vue'
 import ExplicitBadge from '../ui/ExplicitBadge.vue'
 import UiIconButton from '../ui/UiIconButton.vue'
+import UiMenu from '../ui/UiMenu.vue'
+import { useMiniGestures } from '../player/useMiniGestures'
+import { groupingArtistName } from '/src/lib/library'
 import LikeButton from '../player/LikeButton.vue'
 import DevicesButton from '../player/DevicesButton.vue'
 import { useAuth } from '/src/model/auth'
 import { useJamSheet } from '/src/model/jamSheet'
 import SliderBar from '../player/SliderBar.vue'
 import { useSmoothTime } from '../player/useSmoothTime'
+import { usePlaybackLoading } from '../player/usePlaybackLoading'
 import VolumeControl from '../player/VolumeControl.vue'
 import { useRouter } from 'vue-router'
 import { usePlayer } from '/src/model/player'
@@ -239,6 +298,56 @@ const dm = useDownloadManager()
 const tracker = useProgressTracker()
 const ui = useUi()
 const scrub = ref(null)
+const loading = usePlaybackLoading(() => player.loadingPhase.value)
+
+const songMenu = ref(null)
+const gestures = useMiniGestures({
+  onNext: () => player.next(),
+  onPrev: () => player.prev(),
+  onLongPress: (point) =>
+    songMenu.value?.openAt({ ...point, preventDefault() {} }),
+})
+// What holding the song offers: where it's from, and the player's panels.
+const songMenuItems = computed(() => {
+  const tr = track.value
+  if (!tr) return []
+  const artist = groupingArtistName(tr)
+  return [
+    {
+      label: t('player.goToAlbum'),
+      icon: 'disc',
+      hidden: !tr.album || !!tr.stream,
+      action: () =>
+        router.push({
+          name: 'Album',
+          query: { artist: tr.albumArtist, title: tr.album },
+        }),
+    },
+    {
+      label: t('player.goToArtist'),
+      icon: 'user',
+      hidden: !artist,
+      action: () => router.push({ name: 'Artist', query: { name: artist } }),
+    },
+    { divider: true },
+    {
+      label: t('player.lyrics'),
+      icon: 'lyrics',
+      hidden: !showLyrics.value || !!tr.stream,
+      action: () => nowPlaying.open('lyrics'),
+    },
+    {
+      label: t('player.upNext'),
+      icon: 'queue',
+      action: () => nowPlaying.open('queue'),
+    },
+    {
+      label: t('player.details'),
+      icon: 'info',
+      action: () => nowPlaying.open('details'),
+    },
+  ]
+})
 
 const track = computed(() => player.currentTrack.value)
 
@@ -309,7 +418,7 @@ const showDownloadedCheck = computed(
 const isPhone = useMediaQuery('(max-width: 767px)')
 const smoothTime = useSmoothTime(
   () => player.currentTime.value,
-  () => isPhone.value && player.isPlaying.value,
+  () => isPhone.value && player.isAdvancing.value,
   () => player.duration.value || 0
 )
 const smoothPercent = computed(() =>
@@ -334,3 +443,18 @@ function commitSeek(value) {
   scrub.value = null
 }
 </script>
+
+<style scoped>
+.mini-loading-sweep {
+  animation: mini-loading-sweep 1.2s var(--ease-out-soft) infinite;
+}
+
+@keyframes mini-loading-sweep {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(300%);
+  }
+}
+</style>

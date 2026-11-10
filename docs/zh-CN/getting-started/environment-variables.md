@@ -86,7 +86,11 @@ YouTube 会定期对自动下载工具发起验证。默认配置失效时，可
 | `DOWNTIFY_FORCE_IPV4` | _(unset)_ | 设为 `1` 可强制 yt-dlp 仅使用 IPv4。当主机的 IPv6 不可用或受到限流时，此选项会很有帮助。 |
 | `DOWNTIFY_YT_SLEEP_REQUESTS` | _(unset)_ | Seconds yt-dlp waits between its requests to YouTube during a download. Unset, downloads aren't paced — until YouTube answers `429 Too Many Requests`: that song is retried once with a 1 s pause, and every download stays paced for the next 15 minutes. Set a number to force a pause always (`1` is the old behaviour, about 7 s slower per song), or `0` to never pause. To space out whole downloads instead, use **Settings → Downloads → Delay between downloads**. |
 | `DOWNTIFY_YT_PLAYER_CLIENTS` | `ios,android,web_embedded,mweb,web,tv` | 按顺序尝试的 yt-dlp 播放器客户端列表，以逗号分隔。Castify 默认优先使用无需 JavaScript 运行时的客户端。只有确认特定客户端遭到屏蔽时才建议覆盖此设置。 |
+| `DOWNTIFY_LIVE_PLAYER_CLIENTS` | `web_embedded,android` | 播放尚未下载的歌曲时首先询问的 YouTube 播放器客户端（以逗号分隔）。客户端越少响应越快；若它们没有音频，则改为询问 `DOWNTIFY_YT_PLAYER_CLIENTS` 中的所有客户端。 |
 | `DOWNTIFY_YT_PO_TOKEN` | _(unset)_ | 提供给 yt-dlp 的 Proof-of-Origin token 列表，以逗号分隔，每项格式为 `<client>.<context>+<token>`（例如 `mweb.gvs+ABC123`）。仅当 YouTube 开始要求当前客户端提供 PO Token 时才需要设置。 |
+| `DOWNTIFY_POT_PROVIDER_URL` | _(unset)_ | [bgutil PO Token 服务器](https://github.com/Brainicism/bgutil-ytdlp-pot-provider)的 URL（例如 `http://bgutil:4416`，即 `brainicism/bgutil-ytdlp-pot-provider` 镜像）。yt-dlp 随后会为每次下载和串流获取新的 PO Token，即使没有 Cookie，也能在数据中心和 VPN IP 上避免 "Sign in to confirm you're not a bot"。该插件已包含在 Docker 镜像中。 |
+| `DOWNTIFY_IP_ROTATE_URL` | _(unset)_ | 当 YouTube 以 "Sign in to confirm you're not a bot" 封锁当前 IP 时，Castify 发送 `POST` 以获取新出口 IP 的端点，例如由 Cloudflare WARP 容器内的 `contrib/warp-control` 提供的 `http://warp:8081/rotate`。被封锁的下载或串流会用新 IP 重试（每个最多 3 个新 IP，每小时 30 个），因此用户不会看到该错误。同时被封锁的并行下载共用一次更换。 |
+| `DOWNTIFY_IP_ROTATE_TOKEN` | _(unset)_ | 以 `Authorization: Bearer <token>` 发送到 `DOWNTIFY_IP_ROTATE_URL`（即 `contrib/warp-control` 的 `WARP_CONTROL_TOKEN`）。 |
 | `DOWNTIFY_COOKIES_FILE` | _(unset)_ | 容器**内部** Netscape 格式 `cookies.txt` 的路径。让 yt-dlp 使用真实浏览器会话进行身份验证；下载显式内容/年龄限制歌曲或 YouTube 强制登录时需要此项。其优先级高于 Web 界面上传的文件，并会使界面中的 Cookie 区域变为只读。详见 [YouTube Cookie](../features/youtube-cookies.md)。 |
 | `DOWNTIFY_COOKIES_FROM_BROWSER` | _(unset)_ | 用于提取 Cookie 的浏览器名称（例如 `chrome`、`firefox`）。容器必须能够访问浏览器 Cookie 存储，因此通常不适用于 Docker。 |
 

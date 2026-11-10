@@ -23,7 +23,6 @@ Castify deckt alles ab, was du brauchst, um aus Spotify eine lokale Musikbibliot
 | [Integrierter Player](player.md) | Die Bibliothek im Browser abspielen: Warteschlangenverwaltung, synchrone Songtexte, Schlaf-Timer, Tastatur und Mediatasten |
 | [Lautstärkenormalisierung](playback-normalization.md) | Alle Songs in ähnlicher Lautstärke abspielen, nach Messungen, die ein Admin startet; Audiodateien werden nie verändert |
 | [Lieblingssongs](liked-songs.md) | Mit einem Herz einen Song liken; eine Playlist aller gelikten Songs entsteht von selbst |
-| [Podcasts](podcasts.md) | Eine Sendung per RSS-Feed, Spotify-Link oder Namen abonnieren; neue Folgen werden von selbst geladen und getaggt |
 | [Benutzer und Anmeldung](users.md) | Anmeldung mit Benutzername und Passwort (`admin` / `downtify` auf einem neuen Server), Admin- und normale Benutzerkonten, Einstellungen pro Benutzer und ein Aktivitätsprotokoll von Anmeldungen und dem, was jeder hört |
 | [Explicit-Kennzeichnung](explicit-marker.md) | Das „E“ neben Songs mit expliziten Texten — in der Suche, der Bibliothek und im Player — und in den Tags der Datei |
 | [Audio ersetzen](replace-audio.md) | Falscher Song oder falsche Version? Wähle die richtige auf YouTube Music oder YouTube; die Datei behält Namen, Tags und Playlists |

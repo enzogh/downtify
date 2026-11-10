@@ -77,7 +77,6 @@ export default {
       'features/player.md': '内置播放器',
       'features/jam.md': 'Jam',
       'features/liked-songs.md': '已点赞歌曲',
-      'features/podcasts.md': '播客',
       'features/discover.md': '发现',
       'features/collaborative-playlists.md': '协作播放列表',
       'features/playlist-order.md': '播放列表顺序与重复歌曲',

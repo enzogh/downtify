@@ -54,7 +54,10 @@ Repository layout:
 ```
 main.py                # FastAPI boot, logging, CLI args, static SPA serving
 downtify/
-  api.py               # FastAPI router
+  api.py               # FastAPI router (facade; endpoints listed in its docstring)
+  api_core.py          # Shared state and helpers behind the routers
+  api_pipeline.py      # Download pipeline (queue, batches)
+  *_routes.py          # Routes by domain (library, playlists, downloads, ...)
   downloader.py        # yt-dlp wrapper, file naming, sanitization
   spotify.py           # open.spotify.com/embed scraping + playlist pagination
   providers.py         # YouTube / yt-music search and match scoring

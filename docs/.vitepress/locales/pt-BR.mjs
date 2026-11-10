@@ -78,7 +78,6 @@ export default {
       'features/player.md': 'Player integrado',
       'features/jam.md': 'Jam',
       'features/liked-songs.md': 'Músicas curtidas',
-      'features/podcasts.md': 'Podcasts',
       'features/discover.md': 'Descobrir',
       'features/collaborative-playlists.md': 'Playlists colaborativas',
       'features/playlist-order.md': 'Ordem e músicas repetidas',

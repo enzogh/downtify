@@ -78,7 +78,6 @@ export default {
       'features/player.md': 'Вграден плейър',
       'features/jam.md': 'Jam',
       'features/liked-songs.md': 'Харесани песни',
-      'features/podcasts.md': 'Подкасти',
       'features/discover.md': 'Откриване',
       'features/collaborative-playlists.md': 'Съвместни плейлисти',
       'features/playlist-order.md': 'Ред и повтаряне на песни',

@@ -7,7 +7,7 @@ from unittest.mock import Mock
 import pytest
 from starlette.requests import Request
 
-from downtify import api, library_upgrade, monitor, podcasts
+from downtify import api, library_upgrade, monitor
 from downtify.download_queue import QueuePause, queue_pause
 
 
@@ -130,81 +130,6 @@ def test_queue_state_advertises_global_scope_and_separate_admin_permission(
     assert api.get_queue_state(request)['monitors_paused']
     monkeypatch.setattr(api, 'request_is_admin', lambda _: True)
     assert api.get_queue_state(request)['can_control']
-
-
-def test_paused_podcast_sync_does_not_fetch_a_feed(monkeypatch, tmp_path):
-    fetch = Mock()
-    monkeypatch.setattr(podcasts, 'fetch_feed', fetch)
-    assert (
-        podcasts.sync_show(
-            Mock(),
-            {'feed_url': 'https://example.test/feed'},
-            tmp_path,
-            should_continue=lambda: False,
-        )
-        == 0
-    )
-    fetch.assert_not_called()
-
-
-def test_podcast_pause_finishes_current_episode_without_starting_next(
-    monkeypatch, tmp_path
-):
-    feed = SimpleNamespace(
-        episodes=[], description='', author='', artwork_url=''
-    )
-    monkeypatch.setattr(podcasts, 'fetch_feed', lambda _: feed)
-    rows = [
-        {
-            key: ''
-            for key in (
-                'guid',
-                'title',
-                'description',
-                'published_at',
-                'duration_seconds',
-                'season_number',
-                'episode_number',
-                'enclosure_url',
-                'enclosure_type',
-            )
-        }
-        for _ in range(2)
-    ]
-    for i, row in enumerate(rows):
-        row['id'] = i + 1
-    monkeypatch.setattr(podcasts, 'episode_plan', lambda *args: (rows, []))
-    monkeypatch.setattr(podcasts, 'best_cover_bytes', lambda _: None)
-    monkeypatch.setattr(podcasts, 'EpisodeInfo', lambda **kwargs: object())
-    allowed = [True]
-
-    def download(*args, **kwargs):
-        allowed[0] = False
-        return 'podcasts/episode.mp3'
-
-    download = Mock(side_effect=download)
-    monkeypatch.setattr(podcasts, 'download_episode', download)
-    store = Mock()
-    show = {
-        'id': 1,
-        'feed_url': 'https://example.test/feed',
-        'name': 'Test',
-        'description': '',
-        'author': '',
-        'artwork_url': '',
-        'folder_name': 'Test',
-    }
-    assert (
-        podcasts.sync_show(
-            store,
-            show,
-            tmp_path,
-            should_continue=lambda: allowed[0],
-        )
-        == 1
-    )
-    download.assert_called_once()
-    store.mark_downloaded.assert_called_once_with(1, 'podcasts/episode.mp3')
 
 
 def test_admin_device_is_not_advertised_as_web_control(monkeypatch):

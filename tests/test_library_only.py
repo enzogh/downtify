@@ -76,7 +76,6 @@ def test_external_gets_are_refused_before_resolution(local_client, path):
         '/api/monitor/playlists',
         '/api/library/upgrade/start',
         '/api/library/upgrade/resume',
-        '/api/podcasts/episodes/1/download',
     ],
 )
 def test_external_posts_are_refused(local_client, path):

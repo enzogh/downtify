@@ -77,7 +77,6 @@ export default {
       'features/player.md': '내장 플레이어',
       'features/jam.md': 'Jam',
       'features/liked-songs.md': '좋아요 표시한 곡',
-      'features/podcasts.md': '팟캐스트',
       'features/discover.md': '둘러보기',
       'features/collaborative-playlists.md': '함께 편집하는 재생목록',
       'features/playlist-order.md': '재생목록 순서와 반복 곡',

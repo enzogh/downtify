@@ -316,7 +316,6 @@ export default {
     queue: 'Warteschlange',
     monitor: 'Überwachung',
     discover: 'Entdecken',
-    podcasts: 'Podcasts',
     charts: 'Charts',
     settings: 'Einstellungen',
     more: 'Mehr',
@@ -1205,6 +1204,11 @@ export default {
     lyricsNotSynced:
       'Diese Songtexte sind nicht mit der Wiedergabe synchronisiert.',
     cannotPlay: 'Diese Datei kann nicht abgespielt werden.',
+    cannotPlaySong: 'Dieser Song kann nicht abgespielt werden',
+    skipSong: 'Überspringen',
+    findingSong: 'Song wird gesucht …',
+    loadingSong: 'Wird geladen …',
+    stillLoading: 'Lädt noch …',
     sleepTimer: 'Sleeptimer',
     sleepMinutes: { one: 'In {count} Minute', other: 'In {count} Minuten' },
     sleepEndOfTrack: 'Am Ende dieses Titels',
@@ -2236,47 +2240,6 @@ export default {
     poweredBy:
       'Künstlerempfehlungen stammen von Deezer; Alben von Deezer und Spotify; Playlists von beiden Diensten.',
   },
-  podcasts: {
-    title: 'Podcasts',
-    subtitle:
-      'Abonniere einen Podcast, damit neue Folgen automatisch heruntergeladen werden.',
-    addTitle: 'Podcast hinzufügen',
-    addBody:
-      'Füge die URL eines RSS-Feeds oder einen Spotify-Link zu einem Podcast oder einer Folge ein oder gib einen Namen ein.',
-    findPlaceholder: 'RSS-Feed, Spotify-Link oder Podcastname',
-    find: 'Suchen',
-    noResults: 'Keine Podcasts gefunden',
-    findFailed:
-      'Der Link oder die Suche hat nicht funktioniert - versuche es erneut',
-    alreadySubscribed: 'Du hast diesen Podcast bereits abonniert',
-    keep: 'Behalten',
-    retentionAll: 'Alle neuen Folgen',
-    retentionCount: {
-      one: 'Neueste Folge',
-      other: 'Neueste {count} Folgen',
-    },
-    subscribe: 'Abonnieren',
-    subscribed: '{name} abonniert',
-    emptyTitle: 'Noch keine Podcasts',
-    emptyBody:
-      'Abonniere oben einen Podcast, damit seine Folgen hier erscheinen.',
-    kicker: 'Podcast',
-    notFound: 'Dieser Podcast ist nicht mehr abonniert',
-    noEpisodesTitle: 'Noch keine Folgen',
-    noEpisodesBody: 'Castify prüft diesen Feed automatisch.',
-    download: 'Folge herunterladen',
-    downloadFailed: 'Die Folge konnte nicht heruntergeladen werden',
-    played: 'Abgespielt',
-    markPlayed: 'Als abgespielt markieren',
-    markUnplayed: 'Als nicht abgespielt markieren',
-    removeDownload: 'Download entfernen',
-    resumeAt: 'Bei {time} fortsetzen',
-    unsubscribe: 'Abo beenden',
-    unsubscribeKeepFiles: 'Abo beenden, Folgen behalten',
-    skipBack: '15 Sekunden zurück',
-    skipForward: '30 Sekunden vor',
-    playbackSpeed: 'Wiedergabegeschwindigkeit',
-  },
   confirm: {
     deleteTrackTitle: '„{title}“ löschen?',
     deleteTracksTitle: '{count} Titel löschen?',
@@ -2292,13 +2255,6 @@ export default {
       'Wartende und abgeschlossene Elemente werden aus der Liste entfernt. Heruntergeladene Dateien bleiben erhalten.',
     stopWatchingTitle: 'Überwachung von „{name}“ beenden?',
     stopWatchingBody: 'Heruntergeladene Titel bleiben in deiner Bibliothek.',
-    removeEpisodeTitle: 'Download von „{name}“ entfernen?',
-    removeEpisodeBody:
-      'Die Folge wird nicht erneut automatisch heruntergeladen. Du kannst sie jederzeit auf der Podcastseite erneut herunterladen.',
-    unsubscribeTitle: '„{name}“ nicht mehr abonnieren?',
-    unsubscribeBody: 'Die heruntergeladenen Folgen werden ebenfalls entfernt.',
-    unsubscribeKeepBody:
-      'Heruntergeladene Folgen bleiben erhalten; nur das Abo wird beendet.',
     removeArtistPhotoTitle: 'Foto von {name} entfernen?',
     removeArtistBannerTitle: 'Banner von {name} entfernen?',
     removeArtistArtBody:

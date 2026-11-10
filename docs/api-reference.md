@@ -697,7 +697,7 @@ Whether the download queue is paused. Anyone signed in can read it. See [Downloa
 | `paused` | boolean | Whether the queue is paused |
 | `state` | string | `running`, `pausing` (paused, with `active` downloads still finishing) or `paused` (nothing running) |
 | `active` | integer | Downloads running right now, everyone's (Playlist Monitor sweeps included) |
-| `global_pause_supported` | boolean | Whether pause also gates watch checks and podcasts; absent on older servers |
+| `global_pause_supported` | boolean | Whether pause also gates watch checks; absent on older servers |
 | `monitors_paused` | boolean | Whether new automatic checks wait at the global gate |
 | `can_control` | boolean | Whether this request can use the web administrator control; false for paired devices |
 
@@ -2629,9 +2629,8 @@ Watches belong to whoever created them (admins see every watch); sweeps attribut
 
 List all watches (playlists and artists).
 
-**Response:** Array of watch objects. Each has a `kind` of `"playlist"`, `"artist"` or `"podcast"`, and a `source` of `"spotify"`, `"deezer"` or `"youtube_music"` (the service the watch was added from, read from its `url`; meaningless for a podcast watch). `spotify_id` is the watch's unique key: the Spotify or YouTube Music playlist id, `deezer:playlist:<id>` for a Deezer playlist, an artist's YouTube Music channel id, or a podcast's RSS feed URL. For an artist watch, `last_track_count` is the number of releases, `release_types` the kinds of release it downloads (a subset of `["album", "single", "ep"]`, in that order) and `new_only` whether it skips what the artist had released when the watch started — see [Choosing what to download](features/playlist-monitor.md#choosing-what-to-download). Playlist watches carry the same two fields at their defaults (all kinds, `false`); they don't mean anything there.
+**Response:** Array of watch objects. Each has a `kind` of `"playlist"` or `"artist"`, and a `source` of `"spotify"`, `"deezer"` or `"youtube_music"` (the service the watch was added from, read from its `url`). `spotify_id` is the watch's unique key: the Spotify or YouTube Music playlist id, `deezer:playlist:<id>` for a Deezer playlist, or an artist's YouTube Music channel id. For an artist watch, `last_track_count` is the number of releases, `release_types` the kinds of release it downloads (a subset of `["album", "single", "ep"]`, in that order) and `new_only` whether it skips what the artist had released when the watch started — see [Choosing what to download](features/playlist-monitor.md#choosing-what-to-download). Playlist watches carry the same two fields at their defaults (all kinds, `false`); they don't mean anything there.
 
-A podcast watch only ever appears here — it's created, updated and deleted through [`POST /api/podcasts/subscribe`](#podcasts) and friends, not through this endpoint's `POST`/`PATCH`/`DELETE`, since a podcast needs a retention policy the generic watch shape has no room for.
 
 ---
 
@@ -2707,7 +2706,7 @@ Trigger an immediate check for a specific playlist outside the normal schedule.
 
 ### `GET /api/monitor/stats`
 
-Each watch's storage, download status and activity — see [Activity and storage per watch](features/playlist-monitor.md#activity-and-storage-per-watch). A user gets their own watches; an admin every watch. Podcast watches are left out.
+Each watch's storage, download status and activity — see [Activity and storage per watch](features/playlist-monitor.md#activity-and-storage-per-watch). A user gets their own watches; an admin every watch.
 
 | Query | Description |
 |-------|-------------|
@@ -2899,207 +2898,6 @@ The YouTube Music artist to follow for a suggested name — the identity an arti
 
 ---
 
-## Podcasts
-
-Subscriptions belong to whoever subscribes (an admin sees every show); episodes, resume positions and dismissals follow the subscription. Subscribing to a show, its episodes, and per-episode playback position — see [Podcasts](features/podcasts.md). Scheduling (the interval, enabled flag and last-checked time) lives on the same watch object [`GET /api/monitor/playlists`](#get-apimonitorplaylists) returns for playlists and artists (`kind: "podcast"`); everything below is what that generic shape has no room for.
-
-### `POST /api/podcasts/resolve`
-
-Preview a podcast from a pasted link, before subscribing. Accepts a direct RSS feed URL or a Spotify show/episode link.
-
-**Request body:** `{ "url": "https://feeds.example.com/show.xml" }`
-
-**Response:**
-
-```json
-{
-  "show": {
-    "name": "Radiolab",
-    "author": "WNYC Studios",
-    "description": "…",
-    "artwork_url": "https://…",
-    "feed_url": "https://feeds.simplecast.com/EmVW7VGp",
-    "source_url": "https://feeds.simplecast.com/EmVW7VGp"
-  },
-  "episodes": [
-    {
-      "guid": "…",
-      "title": "The Sweetest Thing",
-      "description": "…",
-      "published_at": "2026-09-18T14:00:00+00:00",
-      "duration_seconds": 1862,
-      "season_number": null,
-      "episode_number": 712,
-      "enclosure_url": "https://…",
-      "enclosure_type": "audio/mpeg"
-    }
-  ],
-  "matched_episode_guid": null,
-  "already_subscribed": false
-}
-```
-
-`matched_episode_guid` is set only when a Spotify **episode** link's title could be matched into the feed. `400` for a link that isn't a podcast feed and isn't a Spotify show/episode link; `404` when Spotify resolves a show name but it has no public RSS feed (a Spotify-exclusive show) — the response `detail` names the show.
-
----
-
-### `GET /api/podcasts/search`
-
-Free-text podcast search, via the iTunes podcast directory.
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `q` | string | yes | Show name |
-
-**Response:** `{ "results": [ { "name": "…", "author": "…", "feed_url": "…", "artwork_url": "…" } ] }`. A result with an empty `feed_url` has no public feed and can't be subscribed to.
-
----
-
-### `POST /api/podcasts/subscribe`
-
-Subscribe to a show resolved with `POST /api/podcasts/resolve`. Triggers an immediate initial sync in the background — see [How many episodes are downloaded](features/podcasts.md#how-many-episodes-are-downloaded).
-
-**Request body:**
-
-```json
-{
-  "feed_url": "https://feeds.simplecast.com/EmVW7VGp",
-  "name": "Radiolab",
-  "author": "WNYC Studios",
-  "description": "…",
-  "artwork_url": "https://…",
-  "source_url": "https://feeds.simplecast.com/EmVW7VGp",
-  "retention": 0,
-  "interval_minutes": 720
-}
-```
-
-Only `feed_url` and `name` are required. `retention` is `0` for "every new episode" or a positive integer for "keep the latest N"; default `0`. `409` if already subscribed to this feed.
-
-**Response:** The show object (see `GET /api/podcasts/shows/{id}`).
-
----
-
-### `GET /api/podcasts/shows`
-
-List subscribed shows.
-
-**Response:** Array of show objects:
-
-```json
-{
-  "id": 1,
-  "feed_url": "https://feeds.simplecast.com/EmVW7VGp",
-  "name": "Radiolab",
-  "author": "WNYC Studios",
-  "description": "…",
-  "artwork_url": "https://…",
-  "source_url": "https://feeds.simplecast.com/EmVW7VGp",
-  "folder_name": "Radiolab",
-  "retention": 3,
-  "created_at": "…",
-  "watch_id": 1,
-  "interval_minutes": 720,
-  "enabled": true,
-  "last_checked": "…",
-  "episode_count": 671,
-  "downloaded_count": 3
-}
-```
-
-`folder_name` is the sanitized, on-disk folder name under `Podcasts/`, fixed at subscribe time. `watch_id`/`interval_minutes`/`enabled`/`last_checked` are `null` if the scheduling watch is somehow missing.
-
----
-
-### `GET /api/podcasts/shows/{show_id}`
-
-One show. `404` if not subscribed.
-
----
-
-### `GET /api/podcasts/shows/{show_id}/episodes`
-
-A show's episodes, newest first.
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `include_dismissed` | boolean | no | Include episodes whose download was removed on purpose (default `false`) |
-
-**Response:** `{ "show": { /* show object */ }, "episodes": [ /* episode objects */ ] }`
-
-```json
-{
-  "id": 1,
-  "show_id": 1,
-  "guid": "…",
-  "title": "The Sweetest Thing",
-  "description": "…",
-  "published_at": "2026-09-18T14:00:00+00:00",
-  "duration_seconds": 1862,
-  "season_number": null,
-  "episode_number": 712,
-  "enclosure_url": "https://…",
-  "enclosure_type": "audio/mpeg",
-  "filename": "Podcasts/Radiolab/2026-09-18 - The Sweetest Thing.mp3",
-  "downloaded_at": "…",
-  "dismissed": false,
-  "position_seconds": 13.9,
-  "played": false
-}
-```
-
-`filename` is the library path — `null` until downloaded. `position_seconds`/`played` come from `PUT .../playback`.
-
----
-
-### `PATCH /api/podcasts/shows/{show_id}`
-
-Update a show's retention, and/or its watch's interval or enabled state.
-
-**Request body:** Any of `{ "retention": 5, "interval_minutes": 360, "enabled": false }`.
-
-**Response:** The show object.
-
----
-
-### `DELETE /api/podcasts/shows/{show_id}`
-
-Unsubscribe.
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `keep_files` | boolean | no | Keep downloaded episode files on disk (default `false`, which deletes the show's whole folder) |
-
-**Response:** `{ "ok": true, "show": { /* the deleted show */ }, "files_deleted": true }`
-
----
-
-### `POST /api/podcasts/episodes/{episode_id}/download`
-
-Download one episode on demand, regardless of the show's retention policy.
-
-**Response:** The episode object, with `filename` and `downloaded_at` set. `502` if the download fails.
-
----
-
-### `DELETE /api/podcasts/episodes/{episode_id}`
-
-Remove a downloaded episode's file. Sets `dismissed: true` — see [Removing episodes](features/podcasts.md#removing-episodes) for why it is never re-downloaded automatically after this.
-
-**Response:** `{ "ok": true }`
-
----
-
-### `PUT /api/podcasts/episodes/{episode_id}/playback`
-
-Save an episode's resume position and/or played state. Called periodically while an episode plays.
-
-**Request body:** `{ "position_seconds": 42.5, "played": false }` — either field alone is fine.
-
-**Response:** The episode object.
-
----
-
 ## Server and sign-in
 
 Who this server is, signing in, and pairing apps — see [Users & Sign-in](features/users.md) and [Mobile Apps](features/mobile-apps.md). Accounts, preferences and the activity log are in [Accounts and activity](#accounts-and-activity). The routes an app uses are in [Mobile API (v1)](#mobile-api-v1), and the whole flow is in the [mobile client contract](mobile-client-contract.md).
@@ -3109,9 +2907,9 @@ Who this server is, signing in, and pairing apps — see [Users & Sign-in](featu
 | Scope | Credentials | Covers |
 |-------|-------------|--------|
 | Public | none | The web app's own files, `GET /api/health`, `GET /api/version`, `GET /api/server/info`, `GET /api/auth/status`, `GET /api/auth/oidc` and `/api/auth/oidc/callback` (when configured), `POST /api/auth/login`, `POST /api/auth/logout`, `POST /api/auth/pair`, `POST /api/auth/token` |
-| Client | a device token (`Authorization: Bearer dtfy_…`), a signed URL (reads only), a WebSocket ticket, or any web session | Library and media reads (`/tracks`, `/list`, `/playlists`, `/lyrics`, `/cover`, `/playlist-cover`, `/downloads/…`, `/media/…`), `/api/v1/…`, search and link resolving, previews, `POST /api/download/url\|batch\|album`, likes, Discover and listens, podcast reads, episode downloads and playback, the queue and monitor lists (read), `GET /api/me`, `POST /api/activity/playback`, `GET /api/activity/devices`, `POST /api/activity/devices/command`, `POST /api/auth/ws-ticket`, `WS /api/ws` |
+| Client | a device token (`Authorization: Bearer dtfy_…`), a signed URL (reads only), a WebSocket ticket, or any web session | Library and media reads (`/tracks`, `/list`, `/playlists`, `/lyrics`, `/cover`, `/playlist-cover`, `/downloads/…`, `/media/…`), `/api/v1/…`, search and link resolving, previews, `POST /api/download/url\|batch\|album`, likes, Discover and listens, the queue and monitor lists (read), `GET /api/me`, `POST /api/activity/playback`, `GET /api/activity/devices`, `POST /api/activity/devices/command`, `POST /api/auth/ws-ticket`, `WS /api/ws` |
 | User | a web session of any user (the `downtify_session` cookie) | Client, plus your own account (`/api/me…`), your paired devices and pairing (`/api/auth/devices…`, `/api/auth/pairing…`) |
-| Admin | a web session of an **admin** | Everything else: settings, cookies, deleting files and playlists, library upgrade/reconcile/archive, hiding songs from users, queue changes, monitor and podcast subscription changes, artist photo/bio edits, CSV import, renaming the server, users, the activity log, signing everyone out |
+| Admin | a web session of an **admin** | Everything else: settings, cookies, deleting files and playlists, library upgrade/reconcile/archive, hiding songs from users, queue changes, monitor changes, artist photo/bio edits, CSV import, renaming the server, users, the activity log, signing everyone out |
 
 Without credentials: `401` (`WWW-Authenticate: Bearer`). A normal user's browser calling an admin route: `403` `{"detail": "This needs an admin"}`; a device calling a route that needs a browser: `403` `{"detail": "This needs a signed-in browser"}`. A cookie-authenticated change (`POST`/`PUT`/`PATCH`/`DELETE`, or the WebSocket) whose `Origin`/`Referer` is another site: `403`. CORS allows any origin **without** credentials, so a web session only works from Castify's own page.
 
@@ -3132,7 +2930,7 @@ Public. What an app checks before it has credentials.
     "signed_urls": true,
     "pairing": true,
     "password_sign_in": true,
-    "podcasts": true,
+    "podcasts": false,
     "discover": true,
     "lyrics": true,
     "library_sync": true
@@ -3955,19 +3753,6 @@ Every change to a [Jam](#jam) is sent to its members' sockets only, with the sam
 ```json
 { "type": "jam", "jam": { /* the Jam snapshot, or null */ } }
 ```
-
-A [podcast](features/podcasts.md) episode download reports its progress the same way as a music download, tagged so it can be told apart:
-
-```json
-{
-  "type": "podcast_progress",
-  "show": "Radiolab",
-  "episode": "The Sweetest Thing",
-  "progress": 42.5
-}
-```
-
-Once a podcast sync downloads at least one episode, a plain `{ "type": "podcasts" }` follows, telling open pages to refetch the shows/episodes they're showing.
 
 When tracks are added, removed or moved (a finished download, a delete, a reconcile, or a [library sync](#get-apiv1library) that found changes on disk), connected clients are told once, a couple of seconds later, however many files changed — the apps sync on it:
 

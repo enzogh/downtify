@@ -84,6 +84,10 @@ Steuert, wie viele Songs gleichzeitig heruntergeladen werden. Wähle eine Vorein
 
 Das Limit gilt für jeden Batch-Download — Playlist-/Album-Downloads, den Batch-Queue-Endpunkt und CSV-[Bibliotheksimporte](library-import.md) — sowie für die Abfragen der Synchronisierung der **[Vorhandenen Musikordner](external-library.md)** (Songtexte, Cover, Genre). Es gilt **nicht** für die Durchläufe der Playlist-Überwachung, die neue Titel einzeln herunterladen. Eine Änderung dieses Werts in den Einstellungen wirkt sofort ohne Neustart; der Server begrenzt jeden Wert außerhalb von `1–30`.
 
+Die Plätze werden fair zwischen den Konten aufgeteilt. Jeder freie Platz geht an das Konto, das gerade die wenigsten Songs herunterlädt. Eine lange Playlist, die jemand in die Warteschlange stellt, hält also keinen einzelnen Song auf, den jemand anderes danach anfordert: Er startet am nächsten freien Platz. Die Songs jedes Kontos behalten ihre Reihenfolge. Auf einem Server mit nur einem Konto (oder ohne Anmeldung) läuft die Warteschlange einfach der Reihe nach. Ein niedrigerer Wert lässt laufende Downloads zu Ende laufen; nichts wird abgebrochen.
+
+In einer Playlist oder einem Album sucht Castify, während Songs heruntergeladen werden, schon die nächsten paar Songs heraus (ihre vollständigen Angaben und ihren YouTube-Music-Treffer), damit jeder Song starten kann, sobald er einen Platz bekommt. Das geschieht nur, wenn YouTube Music (oder YouTube) die erste [Audioquelle](#audio-provider) ist; Soulseek, Deezer und SoundCloud suchen weiterhin erst, wenn der Song an der Reihe ist. Es wird nie mehr als *Parallele Downloads* + 2 Songs im Voraus gesucht, und wer die Audioquellen zwischendurch ändert, lässt einen Song neu suchen.
+
 ## Pause zwischen Downloads
 
 Lässt Castify nach dem Abschluss eines Songs eine konfigurierbare Anzahl Sekunden warten, bevor der nächste beginnt, statt die Anfragen direkt hintereinander abzufeuern.

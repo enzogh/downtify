@@ -8,6 +8,10 @@ const SNAP_SECONDS = 1
 const FOLLOW_RATE = 10
 // Tiny backward corrections are held instead of drawn as a step back.
 const HOLD_SECONDS = 0.35
+// Never predict further than this past the last report: reports come
+// every ~250 ms while sound plays, so a longer silence means playback
+// stalled (a stream still loading) and the bar must wait, not run on.
+const MAX_LEAD_SECONDS = 1
 
 export function createPlayhead(value = 0, now = 0) {
   return { shown: value, value, at: now }
@@ -28,7 +32,8 @@ export function advancePlayhead(playhead, { now, dt, playing, max }) {
   if (!playing) {
     playhead.shown = playhead.value
   } else {
-    const predicted = playhead.value + (now - playhead.at) / 1000
+    const lead = Math.min(MAX_LEAD_SECONDS, (now - playhead.at) / 1000)
+    const predicted = playhead.value + Math.max(0, lead)
     const gap = predicted - playhead.shown
     if (Math.abs(gap) > SNAP_SECONDS) playhead.shown = predicted
     else if (gap > 0) playhead.shown += gap * Math.min(1, dt * FOLLOW_RATE)

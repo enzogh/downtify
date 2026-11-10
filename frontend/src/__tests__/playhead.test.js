@@ -74,4 +74,20 @@ describe('advancePlayhead', () => {
       })
     ).toBe(100)
   })
+
+  it('holds still when reports stop while playing (a stalled stream)', () => {
+    const playhead = createPlayhead(30, 0)
+    reportTime(playhead, 30, 0)
+    let shown = 30
+    // Six seconds without a single timeupdate.
+    for (let now = 16; now <= 6000; now += 16) {
+      shown = advancePlayhead(playhead, {
+        now,
+        dt: 0.016,
+        playing: true,
+        max: 999,
+      })
+    }
+    expect(shown).toBeLessThanOrEqual(31)
+  })
 })

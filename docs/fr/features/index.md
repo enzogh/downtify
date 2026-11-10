@@ -23,7 +23,6 @@ Castify couvre tout ce qu’il faut pour construire et entretenir une bibliothè
 | [Lecteur intégré](player.md) | Écoutez votre bibliothèque dans le navigateur : gestion de la file, paroles synchronisées, minuterie de mise en veille, clavier et touches multimédias |
 | [Normalisation du volume](playback-normalization.md) | Lire tous les morceaux à un volume semblable, d’après des mesures lancées par un administrateur ; les fichiers audio ne sont jamais modifiés |
 | [Titres likés](liked-songs.md) | Mettez un cœur à un titre pour le liker ; une playlist de tout ce que vous avez liké apparaît toute seule |
-| [Podcasts](podcasts.md) | Abonnez-vous à une émission par flux RSS, lien Spotify ou nom ; les nouveaux épisodes se téléchargent et s’étiquettent tout seuls |
 | [Utilisateurs et connexion](users.md) | Connexion par nom d’utilisateur et mot de passe (`admin` / `downtify` sur un nouveau serveur), comptes administrateur et utilisateur, préférences par utilisateur et journal d’activité des connexions et de ce que chacun écoute |
 | [Marque de contenu explicite](explicit-marker.md) | Le « E » à côté des morceaux aux paroles explicites — dans la recherche, la Bibliothèque et le lecteur — et dans les tags du fichier |
 | [Remplacer l’audio](replace-audio.md) | Mauvais morceau ou mauvaise version ? Choisissez la bonne sur YouTube Music ou YouTube ; le fichier garde son nom, ses tags et ses playlists |

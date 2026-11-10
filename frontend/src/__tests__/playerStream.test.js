@@ -192,4 +192,78 @@ describe('streaming in the player queue', () => {
     expect(saved.tracks[1].url).toBe('')
     expect(saved.tracks[1].stream).toBeTruthy()
   })
+
+  it('reports finding, then loading, then nothing as a stream starts', async () => {
+    let finish
+    resolveTrackUrl.mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          finish = resolve
+        })
+    )
+    player.playList([pending('B')])
+    expect(player.loadingPhase.value).toBe('finding')
+    expect(player.isAdvancing.value).toBe(false)
+    finish({ url: 'https://stream.example/B' })
+    await vi.waitFor(() => {
+      expect(audios.list[0].play).toHaveBeenCalled()
+    })
+    const audio = audios.list[0]
+    audio.fire('play')
+    audio.fire('waiting')
+    expect(player.loadingPhase.value).toBe('loading')
+    expect(player.isPlaying.value).toBe(true)
+    expect(player.isAdvancing.value).toBe(false)
+    audio.fire('playing')
+    expect(player.loadingPhase.value).toBe('')
+    expect(player.isAdvancing.value).toBe(true)
+  })
+
+  it('stops loading when the system pauses a stalled song', async () => {
+    player.playList([lib('A')])
+    await vi.waitFor(() => {
+      expect(audios.list[0].play).toHaveBeenCalled()
+    })
+    const audio = audios.list[0]
+    audio.fire('play')
+    audio.fire('waiting')
+    expect(player.loadingPhase.value).toBe('loading')
+    audio.fire('pause')
+    expect(player.loadingPhase.value).toBe('')
+  })
+
+  it('treats a playhead that stops moving as loading (no waiting event)', async () => {
+    vi.useFakeTimers()
+    try {
+      player.playList([lib('A')])
+      await vi.waitFor(() => {
+        expect(audios.list[0].play).toHaveBeenCalled()
+      })
+      const audio = audios.list[0]
+      audio.paused = false
+      audio.fire('play')
+      audio.fire('playing')
+      vi.advanceTimersByTime(3500)
+      expect(player.loadingPhase.value).toBe('loading')
+      audio.currentTime = 1
+      audio.fire('timeupdate')
+      expect(player.loadingPhase.value).toBe('')
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('retries a failed stream by looking it up again', async () => {
+    player.playList([pending('B')])
+    await vi.waitFor(() => {
+      expect(audios.list[0].play).toHaveBeenCalled()
+    })
+    audios.list[0].fire('error')
+    expect(player.playError.value).toBe('unplayable')
+    player.retry()
+    expect(player.playError.value).toBe('')
+    await vi.waitFor(() => {
+      expect(resolveTrackUrl).toHaveBeenCalledTimes(2)
+    })
+  })
 })

@@ -10,7 +10,12 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=castify" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=castify" />
     <link rel="manifest" href="/manifest.json" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- An app, not a page: no pinch or double-tap zoom, and no jump in
+         when a small input gets focus (iOS). See src/lib/noZoom.js. -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <meta name="theme-color" content="#1ad05c" />
 
     <!-- iOS home-screen "add to home screen" doesn't read manifest.json

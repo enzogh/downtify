@@ -24,7 +24,12 @@ Entry point: `main.py` (CLI flag `web` boots the FastAPI app on `DOWNTIFY_PORT`,
 ```
 main.py                # FastAPI boot, logging, static SPA serving, cover extraction, CLI args
 downtify/
-  api.py               # FastAPI router (endpoints listed in its module docstring)
+  api.py               # FastAPI router facade (endpoints listed in its module docstring)
+  api_core.py          # Shared state, ConnectionManager, settings, who may see what
+  api_pipeline.py      # Download pipeline: queue, _run_download, playlist batches
+  *_routes.py          # Routes by domain: library_, playlist_, download_, stream_,
+                       #   monitor_, artist_, discover_, system_ (on api.router);
+                       #   auth_, account_, mobile_, trash_, jam_... (own routers)
   downloader.py        # yt-dlp wrapper, file naming, sanitization
   spotify.py           # open.spotify.com/embed scraping + anonymous-token playlist pagination
   providers.py         # YouTube/yt-music search + match scoring
@@ -62,6 +67,7 @@ Version bump: `make version 2.7.1` — runs `version.sh`, rebuilds the frontend,
 - Type hints required on public functions and any new code. Use `from __future__ import annotations` (existing convention).
 - Logging: use `loguru` (`from loguru import logger`). Stdlib `logging` is intercepted in `main.py:_InterceptHandler` — do not reconfigure it.
 - Keep the existing API surface stable. The Vue frontend depends on the exact endpoint shapes documented in `downtify/api.py`'s module docstring. Add new endpoints rather than renaming.
+- `downtify/api.py` only builds `router` and re-exports every name of `api_core`, `api_pipeline` and the `*_routes.py` modules it covers, so `api.<name>` (and `monkeypatch.setattr(api, ...)`, which rebinds the name in every module that uses it) keeps working. New routes go in the matching `*_routes.py` (decorated with the shared `router` from `api_core`); new shared helpers in `api_core` / `api_pipeline`. Route modules import from those two, never from each other. New tests may patch the module that uses a name directly.
 - No new top-level dependencies without a clear need — `yt-dlp`, `mutagen`, `ytmusicapi`, `fastapi`, `loguru` cover the vast majority of cases.
 
 ## Domain gotchas (do not rediscover these)
@@ -146,7 +152,7 @@ The server lives in `~/git/downtify` (this repo), the Android client in `~/git/d
 
 ## Useful entry points when investigating
 
-- Download lifecycle: `downtify/api.py` (`POST /api/download/url`) → `downtify/downloader.py:Downloader` → `downtify/providers.py` (search) → `mutagen` tag write → `downtify/lyrics.py`.
+- Download lifecycle: `downtify/download_routes.py` (`POST /api/download/url`) → `downtify/api_pipeline.py:_run_download` → `downtify/downloader.py:Downloader` → `downtify/providers.py` (search) → `mutagen` tag write → `downtify/lyrics.py`.
 - Playlist sync: `downtify/monitor.py:monitor_loop` + `PlaylistMonitorDB` (sqlite under `/data`).
-- WebSocket progress: `downtify/api.py:ConnectionManager` (`WS /api/ws`).
+- WebSocket progress: `downtify/api_core.py:ConnectionManager` (`WS /api/ws` in `downtify/system_routes.py`).
 - Static SPA + cover serving: `main.py:build_app`, `main.py:SPAStaticFiles`, `main.py:_extract_cover`.

@@ -38,7 +38,7 @@ icon: lucide/file-code
   "require_sign_in": true,
   "capabilities": {
     "transcoding": { "available": true, "formats": ["aac", "mp3", "opus"], "bitrates": [96, 128, 160, 192, 256, 320] },
-    "signed_urls": true, "pairing": true, "password_sign_in": true, "podcasts": true, "discover": true, "lyrics": true, "library_sync": true
+    "signed_urls": true, "pairing": true, "password_sign_in": true, "podcasts": false, "discover": true, "lyrics": true, "library_sync": true
   }
 }
 ```
@@ -46,6 +46,7 @@ icon: lucide/file-code
 - 如果 `product` 不是 `Castify`，或 `api_version` 高于客户端支持版本，则拒绝继续。
 - 保存 `server_id`：即使地址发生变化，它仍可用于识别服务器。若之后该地址返回了不同 ID，则说明连接的是另一台服务器。
 - 根据 `capabilities` 启用相应功能（例如，若 `transcoding.available` 为 `false`，则隐藏移动网络音质选项）。
+- `capabilities.podcasts` 始终为 `false`：服务器已移除播客功能，应用会据此隐藏播客页面。保留该字段是为了让已安装的应用仍能读取它。
 - `capabilities.password_sign_in` 决定下一步如何向用户索取凭据：值为 `true` 时询问用户名和密码，否则请求配对码（账户功能已关闭、本地密码登录被禁用，或服务器早于 `POST /api/auth/token`）。
 
 ## 3. 登录或配对
@@ -204,7 +205,6 @@ Authorization: Bearer <token>
 | `{ "type": "likes", "count": 3 }` | 任一位置的喜欢记录更改；重新获取 `GET /api/v1/likes`。 |
 | `{ "type": "queue_reload" }` | 一次性加入大量下载任务；重新获取 `GET /api/queue`。 |
 | `{ "song": {…}, "progress": 42.5, "status": "downloading"\|"done"\|"error", "message", "filename", "provider" }` | 服务器下载进度（没有 `type`）；仅推送当前用户自己的任务（管理员设备可查看所有任务）。 |
-| `{ "type": "podcasts" }` / `{ "type": "podcast_progress", … }` | 播客剧集下载或进度更新。 |
 | `{ "type": "device_paired", … }` | 新设备已配对（此消息供网页使用；客户端可忽略）。 |
 | `{ "type": "now_playing", "players": [ … ] }` | 本账户的某个播放器（浏览器、本应用或另一台设备上的应用）报告了正在播放的内容，内容同 `GET /api/activity/devices`；请排除自己的 `player` id。可选：用于“在其他设备上播放”提示栏。 |
 | `{ "type": "player_command", "player": "<id>", "action": "pause"\|"play" }` | 本账户的另一台设备请求 id 为 `player` 的播放器暂停或继续——仅当 `player` 是本应用的 id 时执行。可选。 |
@@ -233,7 +233,6 @@ POST /api/activity/playback
 - 在歌曲开始、暂停/恢复（`state: "paused"`/`"playing"`）、停止时（`"stopped"`，`track` 可为 `{}`）发送；播放期间约每 30 秒发送一次。仅在线时发送，不要将这些消息排队。
 - `player` 可为此安装实例中任意稳定 ID。应用在服务器中会以设备名称显示。
 
-播客剧集使用 `PUT /api/podcasts/episodes/{id}/playback` 并发送 `{ "position_seconds", "played" }`（参见 API 参考），播放期间约每 10 秒发送一次，暂停时也发送。
 
 ## 错误处理摘要
 

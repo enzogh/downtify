@@ -38,7 +38,7 @@ Build the address from the resolved host + `port`. Discovery is a convenience: a
   "require_sign_in": true,
   "capabilities": {
     "transcoding": { "available": true, "formats": ["aac", "mp3", "opus"], "bitrates": [96, 128, 160, 192, 256, 320] },
-    "signed_urls": true, "pairing": true, "password_sign_in": true, "podcasts": true, "discover": true, "lyrics": true, "library_sync": true
+    "signed_urls": true, "pairing": true, "password_sign_in": true, "podcasts": false, "discover": true, "lyrics": true, "library_sync": true
   }
 }
 ```
@@ -47,6 +47,7 @@ Build the address from the resolved host + `port`. Discovery is a convenience: a
 - `product` stays `Downtify` even though the server is now branded Castify: it identifies the API, not the brand, and installed apps compare it as is.
 - Remember `server_id`: it identifies the server across address changes. When the address later answers with a different id, it's a different server.
 - Use `capabilities` to enable features (e.g. hide mobile-data quality when `transcoding.available` is false).
+- `capabilities.podcasts` is always `false`: podcasts were removed from the server, and the apps hide their Podcasts screens on it. The key stays so installed apps keep reading it.
 - `capabilities.password_sign_in` decides how the app asks for credentials next: a username and password when it is `true`, a pairing code otherwise (accounts turned off, local password login disabled, or a server older than `POST /api/auth/token`).
 
 ## 3. Sign in or pair
@@ -100,7 +101,7 @@ Content-Type: application/json
 
 **Unpaired / revoked:** any request answers `401` with `{"detail": "Invalid or revoked token"}` and the WebSocket closes with code `4401`. Drop the token and send the user back to sign in.
 
-**What a device may do:** everything below, plus the web API's read endpoints, searching and previews (`/api/songs/search`, `/api/url/resolve`, `/api/preview`), where to buy a song to support the artist (`/api/buy`, see [Support the Artist](features/support-artists.md)), asking the server to download (`POST /api/download/url|batch|album`), likes, listens and podcast episode playback/downloads. Settings, credentials, deleting files and managing devices answer `403` for a device. Searching, previews, streaming and asking the server to download are shared: a track anyone downloaded can be played and then claimed by downloading it. The library feed, playlists, likes and the queue hold the paired account’s own entries (everything, on an admin’s device). An account being deleted, or its owner choosing **Sign out everywhere**, unpairs the device (`401`).
+**What a device may do:** everything below, plus the web API's read endpoints, searching and previews (`/api/songs/search`, `/api/url/resolve`, `/api/preview`), where to buy a song to support the artist (`/api/buy`, see [Support the Artist](features/support-artists.md)), asking the server to download (`POST /api/download/url|batch|album`), likes and listens. Settings, credentials, deleting files and managing devices answer `403` for a device. Searching, previews, streaming and asking the server to download are shared: a track anyone downloaded can be played and then claimed by downloading it. The library feed, playlists, likes and the queue hold the paired account’s own entries (everything, on an admin’s device). An account being deleted, or its owner choosing **Sign out everywhere**, unpairs the device (`401`).
 
 ## 4. Sync the library
 
@@ -137,7 +138,7 @@ GET /api/v1/library?since=<cursor>
 - `ETag`/`If-None-Match` are supported (`304` when nothing changed for that `since`).
 - `refresh=true` rescans the folder now (pull to refresh) — otherwise the scan behind the list is cached for about a minute.
 - When the server says the library changed (WebSocket `library_changed`, below), sync again.
-- **Whose library:** the library is shared, so the feed holds every track except what an admin [hid from users](features/users.md#hiding-from-users) (an admin’s device gets everything). A track that becomes hidden arrives as a removed id, and one shown again arrives as an ordinary row. Nothing below changes shape because of this. Podcast shows, episode progress, listens and the block list are per-account the same way; subscribing to a show works from the web page.
+- **Whose library:** the library is shared, so the feed holds every track except what an admin [hid from users](features/users.md#hiding-from-users) (an admin’s device gets everything). A track that becomes hidden arrives as a removed id, and one shown again arrives as an ordinary row. Nothing below changes shape because of this. Listens and the block list are per-account the same way.
 
 Other reads, all by track id:
 
@@ -205,7 +206,6 @@ Messages the app can rely on:
 | `{ "type": "likes", "count": 3 }` | Likes changed somewhere — refetch `GET /api/v1/likes` |
 | `{ "type": "queue_reload" }` | Many downloads were queued at once — refetch `GET /api/queue` |
 | `{ "song": {…}, "progress": 42.5, "status": "downloading"\|"done"\|"error", "message", "filename", "provider" }` | A server download's progress (no `type`) — one’s own jobs only (every job on an admin’s device) |
-| `{ "type": "podcasts" }` / `{ "type": "podcast_progress", … }` | Podcast episodes downloaded / progress |
 | `{ "type": "device_paired", … }` | A device was paired (for the web page; ignore) |
 | `{ "type": "now_playing", "players": [ … ] }` | One of this account's players (a browser, this or another install) reported what it plays — the rows of `GET /api/activity/devices`; leave out your own `player` id. Optional: for a "playing on another device" bar |
 | `{ "type": "player_command", "player": "<id>", "action": "pause"\|"play"\|"load"\|"transfer", … }` | Another device of this account asks the player whose id is `player` to pause, resume, play a queue (`load`: `files`, `index`, `position`, `playing`) or send its own queue to the device `to` (`transfer`) — act on it only when `player` is this install's id; ignore actions you don't support. Optional |
@@ -235,7 +235,6 @@ POST /api/activity/playback
 - `player` is any id stable for this install. The app shows up by its device name.
 - The account's other devices see these reports (`now_playing` frames, `GET /api/activity/devices`) and may send this install `player_command` frames through `POST /api/activity/devices/command` — `{ "player", "action": "pause" | "play" }`; `404` when that player went quiet for 90 s.
 
-Podcast episodes: `PUT /api/podcasts/episodes/{id}/playback` with `{ "position_seconds", "played" }` (see the API reference), roughly every 10 s while playing and on pause.
 
 ## Error handling summary
 

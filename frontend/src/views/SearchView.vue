@@ -425,13 +425,6 @@ const browseTiles = computed(() => [
     to: { name: 'Library' },
   },
   {
-    id: 'podcasts',
-    label: t('nav.podcasts'),
-    icon: 'mic',
-    color: '#006450',
-    to: { name: 'Podcasts' },
-  },
-  {
     id: 'monitor',
     label: t('nav.monitor'),
     icon: 'radar',

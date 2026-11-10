@@ -84,6 +84,10 @@ Controla quantas músicas são baixadas ao mesmo tempo. Escolha uma predefiniç�
 
 O limite vale para todo download em lote — downloads de playlists/álbuns, o endpoint da fila em lote e [importações de biblioteca](library-import.md) por CSV — e para as consultas da sincronização das **[Pastas de músicas existentes](external-library.md)** (letras, capas, gênero). Ele **não** vale para as varreduras do Monitor de playlists, que baixam as faixas novas uma de cada vez. Mudar este valor em Configurações tem efeito imediato, sem reiniciar; o servidor limita qualquer valor fora de `1–30`.
 
+As vagas são divididas de forma justa entre as contas. Cada vaga livre vai para a conta com menos músicas baixando naquele momento, então uma playlist longa colocada na fila por uma pessoa não segura uma música pedida depois por outra: ela começa na próxima vaga livre. As músicas de cada conta mantêm a ordem. Num servidor com uma só conta (ou sem login), a fila simplesmente segue em ordem. Diminuir o valor deixa os downloads em andamento terminarem; nada é interrompido.
+
+Numa playlist ou num álbum, enquanto as músicas baixam, o Castify já procura as próximas (seus dados completos e a correspondência no YouTube Music), para que cada música comece a baixar assim que conseguir uma vaga. Isso só acontece quando o YouTube Music (ou o YouTube) é a primeira [fonte de áudio](#audio-provider); Soulseek, Deezer e SoundCloud continuam buscando quando chega a vez da música. Nunca busca mais de *Downloads paralelos* + 2 músicas à frente, e mudar as fontes de áudio nesse meio-tempo faz uma música ser buscada de novo.
+
 ## Pausa entre downloads
 
 Faz o Castify esperar um número configurável de segundos ao terminar uma música antes de começar a próxima, em vez de disparar as requisições em sequência.

@@ -57,8 +57,8 @@ from . import apple_music, deezer, providers, spotify
 from .album_artist import filing_artist
 from .downloader import _sanitize
 from .file_naming import file_name_key
+from .html_text import strip_html
 from .image_size import image_dimensions
-from .podcasts import strip_html
 
 KIND_PHOTO = 'photo'
 KIND_BANNER = 'banner'
@@ -365,7 +365,7 @@ def _format_bio_text(raw: str) -> str:
     they'd render as one long paragraph. A single line break anywhere
     else is kept as it is.
 
-    Starts from :func:`downtify.podcasts.strip_html`, which already turns
+    Starts from :func:`downtify.html_text.strip_html`, which already turns
     block tags (``<p>``, ``<br>``, ``<li>`` ...) into line breaks and
     drops every other tag, so Deezer's HTML comes out as paragraphs
     separated by blank lines. Idempotent - running its own output through

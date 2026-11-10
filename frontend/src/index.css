@@ -4,6 +4,14 @@
 
 @import './styles/tokens.css';
 
+/* No double-tap zoom (and no 300 ms tap delay); pinch is handled in
+   src/lib/noZoom.js. iOS mustn't enlarge text on rotation either. */
+html {
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 @layer components {
   /* Cover tiles: lift on hover and slide the play button in. */
   .tile {

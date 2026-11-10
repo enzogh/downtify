@@ -84,6 +84,10 @@ Azt szabályozza, hány dal tölt le egyszerre. Válassz egy előbeállítást (
 
 A korlát minden kötegelt letöltésre vonatkozik — lejátszási lista-/albumletöltések, a kötegelt sorvégpont és a CSV [könyvtárimportok](library-import.md) —, valamint a **[Meglévő zenei mappák](external-library.md)** szinkronizálási lekérdezéseire (dalszövegek, borítók, műfaj). **Nem** vonatkozik a Lejátszási lista figyelő átfésüléseire, amelyek az új számokat egyesével töltik le. Ennek az értéknek a módosítása a Beállításokban újraindítás nélkül azonnal érvénybe lép; a szerver az `1–30` tartományon kívüli értékeket a tartományba szorítja.
 
+A helyek igazságosan oszlanak meg a fiókok között. Minden szabad hely ahhoz a fiókhoz kerül, amelyiknek éppen a legkevesebb dala töltődik, így egy valaki által sorba állított hosszú lejátszási lista nem tartja fel a más által később kért dalt: az a következő szabad helyen indul. Minden fiók dalai megtartják a sorrendjüket. Egyetlen fiókos (vagy bejelentkezés nélküli) szerveren a sor egyszerűen sorban halad. Az érték csökkentése hagyja befejeződni a már futó letöltéseket; semmi sem szakad meg.
+
+Lejátszási listában vagy albumban a letöltések közben a Castify már megkeresi a következő néhány dalt (a teljes adataikat és a YouTube Music-találatukat), hogy minden dal azonnal indulhasson, amint helyet kap. Ez csak akkor történik, ha a YouTube Music (vagy a YouTube) az első [hangforrás](#audio-provider); a Soulseek, a Deezer és a SoundCloud továbbra is akkor keres, amikor a dal sorra kerül. Soha nem keres előre több mint *Párhuzamos letöltések* + 2 dalt, és ha közben megváltoznak a hangforrások, a dalt újra keresi.
+
 ## Szünet a letöltések között
 
 Azt éri el, hogy a Castify egy dal befejezése után beállítható számú másodpercet várjon a következő megkezdése előtt, ahelyett hogy egymás után sorozatban lőné ki a kéréseket.

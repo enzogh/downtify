@@ -86,7 +86,6 @@ export default {
       'features/player.md': 'Built-in Player',
       'features/jam.md': 'Jam',
       'features/liked-songs.md': 'Liked Songs',
-      'features/podcasts.md': 'Podcasts',
       'features/discover.md': 'Discover',
       'features/collaborative-playlists.md': 'Collaborative playlists',
       'features/playlist-order.md': 'Playlist order & repeated songs',

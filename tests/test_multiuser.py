@@ -36,7 +36,6 @@ from downtify.monitor import (
 )
 from downtify.playlist_batches import PlaylistBatchStore
 from downtify.playlist_catalog import ManualPlaylistOwners, PlaylistCatalog
-from downtify.podcasts import EpisodeInfo, PodcastStore
 from downtify.track_owners import TrackOwners
 from downtify.traffic import (
     DIRECTION_IN,
@@ -689,7 +688,6 @@ def test_backfill_gives_current_files_to_brillik(monkeypatch, tmp_path):
         'likes': 0,
         'playlists': 0,
         'batches': 0,
-        'podcasts': 0,
         'watches': 0,
         'listens': 0,
     }
@@ -725,7 +723,7 @@ def test_backfill_falls_back_to_the_oldest_admin(monkeypatch, tmp_path):
     assert len(owners.owned_keys(admin['id'])) == 1
 
 
-def test_backfill_takes_shows_watches_and_listens(monkeypatch, tmp_path):
+def test_backfill_takes_watches_and_listens(monkeypatch, tmp_path):
 
     users = UserStore(tmp_path / 'auth.db')
     users.create('admin', 'password123', role='admin')
@@ -734,11 +732,6 @@ def test_backfill_takes_shows_watches_and_listens(monkeypatch, tmp_path):
     monkeypatch.setattr(
         api.state, 'track_owners', TrackOwners(tmp_path / 'lib.db')
     )
-    shows = PodcastStore(tmp_path / 'lib.db')
-    show = shows.add_show('https://example.com/feed.xml', 'Show')
-    episode = shows.upsert_episodes(show['id'], [_episode()])[0]
-    shows.set_playback(episode['id'], position_seconds=5.0)
-    monkeypatch.setattr(api.state, 'podcasts', shows)
     watches = PlaylistMonitorDB(tmp_path / 'monitor.db')
     watches.add_playlist('sid-1', 'Mix', 'https://x/1', 60)
     monkeypatch.setattr(api.state, 'monitor_db', watches)
@@ -767,11 +760,8 @@ def test_backfill_takes_shows_watches_and_listens(monkeypatch, tmp_path):
     done = api.migrate_first_run_ownership()
 
     bid = brillik['id']
-    assert done['podcasts'] == 2
     assert done['watches'] == 1
     assert done['listens'] == 2
-    assert [s['id'] for s in shows.list_shows(bid)] == [show['id']]
-    assert shows.get_episode(episode['id'], bid)['position_seconds'] == 5.0
     assert [w.spotify_id for w in watches.list_playlists(bid)] == ['sid-1']
     assert [row['name'] for row in history.listens(bid)] == ['Daft Punk']
     assert [row['name'] for row in history.blocked(bid)] == ['Nope']
@@ -792,9 +782,6 @@ def test_deleting_a_user_releases_everything(monkeypatch, tmp_path):
     manual = ManualPlaylistOwners(tmp_path / 'lib.db')
     manual.set_owner('Mine', 2)
     monkeypatch.setattr(api.state, 'manual_playlist_owners', manual)
-    shows = PodcastStore(tmp_path / 'lib.db')
-    shows.add_show('https://example.com/feed.xml', 'Show', user_id=2)
-    monkeypatch.setattr(api.state, 'podcasts', shows)
     watches = PlaylistMonitorDB(tmp_path / 'monitor.db')
     watches.add_playlist('sid-1', 'Mix', 'https://x/1', 60, user_id=2)
     monkeypatch.setattr(api.state, 'monitor_db', watches)
@@ -810,7 +797,6 @@ def test_deleting_a_user_releases_everything(monkeypatch, tmp_path):
     assert owners.owned_keys(2) == set()
     assert likes.paths(2) == []
     assert manual.owner_map() == {}
-    assert shows.list_shows(2) == []
     assert watches.list_playlists(2) == []
     assert history.listens(2) == []
     assert traffic.totals() == {}
@@ -911,70 +897,6 @@ def test_release_unlikes_only_for_the_releaser(monkeypatch, tmp_path):
     assert (downloads / 'Shared.mp3').is_file()
 
 
-# ── podcasts per user ────────────────────────────────────────────────
-
-
-def _episode() -> EpisodeInfo:
-    return EpisodeInfo(
-        guid='ep-1',
-        title='Pilot',
-        description='',
-        published_at='2024-01-01',
-        duration_seconds=60.0,
-        season_number=1,
-        episode_number=1,
-        enclosure_url='https://example.com/ep1.mp3',
-        enclosure_type='audio/mpeg',
-    )
-
-
-def test_two_users_subscribe_to_the_same_feed(tmp_path):
-    store = PodcastStore(tmp_path / 'lib.db')
-    first = store.add_show('https://example.com/feed.xml', 'Show', user_id=5)
-    second = store.add_show('https://example.com/feed.xml', 'Show', user_id=7)
-
-    assert first['id'] != second['id']
-    assert first['folder_name'] != second['folder_name']
-    assert [s['id'] for s in store.list_shows(5)] == [first['id']]
-    assert [s['id'] for s in store.list_shows(7)] == [second['id']]
-    assert len(store.list_shows()) == 2
-    again = store.add_show('https://example.com/feed.xml', 'Show', user_id=5)
-    assert again['id'] == first['id']
-
-
-def test_playback_position_is_per_user(tmp_path):
-    store = PodcastStore(tmp_path / 'lib.db')
-    show = store.add_show('https://example.com/feed.xml', 'Show', user_id=5)
-    episode = store.upsert_episodes(show['id'], [_episode()])[0]
-
-    store.set_playback(episode['id'], position_seconds=10.0, user_id=5)
-    assert store.get_episode(episode['id'], 5)['position_seconds'] == 10.0
-    assert store.get_episode(episode['id'], 7)['position_seconds'] == 0
-    assert store.get_episode(episode['id'])['position_seconds'] == 0
-    store.set_playback(episode['id'], played=True, user_id=7)
-    assert store.get_episode(episode['id'], 7)['played'] is True
-    assert store.get_episode(episode['id'], 5)['played'] is False
-
-
-def test_podcast_endpoints_scope_shows_to_their_owner(monkeypatch, tmp_path):
-    store = PodcastStore(tmp_path / 'lib.db')
-    mine = store.add_show('https://example.com/mine.xml', 'Mine', user_id=5)
-    store.add_show('https://example.com/theirs.xml', 'Theirs', user_id=7)
-    monkeypatch.setattr(api.state, 'podcasts', store)
-    monkeypatch.setattr(api.state, 'monitor_db', None)
-
-    shows = asyncio.run(api.list_podcast_shows(_request(5)))
-    assert [s['id'] for s in shows] == [mine['id']]
-    assert len(asyncio.run(api.list_podcast_shows(_admin_request()))) == 2
-    with pytest.raises(HTTPException) as exc:
-        asyncio.run(api.get_podcast_show(_request(7), mine['id']))
-    assert exc.value.status_code == 404
-    assert (
-        asyncio.run(api.get_podcast_show(_request(5), mine['id']))['id']
-        == mine['id']
-    )
-
-
 # ── legacy schema migrations ─────────────────────────────────────────
 
 
@@ -1010,67 +932,6 @@ def test_legacy_watches_migrate_and_allow_same_url_twice(tmp_path):
     second = db.add_playlist('sid-1', 'Mix', 'https://x/1', 60, user_id=7)
     assert [w.id for w in db.list_playlists(7)] == [second.id]
     assert len(db.list_playlists()) == 2
-
-
-def test_legacy_podcasts_migrate_to_per_user(tmp_path):
-    db = tmp_path / 'lib.db'
-    conn = sqlite3.connect(str(db))
-    conn.execute("""
-        CREATE TABLE podcast_shows (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            feed_url TEXT NOT NULL UNIQUE,
-            name TEXT NOT NULL,
-            author TEXT NOT NULL DEFAULT '',
-            description TEXT NOT NULL DEFAULT '',
-            artwork_url TEXT NOT NULL DEFAULT '',
-            source_url TEXT NOT NULL DEFAULT '',
-            folder_name TEXT NOT NULL,
-            retention INTEGER NOT NULL DEFAULT 0,
-            created_at TEXT NOT NULL
-        )
-    """)
-    conn.execute(
-        'INSERT INTO podcast_shows (feed_url, name, folder_name, created_at)'
-        " VALUES ('https://example.com/feed.xml', 'Show', 'Show',"
-        " '2024-01-01')"
-    )
-    conn.execute("""
-        CREATE TABLE podcast_episodes (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            show_id INTEGER NOT NULL,
-            guid TEXT NOT NULL,
-            title TEXT NOT NULL DEFAULT '',
-            description TEXT NOT NULL DEFAULT '',
-            published_at TEXT NOT NULL DEFAULT '',
-            duration_seconds REAL NOT NULL DEFAULT 0,
-            season_number INTEGER,
-            episode_number INTEGER,
-            enclosure_url TEXT NOT NULL DEFAULT '',
-            enclosure_type TEXT NOT NULL DEFAULT '',
-            filename TEXT,
-            downloaded_at TEXT,
-            dismissed INTEGER NOT NULL DEFAULT 0,
-            UNIQUE(show_id, guid)
-        )
-    """)
-    conn.execute("""
-        CREATE TABLE podcast_playback (
-            episode_id INTEGER PRIMARY KEY,
-            position_seconds REAL NOT NULL DEFAULT 0,
-            played INTEGER NOT NULL DEFAULT 0,
-            updated_at TEXT NOT NULL
-        )
-    """)
-    conn.commit()
-    conn.close()
-
-    store = PodcastStore(db)
-    shows = store.list_shows()
-    assert len(shows) == 1
-    # Same feed twice now works, in two folders.
-    other = store.add_show('https://example.com/feed.xml', 'Show', user_id=7)
-    assert other['folder_name'] == 'Show (2)'
-    assert store.reassign_legacy(0) == 0
 
 
 def test_legacy_discover_history_migrates_to_per_user(tmp_path):

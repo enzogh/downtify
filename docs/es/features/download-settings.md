@@ -84,6 +84,10 @@ Controla cuántas canciones se descargan a la vez. Elige un valor predefinido (1
 
 El límite se aplica a toda descarga por lotes — descargas de playlists/álbumes, el endpoint de la cola por lotes y las [importaciones de biblioteca](library-import.md) por CSV — y a las consultas de la sincronización de **[Carpetas de música existentes](external-library.md)** (letras, portadas, género). **No** se aplica a los barridos del Monitor de playlists, que descargan las canciones nuevas de una en una. Cambiar este valor en Ajustes surte efecto de inmediato sin reiniciar; el servidor limita cualquier valor fuera de `1–30`.
 
+Los espacios se reparten de forma justa entre las cuentas. Cada espacio libre va a la cuenta con menos canciones descargándose en ese momento, así que una playlist larga puesta en cola por una persona no retiene una canción que otra pida después: empieza en el siguiente espacio libre. Las canciones de cada cuenta mantienen su orden. En un servidor con una sola cuenta (o sin inicio de sesión), la cola simplemente avanza en orden. Bajar el valor deja terminar las descargas en curso; no se corta nada.
+
+En una playlist o un álbum, mientras se descargan canciones, Castify ya busca las siguientes (sus datos completos y su coincidencia en YouTube Music), para que cada canción pueda empezar a descargarse en cuanto consiga un espacio. Solo ocurre cuando YouTube Music (o YouTube) es la primera [fuente de audio](#audio-provider); Soulseek, Deezer y SoundCloud siguen buscando cuando llega el turno de la canción. Nunca busca más de *Descargas en paralelo* + 2 canciones por adelantado, y cambiar las fuentes de audio mientras tanto hace que una canción se busque de nuevo.
+
 ## Pausa entre descargas
 
 Hace que Castify espere un número configurable de segundos al terminar una canción antes de empezar la siguiente, en lugar de lanzar las peticiones seguidas.

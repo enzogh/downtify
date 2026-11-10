@@ -172,7 +172,7 @@ When a song is skipped:
 
 ## Long tracks
 
-**Settings → Downloads → Longest track taken** caps the track length for downloads *and* streams alike (default **10 minutes**, `0` takes everything). Longer songs are refused before anything is fetched, with a *"tracks over … are not downloaded"* queue error — hour-long mixes and uploads are never what a library track should be. The same cap guards streaming: a longer track is refused with a `400` (callers that know its length pass `duration`, and the length YouTube reports — or the cached file's — is checked either way), so long uploads are never streamed nor accumulate in the stream cache. Already-downloaded files and podcast episodes (which are routinely longer) are unaffected.
+**Settings → Downloads → Longest track taken** caps the track length for downloads *and* streams alike (default **10 minutes**, `0` takes everything). Longer songs are refused before anything is fetched, with a *"tracks over … are not downloaded"* queue error — hour-long mixes and uploads are never what a library track should be. The same cap guards streaming: a longer track is refused with a `400` (callers that know its length pass `duration`, and the length YouTube reports — or the cached file's — is checked either way), so long uploads are never streamed nor accumulate in the stream cache. Already-downloaded files are unaffected.
 
 ## Audio provider
 

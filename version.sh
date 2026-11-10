@@ -48,33 +48,41 @@ fi
 
 echo "Bumping $OLD_VERSION → $NEW_VERSION"
 
+# In-place edit that works with both GNU sed (Linux) and BSD sed (macOS),
+# whose `-i` flags disagree: write a copy, then put it back.
+edit_in_place() {
+  local file="${@: -1}"
+  sed "${@:1:$#-1}" "$file" > "$file.tmp" && cat "$file.tmp" > "$file"
+  rm -f "$file.tmp"
+}
+
 # downtify/__init__.py
 
-sed -i "s/__version__ = '${OLD_VERSION}'/__version__ = '${NEW_VERSION}'/" \
+edit_in_place -e "s/__version__ = '${OLD_VERSION}'/__version__ = '${NEW_VERSION}'/" \
   "$REPO_ROOT/downtify/__init__.py"
 echo "  updated downtify/__init__.py"
 
 # pyproject.toml
 
-sed -i "s/^version = \"${OLD_VERSION}\"/version = \"${NEW_VERSION}\"/" \
+edit_in_place -e "s/^version = \"${OLD_VERSION}\"/version = \"${NEW_VERSION}\"/" \
   "$REPO_ROOT/pyproject.toml"
 echo "  updated pyproject.toml"
 
 # frontend/package.json
 
-sed -i "s/\"version\": \"${OLD_VERSION}\"/\"version\": \"${NEW_VERSION}\"/" \
+edit_in_place -e "s/\"version\": \"${OLD_VERSION}\"/\"version\": \"${NEW_VERSION}\"/" \
   "$REPO_ROOT/frontend/package.json"
 echo "  updated frontend/package.json"
 
 # Makefile
 
-sed -i "s/DOWNTIFY_VERSION := ${OLD_VERSION}/DOWNTIFY_VERSION := ${NEW_VERSION}/" \
+edit_in_place -e "s/DOWNTIFY_VERSION := ${OLD_VERSION}/DOWNTIFY_VERSION := ${NEW_VERSION}/" \
   "$REPO_ROOT/Makefile"
 echo "  updated Makefile"
 
 # Dockerfile
 
-sed -i \
+edit_in_place \
   -e "s/LABEL version=\"${OLD_VERSION}\"/LABEL version=\"${NEW_VERSION}\"/" \
   -e "s/org.opencontainers.image.version=\"${OLD_VERSION}\"/org.opencontainers.image.version=\"${NEW_VERSION}\"/" \
   "$REPO_ROOT/Dockerfile"

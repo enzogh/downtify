@@ -78,7 +78,6 @@ export default {
       'features/player.md': 'Beépített lejátszó',
       'features/jam.md': 'Jam',
       'features/liked-songs.md': 'Kedvelt számok',
-      'features/podcasts.md': 'Podcastok',
       'features/discover.md': 'Felfedezés',
       'features/collaborative-playlists.md': 'Közösen szerkesztett listák',
       'features/playlist-order.md': 'Sorrend és ismétlődő számok',

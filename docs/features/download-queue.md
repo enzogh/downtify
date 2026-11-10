@@ -25,7 +25,7 @@ Finished songs stay listed when you reload the page, and when Castify restarts o
 - **Resume downloads** carries on with the waiting songs, with the settings and the [audio source order](download-settings.md#audio-provider) as they are by then.
 - Songs added while the queue is paused join it and wait too. A waiting song you remove (or **Clear queue**) never starts.
 - [Playlist Monitor](playlist-monitor.md) sweeps wait as well, before each track, and so do [Replace Audio](replace-audio.md) jobs.
-- New watch checks and reconciliation sweeps wait before starting. Podcast monitoring stops between episodes; manual episode downloads wait too. Active work finishes normally.
+- New watch checks and reconciliation sweeps wait before starting. Active work finishes normally.
 - Library improvement receives its native pause and finishes its current track. Resume improvement separately in its existing screen after resuming the global queue. New runs and crash recovery respect the global pause.
 
 Everyone sees whether the queue is paused; only an admin can pause or resume it, since it holds everyone's downloads.

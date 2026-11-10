@@ -37,4 +37,6 @@ On a phone, Castify opens a short guide a moment after the page loads, as long a
 
 iOS Safari doesn't read the manifest's `display` or icon fields at all for "Add to Home Screen" — it needs its own `apple-mobile-web-app-capable` and `apple-touch-icon` `<meta>`/`<link>` tags in `index.html`, which are set alongside the manifest so both platforms get the same standalone, full-screen behavior with the Castify icon.
 
+The page never zooms, like an app: the viewport sets `maximum-scale=1, user-scalable=no` (which also stops iOS from zooming into a focused input), `touch-action: manipulation` drops double-tap zoom, and since iOS ignores `user-scalable=no`, `src/lib/noZoom.js` cancels its pinch gesture.
+
 There's no offline support or service worker — Castify's UI is only useful while it can reach the backend it's paired with, so this is "installable, full-screen web app," not an offline-capable one.

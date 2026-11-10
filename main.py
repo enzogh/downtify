@@ -117,7 +117,6 @@ from downtify.playlist_spotify_cache import (
     PlaylistSpotifyCache,
     playlist_spotify_cache_loop,
 )
-from downtify.podcasts import PodcastStore
 from downtify.proxy_config import configure_outbound_proxy
 from downtify.server_identity import ServerIdentity
 from downtify.server_port import (
@@ -469,7 +468,6 @@ def _open_library_stores(monitor_db_path: Path) -> None:
     api.state.traffic = TrafficCounters(library_db)
     # Albums an admin marked (or unmarked) as Various Artists by hand.
     api.state.compilation_marks = CompilationMarks(library_db)
-    api.state.podcasts = PodcastStore(library_db)
     # The music trash (downtify/library_trash.py), when the operator
     # turned it on. A configuration that doesn't load stops the server:
     # carrying on would quietly bring permanent deletion back.
@@ -670,7 +668,6 @@ def build_app() -> FastAPI:
                 loop=loop,
                 settings=api.state.settings,
                 get_library=api.library_stores,
-                get_podcasts=lambda: api.state.podcasts,
             ),
             name='monitor-loop',
         )
