@@ -37,7 +37,6 @@ from ytmusicapi.navigation import (
 )
 from ytmusicapi.parsers.library import parse_albums as _parse_ytm_albums
 
-from . import ip_rotation
 from .album_artist import album_artist_fields, is_act_of
 from .file_naming import file_name_key
 from .proxy_config import requests_proxies_for_youtube_music
@@ -1897,51 +1896,32 @@ def soundcloud_track_from_url(url: str) -> dict[str, Any]:
     parsed = parse_soundcloud_url(url)
     if parsed is None:
         raise ValueError('Not a SoundCloud track URL')
-    seen = ip_rotation.current_generation()
-    try:
-        return _soundcloud_track(parsed[1])
-    except Exception as exc:
-        # SoundCloud turns away a flagged exit IP (403 on its pages and
-        # oEmbed alike) for a while: a new IP opens the link again.
-        if not _soundcloud_blocked(str(exc)) or not ip_rotation.rotate_exit_ip(
-            seen, reason='SoundCloud'
-        ):
-            raise
-        return _soundcloud_track(parsed[1])
-
-
-def _soundcloud_blocked(message: str) -> bool:
-    lowered = message.lower()
-    return 'http error 403' in lowered or 'http error 429' in lowered
-
-
-def _soundcloud_track(track_link: str) -> dict[str, Any]:
     try:
         with yt_dlp.YoutubeDL(_soundcloud_ydl_opts()) as ydl:
             # process=False: the metadata, without picking a format.
-            info = ydl.extract_info(track_link, download=False, process=False)
+            info = ydl.extract_info(parsed[1], download=False, process=False)
     except Exception as exc:
         # SoundCloud's API turns some servers away (a blocked address, a
         # region) while its public oEmbed still answers: the link opens
         # with its title, artist and artwork instead of failing.
         logger.warning(
             'SoundCloud lookup failed for {} ({}); trying oEmbed',
-            track_link,
+            parsed[1],
             str(exc).splitlines()[0][:200] if str(exc) else type(exc).__name__,
         )
-        song = soundcloud_track_from_oembed(track_link)
+        song = soundcloud_track_from_oembed(parsed[1])
         if song is None:
             raise
         return song
     if not isinstance(info, dict) or not str(info.get('title') or '').strip():
-        song = soundcloud_track_from_oembed(track_link)
+        song = soundcloud_track_from_oembed(parsed[1])
         if song is None:
             raise ValueError('SoundCloud track metadata is unavailable')
         return song
     title = str(info['title']).strip()
     artist = _soundcloud_artist(info)
     track_url = parse_soundcloud_url(str(info.get('webpage_url') or ''))
-    track_url = track_url[1] if track_url else track_link
+    track_url = track_url[1] if track_url else parsed[1]
     year, release_date = _soundcloud_release(info)
     genres = [str(g).strip() for g in info.get('genres') or [] if g]
     try:

@@ -295,47 +295,6 @@ def test_soundcloud_failure_stands_when_oembed_fails_too(monkeypatch):
         )
 
 
-def test_soundcloud_block_gets_a_new_exit_ip_and_retries(monkeypatch):
-    attempts = []
-
-    def fake_track(link):
-        attempts.append(link)
-        if len(attempts) == 1:
-            raise RuntimeError('HTTP Error 403: Forbidden')
-        return {'name': 'I Follow', 'soundcloud_url': link}
-
-    rotations = []
-    monkeypatch.setattr(providers, '_soundcloud_track', fake_track)
-    monkeypatch.setattr(
-        providers.ip_rotation,
-        'rotate_exit_ip',
-        lambda seen, **kw: rotations.append(kw) or True,
-    )
-
-    song = providers.soundcloud_track_from_url(
-        'https://soundcloud.com/djharmelo/i-follow?si=x'
-    )
-
-    assert song['name'] == 'I Follow'
-    assert attempts == ['https://soundcloud.com/djharmelo/i-follow'] * 2
-    assert rotations == [{'reason': 'SoundCloud'}]
-
-
-def test_soundcloud_error_without_block_does_not_rotate(monkeypatch):
-    def fake_track(link):
-        raise ValueError('SoundCloud track metadata is unavailable')
-
-    monkeypatch.setattr(providers, '_soundcloud_track', fake_track)
-    monkeypatch.setattr(
-        providers.ip_rotation,
-        'rotate_exit_ip',
-        lambda *a, **k: pytest.fail('should not rotate'),
-    )
-
-    with pytest.raises(ValueError, match='unavailable'):
-        providers.soundcloud_track_from_url('https://soundcloud.com/a/b')
-
-
 def test_soundcloud_track_metadata_refuses_other_links():
     with pytest.raises(ValueError, match='Not a SoundCloud track'):
         providers.soundcloud_track_from_url(
