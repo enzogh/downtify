@@ -224,6 +224,11 @@ downloads are shared, and files are never stored twice.
   last-finished status)
 * ``POST /api/library/external/unmap`` (drop one extra folder from
   the library without deleting the audio files)
+* ``GET  /api/library/metadata`` (a track's tags plus suggestions from
+  Apple Music, Deezer and YouTube Music - ``?file=&query=``) and
+  ``POST /api/library/metadata`` (body ``{file, name, artists, ...}``:
+  rewrite its tags in place, admins only - see
+  ``downtify/track_metadata.py``)
 * ``GET  /api/library/replace/candidates`` (versions of a library track
   to pick from: YouTube Music and YouTube results, or a pasted link) and
   ``POST /api/library/replace`` (body ``{file, video_id}``: replace the

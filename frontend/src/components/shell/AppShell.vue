@@ -42,6 +42,7 @@
     <DefaultPasswordPrompt />
     <InstallPrompt />
     <ReplaceAudioDialog v-if="auth.isAdmin.value" />
+    <EditTagsDialog v-if="auth.isAdmin.value" />
     <BuyLinksDialog />
     <ShareCardDialog />
     <TrackOriginDialog />
@@ -82,6 +83,7 @@ import PlaylistDropDock from './PlaylistDropDock.vue'
 import SignIn from './SignIn.vue'
 import DefaultPasswordPrompt from './DefaultPasswordPrompt.vue'
 import ReplaceAudioDialog from '../library/ReplaceAudioDialog.vue'
+import EditTagsDialog from '../library/EditTagsDialog.vue'
 import BuyLinksDialog from '../library/BuyLinksDialog.vue'
 import ShareCardDialog from '../library/ShareCardDialog.vue'
 import TrackOriginDialog from '../monitor/TrackOriginDialog.vue'

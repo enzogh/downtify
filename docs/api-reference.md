@@ -1680,6 +1680,37 @@ It runs as a queue job, with the usual [WebSocket](#websocket) progress messages
 
 ---
 
+### `GET /api/library/metadata`
+
+Admin. A library track's tags and suggestions to [edit its info](features/edit-track-info.md) with.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `file` | string | yes | The track's library path |
+| `query` | string | no | What to search; default "Artist Title" from its tags |
+
+```json
+{
+  "track": { "file": "Martin Garrix/Animals/Martin Garrix - Animals.mp3", "source": "current", "name": "Animals", "artists": ["Martin Garrix"], "album_name": "Animals", "album_artist": "Martin Garrix", "year": "2013", "release_date": "", "track_number": 1, "genre": "", "explicit": false, "cover_url": "" },
+  "query": "Martin Garrix Animals",
+  "suggestions": [
+    { "source": "applemusic", "name": "Animals", "artists": ["Martin Garrix"], "album_name": "Animals - Single", "album_artist": "Martin Garrix", "year": "2013", "release_date": "2013-06-17", "track_number": 1, "genre": "Dance", "explicit": false, "cover_url": "https://is1-ssl.mzstatic.com/…/600x600bb.jpg" }
+  ]
+}
+```
+
+`source` is `applemusic` (iTunes Search), `deezer` or `youtube` (YouTube Music), up to 5 each, Apple Music first; a source that fails just has none. `404` for an unknown file.
+
+---
+
+### `POST /api/library/metadata`
+
+Admin. Rewrite a library track's tags: `{ "file", "name", "artists", "album_name", "album_artist", "year", "release_date", "track_number", "genre", "explicit", "cover_url" }` (`artists` a list or a comma-separated string). **Response:** `{ "file": "…" }`.
+
+The file keeps its path, lyrics and every other tag. A `cover_url` downloads that picture as the new cover; without one the current cover stays. A track number of `0` or an empty genre leaves the file's as it is, and `explicit` only ever adds the mark. `400` without a title or an artist, `404` for an unknown file.
+
+---
+
 ### `POST /api/library/compilation`
 
 Admin. Mark (`"compilation": true`) or unmark an album as a Various Artists compilation: `{ "files": ["…", "…"], "compilation": true }`, where `files` are every track of the album. See [Marking an album as Various Artists](features/file-organization.md#marking-an-album-as-various-artists).

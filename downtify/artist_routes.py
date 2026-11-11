@@ -11,6 +11,7 @@ import asyncio
 import base64
 import hashlib
 import mimetypes
+import unicodedata
 from pathlib import (
     Path,
 )
@@ -230,7 +231,38 @@ def artist_art_search_endpoint(
         if artist.get('cover_url')
     ]
     results.extend(deezer.search_artist(query, limit=8))
-    return results
+    return relevant_art_results(query, results)
+
+
+def relevant_art_results(
+    query: str, results: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
+    """The photo candidates whose artist is the one searched for.
+
+    Both searches pad their answer with related artists (Avicii and
+    Zedd for "Martin Garrix"): a photo of someone else is never the
+    right pick. A result counts when one name holds the other (ignoring
+    case and accents, "Martin Garrix & Dua Lipa" included). When none
+    does - a misspelt or partial search - everything found is kept.
+    """
+
+    wanted = _name_key(query)
+    kept = [
+        row
+        for row in results
+        if wanted
+        and (
+            wanted in _name_key(row.get('name'))
+            or _name_key(row.get('name')) in wanted
+        )
+        and _name_key(row.get('name'))
+    ]
+    return kept or results
+
+
+def _name_key(name: Any) -> str:
+    text = unicodedata.normalize('NFKD', str(name or '').casefold())
+    return ''.join(c for c in text if c.isalnum())
 
 
 @router.get('/api/artists/art/spotify_candidate')

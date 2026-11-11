@@ -67,6 +67,7 @@ export const NAV = [
       { title: 'Storage & Usage', page: 'features/storage-usage.md' },
       { title: 'Music Trash', page: 'features/music-trash.md' },
       { title: 'Replace Audio', page: 'features/replace-audio.md' },
+      { title: 'Edit Track Info', page: 'features/edit-track-info.md' },
       { title: 'M3U Export', page: 'features/m3u-export.md' },
       {
         title: 'Import existing playlists',

@@ -105,6 +105,7 @@ export default {
       'features/storage-usage.md': 'Storage & Usage',
       'features/music-trash.md': 'Music Trash',
       'features/replace-audio.md': 'Replace Audio',
+      'features/edit-track-info.md': 'Edit Track Info',
       'features/external-playlists.md': 'Import existing playlists',
       'features/m3u-export.md': 'M3U Export',
       'features/playlist-cover-art.md': 'Playlist Cover Art',

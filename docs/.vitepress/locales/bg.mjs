@@ -97,6 +97,7 @@ export default {
       'features/storage-usage.md': 'Хранилище и използване',
       'features/music-trash.md': 'Кошче за музика',
       'features/replace-audio.md': 'Замяна на аудио',
+      'features/edit-track-info.md': 'Редактиране на данните',
       'features/external-playlists.md': 'Import existing playlists',
       'features/m3u-export.md': 'M3U експорт',
       'features/playlist-cover-art.md': 'Корици на плейлисти',

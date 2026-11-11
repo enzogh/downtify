@@ -45,6 +45,7 @@ REMOTE_PREFIXES = (
     '/api/artists/profile/ensure',
     '/api/artists/profile/bio/preview',
     '/api/library/replace',
+    '/api/library/metadata',
     '/api/playlists/incomplete',
     '/api/playlists/batches/',
 )

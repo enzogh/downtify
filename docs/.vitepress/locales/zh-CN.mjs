@@ -96,6 +96,7 @@ export default {
       'features/storage-usage.md': '存储空间与用量',
       'features/music-trash.md': '音乐回收站',
       'features/replace-audio.md': '替换音频',
+      'features/edit-track-info.md': '编辑信息',
       'features/external-playlists.md': '导入现有播放列表',
       'features/m3u-export.md': '导出 M3U',
       'features/playlist-cover-art.md': '播放列表封面',

@@ -7,6 +7,7 @@ import { useHistory } from '/src/model/history'
 import { useUi } from '/src/model/ui'
 import { useAuth } from '/src/model/auth'
 import { useReplaceAudio } from '/src/model/replaceAudio'
+import { useEditTags } from '/src/model/editTags'
 import { useBuyLinks } from '/src/model/buyLinks'
 import { useTrackOrigin } from '/src/model/trackOrigin'
 import { useShareCard } from '/src/model/shareCard'
@@ -34,6 +35,7 @@ export function useTrackActions() {
   const ui = useUi()
   const auth = useAuth()
   const replaceAudio = useReplaceAudio()
+  const editTags = useEditTags()
   const buyLinks = useBuyLinks()
   const trackOrigin = useTrackOrigin()
   const shareCard = useShareCard()
@@ -309,6 +311,12 @@ export function useTrackActions() {
         label: t('library.saveToDevice'),
         icon: 'download',
         action: () => saveToDevice(track),
+      },
+      {
+        label: t('tagEdit.menu'),
+        icon: 'pencil',
+        hidden: !auth.isAdmin.value || !canReplace(track),
+        action: () => editTags.open(track),
       },
       {
         // Wrong song or version: pick the right one by hand (admins).

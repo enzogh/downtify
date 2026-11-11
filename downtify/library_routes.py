@@ -47,6 +47,7 @@ from . import (
     lyrics,
     m3u,
     providers,
+    track_metadata,
 )
 from .api_core import (
     _artist_image_kinds_to_save,
@@ -576,6 +577,101 @@ def _after_replacement(file: str, full: Path, old_key: str = '') -> None:
                 'Could not rekey owners for {}', file
             )
     invalidate_library_paths_cache(notify=False)
+
+
+def _require_admin(request: Request) -> None:
+    if not request_is_admin(request):
+        raise HTTPException(status_code=403, detail='Admins only')
+
+
+def _editable_track(file: str) -> tuple[Path, dict[str, Any]]:
+    """A library file and its tags, or 404."""
+
+    full = resolve_library_file(file, library_context())
+    if full is None:
+        raise HTTPException(status_code=404, detail='File not found')
+    return full, read_audio_metadata(full)
+
+
+@router.get('/api/library/metadata')
+async def track_metadata_endpoint(
+    request: Request, file: str = Query(...), query: str = Query('')
+) -> dict[str, Any]:
+    """A track's tags and suggestions to edit them with (admins):
+    ``{track, query, suggestions}``. ``query`` defaults to "Artist
+    Title"; each suggestion is ``{source, name, artists, album_name,
+    album_artist, year, release_date, track_number, genre, explicit,
+    cover_url}`` (``source``: ``applemusic``, ``deezer`` or
+    ``youtube``) - see ``downtify/track_metadata.py``."""
+
+    _require_admin(request)
+    file = file.strip().replace('\\', '/')
+    _full, entry = await asyncio.to_thread(_editable_track, file)
+    current = track_metadata.suggestion(
+        {
+            'name': entry.get('title'),
+            'artists': entry.get('artists') or [entry.get('artist') or ''],
+            'album_name': entry.get('album'),
+            'album_artist': entry.get('album_artist'),
+            'year': entry.get('year'),
+            'release_date': entry.get('release_date'),
+            'track_number': entry.get('track_number'),
+            'genre': entry.get('genre'),
+            'explicit': entry.get('explicit'),
+        },
+        'current',
+    )
+    text = (
+        query.strip()
+        or ' '.join([', '.join(current['artists']), current['name']]).strip()
+    )
+    found = await asyncio.to_thread(track_metadata.suggestions, text)
+    return {
+        'track': {**current, 'file': file},
+        'query': text,
+        'suggestions': found,
+    }
+
+
+@router.post('/api/library/metadata')
+async def edit_track_metadata(request: Request) -> dict[str, Any]:
+    """Write a track's tags (admins): ``{file, name, artists,
+    album_name, album_artist, year, release_date, track_number, genre,
+    explicit, cover_url}`` -> ``{file}``. Same path; a ``cover_url``
+    replaces the cover, none keeps it."""
+
+    _require_admin(request)
+    payload = await _json_object(request)
+    file = str(payload.get('file') or '').strip().replace('\\', '/')
+    if not file:
+        raise HTTPException(status_code=400, detail='file is required')
+    try:
+        edit = track_metadata.clean_edit(payload)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    full, _entry = await asyncio.to_thread(_editable_track, file)
+    try:
+        old_key = content_key_for(full) or ''
+    except Exception:
+        old_key = ''
+    try:
+        await asyncio.to_thread(track_metadata.write_tags, full, edit)
+    except Exception as exc:
+        logger.opt(exception=True).warning('Editing tags of {} failed', file)
+        raise HTTPException(
+            status_code=500, detail='Could not write the tags'
+        ) from exc
+    await asyncio.to_thread(_after_replacement, file, full, old_key)
+    if edit.get('cover_url') and state.cover_cache is not None:
+        await asyncio.to_thread(state.cover_cache.refresh, file, full)
+    await log_activity(
+        request,
+        'metadata_edited',
+        f'{", ".join(edit["artists"])} - {edit["name"]}',
+        {'file': file},
+    )
+    announce_library_changed()
+    return {'file': file}
 
 
 @router.post('/api/library/compilation')

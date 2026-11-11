@@ -865,6 +865,14 @@ function getReplaceCandidates(file, query = '') {
   })
 }
 
+function getTrackMetadata(file, query = '') {
+  return API.get('/api/library/metadata', { params: { file, query } })
+}
+
+function editTrackMetadata(body) {
+  return API.post('/api/library/metadata', body)
+}
+
 function replaceAudio(file, videoId) {
   return API.post('/api/library/replace', { file, video_id: videoId })
 }
@@ -1210,6 +1218,8 @@ export default {
   setServerPort,
   getReplaceCandidates,
   replaceAudio,
+  getTrackMetadata,
+  editTrackMetadata,
   setAlbumCompilation,
   getDiscover,
   getDiscoverDeezerCollections,

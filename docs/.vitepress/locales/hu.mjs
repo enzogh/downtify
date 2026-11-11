@@ -97,6 +97,7 @@ export default {
       'features/storage-usage.md': 'Tárhely és használat',
       'features/music-trash.md': 'Zenekuka',
       'features/replace-audio.md': 'Hang cseréje',
+      'features/edit-track-info.md': 'Adatok szerkesztése',
       'features/external-playlists.md': 'Import existing playlists',
       'features/m3u-export.md': 'M3U-exportálás',
       'features/playlist-cover-art.md': 'Lejátszási lista borítók',

@@ -98,6 +98,7 @@ export default {
       'features/storage-usage.md': 'Χώρος και χρήση',
       'features/music-trash.md': 'Κάδος μουσικής',
       'features/replace-audio.md': 'Αντικατάσταση ήχου',
+      'features/edit-track-info.md': 'Επεξεργασία στοιχείων',
       'features/external-playlists.md': 'Import existing playlists',
       'features/m3u-export.md': 'Εξαγωγή M3U',
       'features/playlist-cover-art.md': 'Εξώφυλλα λιστών',

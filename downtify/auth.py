@@ -1079,7 +1079,7 @@ RULES: list[tuple[frozenset[str], re.Pattern[str], str]] = [
         (
             _ALL,
             r'^/api/library/(upgrade|reconcile|archive|replace|external'
-            r'|visibility|usage|compilation)',
+            r'|visibility|usage|compilation|metadata)',
             ADMIN,
         ),
         (_ALL, r'^/api/library/playlist', ADMIN),
