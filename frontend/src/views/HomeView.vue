@@ -141,6 +141,7 @@
           :title="artist.name"
           :subtitle="t('search.artist')"
           :cover="artist.cover"
+          :fallback="artist.fallback"
           :name="artist.name"
           round
           icon="user"
@@ -174,7 +175,7 @@
 // play, then rows that scroll sideways - your mixes, what you played,
 // your playlists, what was added, your artists. Links go in the search
 // bar at the top, which takes them as well as words.
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import AppIcon from '/src/components/ui/AppIcon.vue'
 import HomeRow from '/src/components/home/HomeRow.vue'
 import HomeShortcut from '/src/components/home/HomeShortcut.vue'
@@ -191,6 +192,8 @@ import { useTrackActions } from '/src/model/trackActions'
 import { itemTrackCount } from '/src/lib/library'
 import { useOffline } from '/src/model/offline'
 import { mixSeeds } from '/src/lib/mixes'
+import { artistPhotoSource } from '/src/lib/artistPhotoProxy'
+import API from '/src/model/api'
 import { useI18n } from '/src/i18n'
 
 const { t } = useI18n()
@@ -342,24 +345,53 @@ const artistsByName = computed(
     )
 )
 
-// The artists you play (or like, or have the most of), with their photo.
-const topArtists = computed(() => {
+// The artists you play (or like, or have the most of).
+const topArtistSeeds = computed(() => {
   if (!library.tracksComplete.value) return []
   return mixSeeds(library.tracks.value, {
     plays: listening.plays.value,
     liked: likes.liked.value,
     count: 12,
-  }).map((seed) => {
+  })
+})
+
+// Their saved photos (artist page picker), asked once per set of names,
+// as the Library's artists tab does.
+const artistPhotos = ref({})
+const artistPhotosLoaded = ref(false)
+watch(
+  () => topArtistSeeds.value.map((seed) => seed.name).join('\n'),
+  async (joined) => {
+    if (!joined) return
+    try {
+      const res = await API.getArtistArtBulk(joined.split('\n'))
+      artistPhotos.value = res.data || {}
+    } catch {
+      artistPhotos.value = {}
+    }
+    artistPhotosLoaded.value = true
+  },
+  { immediate: true }
+)
+
+// Each with their photo: the saved one, else the display-only proxy's.
+// Behind it, a cover of a song of their own - never one they only guest
+// on, which is another artist's artwork.
+const topArtists = computed(() =>
+  topArtistSeeds.value.map((seed) => {
+    const own = seed.tracks.find((track) => track.hasCover)?.cover || ''
     const found = artistsByName.value.get(seed.name.toLowerCase())
     return {
       name: seed.name,
-      cover:
-        found?.cover ||
-        seed.tracks.find((track) => track.hasCover)?.cover ||
-        '',
+      ...artistPhotoSource(
+        seed.name,
+        artistPhotos.value[seed.name],
+        artistPhotosLoaded.value,
+        own || found?.cover || ''
+      ),
     }
   })
-})
+)
 
 const madeForYou = computed(() => {
   const made = mixes.mixes.value.map((mix) => ({
