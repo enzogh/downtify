@@ -640,6 +640,22 @@ def _library_snapshot() -> Optional[LibrarySnapshot]:
     return LibrarySnapshot.build(track_files, [s for s, _r in pairs])
 
 
+def _catalog_owners() -> dict[str, int]:
+    """``{casefolded playlist name: owner id}`` from the catalog."""
+
+    catalog = state.playlist_catalog
+    if catalog is None:
+        return {}
+    try:
+        return {
+            str(name or '').strip().casefold(): int(uid or 0)
+            for name, uid in catalog.playlist_owner_map().items()
+        }
+    except Exception:
+        logger.opt(exception=True).debug('Could not read playlist owners')
+        return {}
+
+
 def _build_playlist_batch_reports(
     *,
     include_tracks: bool = False,
@@ -658,22 +674,29 @@ def _build_playlist_batch_reports(
         if builder is _playlist_completeness_report
         else {'snapshot': _library_snapshot()}
     )
+    owners = _catalog_owners()
     reports: list[dict[str, Any]] = []
     for sid, meta in _known_spotify_playlist_sources(user_id).items():
         batch = meta.get('batch')
-        reports.append(
-            builder(
-                sid,
-                str(meta.get('playlist_name') or sid),
-                str(
-                    meta.get('playlist_url')
-                    or f'https://open.spotify.com/playlist/{sid}'
-                ),
-                batch=batch if isinstance(batch, dict) else None,
-                expected_hint=int(meta.get('expected_hint') or 0),
-                **kwargs,
-            )
+        name = str(meta.get('playlist_name') or sid)
+        report = builder(
+            sid,
+            name,
+            str(
+                meta.get('playlist_url')
+                or f'https://open.spotify.com/playlist/{sid}'
+            ),
+            batch=batch if isinstance(batch, dict) else None,
+            expected_hint=int(meta.get('expected_hint') or 0),
+            **kwargs,
         )
+        # Whose playlist it is (0: nobody's): an admin gets everyone's
+        # batches, but the Library lists only their own.
+        report['user_id'] = int(
+            (batch or {}).get('user_id')
+            or owners.get(name.strip().casefold(), 0)
+        )
+        reports.append(report)
     reports.sort(
         key=lambda row: (
             row.get('status') != 'complete',
@@ -1993,6 +2016,12 @@ async def list_playlist_batches_endpoint(request: Request) -> dict[str, Any]:
     reports = await asyncio.to_thread(
         _build_playlist_batch_reports, user_id=scope
     )
+    # An admin gets everyone's; ``mine`` tells their own (and nobody's)
+    # apart, which is all the Library lists.
+    me = request_user_id(request)
+    for report in reports:
+        owner = int(report.get('user_id') or 0)
+        report['mine'] = not owner or owner == me
     return {'playlists': reports, 'count': len(reports)}
 
 

@@ -441,9 +441,12 @@ export function buildPlaylists(playlists, tracksByFile, batches = []) {
     }
   })
   // A tracked Spotify playlist whose M3U isn't written (M3U export off,
-  // or nothing downloaded yet) still belongs in the list.
+  // or nothing downloaded yet) still belongs in the list - the viewer's
+  // own only: an admin gets everyone's batches, and someone else's
+  // playlist missing from the list was left out on purpose.
   const tracked = batches
     .filter((batch) => !names.has(String(batch.playlist_name || '')))
+    .filter((batch) => batch.mine !== false)
     .map((batch) => ({
       key: String(batch.playlist_name || '').toLowerCase(),
       name: String(batch.playlist_name || ''),

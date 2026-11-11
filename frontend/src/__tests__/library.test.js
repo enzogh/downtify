@@ -714,3 +714,20 @@ describe('albumLinkFor', () => {
     expect(albumLinkFor(albums, null)).toBe(null)
   })
 })
+
+describe('buildPlaylists tracked batches', () => {
+  const batch = (name, mine) => ({
+    playlist_name: name,
+    mine,
+    spotify_playlist_id: name,
+  })
+
+  it('adds a batch-only playlist for the viewer, not for someone else', () => {
+    const names = buildPlaylists([], new Map(), [
+      batch('Mine', true),
+      batch('Theirs', false),
+      batch('Older'),
+    ]).map((playlist) => playlist.name)
+    expect(names).toEqual(['Mine', 'Older'])
+  })
+})
