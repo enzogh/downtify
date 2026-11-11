@@ -71,6 +71,7 @@ If Castify sits behind nginx, Caddy, Traefik or similar (for HTTPS, or to reach 
 - **Pass the WebSocket through.** `/api/ws` needs the `Upgrade`/`Connection` headers forwarded (Caddy and Traefik do this by default; nginx needs `proxy_set_header Upgrade $http_upgrade; proxy_set_header Connection "upgrade";`).
 - **Pass Range requests through** unchanged, and don't buffer audio responses (nginx: `proxy_buffering off;` for `/api/v1/` and `/downloads/`), or seeking and large files suffer.
 - **Tell Castify which proxy to trust.** Set `DOWNTIFY_TRUSTED_PROXIES` to the proxy's address (e.g. `172.18.0.0/16`). Only then does Castify use `X-Forwarded-For` for the client's address (rate limits, "last seen" in Paired apps) and `X-Forwarded-Proto`/`X-Forwarded-Host` to mark the sign-in cookie secure and check where requests come from. Without it, those headers are ignored — anyone could send them.
+- **Keep audio off a CDN** (Cloudflare and the like) by giving the server a second address that reaches it directly and setting `DOWNTIFY_DIRECT_STREAM_URL` to it: the web player and the apps are then redirected there for audio, with a link that works only for them, while everything else stays behind the CDN.
 - **Use HTTPS** when the server is reachable from outside: the password and the apps' keys travel with every request.
 
 ## For app developers

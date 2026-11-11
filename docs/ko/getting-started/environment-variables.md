@@ -47,6 +47,7 @@ environment:
 | `DOWNTIFY_OIDC_ADMIN_GROUPS` | _(empty)_ | Comma-separated groups mapped to Castify admins. Other OIDC users are normal users. |
 | `DOWNTIFY_OIDC_ADMIN_CLAIM` | _(empty)_ | Claim that makes an identity an admin when `true` (e.g. `is_superuser` from an Authentik scope mapping). Admins may sign in outside `DOWNTIFY_OIDC_ALLOWED_GROUPS`. |
 | `DOWNTIFY_TRUSTED_PROXIES` | _(설정 안 됨)_ | 리버스 프록시의 주소 또는 네트워크를 쉼표로 구분(예: `172.18.0.0/16,10.0.0.5`). 이들에게서 온 요청의 `X-Forwarded-For`, `X-Forwarded-Proto`, `X-Forwarded-Host` 헤더만 신뢰합니다. 로그인과 페어링 시도를 제한하는 기준이 되는 클라이언트 주소, 로그인 쿠키의 secure 플래그, same-site 검사에 쓰입니다. 설정하지 않으면 이 헤더들은 무시됩니다. |
+| `DOWNTIFY_DIRECT_STREAM_URL` | _(설정 안 됨)_ | 앞단의 CDN이나 터널을 거치지 않는 이 서버의 다른 주소입니다(예: `https://audio.example.com`, DNS 전용 레코드). 다른 호스트 이름으로 들어온 로그인된 오디오 요청은 해당 브라우저 세션이나 페어링된 앱에서만 유효한 서명된 URL과 함께 이 주소로 리디렉션됩니다(로그아웃하거나 페어링을 해제하면 무효화). 페이지와 API만 CDN을 거칩니다. IP 주소와 `localhost`는 리디렉션되지 않습니다. 이 주소 앞의 프록시는 `Host` 헤더와 오디오 경로만 전달해야 합니다: `/downloads/`, `/media/`, `/api/v1/tracks/<id>/stream`, `/api/stream/file`, `/api/stream/live`. |
 | `DOWNTIFY_DISCOVERY` | `true` | `false`로 하면 앱이 *이 네트워크에서 찾음*에 서버를 나열하는 데 쓰는 로컬 네트워크 알림(mDNS, `_downtify._tcp`)을 중단합니다. Docker 브리지 네트워크에서는 알림이 어차피 LAN에 닿지 않습니다. [Docker Compose](docker-compose.md#finding-the-server-from-the-apps)를 참고하세요. |
 | `DOWNTIFY_TRANSCODE_CACHE_MB` | `2048` | 트랜스코딩된 사본의 캐시(`/data/transcode_cache`)를 유지하는 최대 크기(MB). 가장 오래 재생되지 않은 사본부터 삭제됩니다. |
 | `DOWNTIFY_TRANSCODE_CONCURRENCY` | `2` | 앱의 낮은 스트리밍 음질을 위해 동시에 트랜스코딩하는 곡 수. |

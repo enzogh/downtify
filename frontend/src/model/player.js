@@ -209,6 +209,11 @@ function createElement() {
   // Buffer aggressively: a stream starts while it is still arriving, and
   // the next one is already resolved one track ahead (see prefetchNext).
   el.preload = 'auto'
+  // The server may send the audio to another of its hostnames (one that
+  // skips its CDN, DOWNTIFY_DIRECT_STREAM_URL). Without CORS, the
+  // equalizer's Web Audio graph would play that audio as silence. The
+  // cookie still goes to this site; the other host gets a signed URL.
+  el.crossOrigin = 'anonymous'
   // Every event is the current song's only while this element plays it:
   // the standby one loads the next song in silence.
   const on = (name, fn) =>

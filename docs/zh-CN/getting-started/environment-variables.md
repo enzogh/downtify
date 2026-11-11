@@ -47,6 +47,7 @@ environment:
 | `DOWNTIFY_OIDC_ADMIN_GROUPS` | _(empty)_ | 映射为 Castify 管理员的组名，以逗号分隔。其他 OIDC 用户将作为普通用户。 |
 | `DOWNTIFY_OIDC_ADMIN_CLAIM` | _(empty)_ | Claim that makes an identity an admin when `true` (e.g. `is_superuser` from an Authentik scope mapping). Admins may sign in outside `DOWNTIFY_OIDC_ALLOWED_GROUPS`. |
 | `DOWNTIFY_TRUSTED_PROXIES` | _(unset)_ | 反向代理的地址或网段列表，以逗号分隔（例如 `172.18.0.0/16,10.0.0.5`）。仅信任来自这些地址的请求所携带的 `X-Forwarded-For`、`X-Forwarded-Proto` 和 `X-Forwarded-Host`，用于识别客户端地址、限制登录和配对尝试频率、设置登录 Cookie 的安全标志并执行 same-site 检查。未设置时会忽略这些请求头。 |
+| `DOWNTIFY_DIRECT_STREAM_URL` | _(unset)_ | 本服务器的另一个地址，绕过其前面的 CDN 或隧道（例如 `https://audio.example.com`，仅 DNS 记录）。到达其他主机名的已登录音频请求会被重定向到这里，附带仅对该浏览器会话或已配对应用有效的签名 URL（退出登录或取消配对即失效）；只有页面和 API 经过 CDN。IP 地址和 `localhost` 从不重定向。该地址前的代理需要转发 `Host` 头，并且只转发音频路径：`/downloads/`, `/media/`, `/api/v1/tracks/<id>/stream`, `/api/stream/file`, `/api/stream/live`。 |
 | `DOWNTIFY_DISCOVERY` | `true` | 设为 `false` 后，停止通过本地网络 mDNS（`_downtify._tcp`）广播服务器；应用依靠该广播在 *Found on this network* 列表中显示服务器。在 Docker bridge 网络中，广播本来也无法到达局域网。详见 [Docker Compose](docker-compose.md#finding-the-server-from-the-apps)。 |
 | `DOWNTIFY_TRANSCODE_CACHE_MB` | `2048` | 转码副本缓存（`/data/transcode_cache`）的最大大小，单位为 MB；优先清除最近较少播放的副本。 |
 | `DOWNTIFY_TRANSCODE_CONCURRENCY` | `2` | 同时为应用的较低流媒体音质转码的歌曲数量。 |

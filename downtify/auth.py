@@ -26,7 +26,10 @@ Players that can't send headers (a Chromecast receiver fetching a stream
 itself) use **signed URLs**: ``exp``, ``kid`` (the device) and ``sig``
 query parameters, an HMAC over the method, path and every other query
 parameter, valid until ``exp`` and only while the device isn't revoked.
-Long-lived tokens never go in a URL.
+The server also signs URLs for a web session (``kid`` is then
+``s.`` and the start of the session's hash) when it sends a browser's
+audio to another hostname (:mod:`downtify.direct_stream`); those stop
+working when that browser signs out. Long-lived tokens never go in a URL.
 
 Everything here is stored in ``<data>/downtify_auth.db`` and
 ``<data>/.auth_secret`` (the signing key) - never in ``settings.json``,
@@ -111,6 +114,11 @@ WS_TICKET_TTL_SECONDS = 60
 #: Signed URLs: default and longest lifetime, in seconds.
 SIGNED_URL_DEFAULT_TTL = 3600
 SIGNED_URL_MAX_TTL = 24 * 3600
+#: A signed URL's ``kid`` for a web session: this, then the first
+#: :data:`_SESSION_KID_LENGTH` hex digits of the session's stored hash.
+SESSION_KID_PREFIX = 's.'
+_SESSION_KID_LENGTH = 32
+_SESSION_KID_RE = re.compile(r'^s\.([0-9a-f]{32})$')
 #: Longest device name kept.
 MAX_DEVICE_NAME = 64
 
@@ -496,7 +504,7 @@ class AuthStore:
         if self.users.ensure_default_admin(existing_install=existing_install):
             # Sessions from before accounts belong to nobody.
             self.end_all_sessions()
-        self.signer = UrlSigner(secret_path, self.device_active)
+        self.signer = UrlSigner(secret_path, self.signing_key_active)
 
     # Storage
 
@@ -610,6 +618,66 @@ class AuthStore:
             max_age=(expires - now).total_seconds(),
         )
         return user
+
+    @staticmethod
+    def session_kid(token: str) -> str:
+        """The ``kid`` URLs signed for the web session *token* carry.
+        Only part of a hash of it: the URL can't be turned back into it."""
+
+        return SESSION_KID_PREFIX + _sha256(token)[:_SESSION_KID_LENGTH]
+
+    def _session_user_by_kid(self, kid: str) -> Optional[dict[str, Any]]:
+        """The user of the live session a :meth:`session_kid` names."""
+
+        match = _SESSION_KID_RE.match(kid or '')
+        if match is None:
+            return None
+        prefix = match.group(1)
+        cached = self._signed_in.get('k:' + prefix)
+        if cached is not None:
+            return cached
+        generation = self._signed_in.generation()
+        with self._connect() as conn:
+            row = conn.execute(
+                'SELECT s.expires_at, u.* '
+                'FROM auth_sessions s JOIN users u ON u.id = s.user_id '
+                'WHERE substr(s.id_hash, 1, ?) = ?',
+                (_SESSION_KID_LENGTH, prefix),
+            ).fetchone()
+        if row is None:
+            return None
+        now = _now()
+        expires = _parse(row['expires_at'])
+        if expires is None or expires <= now:
+            return None
+        user = public_user(row)
+        self._signed_in.put(
+            'k:' + prefix,
+            user,
+            generation=generation,
+            max_age=(expires - now).total_seconds(),
+        )
+        return user
+
+    def signing_key_active(self, kid: str) -> bool:
+        """Whether URLs signed for *kid* (a device, or a web session's
+        :meth:`session_kid`) may still be used."""
+
+        if kid.startswith(SESSION_KID_PREFIX):
+            return self._session_user_by_kid(kid) is not None
+        return self.device_active(kid)
+
+    def signed_principal(self, kid: str) -> Optional[Principal]:
+        """Who a signed URL for *kid* (already checked) acts for."""
+
+        if not kid.startswith(SESSION_KID_PREFIX):
+            return Principal('signed', CLIENT, kid)
+        user = self._session_user_by_kid(kid)
+        if user is None:
+            return None
+        return Principal(
+            'signed', CLIENT, '', user['id'], user['username'], user['role']
+        )
 
     def end_session(self, token: str) -> None:
         with self._connect() as conn:
@@ -888,13 +956,21 @@ class UrlSigner:
         device_id: str,
         ttl: int = SIGNED_URL_DEFAULT_TTL,
         method: str = 'GET',
+        expires_at: Optional[int] = None,
     ) -> str:
-        """*path* with its query and ``exp``/``kid``/``sig`` added."""
+        """*path* with its query and ``exp``/``kid``/``sig`` added.
+        *device_id* is the ``kid``: a device, or a web session's
+        :meth:`AuthStore.session_kid`. *expires_at* (a Unix time, at
+        most :data:`SIGNED_URL_MAX_TTL` away) replaces *ttl*."""
 
-        ttl = max(1, min(int(ttl), SIGNED_URL_MAX_TTL))
+        now = int(time.time())
+        if expires_at is None:
+            expires_at = now + max(1, min(int(ttl), SIGNED_URL_MAX_TTL))
+        latest = now + SIGNED_URL_MAX_TTL
+        expires_at = max(now + 1, min(int(expires_at), latest))
         items = [(k, v) for k, v in params if k not in {'exp', 'kid', 'sig'}]
         items += [
-            ('exp', str(int(time.time()) + ttl)),
+            ('exp', str(expires_at)),
             ('kid', device_id),
         ]
         sig = self._signature(method, path, items)
@@ -903,8 +979,9 @@ class UrlSigner:
     def verify_signed(
         self, method: str, path: str, query: str
     ) -> Optional[str]:
-        """The device id a signed URL was issued to, when its signature,
-        expiry and device are all good; else ``None``. Only for reads."""
+        """The ``kid`` (device id, or web session key) a signed URL was
+        issued to, when its signature, expiry and key are all good; else
+        ``None``. Only for reads."""
 
         if method.upper() not in {'GET', 'HEAD'}:
             return None
@@ -1318,11 +1395,10 @@ class AuthMiddleware:
 
         query = (scope.get('query_string') or b'').decode('latin-1')
         if 'sig=' in query and method in {'GET', 'HEAD'}:
-            device_id = store.signer.verify_signed(
-                method, scope['path'], query
-            )
-            if device_id:
-                return Principal('signed', CLIENT, device_id), False
+            kid = store.signer.verify_signed(method, scope['path'], query)
+            signed = store.signed_principal(kid) if kid else None
+            if signed is not None:
+                return signed, False
         if 'ticket=' in query and scope.get('type') == 'websocket':
             tickets = self._get_tickets()
             ticket = dict(parse_qsl(query)).get('ticket', '')

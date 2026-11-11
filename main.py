@@ -53,6 +53,7 @@ from downtify.cover_thumbs import CoverThumbs
 from downtify.cover_thumbs import normalize_size as normalize_cover_size
 from downtify.deemix_upgrade import DeemixLibraryUpgrade, alias_file
 from downtify.deemix_upgrade_store import AudioReplacementStore
+from downtify.direct_stream import DirectStreamConfig, DirectStreamMiddleware
 from downtify.discover import DiscoverStore
 from downtify.discovery import Announcer, discovery_enabled
 from downtify.download_history import DownloadHistory
@@ -761,6 +762,17 @@ def build_app() -> FastAPI:
     # middleware so it runs inside it, seeing the principal it sets.
     app.add_middleware(
         TrafficMiddleware, get_counters=lambda: api.state.traffic
+    )
+    # Audio sent to a hostname that skips the CDN, when one is set
+    # (DOWNTIFY_DIRECT_STREAM_URL, downtify/direct_stream.py). Inside the
+    # auth middleware too: it signs the URL for whoever asked.
+    direct_stream = DirectStreamConfig.from_env()
+    if direct_stream is not None:
+        logger.info('Audio is served from {}', direct_stream.base_url)
+    app.add_middleware(
+        DirectStreamMiddleware,
+        get_config=lambda: direct_stream,
+        get_store=lambda: api.state.auth,
     )
     # Sign-in and paired apps (downtify/auth.py). Added before CORS so
     # CORS stays outermost and answers preflights without credentials.
