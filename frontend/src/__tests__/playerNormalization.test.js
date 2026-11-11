@@ -4,6 +4,7 @@ vi.mock('/src/model/api', () => ({ default: api }))
 vi.mock('/src/model/streamResolve', () => ({
   resolveTrackUrl: vi.fn(),
   warmServerCache: vi.fn(),
+  directVideoId: () => '',
 }))
 
 describe('normalization before playback', () => {

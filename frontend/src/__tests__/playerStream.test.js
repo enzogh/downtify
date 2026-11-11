@@ -8,6 +8,7 @@ const { resolveTrackUrl, warmServerCache } = vi.hoisted(() => ({
 vi.mock('/src/model/streamResolve', () => ({
   resolveTrackUrl,
   warmServerCache,
+  directVideoId: (track) => track?.youtube_id || '',
 }))
 
 const audios = vi.hoisted(() => ({ list: [] }))
@@ -151,6 +152,22 @@ describe('streaming in the player queue', () => {
     await vi.waitFor(() => {
       expect(warmServerCache).toHaveBeenCalledWith('vid-B')
     })
+  })
+
+  it('warms the tracks after the next one when their video is known', async () => {
+    const withId = (title) => ({ ...pending(title), youtube_id: `yt-${title}` })
+    player.playList([
+      lib('A'),
+      withId('B'),
+      withId('C'),
+      pending('D'),
+      withId('E'),
+    ])
+    await vi.waitFor(() => {
+      expect(warmServerCache).toHaveBeenCalledWith('yt-C')
+    })
+    // D has no video id (it would need a search) and E is past the window.
+    expect(warmServerCache).not.toHaveBeenCalledWith('yt-E')
   })
 
   it('warms a track enqueued while the current one plays', async () => {

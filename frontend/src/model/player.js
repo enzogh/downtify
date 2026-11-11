@@ -9,7 +9,11 @@ import { libraryOnly } from '/src/model/musicPolicy'
 import { normalizeTrack } from '/src/lib/library'
 import { clampFade, fadeGain } from '/src/lib/fade'
 import { attachEqualizer, resumeEqualizer } from '/src/model/equalizer'
-import { resolveTrackUrl, warmServerCache } from '/src/model/streamResolve'
+import {
+  directVideoId,
+  resolveTrackUrl,
+  warmServerCache,
+} from '/src/model/streamResolve'
 import {
   normalizationEnabled,
   knownTrackNormalization,
@@ -635,9 +639,33 @@ async function playUnresolved(index) {
 // net doesn't ask again on every tick.
 let preparing = null
 
+// How many upcoming tracks get warmed on the server: the next one is
+// fully prepared (prefetchNext); the ones after it only have their
+// audio URL resolved ahead, so a double skip or a tap on the third song
+// of Up next starts at once too.
+const WARM_AHEAD = 3
+
+// Video ids warmed ahead for this queue, so each is asked for once.
+const warmedAhead = new Set()
+
+/** Warm the server for the tracks after the next one (no search: only
+ * songs that already carry their video id). */
+function warmAhead() {
+  for (const { track } of upcoming.value.slice(1, WARM_AHEAD)) {
+    if (!needsStreamUrl(track)) continue
+    const videoId = directVideoId(track)
+    if (!videoId || warmedAhead.has(videoId)) continue
+    // The server forgets a URL within hours: a long session asks again.
+    if (warmedAhead.size >= 200) warmedAhead.clear()
+    warmedAhead.add(videoId)
+    warmServerCache(videoId)
+  }
+}
+
 /** Resolve the next unstored track while this one plays, one ahead. */
 function prefetchNext() {
   if (libraryOnly.value) return
+  warmAhead()
   const upcoming = nextIndex()
   if (upcoming < 0) return
   const track = playlist.value[upcoming]

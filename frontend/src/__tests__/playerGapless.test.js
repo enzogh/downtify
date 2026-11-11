@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 vi.mock('/src/model/streamResolve', () => ({
   resolveTrackUrl: vi.fn(),
   warmServerCache: vi.fn(),
+  directVideoId: () => '',
 }))
 
 const audios = vi.hoisted(() => ({ list: [] }))
