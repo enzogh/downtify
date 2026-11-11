@@ -24,7 +24,7 @@ Click **On this device** to remove it from this device. It asks first and shows 
 
 ## On this device
 
-**Library → ⋯ → On this device** (`/library/offline`) lists everything saved on this device, newest first. For each one you get the number of songs and their size, **Play**, **Shuffle**, **Open** (while you're online) and **Remove**. Click a row to see its songs and start one.
+**Library → On this device** (`/library/offline`, the button beside *Create playlist*; also a Quick access tile on Home once something is saved) lists everything saved on this device, newest first. For each one you get the number of songs and their size, **Play**, **Shuffle**, **Open** (while you're online) and **Remove**. Click a row to see its songs and start one.
 
 At the top you see how much space the saved songs use, how much the browser still lets Castify use, and whether the browser will keep the songs for good. **Remove everything** deletes every saved song from this device.
 

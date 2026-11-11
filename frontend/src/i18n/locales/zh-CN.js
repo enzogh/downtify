@@ -2177,6 +2177,11 @@ export default {
     androidConfirm: '点按“安装”确认',
     androidConfirmHint: '之后即可从图标打开 Castify。',
   },
+  iosAudio: {
+    notice: '在 iPhone 上，开启均衡器或音量标准化时，锁屏后音乐可能会停止。',
+    turnOff: '关闭',
+    warning: '在 iPhone 上，锁屏时这可能会让音乐停止。',
+  },
   offline: {
     title: '此设备上',
     subtitle: '保存在这里的歌单和专辑无需联网即可播放。',

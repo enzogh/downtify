@@ -282,11 +282,13 @@ import { useDownloadManager, useProgressTracker } from '/src/model/download'
 import { useLibrary } from '/src/model/library'
 import { usePlayerPrefs } from '/src/model/playerPrefs'
 import { useNowPlaying, useUi } from '/src/model/ui'
+import { usePlaylistActions } from '/src/model/playlistActions'
 import { formatDuration, widestClock } from '/src/lib/format'
 import { useI18n } from '/src/i18n'
 
 const player = usePlayer()
 const jam = useJam()
+const playlistActions = usePlaylistActions()
 const router = useRouter()
 const { showLyrics } = usePlayerPrefs()
 const nowPlaying = useNowPlaying()
@@ -312,7 +314,9 @@ const songMenuItems = computed(() => {
   const tr = track.value
   if (!tr) return []
   const artist = groupingArtistName(tr)
+  const addTo = playlistActions.playerMenuItems(tr)
   return [
+    ...(addTo.length ? [...addTo, { divider: true }] : []),
     {
       label: t('player.goToAlbum'),
       icon: 'disc',

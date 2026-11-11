@@ -2418,6 +2418,13 @@ export default {
     androidConfirm: 'Bestätige mit „Installieren“',
     androidConfirmHint: 'Castify öffnet sich dann über sein Symbol.',
   },
+  iosAudio: {
+    notice:
+      'Auf dem iPhone kann die Musik bei gesperrtem Bildschirm stoppen, solange Equalizer oder Lautstärkeangleichung an sind.',
+    turnOff: 'Ausschalten',
+    warning:
+      'Auf dem iPhone kann das die Musik stoppen, wenn sich der Bildschirm sperrt.',
+  },
   offline: {
     title: 'Auf diesem Gerät',
     subtitle: 'Hier gespeicherte Playlists und Alben spielen ohne Verbindung.',

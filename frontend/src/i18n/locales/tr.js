@@ -2348,6 +2348,12 @@ export default {
     androidConfirm: '“Yükle” ile onayla',
     androidConfirmHint: 'Castify artık simgesinden açılır.',
   },
+  iosAudio: {
+    notice:
+      "iPhone'da ekolayzer veya ses normalleştirme açıkken ekran kilitlenince müzik durabilir.",
+    turnOff: 'Kapat',
+    warning: "iPhone'da bu, ekran kilitlenince müziği durdurabilir.",
+  },
   offline: {
     title: 'Bu cihazda',
     subtitle:

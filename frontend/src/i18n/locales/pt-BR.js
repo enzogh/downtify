@@ -2364,6 +2364,12 @@ export default {
     androidConfirm: 'Confirme em “Instalar”',
     androidConfirmHint: 'O Castify abre pelo ícone.',
   },
+  iosAudio: {
+    notice:
+      'No iPhone, a música pode parar com a tela bloqueada se o equalizador ou a normalização de volume estiverem ativos.',
+    turnOff: 'Desativar',
+    warning: 'No iPhone, isso pode parar a música quando a tela bloqueia.',
+  },
   offline: {
     title: 'Neste dispositivo',
     subtitle: 'Playlists e álbuns salvos aqui tocam sem conexão.',

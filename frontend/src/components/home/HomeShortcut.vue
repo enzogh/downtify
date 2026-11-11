@@ -12,7 +12,7 @@
         :covers="entry.covers"
         :name="entry.title"
         :icon="
-          entry.type === 'artist'
+          entry.icon || entry.type === 'artist'
             ? 'user'
             : entry.type === 'playlist'
               ? 'playlist'

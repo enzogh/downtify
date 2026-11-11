@@ -44,6 +44,9 @@
         }}
       </button>
     </header>
+    <p v-if="atRisk" class="text-sm text-warn" role="note">
+      {{ t('iosAudio.warning') }}
+    </p>
 
     <div class="flex flex-wrap items-center gap-2">
       <UiMenu :items="presetMenu" :label="t('player.preset')" align="start">
@@ -168,6 +171,7 @@ import AppIcon from '../ui/AppIcon.vue'
 import UiMenu from '../ui/UiMenu.vue'
 import EqBandSlider from './EqBandSlider.vue'
 import { useEqualizer } from '/src/model/equalizer'
+import { useBackgroundAudioRisk } from '/src/model/iosAudioNotice'
 import {
   BANDS,
   GAIN_LIMIT,
@@ -185,6 +189,7 @@ const props = defineProps({
 
 const { t } = useI18n()
 const eq = useEqualizer()
+const atRisk = useBackgroundAudioRisk()
 const gradientId = `eq-fill-${useId()}`
 
 const color = computed(() => props.palette?.primary || '#ffffff')

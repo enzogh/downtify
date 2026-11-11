@@ -87,6 +87,14 @@ function connect() {
 
 connect()
 
+/**
+ * Whether the WebSocket is open: pushed frames are arriving, so polling
+ * only has to catch what one might have missed.
+ */
+function socketOpen() {
+  return Boolean(socket && socket.readyState === 1)
+}
+
 /** Subscribe to progress events; returns an unsubscribe function. */
 function onMessage(fn) {
   listeners.add(fn)
@@ -1226,6 +1234,7 @@ export default {
   deleteCookies,
   check_for_update,
   onMessage,
+  socketOpen,
   ws_onmessage,
   ws_onerror,
   getVersion,

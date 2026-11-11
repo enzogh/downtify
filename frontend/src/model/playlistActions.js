@@ -517,6 +517,18 @@ export function usePlaylistActions() {
     }
   }
 
+  /**
+   * "Add to playlist" for what the player plays: a library song goes in
+   * at once, a streamed one downloads into the playlist first. Empty for
+   * anything else (a podcast episode, a stream without its song).
+   */
+  function playerMenuItems(track) {
+    if (!track || track.isPodcast) return []
+    if (track.file) return addMenuItems([track])
+    if (track.stream && track.song) return songMenuItems([track.song])
+    return []
+  }
+
   function addMenuItems(files) {
     const list = Array.isArray(files) ? files : [files]
     const items = [
@@ -832,6 +844,7 @@ export function usePlaylistActions() {
     hideFiles,
     showHidden,
     addMenuItems,
+    playerMenuItems,
     addSongs,
     addDropped,
     detachThenAdd,

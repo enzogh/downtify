@@ -2342,6 +2342,12 @@ export default {
     androidConfirm: '‘설치’로 확인하세요',
     androidConfirmHint: '이제 아이콘으로 Castify가 열려요.',
   },
+  iosAudio: {
+    notice:
+      'iPhone에서 이퀄라이저나 볼륨 정규화가 켜져 있으면 화면이 잠길 때 음악이 멈출 수 있습니다.',
+    turnOff: '끄기',
+    warning: 'iPhone에서는 화면이 잠길 때 음악이 멈출 수 있습니다.',
+  },
   offline: {
     title: '이 기기',
     subtitle: '여기에 저장한 플레이리스트와 앨범은 연결 없이도 재생돼요.',

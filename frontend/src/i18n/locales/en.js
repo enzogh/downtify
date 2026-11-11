@@ -2312,6 +2312,12 @@ export default {
     androidConfirm: 'Confirm with “Install”',
     androidConfirmHint: 'Castify then opens from its icon.',
   },
+  iosAudio: {
+    notice:
+      'On iPhone, music can stop when the screen locks while the equalizer or volume normalization is on.',
+    turnOff: 'Turn off',
+    warning: 'On iPhone, this can stop the music when the screen locks.',
+  },
   offline: {
     title: 'On this device',
     subtitle: 'Playlists and albums saved here play without a connection.',

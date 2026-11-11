@@ -2371,6 +2371,12 @@ export default {
     androidConfirm: 'Erősítsd meg a „Telepítés” gombbal',
     androidConfirmHint: 'A Castify ezután az ikonjáról nyílik.',
   },
+  iosAudio: {
+    notice:
+      'iPhone-on a zene leállhat zárolt képernyőnél, ha be van kapcsolva a hangszínszabályzó vagy a hangerő-kiegyenlítés.',
+    turnOff: 'Kikapcsolás',
+    warning: 'iPhone-on ez leállíthatja a zenét, amikor a képernyő zárol.',
+  },
   offline: {
     title: 'Ezen az eszközön',
     subtitle:

@@ -53,6 +53,7 @@ import { startListeningLog } from '/src/model/listening'
 import { startAutoplay } from '/src/model/autoplay'
 import { startJamSync } from '/src/model/jam'
 import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { startIosAudioNotice } from '/src/model/iosAudioNotice'
 import {
   libraryOnly,
   policyLoaded,
@@ -131,6 +132,7 @@ watch(
     account.start()
     account.startPlaybackReports()
     useRemotePlayback().start()
+    startIosAudioNotice()
   },
   { immediate: true }
 )

@@ -2405,6 +2405,13 @@ export default {
     androidConfirm: 'Confirmez avec « Installer »',
     androidConfirmHint: 'Castify s’ouvre ensuite depuis son icône.',
   },
+  iosAudio: {
+    notice:
+      'Sur iPhone, la musique peut s’arrêter écran verrouillé quand l’égaliseur ou la normalisation du volume est activé.',
+    turnOff: 'Désactiver',
+    warning:
+      'Sur iPhone, cette option peut arrêter la musique quand l’écran se verrouille.',
+  },
   offline: {
     title: 'Sur cet appareil',
     subtitle:

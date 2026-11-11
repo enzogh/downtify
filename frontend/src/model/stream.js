@@ -55,6 +55,8 @@ export function streamTrack(song, url, videoId) {
     url,
     duration: Number(song?.duration) || 0,
     explicit: Boolean(song?.explicit),
+    // The song it came from: what "Add to playlist" downloads into it.
+    song: song || null,
   }
 }
 

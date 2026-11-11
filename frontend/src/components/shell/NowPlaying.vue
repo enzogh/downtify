@@ -518,12 +518,14 @@ import { useCoverPalette } from '/src/model/coverPalette'
 import { groupingArtistName } from '/src/lib/library'
 import { saveName } from '/src/lib/paths'
 import { useBuyLinks } from '/src/model/buyLinks'
+import { usePlaylistActions } from '/src/model/playlistActions'
 import { buyTargetForTrack } from '/src/lib/buyLinks'
 import { hasLyricsSource, prefetchLyrics } from '/src/model/lyrics'
 import { useI18n } from '/src/i18n'
 
 const player = usePlayer()
 const library = useLibrary()
+const playlistActions = usePlaylistActions()
 const dm = useDownloadManager()
 const tracker = useProgressTracker()
 const ui = useUi()
@@ -686,7 +688,9 @@ const sleepMenu = computed(() => [
 const trackMenu = computed(() => {
   const tr = track.value
   if (!tr) return []
+  const addTo = playlistActions.playerMenuItems(tr)
   return [
+    ...(addTo.length ? [...addTo, { divider: true }] : []),
     {
       label: t('player.goToAlbum'),
       icon: 'disc',

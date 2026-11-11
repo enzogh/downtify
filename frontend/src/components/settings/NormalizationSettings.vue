@@ -12,6 +12,9 @@
         :aria-label="t('normalization.enable')"
       />
     </SettingRow>
+    <p v-if="atRisk" class="px-5 pb-4 text-sm text-warn" role="note">
+      {{ t('iosAudio.warning') }}
+    </p>
     <SettingRow
       v-if="normalizeVolume"
       :label="t('normalization.level')"
@@ -96,12 +99,14 @@ import API from '/src/model/api'
 import { usePlayerPrefs } from '/src/model/playerPrefs'
 import { normalizationState } from '/src/model/normalization'
 import { useEqualizer } from '/src/model/equalizer'
+import { useBackgroundAudioRisk } from '/src/model/iosAudioNotice'
 import { useAuth } from '/src/model/auth'
 import { usePlayer } from '/src/model/player'
 import { useI18n } from '/src/i18n'
 
 const { t } = useI18n()
 const { normalizeVolume, normalizationLevel } = usePlayerPrefs()
+const atRisk = useBackgroundAudioRisk()
 const { supported } = useEqualizer()
 const auth = useAuth()
 const player = usePlayer()

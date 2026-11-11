@@ -255,6 +255,13 @@ function stopQueuePoll() {
   }
 }
 
+// While the WebSocket is open it pushes every change: the list is only
+// asked for again now and then, in case a frame was missed. Without it,
+// every 3 s. Never while the tab is hidden.
+const QUEUE_POLL_MS = 3000
+const QUEUE_POLL_CONNECTED_MS = 20000
+let lastQueueSync = 0
+
 function ensureQueuePoll() {
   if (!queueHasActiveItems()) {
     stopQueuePoll()
@@ -262,8 +269,11 @@ function ensureQueuePoll() {
   }
   if (queuePollTimer) return
   queuePollTimer = setInterval(() => {
+    if (typeof document !== 'undefined' && document.hidden) return
+    const wait = API.socketOpen?.() ? QUEUE_POLL_CONNECTED_MS : QUEUE_POLL_MS
+    if (Date.now() - lastQueueSync < wait - 100) return
     syncQueueFromServer().catch(() => {})
-  }, 3000)
+  }, QUEUE_POLL_MS)
 }
 
 /**
@@ -285,6 +295,7 @@ export function staleActiveItems(items, listedKeys, askedAt) {
 
 export async function syncQueueFromServer() {
   const askedAt = Date.now()
+  lastQueueSync = askedAt
   const res = await API.getQueue()
   const listed = new Set()
   batchQueueChanges(() => {

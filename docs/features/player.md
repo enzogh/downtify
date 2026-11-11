@@ -40,6 +40,7 @@ A full-screen view tinted with colours picked from the current album cover:
 - **Volume** with mute toggle, saved between sessions. Hidden on phones, where the hardware buttons control the level
 - **Sleep timer** — stop playback in 15, 30, 45, 60 or 90 minutes, or at the end of the current track. The remaining time shows next to the timer button
 - **File info** — format and size of the playing file
+- **⋯ menu** — add the song to one of your playlists (or a new one; a streamed song downloads into it first), go to its album or artist, and more. The player bar's song has the same menu on a long press
 
 Four panels sit next to the cover on wide screens, or replace it on phones — their buttons sit under the controls there, in a row you can slide sideways with a finger when they don't all fit:
 
@@ -87,7 +88,7 @@ The settings are saved in the browser (`localStorage`) and apply to everything y
 The equalizer uses the Web Audio API, available in all current browsers. Until you switch it on, playback doesn't touch Web Audio at all. Once it's on, audio for the rest of the visit runs through it — switching off just flattens every band.
 
 ::: warning Safari on iPhone and iPad
-iOS may pause Web Audio when the screen locks or you switch apps, which stops playback while the equalizer is on. If you listen with the screen off, turn the equalizer off and reload the page.
+iOS may pause Web Audio when the screen locks or you switch apps, which stops playback while the equalizer is on. If you listen with the screen off, turn the equalizer off and reload the page. Volume normalization uses Web Audio too. On an iPhone, Castify says so once, with a button that turns both off, and warns in their settings.
 :::
 
 ## Building the queue

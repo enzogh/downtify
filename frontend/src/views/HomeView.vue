@@ -189,6 +189,7 @@ import { usePlayer } from '/src/model/player'
 import { usePlaylistActions } from '/src/model/playlistActions'
 import { useTrackActions } from '/src/model/trackActions'
 import { itemTrackCount } from '/src/lib/library'
+import { useOffline } from '/src/model/offline'
 import { mixSeeds } from '/src/lib/mixes'
 import { useI18n } from '/src/i18n'
 
@@ -202,6 +203,7 @@ const player = usePlayer()
 const tracker = useProgressTracker()
 const actions = useTrackActions()
 const playlistActions = usePlaylistActions()
+const offline = useOffline()
 const favoriteActions = playlistActions
 
 const greeting = computed(() => {
@@ -280,7 +282,21 @@ function playlistEntry(playlist) {
 // played lately, then your newest playlists - each once.
 const quickAccess = computed(() => {
   const own = library.ownPlaylists.value
+  // Songs kept on this device (listening without a network), once any are.
+  const saved = offline.savedFiles.value.size
   const candidates = [
+    ...(saved
+      ? [
+          {
+            id: 'offline',
+            type: 'offline',
+            icon: 'arrow-down-to-line',
+            title: t('offline.title'),
+            subtitle: t('common.tracks', { count: saved }),
+            route: { name: 'Offline' },
+          },
+        ]
+      : []),
     ...own.filter((playlist) => playlist.liked && itemTrackCount(playlist)),
     ...library.playlists.value.filter((playlist) => playlist.favorite),
   ].map(playlistEntry)

@@ -12,6 +12,16 @@
       >
         {{ t('playlists.create') }}
       </UiButton>
+      <!-- Songs kept on this device, for listening without a network:
+           a button of its own, not buried in the menu. -->
+      <UiButton
+        v-if="offline.support !== 'unsupported'"
+        variant="secondary"
+        icon="arrow-down-to-line"
+        :to="{ name: 'Offline' }"
+      >
+        <span class="max-sm:sr-only">{{ t('offline.title') }}</span>
+      </UiButton>
       <UiMenu :items="toolsMenu" :label="t('common.more')" />
       <ExternalPlaylistImport
         v-if="auth.isAdmin.value"
@@ -337,7 +347,8 @@ const account = useAccount()
 const visibility = useVisibility()
 
 const TABS = ['albums', 'artists', 'playlists', 'tracks']
-const lastTab = useLocalStorage('downtify-library-tab', 'albums')
+// Playlists first: what people open the Library for (then their last tab).
+const lastTab = useLocalStorage('downtify-library-tab', 'playlists')
 const tab = computed(() => {
   const requested = String(route.params.tab || '')
   return TABS.includes(requested) ? requested : lastTab.value
@@ -498,12 +509,6 @@ const toolsMenu = computed(() => [
     label: t('externalPlaylistImport.open'),
     icon: 'folder',
     action: () => importer.value?.show(),
-  },
-  {
-    hidden: offline.support === 'unsupported',
-    label: t('offline.title'),
-    icon: 'arrow-down-to-line',
-    action: () => router.push({ name: 'Offline' }),
   },
   { divider: true, hidden: !auth.isAdmin.value },
   {
