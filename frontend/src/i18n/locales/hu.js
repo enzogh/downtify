@@ -2371,6 +2371,31 @@ export default {
     androidConfirm: 'Erősítsd meg a „Telepítés” gombbal',
     androidConfirmHint: 'A Castify ezután az ikonjáról nyílik.',
   },
+  subsonic: {
+    title: 'Subsonic-hozzáférés',
+    hint: 'Hallgass bármely Subsonic-alkalmazással (Symfonium, Amperfy, Feishin…). Ott vannak a lejátszási listáid és kedvelt dalaid, és csak a tieid.',
+    server: 'Szerver',
+    username: 'Felhasználónév',
+    password: 'Jelszó',
+    copy: 'Másolás',
+    copied: 'Másolva',
+    shownOnce:
+      'Másold ki most ezt a jelszót: többé nem jelenik meg. Használd a Subsonic-alkalmazásodban a fenti szerverrel és felhasználónévvel.',
+    active: 'A hozzáférésed aktív. Elveszett a jelszó? Kérj újat.',
+    inactive:
+      'Kapcsold be, hogy felhasználónevet és jelszót kapj a Subsonic-alkalmazásodhoz.',
+    enable: 'Subsonic-hozzáférés bekapcsolása',
+    newPassword: 'Új jelszó',
+    newPasswordTitle: 'Új jelszót kérsz?',
+    newPasswordBody:
+      'A Subsonic-alkalmazásaidnak az új kell: a régi nem működik tovább.',
+    disable: 'Kikapcsolás',
+    disableTitle: 'Kikapcsolod a Subsonic-hozzáférést?',
+    disableBody:
+      'A Subsonic-fiókod és a listái törlődnek. A zenéd és a listáid a Castifyban megmaradnak.',
+    clients:
+      'Működő alkalmazások: Symfonium (Android), Amperfy vagy play:Sub (iPhone), Feishin vagy Sonixd (számítógép). A listáid néhány percen belül megjelennek ott.',
+  },
   iosAudio: {
     notice:
       'iPhone-on a zene leállhat zárolt képernyőnél, ha be van kapcsolva a hangszínszabályzó vagy a hangerő-kiegyenlítés.',

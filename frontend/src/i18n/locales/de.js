@@ -2418,6 +2418,31 @@ export default {
     androidConfirm: 'Bestätige mit „Installieren“',
     androidConfirmHint: 'Castify öffnet sich dann über sein Symbol.',
   },
+  subsonic: {
+    title: 'Subsonic-Zugang',
+    hint: 'Hör mit jeder Subsonic-App (Symfonium, Amperfy, Feishin…). Dort findest du deine Playlists und Lieblingssongs, und nur deine.',
+    server: 'Server',
+    username: 'Benutzername',
+    password: 'Passwort',
+    copy: 'Kopieren',
+    copied: 'Kopiert',
+    shownOnce:
+      'Kopiere dieses Passwort jetzt: Es wird nicht wieder angezeigt. Nutze es in deiner Subsonic-App mit Server und Benutzernamen oben.',
+    active: 'Dein Zugang ist aktiv. Passwort verloren? Erstelle ein neues.',
+    inactive:
+      'Schalte ihn ein, um Benutzername und Passwort für deine Subsonic-App zu bekommen.',
+    enable: 'Subsonic-Zugang einschalten',
+    newPassword: 'Neues Passwort',
+    newPasswordTitle: 'Neues Passwort erstellen?',
+    newPasswordBody:
+      'Deine Subsonic-Apps brauchen dann das neue: Das alte funktioniert nicht mehr.',
+    disable: 'Ausschalten',
+    disableTitle: 'Subsonic-Zugang ausschalten?',
+    disableBody:
+      'Dein Subsonic-Konto und seine Playlists werden gelöscht. Deine Musik und Playlists in Castify bleiben.',
+    clients:
+      'Passende Apps: Symfonium (Android), Amperfy oder play:Sub (iPhone), Feishin oder Sonixd (Computer). Deine Playlists erscheinen dort in wenigen Minuten.',
+  },
   iosAudio: {
     notice:
       'Auf dem iPhone kann die Musik bei gesperrtem Bildschirm stoppen, solange Equalizer oder Lautstärkeangleichung an sind.',

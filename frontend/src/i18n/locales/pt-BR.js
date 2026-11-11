@@ -2364,6 +2364,31 @@ export default {
     androidConfirm: 'Confirme em “Instalar”',
     androidConfirmHint: 'O Castify abre pelo ícone.',
   },
+  subsonic: {
+    title: 'Acesso Subsonic',
+    hint: 'Ouça com qualquer app Subsonic (Symfonium, Amperfy, Feishin…). Lá estão suas playlists e músicas curtidas, e só as suas.',
+    server: 'Servidor',
+    username: 'Usuário',
+    password: 'Senha',
+    copy: 'Copiar',
+    copied: 'Copiado',
+    shownOnce:
+      'Copie esta senha agora: ela não será mostrada de novo. Use-a no seu app Subsonic com o servidor e o usuário acima.',
+    active: 'Seu acesso está ativo. Perdeu a senha? Gere uma nova.',
+    inactive:
+      'Ative para receber um usuário e uma senha para o seu app Subsonic.',
+    enable: 'Ativar o acesso Subsonic',
+    newPassword: 'Nova senha',
+    newPasswordTitle: 'Gerar uma nova senha?',
+    newPasswordBody:
+      'Seus apps Subsonic vão precisar da nova: a antiga para de funcionar.',
+    disable: 'Desativar',
+    disableTitle: 'Desativar o acesso Subsonic?',
+    disableBody:
+      'Sua conta Subsonic e as playlists dela são removidas. Suas músicas e playlists no Castify continuam.',
+    clients:
+      'Apps compatíveis: Symfonium (Android), Amperfy ou play:Sub (iPhone), Feishin ou Sonixd (computador). Suas playlists aparecem lá em poucos minutos.',
+  },
   iosAudio: {
     notice:
       'No iPhone, a música pode parar com a tela bloqueada se o equalizador ou a normalização de volume estiverem ativos.',

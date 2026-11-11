@@ -835,6 +835,8 @@ class AppState:
     live_streams: LiveStreams = LiveStreams()
     cover_thumbs: Optional[CoverThumbs] = None
     discovery: Any = None
+    # Subsonic clients through Navidrome (downtify/subsonic_access.py).
+    subsonic: Any = None
 
 
 state = AppState()
@@ -1398,6 +1400,64 @@ def listed_playlists_for_request(
     *request* may open."""
 
     return listed_playlists_for(playlists_for_request(request), request)
+
+
+#: What a user's liked songs are called in their Subsonic playlists.
+_LIKED_TITLES = {'fr': 'Titres likés', 'en': 'Liked songs'}
+
+
+def subsonic_accounts() -> dict[str, dict[str, list[str]]]:
+    """``{username: {playlist title: library paths}}``: every account's
+    own playlists and liked songs, for their Subsonic access (see
+    ``downtify.subsonic_access``). Shared and public playlists stay out:
+    each account gets exactly what is theirs."""
+
+    if state.auth is None:
+        return {}
+    ctx = library_context()
+    found = list_library_playlists(
+        ctx.download_dir, ctx.slskd_dir, ctx.extra_dirs, stale_ok=True
+    )
+    catalog_names, manual_owners = _playlist_owner_maps()
+    labels = (
+        state.playlist_shares.display_names()
+        if state.playlist_shares is not None
+        else {}
+    )
+    accounts: dict[str, dict[str, list[str]]] = {}
+    users = {int(user['id']): user for user in state.auth.users.list()}
+    for user_id, user in users.items():
+        accounts[str(user['username'])] = {}
+    for playlist in found:
+        if playlist.get('liked'):
+            continue
+        name = str(playlist.get('name') or '')
+        key = share_key(name)
+        owner = (
+            manual_owners if playlist.get('manual') else catalog_names
+        ).get(key, 0)
+        user = users.get(owner)
+        if user is None:
+            continue
+        title = labels.get(playlist_display_identity(playlist), name)
+        accounts[str(user['username'])][title] = list(
+            playlist.get('files') or []
+        )
+    if state.likes is not None:
+        for user_id, user in users.items():
+            try:
+                liked = state.likes.paths(user_id)
+            except Exception:
+                logger.opt(exception=True).debug('Could not read likes')
+                continue
+            if liked:
+                locale = str(
+                    (state.auth.users.preferences(user_id) or {}).get('locale')
+                    or 'fr'
+                )
+                title = _LIKED_TITLES.get(locale[:2], _LIKED_TITLES['en'])
+                accounts[str(user['username'])][title] = liked
+    return accounts
 
 
 def request_ip(request: Request) -> str:

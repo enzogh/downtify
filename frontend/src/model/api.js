@@ -757,6 +757,19 @@ function signOutEverywhere() {
   return API.post('/api/me/sign-out-everywhere')
 }
 
+// Subsonic clients through the Navidrome beside Castify, if any.
+function getMySubsonic() {
+  return API.get('/api/me/subsonic', { quiet: true })
+}
+
+function issueMySubsonic() {
+  return API.post('/api/me/subsonic')
+}
+
+function removeMySubsonic() {
+  return API.delete('/api/me/subsonic')
+}
+
 // ── Users and activity (admins) ───────────────────────────────────────
 function listUsers() {
   return API.get('/api/users')
@@ -1171,6 +1184,9 @@ export default {
   changeMyPassword,
   setPreferences,
   signOutEverywhere,
+  getMySubsonic,
+  issueMySubsonic,
+  removeMySubsonic,
   listUsers,
   createUser,
   updateUser,

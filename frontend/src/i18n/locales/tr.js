@@ -2348,6 +2348,31 @@ export default {
     androidConfirm: '“Yükle” ile onayla',
     androidConfirmHint: 'Castify artık simgesinden açılır.',
   },
+  subsonic: {
+    title: 'Subsonic erişimi',
+    hint: 'Herhangi bir Subsonic uygulamasıyla dinleyin (Symfonium, Amperfy, Feishin…). Çalma listeleriniz ve beğendiğiniz şarkılar orada, yalnızca sizinkiler.',
+    server: 'Sunucu',
+    username: 'Kullanıcı adı',
+    password: 'Parola',
+    copy: 'Kopyala',
+    copied: 'Kopyalandı',
+    shownOnce:
+      'Bu parolayı şimdi kopyalayın: bir daha gösterilmeyecek. Subsonic uygulamanızda yukarıdaki sunucu ve kullanıcı adıyla kullanın.',
+    active: 'Erişiminiz açık. Parolayı mı kaybettiniz? Yenisini oluşturun.',
+    inactive:
+      'Subsonic uygulamanız için kullanıcı adı ve parola almak üzere açın.',
+    enable: 'Subsonic erişimini aç',
+    newPassword: 'Yeni parola',
+    newPasswordTitle: 'Yeni parola oluşturulsun mu?',
+    newPasswordBody:
+      'Subsonic uygulamalarınızda yenisi gerekecek: eskisi artık çalışmaz.',
+    disable: 'Kapat',
+    disableTitle: 'Subsonic erişimi kapatılsın mı?',
+    disableBody:
+      "Subsonic hesabınız ve listeleri silinir. Castify'daki müziğiniz ve listeleriniz kalır.",
+    clients:
+      'Uyumlu uygulamalar: Symfonium (Android), Amperfy veya play:Sub (iPhone), Feishin veya Sonixd (bilgisayar). Listeleriniz birkaç dakika içinde orada görünür.',
+  },
   iosAudio: {
     notice:
       "iPhone'da ekolayzer veya ses normalleştirme açıkken ekran kilitlenince müzik durabilir.",

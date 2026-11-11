@@ -2177,6 +2177,29 @@ export default {
     androidConfirm: '点按“安装”确认',
     androidConfirmHint: '之后即可从图标打开 Castify。',
   },
+  subsonic: {
+    title: 'Subsonic 访问',
+    hint: '用任意 Subsonic 应用收听（Symfonium、Amperfy、Feishin…）。那里有你的播放列表和喜欢的歌曲，而且只有你的。',
+    server: '服务器',
+    username: '用户名',
+    password: '密码',
+    copy: '复制',
+    copied: '已复制',
+    shownOnce:
+      '现在就复制这个密码：它不会再显示。在 Subsonic 应用中配合上面的服务器和用户名使用。',
+    active: '你的访问已开启。忘记密码了？生成一个新的。',
+    inactive: '开启后即可获得 Subsonic 应用的用户名和密码。',
+    enable: '开启 Subsonic 访问',
+    newPassword: '新密码',
+    newPasswordTitle: '生成新密码？',
+    newPasswordBody: '你的 Subsonic 应用需要使用新密码：旧密码将失效。',
+    disable: '关闭',
+    disableTitle: '关闭 Subsonic 访问？',
+    disableBody:
+      '你的 Subsonic 账户及其播放列表将被删除。你在 Castify 中的音乐和播放列表保留。',
+    clients:
+      '可用应用：Symfonium（Android）、Amperfy 或 play:Sub（iPhone）、Feishin 或 Sonixd（电脑）。播放列表几分钟内就会出现。',
+  },
   iosAudio: {
     notice: '在 iPhone 上，开启均衡器或音量标准化时，锁屏后音乐可能会停止。',
     turnOff: '关闭',

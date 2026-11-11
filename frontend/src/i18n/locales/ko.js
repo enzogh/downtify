@@ -2342,6 +2342,30 @@ export default {
     androidConfirm: '‘설치’로 확인하세요',
     androidConfirmHint: '이제 아이콘으로 Castify가 열려요.',
   },
+  subsonic: {
+    title: 'Subsonic 접속',
+    hint: 'Subsonic 앱(Symfonium, Amperfy, Feishin 등)으로 들으세요. 내 재생목록과 좋아요한 곡이, 내 것만 그곳에 있습니다.',
+    server: '서버',
+    username: '사용자 이름',
+    password: '비밀번호',
+    copy: '복사',
+    copied: '복사됨',
+    shownOnce:
+      '지금 이 비밀번호를 복사하세요. 다시 표시되지 않습니다. 위의 서버와 사용자 이름과 함께 Subsonic 앱에서 사용하세요.',
+    active: '접속이 켜져 있습니다. 비밀번호를 잃어버렸다면 새로 만드세요.',
+    inactive: '켜면 Subsonic 앱용 사용자 이름과 비밀번호를 받습니다.',
+    enable: 'Subsonic 접속 켜기',
+    newPassword: '새 비밀번호',
+    newPasswordTitle: '새 비밀번호를 만들까요?',
+    newPasswordBody:
+      'Subsonic 앱에 새 비밀번호를 입력해야 합니다. 이전 비밀번호는 더 이상 작동하지 않습니다.',
+    disable: '끄기',
+    disableTitle: 'Subsonic 접속을 끌까요?',
+    disableBody:
+      'Subsonic 계정과 그 재생목록이 삭제됩니다. Castify의 음악과 재생목록은 그대로입니다.',
+    clients:
+      '사용 가능한 앱: Symfonium(Android), Amperfy 또는 play:Sub(iPhone), Feishin 또는 Sonixd(컴퓨터). 몇 분 안에 재생목록이 나타납니다.',
+  },
   iosAudio: {
     notice:
       'iPhone에서 이퀄라이저나 볼륨 정규화가 켜져 있으면 화면이 잠길 때 음악이 멈출 수 있습니다.',

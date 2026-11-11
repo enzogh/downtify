@@ -28,6 +28,7 @@ from .activity import KINDS, clean_track, track_label
 from .auth import SESSION_COOKIE, AuthStore, Principal, session_cookie
 from .library_catalog import entry_content_key, listing_for_request
 from .monitor import delete_user_watches
+from .subsonic_access import SYNC_INTERVAL_SECONDS
 from .users import ROLE_USER, UserError, UserStore
 
 router = APIRouter()
@@ -184,6 +185,99 @@ async def set_my_preferences(request: Request) -> dict[str, Any]:
     return await asyncio.to_thread(
         _users().set_preferences, me.user_id, payload
     )
+
+
+# ── Subsonic access ─────────────────────────────────────────────────────
+
+
+def _subsonic() -> Any:
+    access = api.state.subsonic
+    if access is None:
+        raise HTTPException(status_code=404, detail='Subsonic is not set up')
+    return access
+
+
+def _subsonic_failed(exc: Exception) -> HTTPException:
+    logger.warning('Subsonic access: {}', exc)
+    return HTTPException(status_code=502, detail=str(exc))
+
+
+async def sync_subsonic(only: str | None = None) -> None:
+    """Bring Subsonic playlists in line (one account, or everyone's)."""
+
+    access = api.state.subsonic
+    if access is None:
+        return
+    try:
+        accounts = await asyncio.to_thread(api.subsonic_accounts)
+        await asyncio.to_thread(access.sync, accounts, only=only)
+    except Exception:
+        logger.opt(exception=True).warning('Subsonic: playlist sync failed')
+
+
+async def subsonic_sync_loop() -> None:
+    """Every account's Subsonic playlists, kept in line in the
+    background (a first pass shortly after startup)."""
+
+    await asyncio.sleep(30)
+    while True:
+        await sync_subsonic()
+        await asyncio.sleep(SYNC_INTERVAL_SECONDS)
+
+
+@router.get('/api/me/subsonic')
+async def my_subsonic(request: Request) -> dict[str, Any]:
+    """Your Subsonic access: ``{available, url, username, exists}``.
+    ``available`` is false (and nothing else is said) when the server
+    has no Navidrome set up for it."""
+
+    me = _me(request)
+    access = api.state.subsonic
+    if access is None:
+        return {'available': False}
+    try:
+        return await asyncio.to_thread(access.status, me.username)
+    except Exception as exc:
+        raise _subsonic_failed(exc) from exc
+
+
+@router.post('/api/me/subsonic')
+async def issue_my_subsonic(request: Request) -> dict[str, Any]:
+    """Turn your Subsonic access on, or give it a new password:
+    ``{url, username, password, created}``. The password is shown this
+    once (only Navidrome keeps it). Your playlists and liked songs follow
+    in the minutes after."""
+
+    me = _me(request)
+    access = _subsonic()
+    try:
+        result = await asyncio.to_thread(
+            access.issue_password, me.username, me.username
+        )
+    except Exception as exc:
+        raise _subsonic_failed(exc) from exc
+    await api.log_activity(
+        request,
+        'settings_changed',
+        'Subsonic access',
+        {'subsonic': 'created' if result['created'] else 'new password'},
+    )
+    api.spawn_task(sync_subsonic(me.username), name='subsonic-sync-user')
+    return result
+
+
+@router.delete('/api/me/subsonic')
+async def remove_my_subsonic(request: Request) -> dict[str, Any]:
+    """Turn your Subsonic access off: your Navidrome account and its
+    playlists go. ``{removed}``."""
+
+    me = _me(request)
+    access = _subsonic()
+    try:
+        removed = await asyncio.to_thread(access.remove, me.username)
+    except Exception as exc:
+        raise _subsonic_failed(exc) from exc
+    return {'removed': removed}
 
 
 @router.post('/api/me/sign-out-everywhere')

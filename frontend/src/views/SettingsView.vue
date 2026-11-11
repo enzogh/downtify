@@ -885,6 +885,7 @@
           </template>
 
           <template v-else-if="section === 'apps'">
+            <SubsonicSettings />
             <AppsSettings />
           </template>
 
@@ -983,6 +984,7 @@ import ExternalLibrarySettings from '/src/components/settings/ExternalLibrarySet
 import PathSuggestInput from '/src/components/settings/PathSuggestInput.vue'
 import PresetPicker from '/src/components/settings/PresetPicker.vue'
 import AccountSettings from '/src/components/settings/AccountSettings.vue'
+import SubsonicSettings from '/src/components/settings/SubsonicSettings.vue'
 import NormalizationSettings from '/src/components/settings/NormalizationSettings.vue'
 import FadeSettings from '/src/components/settings/FadeSettings.vue'
 import AutoplaySettings from '/src/components/settings/AutoplaySettings.vue'

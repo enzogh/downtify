@@ -129,6 +129,7 @@ from downtify.server_port import (
 )
 from downtify.song_links import SongLinks
 from downtify.stream import stream_cache_from_env
+from downtify.subsonic_access import SubsonicAccess, SubsonicAccessConfig
 from downtify.telemetry import redact_url_secrets
 from downtify.track_index import TrackIndex
 from downtify.track_owners import TrackOwners
@@ -710,6 +711,16 @@ def build_app() -> FastAPI:
         # The library's size once an hour, for the growth on the library
         # usage page (downtify/library_usage.py).
         api.spawn_task(api.usage_snapshot_loop(), name='usage-snapshot-loop')
+        # Subsonic clients through a Navidrome beside Castify
+        # (downtify/subsonic_access.py): accounts made from Settings > Apps,
+        # each account's own playlists kept in it.
+        subsonic_config = SubsonicAccessConfig.from_env()
+        if subsonic_config is not None:
+            api.state.subsonic = SubsonicAccess(subsonic_config)
+            logger.info('Subsonic access via {}', subsonic_config.public_url)
+            api.spawn_task(
+                account_routes.subsonic_sync_loop(), name='subsonic-sync-loop'
+            )
         # "Found on this network" in the apps (downtify/discovery.py).
         if discovery_enabled() and api.state.identity is not None:
             announcer = Announcer(

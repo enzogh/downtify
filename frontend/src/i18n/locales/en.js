@@ -2312,6 +2312,31 @@ export default {
     androidConfirm: 'Confirm with “Install”',
     androidConfirmHint: 'Castify then opens from its icon.',
   },
+  subsonic: {
+    title: 'Subsonic access',
+    hint: 'Listen with any Subsonic app (Symfonium, Amperfy, Feishin…). You get your playlists and liked songs there, and only yours.',
+    server: 'Server',
+    username: 'Username',
+    password: 'Password',
+    copy: 'Copy',
+    copied: 'Copied',
+    shownOnce:
+      "Copy this password now: it won't be shown again. Use it in your Subsonic app with the server and username above.",
+    active: 'Your access is on. Lost the password? Make a new one.',
+    inactive:
+      'Turn it on to get a username and password for your Subsonic app.',
+    enable: 'Turn on Subsonic access',
+    newPassword: 'New password',
+    newPasswordTitle: 'Make a new password?',
+    newPasswordBody:
+      'Your Subsonic apps will need the new one: the old one stops working.',
+    disable: 'Turn off',
+    disableTitle: 'Turn off Subsonic access?',
+    disableBody:
+      'Your Subsonic account and its playlists are removed. Your music and playlists in Castify stay.',
+    clients:
+      'Apps that work: Symfonium (Android), Amperfy or play:Sub (iPhone), Feishin or Sonixd (computer). Your playlists show up there within a few minutes.',
+  },
   iosAudio: {
     notice:
       'On iPhone, music can stop when the screen locks while the equalizer or volume normalization is on.',
