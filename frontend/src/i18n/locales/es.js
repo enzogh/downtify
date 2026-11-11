@@ -1684,6 +1684,10 @@ export default {
     delay: 'Pausa entre descargas',
     delayHint:
       'Espera entre canciones para parecer menos un bot en playlists grandes.',
+    autoDownloadPlays: 'Descargar tras reproducciones en streaming',
+    autoDownloadPlaysHint:
+      'Cuando una canción no descargada se ha reproducido en streaming este número de veces, se descarga en el servidor.',
+    autoDownloadPlaysOff: 'Desactivado',
     maxDuration: 'Duración máxima',
     maxDurationHint:
       'Las canciones más largas no se descargan ni se reproducen. 0 lo permite todo.',

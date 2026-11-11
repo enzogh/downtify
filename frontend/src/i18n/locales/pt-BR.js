@@ -1676,6 +1676,10 @@ export default {
     delay: 'Pausa entre downloads',
     delayHint:
       'Aguarda entre músicas para parecer menos um robô em playlists grandes.',
+    autoDownloadPlays: 'Baixar após reproduções ao vivo',
+    autoDownloadPlaysHint:
+      'Quando uma música não baixada for tocada em streaming esse número de vezes, ela é baixada no servidor.',
+    autoDownloadPlaysOff: 'Desligado',
     maxDuration: 'Duração máxima',
     maxDurationHint:
       'Músicas mais longas não são baixadas nem tocadas. 0 permite tudo.',

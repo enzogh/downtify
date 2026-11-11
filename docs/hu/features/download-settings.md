@@ -174,6 +174,10 @@ Amikor egy dalt kihagy:
 
 A **Beállítások → Letöltések és fájlok → Leghosszabb szám** a számhosszt a letöltésekre *és* a streamekre egyaránt korlátozza (alapértelmezés **10 perc**, a `0` mindent elfogad). A hosszabb dalokat elutasítja, mielőtt bármit lekérne, a *„… feletti számokat nem tölti le”* sorhibával — az órás mixek és feltöltések sosem azok, aminek egy könyvtári számnak lennie kellene. Ugyanez a korlát védi a streamelést is: egy hosszabb számot `400`-zal utasít el (azok a hívók, akik ismerik a hosszát, átadják a `duration` értéket, és a gyorsítótárazott fájlt amúgy is megvizsgálja), így a hosszú feltöltések a stream-gyorsítótárban sem halmozódnak fel. A már letöltött fájlokat és a podcast-epizódokat (amelyek rendszeresen hosszabbak) ez nem érinti.
 
+## Letöltés élő lejátszások után
+
+**Beállítások → Letöltések → Letöltés élő lejátszások után** magától letölt egy dalt, ha elég sokszor streamelték: a választott szám után (**3**, **5**, **10** vagy saját érték 100-ig; alapból **Ki**) a dal bekerül a sorba, mint bármely letöltés. A számlálás dalonként, minden fiókra együtt történik; az elejéről indítás egyszer számít (egy percen belüli két indítás egynek számít), és egy dal csak egyszer kerül sorba. A metaadatok a YouTube Musicból jönnek. Csak könyvtár módban semmi nem számít.
+
 ## Hangszolgáltató
 
 Az alapértelmezett hangszolgáltató a **YouTube Music**. A Castify a [`ytmusicapi`](https://ytmusicapi.readthedocs.io/) segítségével keresi a legjobb találatot a szám hosszának összevetésével. Ha a YouTube Musicnak nincs elfogadható találata, vagy csak olyan, amelynek hossza jócskán eltér (valószínűleg másik felvétel), a Castify automatikusan a hagyományos YouTube-keresésre vált — lásd: [Hogyan működik](../how-it-works.md#fallback-to-standard-youtube).

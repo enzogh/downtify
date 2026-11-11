@@ -1633,6 +1633,10 @@ export default {
     parallelHint: 'How many songs download or sync at the same time.',
     delay: 'Pause between downloads',
     delayHint: 'Wait between songs to look less like a bot on big playlists.',
+    autoDownloadPlays: 'Download after live plays',
+    autoDownloadPlaysHint:
+      "Once a song that isn't downloaded has been streamed this many times, it is downloaded to the server.",
+    autoDownloadPlaysOff: 'Off',
     maxDuration: 'Longest track taken',
     maxDurationHint:
       'Songs longer than this are neither downloaded nor streamed. 0 takes everything.',

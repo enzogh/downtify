@@ -42,7 +42,7 @@ Metadata comes from the public `open.spotify.com/embed` pages, the audio from th
 
 | | |
 | --- | --- |
-| **Download** | Tracks, albums, playlists and artists from Spotify, YouTube Music, Deezer and SoundCloud, free-text search and CSV imports. MP3, FLAC, M4A, OGG or OPUS, or the source audio untouched. [Download settings](https://downtify.henriquesebastiao.com/features/download-settings/) |
+| **Download** | Tracks, albums, playlists and artists from Spotify, YouTube Music, Deezer and SoundCloud, free-text search and CSV imports. MP3, FLAC, M4A, OGG or OPUS, or the source audio untouched; songs you stream often can download themselves. [Download settings](https://downtify.henriquesebastiao.com/features/download-settings/) |
 | **Player** | Full-screen Now playing with synced lyrics, Up next, autoplay when the queue runs out, a sleep timer, an equalizer and media keys. Songs fade into each other or play gapless, and the next songs' lyrics load ahead so they're there the moment a song starts. What plays on your other devices shows up with **Listen here** to pick it up. [Built-in player](https://downtify.henriquesebastiao.com/features/player/) |
 | **Jam** | Listen together: friends with an account on your server join with a code, add songs to one shared queue and hear the same song at the same moment on their own devices. [Jam](https://downtify.henriquesebastiao.com/features/jam/) |
 | **Home & playlists** | A Home laid out like a streaming app, daily mixes, and your own playlists that accept any song, downloaded or not, with suggestions that fit each one. [Building playlists](https://downtify.henriquesebastiao.com/features/building-playlists/) |

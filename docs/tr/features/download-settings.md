@@ -174,6 +174,10 @@ Bir şarkı atlandığında:
 
 **Ayarlar → İndirmeler ve dosyalar → En uzun parça**, hem indirmeler *hem de* akışlar için parça uzunluğunu sınırlar (varsayılan **10 dakika**, `0` her şeyi alır). Daha uzun şarkılar hiçbir şey getirilmeden önce reddedilir; kuyruk hatası *“… üzerindeki parçalar indirilmez”*dir — saatlik miksler ve yüklemeler bir kitaplık parçasının olması gereken şey değildir. Aynı sınır akışı da korur: daha uzun bir parça `400` ile reddedilir (uzunluğunu bilen çağıranlar `duration` verir ve önbellekteki dosya her durumda yoklanır), böylece uzun yüklemeler akış önbelleğinde de birikmez. Zaten indirilmiş dosyalar ve podcast bölümleri (genellikle daha uzundur) etkilenmez.
 
+## Canlı dinlemelerden sonra indir
+
+**Ayarlar → İndirmeler → Canlı dinlemelerden sonra indir**, yeterince akışla dinlenen bir şarkıyı kendiliğinden indirir: seçilen sayıdan sonra (**3**, **5**, **10** veya 100'e kadar özel bir değer; varsayılan **Kapalı**) her indirme gibi kuyruğa eklenir. Sayım tüm hesaplarda şarkı başınadır; baştan başlatmak bir kez sayılır (bir dakika içindeki iki başlatma bir sayılır) ve bir şarkı yalnızca bir kez kuyruğa alınır. Meta veriler YouTube Music'ten gelir. Yalnızca kitaplık modunda hiçbir şey sayılmaz.
+
 ## Ses sağlayıcı
 
 Varsayılan ses sağlayıcı **YouTube Music**’tir. Castify, parça süresini karşılaştırarak en iyi eşleşmeyi aramak için [`ytmusicapi`](https://ytmusicapi.readthedocs.io/) kullanır. YouTube Music’te kabul edilebilir bir eşleşme yoksa ya da yalnızca süresi çok farklı olan (muhtemelen başka bir kayıt) varsa, Castify otomatik olarak standart YouTube aramasına geçer — bkz. [Nasıl çalışır](../how-it-works.md#fallback-to-standard-youtube).

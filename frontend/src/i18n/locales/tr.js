@@ -1656,6 +1656,10 @@ export default {
     delay: 'İndirmeler arası bekleme',
     delayHint:
       'Büyük çalma listelerinde bot gibi görünmemek için şarkılar arasında bekle.',
+    autoDownloadPlays: 'Canlı dinlemelerden sonra indir',
+    autoDownloadPlaysHint:
+      'İndirilmemiş bir şarkı bu kadar kez akışla dinlendiğinde sunucuya indirilir.',
+    autoDownloadPlaysOff: 'Kapalı',
     maxDuration: 'En uzun parça',
     maxDurationHint:
       'Bundan uzun şarkılar indirilmez ve çalınmaz. 0 her şeyi kabul eder.',

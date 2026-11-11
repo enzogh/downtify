@@ -612,6 +612,29 @@
                 />
               </SettingRow>
               <SettingRow
+                :label="t('settings.autoDownloadPlays')"
+                :description="t('settings.autoDownloadPlaysHint')"
+                stacked
+              >
+                <PresetPicker
+                  :model-value="s.auto_download_after_plays"
+                  :presets="
+                    sm.settingsOptions.auto_download_after_plays_presets
+                  "
+                  :min="0"
+                  :max="sm.settingsOptions.auto_download_after_plays_max"
+                  :format="
+                    (v) =>
+                      v === 0 ? t('settings.autoDownloadPlaysOff') : `${v}×`
+                  "
+                  :custom-label="t('settings.custom')"
+                  @update:model-value="
+                    (v) =>
+                      (s.auto_download_after_plays = clampAutoDownloadPlays(v))
+                  "
+                />
+              </SettingRow>
+              <SettingRow
                 :label="t('settings.syncDelay')"
                 :description="t('settings.syncDelayHint')"
                 stacked
@@ -1004,6 +1027,7 @@ import {
   clampDownloadDelaySeconds,
   clampExternalSyncDelaySeconds,
   clampParallelDownloads,
+  clampAutoDownloadPlays,
   clampTrackDurationSeconds,
   useSettingsManager,
 } from '/src/model/settings'

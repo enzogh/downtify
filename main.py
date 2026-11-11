@@ -129,6 +129,7 @@ from downtify.server_port import (
 )
 from downtify.song_links import SongLinks
 from downtify.stream import stream_cache_from_env
+from downtify.stream_plays import StreamPlays
 from downtify.subsonic_access import SubsonicAccess, SubsonicAccessConfig
 from downtify.telemetry import redact_url_secrets
 from downtify.track_index import TrackIndex
@@ -462,6 +463,7 @@ def _open_library_stores(monitor_db_path: Path) -> None:
     api.state.playlist_batch_store = PlaylistBatchStore(library_db)
     api.state.pending_downloads = PendingDownloads(library_db)
     api.state.download_history = DownloadHistory(library_db)
+    api.state.stream_plays = StreamPlays(library_db)
     restored = api.restore_finished_jobs()
     if restored:
         logger.info('Download queue: {} finished job(s) kept', restored)

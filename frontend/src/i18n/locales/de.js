@@ -1709,6 +1709,10 @@ export default {
     delay: 'Pause zwischen Downloads',
     delayHint:
       'Warte zwischen Titeln, damit große Playlists weniger automatisiert wirken.',
+    autoDownloadPlays: 'Nach Live-Wiedergaben herunterladen',
+    autoDownloadPlaysHint:
+      'Wurde ein nicht heruntergeladener Song so oft gestreamt, wird er auf den Server heruntergeladen.',
+    autoDownloadPlaysOff: 'Aus',
     maxDuration: 'Maximale Titellänge',
     maxDurationHint:
       'Längere Titel werden weder heruntergeladen noch gestreamt. 0 bedeutet unbegrenzt.',

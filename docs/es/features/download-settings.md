@@ -174,6 +174,10 @@ Cuando se omite una canción:
 
 **Ajustes → Descargas y archivos → Duración máxima** limita la duración de las canciones para descargas *y* streams por igual (por defecto **10 minutos**, `0` admite todo). Las canciones más largas se rechazan antes de obtener nada, con el error de cola *«no se descargan canciones de más de …»* — los mixes y subidas de una hora nunca son lo que debería ser una canción de la biblioteca. El mismo límite protege el streaming: una canción más larga se rechaza con un `400` (quien conoce su duración la pasa en `duration`, y el archivo en caché se comprueba de todos modos), así que las subidas largas tampoco se acumulan en la caché de streaming. Los archivos ya descargados y los episodios de podcast (que suelen ser más largos) no se ven afectados.
 
+## Descargar tras reproducciones en streaming
+
+**Ajustes → Descargas → Descargar tras reproducciones en streaming** descarga una canción por sí sola cuando se ha escuchado en streaming lo suficiente: tras el número elegido (**3**, **5**, **10** o un valor propio hasta 100; **Desactivado** por defecto) entra en la cola como cualquier otra descarga. Se cuenta por canción entre todas las cuentas; empezar desde el principio cuenta una vez (dos inicios en menos de un minuto cuentan una), y una canción solo se encola una vez. Los metadatos vienen de YouTube Music. En modo solo biblioteca no se cuenta nada.
+
 ## Proveedor de audio
 
 El proveedor de audio por defecto es **YouTube Music**. Castify usa [`ytmusicapi`](https://ytmusicapi.readthedocs.io/) para buscar la mejor coincidencia comparando la duración de la canción. Cuando YouTube Music no tiene una coincidencia aceptable, o solo una cuya duración se aleja mucho (probablemente otra grabación), Castify recurre automáticamente a buscar en YouTube estándar — consulta [Cómo funciona](../how-it-works.md#fallback-to-standard-youtube).

@@ -1672,6 +1672,10 @@ export default {
     delay: 'Szünet a letöltések között',
     delayHint:
       'Várakozik a dalok között, hogy nagy listáknál kevésbé tűnjön botnak.',
+    autoDownloadPlays: 'Letöltés élő lejátszások után',
+    autoDownloadPlaysHint:
+      'Ha egy nem letöltött dalt ennyiszer streameltek, letöltődik a szerverre.',
+    autoDownloadPlaysOff: 'Ki',
     maxDuration: 'Leghosszabb szám',
     maxDurationHint:
       'Az ennél hosszabb számok nem töltődnek le és nem játszhatók le. 0 mindent engedélyez.',

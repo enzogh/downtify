@@ -174,6 +174,10 @@ Quando uma música é pulada:
 
 **Configurações → Downloads e arquivos → Duração máxima** limita a duração das faixas para downloads *e* streams (padrão **10 minutos**, `0` aceita tudo). Músicas mais longas são recusadas antes de qualquer coisa ser buscada, com o erro de fila *"faixas acima de … não são baixadas"* — mixes e uploads de uma hora nunca são o que uma faixa da biblioteca deveria ser. O mesmo limite protege o streaming: uma faixa mais longa é recusada com `400` (quem conhece a duração a passa em `duration`, e o arquivo em cache é verificado de qualquer forma), então uploads longos também nunca se acumulam no cache de streaming. Arquivos já baixados e episódios de podcast (que costumam ser mais longos) não são afetados.
 
+## Baixar após reproduções ao vivo
+
+**Configurações → Downloads → Baixar após reproduções ao vivo** baixa uma música sozinha quando ela foi tocada em streaming o bastante: após o número escolhido (**3**, **5**, **10** ou um valor próprio até 100; **Desligado** por padrão) ela entra na fila como qualquer outro download. A contagem é por música, somando todas as contas; começar do início conta uma vez (dois inícios com menos de um minuto contam um), e uma música só entra na fila uma vez. Os metadados vêm do YouTube Music. No modo só biblioteca nada é contado.
+
 ## Provedor de áudio
 
 O provedor de áudio padrão é o **YouTube Music**. O Castify usa o [`ytmusicapi`](https://ytmusicapi.readthedocs.io/) para buscar a melhor correspondência comparando a duração da faixa. Quando o YouTube Music não tem uma correspondência aceitável, ou só uma com duração muito diferente (provavelmente outra gravação), o Castify recorre automaticamente à busca no YouTube comum — veja [Como funciona](../how-it-works.md#fallback-to-standard-youtube).

@@ -206,6 +206,9 @@ from .server_identity import (
 from .stream import (
     StreamCache,
 )
+from .stream_plays import (
+    StreamPlays,
+)
 from .track_index import (
     TrackIndex,
     normalize_spotify_track_id,
@@ -263,6 +266,9 @@ DEFAULT_SETTINGS: dict[str, Any] = {
     'download_delay_seconds': 0,
     'download_retry_budget_minutes': 0,
     'max_track_duration_seconds': MAX_TRACK_DURATION_SECONDS,
+    # Queue a song for download once it has been played live this many
+    # times (downtify/stream_plays.py). ``0`` turns it off.
+    'auto_download_after_plays': 0,
     'external_sync_delay_seconds': 0,
     'cover_resolution': providers.DEFAULT_COVER_RESOLUTION,
     'download_cover_art': True,
@@ -774,6 +780,8 @@ class AppState:
     # The recently finished jobs, for the queue's Done/Failed tabs after
     # a restart (downtify/download_history.py).
     download_history: Optional[DownloadHistory] = None
+    # Live play counts for auto-download (downtify/stream_plays.py).
+    stream_plays: Optional[StreamPlays] = None
     # Fire-and-forget work owned by the process (import batches, monitor
     # loops, playlist refresh). Cancelled in :func:`shutdown_resources`.
     background_tasks: set[asyncio.Task[Any]] = set()

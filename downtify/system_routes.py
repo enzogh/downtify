@@ -31,6 +31,7 @@ from . import (
     library_only,
     lyrics,
     providers,
+    stream_plays,
 )
 from .api_core import (
     DEFAULT_SETTINGS,
@@ -303,6 +304,8 @@ async def update_settings_endpoint(
                 state.settings[key] = _clamp_download_delay(raw_value)
             elif key == 'max_track_duration_seconds':
                 state.settings[key] = _clamp_track_duration(raw_value)
+            elif key == 'auto_download_after_plays':
+                state.settings[key] = stream_plays.clamp_threshold(raw_value)
             elif key == 'external_sync_delay_seconds':
                 state.settings[key] = _clamp_download_delay(raw_value)
             elif key == 'cover_resolution':

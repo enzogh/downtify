@@ -31,7 +31,10 @@ from loguru import (
 
 from . import (
     deezer,
+    library_only,
+    providers,
     stream,
+    stream_plays,
 )
 from .api_core import (
     DEFAULT_SETTINGS,
@@ -43,6 +46,8 @@ from .api_core import (
 )
 from .api_pipeline import (
     _json_object,
+    _register_job,
+    _run_download,
 )
 from .downloader import (
     TrackTooLongError,
@@ -249,16 +254,60 @@ async def stream_live_endpoint(
     knows it) refuses long tracks before anything is resolved, and the
     resolved length is checked either way. ``400`` for a malformed id
     or a track past the duration limit, ``416`` for a range past the
-    end, ``503`` when YouTube can't provide the audio.
+    end, ``503`` when YouTube can't provide the audio. Each play is
+    counted for *Download after N live plays*
+    (``downtify.stream_plays``).
     """
 
     try:
         vid = stream.clean_video_id(video_id)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
-    return await relay_live_audio(
-        request, vid, duration, user_id=request_user_id(request)
+    user_id = request_user_id(request)
+    response = await relay_live_audio(request, vid, duration, user_id=user_id)
+    if response.status_code in {200, 206} and stream_plays.is_play_start(
+        request.method, request.headers.get('range')
+    ):
+        count_live_play(vid, user_id)
+    return response
+
+
+def count_live_play(vid: str, user_id: int) -> None:
+    """Count one live play of *vid*; queue its download once it has
+    been played ``auto_download_after_plays`` times (see
+    :mod:`downtify.stream_plays`)."""
+
+    store = state.stream_plays
+    threshold = stream_plays.clamp_threshold(
+        state.settings.get('auto_download_after_plays', 0)
     )
+    if store is None or not threshold:
+        return
+    if library_only.enabled(state.settings) or state.downloader is None:
+        return
+    if store.record(vid, threshold):
+        spawn_task(
+            _auto_download_played(vid, user_id),
+            name=f'stream-auto-download-{vid}',
+        )
+
+
+async def _auto_download_played(vid: str, user_id: int) -> None:
+    """Download the often-played video *vid* (never raises)."""
+
+    try:
+        song = await asyncio.to_thread(providers.song_from_video_id, vid)
+        if not song.get('name'):
+            return
+        song['youtube_id'] = vid
+        song['youtube_id_override'] = True
+        logger.info('Auto-downloading {} after repeated live plays', vid)
+        song_id = _register_job(song, status='queued', user_id=user_id)
+        await _run_download(song, song_id, user_id=user_id)
+    except Exception:
+        logger.opt(exception=True).warning(
+            'Auto-download after live plays failed for {}', vid
+        )
 
 
 async def relay_live_audio(

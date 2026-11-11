@@ -77,6 +77,7 @@ const settings = ref({
   max_parallel_downloads: 3,
   download_delay_seconds: 0,
   max_track_duration_seconds: 600,
+  auto_download_after_plays: 0,
   external_sync_delay_seconds: 0,
   cover_resolution: 600,
   download_cover_art: true,
@@ -93,6 +94,8 @@ const MAX_DOWNLOAD_DELAY_SECONDS = 300
 
 const MIN_TRACK_DURATION_SECONDS = 0
 const MAX_TRACK_DURATION_SECONDS = 21600
+
+const MAX_AUTO_DOWNLOAD_PLAYS = 100
 
 const MIN_COVER_RESOLUTION = 300
 const MAX_COVER_RESOLUTION = 1200
@@ -117,6 +120,8 @@ const settingsOptions = {
   max_track_duration_seconds_presets: [0, 300, 600, 900, 1800, 3600],
   max_track_duration_seconds_min: MIN_TRACK_DURATION_SECONDS,
   max_track_duration_seconds_max: MAX_TRACK_DURATION_SECONDS,
+  auto_download_after_plays_presets: [0, 3, 5, 10],
+  auto_download_after_plays_max: MAX_AUTO_DOWNLOAD_PLAYS,
   external_sync_delay_seconds_presets: [0, 5, 15, 30, 60],
   external_sync_delay_seconds_min: MIN_DOWNLOAD_DELAY_SECONDS,
   external_sync_delay_seconds_max: MAX_DOWNLOAD_DELAY_SECONDS,
@@ -149,6 +154,13 @@ export function clampDownloadDelaySeconds(value) {
 }
 
 export const clampExternalSyncDelaySeconds = clampDownloadDelaySeconds
+
+/** Live plays before a song downloads itself (0 = off, at most 100). */
+export function clampAutoDownloadPlays(value) {
+  const parsed = Number.parseInt(value, 10)
+  if (Number.isNaN(parsed) || parsed <= 0) return 0
+  return Math.min(MAX_AUTO_DOWNLOAD_PLAYS, parsed)
+}
 
 export function clampTrackDurationSeconds(value) {
   const parsed = Number.parseInt(value, 10)

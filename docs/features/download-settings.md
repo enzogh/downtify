@@ -174,6 +174,10 @@ When a song is skipped:
 
 **Settings → Downloads → Longest track taken** caps the track length for downloads *and* streams alike (default **10 minutes**, `0` takes everything). Longer songs are refused before anything is fetched, with a *"tracks over … are not downloaded"* queue error — hour-long mixes and uploads are never what a library track should be. The same cap guards streaming: a longer track is refused with a `400` (callers that know its length pass `duration`, and the length YouTube reports — or the cached file's — is checked either way), so long uploads are never streamed nor accumulate in the stream cache. Already-downloaded files are unaffected.
 
+## Download after live plays
+
+**Settings → Downloads → Download after live plays** downloads a song on its own once it has been streamed enough: a song that isn't in the library plays live from YouTube, and after the chosen number of plays (**3**, **5**, **10** or a custom value up to 100; **Off** by default) it is queued like any other download and lands in the library with its tags, cover and lyrics. Plays are counted per song across every account, since the library is shared. A play is a start from the beginning — seeking, skipping back within a minute or opening the same song twice in a row counts once — and a song is only ever queued once by this setting. The metadata comes from YouTube Music for the video that played. Nothing is counted in library-only mode.
+
 ## Audio provider
 
 The default audio provider is **YouTube Music**. Castify uses [`ytmusicapi`](https://ytmusicapi.readthedocs.io/) to search for the best match by comparing track duration. When YouTube Music has no acceptable match, or only one whose duration is far off (a likely different recording), Castify automatically falls back to searching standard YouTube — see [How it works](../how-it-works.md#fallback-to-standard-youtube).

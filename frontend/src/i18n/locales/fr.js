@@ -1705,6 +1705,10 @@ export default {
     delay: 'Pause entre téléchargements',
     delayHint:
       'Attendre entre les titres pour ressembler moins à un robot sur les grandes playlists.',
+    autoDownloadPlays: 'Télécharger après des écoutes en streaming',
+    autoDownloadPlaysHint:
+      'Quand une musique non téléchargée a été écoutée en streaming ce nombre de fois, elle est téléchargée sur le serveur.',
+    autoDownloadPlaysOff: 'Désactivé',
     maxDuration: 'Durée maximale',
     maxDurationHint:
       'Les morceaux plus longs ne sont ni téléchargés ni lus. 0 accepte tout.',

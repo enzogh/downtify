@@ -174,6 +174,10 @@ Quand un morceau est ignoré :
 
 **Paramètres → Téléchargements et fichiers → Durée maximale** plafonne la durée des morceaux pour les téléchargements *et* les diffusions (par défaut **10 minutes**, `0` accepte tout). Les morceaux plus longs sont refusés avant que quoi que ce soit soit récupéré, avec l’erreur de file *« les morceaux de plus de … ne sont pas téléchargés »* — les mix et uploads d’une heure ne sont jamais ce qu’un morceau de bibliothèque devrait être. Le même plafond protège la diffusion : un morceau plus long est refusé avec un `400` (les appelants qui connaissent sa durée la passent dans `duration`, et le fichier en cache est de toute façon sondé), si bien que les longs uploads ne s’accumulent pas non plus dans le cache de diffusion. Les fichiers déjà téléchargés et les épisodes de podcast (souvent plus longs) ne sont pas concernés.
 
+## Télécharger après des écoutes en streaming
+
+**Réglages → Téléchargements → Télécharger après des écoutes en streaming** télécharge une musique toute seule quand elle a été assez écoutée en streaming : après le nombre d'écoutes choisi (**3**, **5**, **10** ou une valeur personnalisée jusqu'à 100 ; **Désactivé** par défaut), elle est mise en file comme tout autre téléchargement. Les écoutes sont comptées par musique pour tous les comptes ; un démarrage depuis le début compte une écoute (deux démarrages à moins d'une minute d'écart comptent une fois), et une musique n'est mise en file qu'une seule fois. Les métadonnées viennent de YouTube Music. Rien n'est compté en mode bibliothèque seule.
+
 ## Fournisseur audio
 
 Le fournisseur audio par défaut est **YouTube Music**. Castify utilise [`ytmusicapi`](https://ytmusicapi.readthedocs.io/) pour chercher la meilleure correspondance en comparant la durée du morceau. Quand YouTube Music n’a pas de correspondance acceptable, ou seulement une dont la durée est très différente (probablement un autre enregistrement), Castify se rabat automatiquement sur une recherche sur YouTube standard — voir [Comment ça marche](../how-it-works.md#fallback-to-standard-youtube).

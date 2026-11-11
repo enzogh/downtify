@@ -174,6 +174,10 @@ Wenn ein Song übersprungen wird:
 
 **Einstellungen → Downloads und Dateien → Maximale Titellänge** begrenzt die Titellänge für Downloads *und* Streams gleichermaßen (Standard **10 Minuten**, `0` nimmt alles). Längere Songs werden abgelehnt, bevor etwas abgerufen wird, mit dem Warteschlangenfehler *„Titel über … werden nicht heruntergeladen“* — stundenlange Mixe und Uploads sind nie das, was ein Bibliothekstitel sein sollte. Dieselbe Grenze schützt das Streaming: Ein längerer Titel wird mit einem `400` abgelehnt (Aufrufer, die seine Länge kennen, übergeben `duration`, und die gecachte Datei wird in jedem Fall geprüft), sodass sich lange Uploads auch nicht im Stream-Cache ansammeln. Bereits heruntergeladene Dateien und Podcast-Episoden (die oft länger sind) sind nicht betroffen.
 
+## Nach Live-Wiedergaben herunterladen
+
+**Einstellungen → Downloads → Nach Live-Wiedergaben herunterladen** lädt einen Song von selbst herunter, wenn er oft genug gestreamt wurde: nach der gewählten Anzahl (**3**, **5**, **10** oder ein eigener Wert bis 100; standardmäßig **Aus**) wird er wie jeder andere Download eingereiht. Gezählt wird pro Song über alle Konten; ein Start von vorn zählt einmal (zwei Starts innerhalb einer Minute zählen einmal), und ein Song wird nur einmal eingereiht. Die Metadaten stammen von YouTube Music. Im Nur-Bibliothek-Modus wird nichts gezählt.
+
 ## Audioanbieter
 
 Der Standard-Audioanbieter ist **YouTube Music**. Castify nutzt [`ytmusicapi`](https://ytmusicapi.readthedocs.io/), um die beste Übereinstimmung durch Vergleich der Titellänge zu finden. Hat YouTube Music keinen akzeptablen Treffer oder nur einen mit stark abweichender Länge (wahrscheinlich eine andere Aufnahme), fällt Castify automatisch auf die Suche im normalen YouTube zurück — siehe [So funktioniert es](../how-it-works.md#fallback-to-standard-youtube).

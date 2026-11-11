@@ -1655,6 +1655,10 @@ export default {
     delay: '다운로드 간격',
     delayHint:
       '대규모 재생목록 처리 시 봇 감지를 방지하기 위해 각 곡 다운로드 사이에 대기할 시간입니다.',
+    autoDownloadPlays: '스트리밍 재생 후 다운로드',
+    autoDownloadPlaysHint:
+      '다운로드하지 않은 곡을 이 횟수만큼 스트리밍하면 서버에 다운로드합니다.',
+    autoDownloadPlaysOff: '끔',
     maxDuration: '최대 허용 곡 길이',
     maxDurationHint:
       '이 길이보다 긴 곡은 다운로드하거나 스트리밍하지 않습니다. 0으로 설정하면 무제한입니다.',
