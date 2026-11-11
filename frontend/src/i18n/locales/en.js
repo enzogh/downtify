@@ -541,6 +541,10 @@ export default {
     otherDevice: 'another device',
     cannotPlay: "This song can't play here",
     gone: "That device can't be reached anymore",
+    tapToStart: 'Playback was sent here. Tap Play to start it.',
+    play: 'Play',
+    tapThere:
+      'Tap Play on {device} to carry on there. It keeps playing here until then.',
   },
   queue: {
     useOtherLink: 'Use another link',
@@ -601,6 +605,8 @@ export default {
       one: '{count} track is waiting for a free slot.',
       other: '{count} tracks are waiting for a free slot.',
     },
+    doneTrimmed:
+      'Only the {shown} latest finished downloads are shown (out of {total}).',
     showMore: 'Show {count} more',
     statusQueued: 'Waiting',
     statusPaused: 'Paused',
@@ -1513,6 +1519,9 @@ export default {
     showPublicPlaylists: 'Show public playlists',
     showPublicPlaylistsHint:
       'List other people’s public playlists in the Library. Playlists you follow always show.',
+    showAllPlaylists: 'Show every user’s playlists',
+    showAllPlaylistsHint:
+      'Admins only. Off: your Library lists your own playlists, those shared with you and public ones. On: everyone’s private playlists too.',
     allowPlaylistSharing: 'Allow users to share playlists',
     allowPlaylistSharingHint:
       'Users can share their playlists with other users, or make them public. When off, every shared playlist stays hidden until you turn it back on.',

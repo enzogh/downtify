@@ -131,6 +131,16 @@
                   :aria-label="t('settings.showPublicPlaylists')"
                 />
               </SettingRow>
+              <SettingRow
+                v-if="auth.isAdmin.value"
+                :label="t('settings.showAllPlaylists')"
+                :description="t('settings.showAllPlaylistsHint')"
+              >
+                <UiSwitch
+                  v-model="account.showAllPlaylists.value"
+                  :aria-label="t('settings.showAllPlaylists')"
+                />
+              </SettingRow>
             </SettingGroup>
             <SettingGroup :title="t('settings.searchGroup')">
               <SettingRow

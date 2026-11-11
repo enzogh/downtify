@@ -169,6 +169,13 @@ const touch = useMediaQuery('(pointer: coarse)')
 watch(remote.movedHere, () =>
   ui.toast(t('remotePlayback.movedHere'), { kind: 'success' })
 )
+// It came here but this device (an iPhone) wants a tap to start it.
+watch(remote.needsTap, () =>
+  ui.toast(t('remotePlayback.tapToStart'), {
+    timeout: 30000,
+    action: { label: t('remotePlayback.play'), run: () => player.play() },
+  })
+)
 
 const hereIcon = computed(() => (touch.value ? 'smartphone' : 'monitor'))
 const canSend = computed(() => Boolean(remote.localQueue()))
@@ -209,7 +216,14 @@ function status(row) {
 
 async function choose(row) {
   if (!canSend.value) return
-  if (await remote.sendTo(row)) {
+  const sent = await remote.sendTo(row)
+  if (sent === 'waiting') {
+    // Keeps playing here until that device starts (it needs a tap there).
+    ui.toast(t('remotePlayback.tapThere', { device: label(row) }), {
+      timeout: 10000,
+    })
+    remote.pickerOpen.value = false
+  } else if (sent) {
     ui.toast(t('remotePlayback.playingOn', { device: label(row) }), {
       kind: 'success',
     })

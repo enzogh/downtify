@@ -91,3 +91,10 @@ export function queueToSend(playlist, index, position = 0, playing = true) {
     playing: Boolean(playing),
   }
 }
+
+/** Whether the player `id` is listed playing a song in `players`. */
+export function isPlayingOn(players, id) {
+  return (Array.isArray(players) ? players : []).some(
+    (row) => row && row.player === id && row.track && !row.paused
+  )
+}

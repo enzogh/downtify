@@ -517,6 +517,10 @@ export default {
     otherDevice: '另一台设备',
     cannotPlay: '这首歌无法在这里播放',
     gone: '无法再连接到那台设备',
+    tapToStart: '播放已发送到此设备。点按“播放”开始。',
+    play: '播放',
+    tapThere:
+      '在 {device} 上点按“播放”即可在那里继续。在此之前这里会继续播放。',
   },
   queue: {
     useOtherLink: '使用其他链接',
@@ -574,6 +578,7 @@ export default {
       one: '{count} 首歌曲正在等待空闲下载名额。',
       other: '{count} 首歌曲正在等待空闲下载名额。',
     },
+    doneTrimmed: '仅显示最近 {shown} 个已完成的下载（共 {total} 个）。',
     showMore: '再显示 {count} 项',
     statusQueued: '等待中',
     statusPaused: '已暂停',
@@ -1433,6 +1438,9 @@ export default {
     showPublicPlaylists: '显示公开播放列表',
     showPublicPlaylistsHint:
       '在音乐库中列出其他人的公开播放列表。你关注的播放列表始终显示。',
+    showAllPlaylists: '显示所有用户的播放列表',
+    showAllPlaylistsHint:
+      '仅限管理员。关闭：资料库只显示你自己的、与你共享的和公开的播放列表。开启：也显示所有人的私人播放列表。',
     allowPlaylistSharing: '允许用户共享播放列表',
     allowPlaylistSharingHint:
       '用户可向其他用户共享播放列表，或将其公开。关闭后，所有共享列表将隐藏，直到重新开启。',

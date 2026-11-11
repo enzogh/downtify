@@ -551,6 +551,11 @@ export default {
     otherDevice: 'egy másik eszköz',
     cannotPlay: 'Ez a dal itt nem játszható le',
     gone: 'Az eszköz már nem érhető el',
+    tapToStart:
+      'A lejátszás ide lett küldve. Koppints a Lejátszásra az indításhoz.',
+    play: 'Lejátszás',
+    tapThere:
+      'Koppints a Lejátszásra ezen: {device}, hogy ott folytasd. Addig itt szól tovább.',
   },
   queue: {
     useOtherLink: 'Másik link használata',
@@ -614,6 +619,8 @@ export default {
       one: '{count} szám szabad helyre vár.',
       other: '{count} szám szabad helyre vár.',
     },
+    doneTrimmed:
+      'Csak a legutóbbi {shown} befejezett letöltés látszik ({total} közül).',
     showMore: 'Még {count} megjelenítése',
     statusQueued: 'Várakozik',
     statusPaused: 'Szüneteltetve',
@@ -1548,6 +1555,9 @@ export default {
     showPublicPlaylists: 'Nyilvános listák megjelenítése',
     showPublicPlaylistsHint:
       'Mások nyilvános listáit is felsorolja a Könyvtárban. A követett listák mindig látszanak.',
+    showAllPlaylists: 'Minden felhasználó lejátszási listáinak megjelenítése',
+    showAllPlaylistsHint:
+      'Csak adminoknak. Ki: a könyvtár a saját, a veled megosztott és a nyilvános listákat mutatja. Be: mindenki privát listáit is.',
     allowPlaylistSharing: 'Felhasználók listamegosztásának engedélyezése',
     allowPlaylistSharingHint:
       'A felhasználók megoszthatják listáikat másokkal, vagy nyilvánossá tehetik azokat. Kikapcsolva minden megosztott lista rejtve marad, amíg vissza nem kapcsolod.',

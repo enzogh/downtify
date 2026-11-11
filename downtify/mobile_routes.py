@@ -142,7 +142,7 @@ async def playlists(request: Request) -> list[dict[str, Any]]:
     """
 
     await asyncio.to_thread(_refresh)
-    found = await asyncio.to_thread(api.playlists_for_request, request)
+    found = await asyncio.to_thread(api.listed_playlists_for_request, request)
     paths = [f for p in found for f in p['files']]
     ids = await asyncio.to_thread(_sync().ids_for_paths, paths)
     return [

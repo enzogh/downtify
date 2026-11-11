@@ -2,12 +2,13 @@
 // they play, moving playback (and its queue) from one to another, and
 // pausing or resuming them from here. Fed by `GET /api/activity/devices`
 // and the `now_playing` / `player_command` WebSocket frames.
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import API from '/src/model/api'
 import { useLibrary } from '/src/model/library'
 import { usePlayer } from '/src/model/player'
 import { normalizeTrack } from '/src/lib/library'
 import {
+  isPlayingOn,
   otherDevices,
   pickRemote,
   queueToSend,
@@ -21,6 +22,14 @@ const REFRESH_MS = 45000
 // How long "Listen here" waits for the other device to send its whole
 // queue before picking up just its song (an app that can't send it).
 const TRANSFER_WAIT_MS = 1800
+// How long "Play on" waits for the other device to start before saying
+// it needs a tap there (iPhones won't start a song nobody tapped for).
+const START_WAIT_MS = 5000
+// How long this page keeps playing for a device that needs that tap,
+// pausing as soon as it starts.
+const HANDOFF_WAIT_MS = 120000
+// A refused start this soon after playback was sent here is that send's.
+const SENT_HERE_WINDOW_MS = 15000
 
 const players = ref([])
 const receivedAt = ref(0)
@@ -28,12 +37,21 @@ const hidden = ref('')
 const pickerOpen = ref(false)
 // Set when this page just moved playback here (a toast says so).
 const movedHere = ref(0)
+// Set when playback sent here couldn't start without a tap on this
+// device (a toast offers the button that starts it).
+const needsTap = ref(0)
+// The device this page hands its playback to once it starts.
+let handoff = null
 let started = false
 let awaitingTransfer = null
 
 function apply(rows) {
   players.value = Array.isArray(rows) ? rows : []
   receivedAt.value = Date.now()
+  if (handoff && isPlayingOn(players.value, handoff.player)) {
+    handoff.started()
+    handoff = null
+  }
 }
 
 async function refresh() {
@@ -108,6 +126,14 @@ function onCommand(data) {
 function start() {
   if (started) return
   started = true
+  // iPhones refuse to start a song another device sent without a tap
+  // here: offer the tap rather than stay silent.
+  watch(usePlayer().playBlocked, (at) => {
+    const sent = movedHere.value
+    if (sent && at >= sent && at - sent < SENT_HERE_WINDOW_MS) {
+      needsTap.value = at
+    }
+  })
   API.onMessage((data) => {
     if (data?.type === 'now_playing') apply(data.players)
     if (data?.type === 'player_command' && data.player === API.clientId)
@@ -155,15 +181,49 @@ async function listenHere(row = remote.value) {
 }
 
 /**
- * Move what plays here to `row` (its queue and place), then pause here.
- * `false` when nothing plays here or the device is gone.
+ * Move what plays here to `row` (its queue and place). This page pauses
+ * once that device plays, not before, so the music never stops for a
+ * device that can't start on its own (an iPhone wants a tap there).
+ * `'moved'` when it plays there, `'waiting'` when it needs that tap
+ * (this page keeps playing until it starts), `false` when nothing plays
+ * here or the device is gone.
  */
 async function sendTo(row) {
   const queue = localQueue()
   if (!queue || !row) return false
-  const ok = await command(row, 'load', queue)
-  if (ok) usePlayer().pause()
-  return ok
+  const player = usePlayer()
+  const wasPlaying = player.isPlaying.value
+  const startedThere = new Promise((resolve) => {
+    let done = false
+    const finish = (value) => {
+      if (done) return
+      done = true
+      resolve(value)
+    }
+    handoff = {
+      player: row.player,
+      started: () => {
+        if (wasPlaying) player.pause()
+        finish(true)
+      },
+    }
+    setTimeout(() => finish(false), START_WAIT_MS)
+  })
+  if (!(await command(row, 'load', queue))) {
+    handoff = null
+    return false
+  }
+  if (!wasPlaying) {
+    handoff = null
+    return 'moved'
+  }
+  if (await startedThere) return 'moved'
+  // Still waiting for a tap over there: give up after a while.
+  const pending = handoff
+  setTimeout(() => {
+    if (handoff === pending) handoff = null
+  }, HANDOFF_WAIT_MS)
+  return 'waiting'
 }
 
 /** Pause or resume `row` on its own device. */
@@ -189,6 +249,7 @@ export function useRemotePlayback() {
     remote,
     pickerOpen,
     movedHere,
+    needsTap,
     start,
     refresh,
     listenHere,

@@ -17,6 +17,7 @@ import {
 } from '/src/i18n'
 import { playbackReport } from '/src/lib/auth'
 import { useAuth } from '/src/model/auth'
+import { useLibrary } from '/src/model/library'
 import { usePlayer } from '/src/model/player'
 import { usePlayerPrefs } from '/src/model/playerPrefs'
 import { useTheme } from '/src/model/theme'
@@ -25,6 +26,9 @@ const searchAlbums = ref(true)
 // Other people's public playlists in the lists (the server also applies
 // it, so apps agree). On unless switched off.
 const showPublicPlaylists = ref(true)
+// Admins only: list every user's playlists, not just their own (they may
+// open any of them either way). Off unless switched on.
+const showAllPlaylists = ref(false)
 // Whether the admin lets users share playlists at all.
 const playlistSharing = ref(true)
 const ready = ref(false)
@@ -43,6 +47,7 @@ function current() {
     normalize_volume: normalizeVolume.value,
     search_albums: searchAlbums.value,
     show_public_playlists: showPublicPlaylists.value,
+    show_all_playlists: showAllPlaylists.value,
   }
 }
 
@@ -64,6 +69,8 @@ function apply(prefs) {
     searchAlbums.value = prefs.search_albums
   if (typeof prefs.show_public_playlists === 'boolean')
     showPublicPlaylists.value = prefs.show_public_playlists
+  if (typeof prefs.show_all_playlists === 'boolean')
+    showAllPlaylists.value = prefs.show_all_playlists
 }
 
 async function save() {
@@ -106,6 +113,12 @@ async function start() {
       showPublicPlaylists,
     ],
     () => save(),
+    { flush: 'post' }
+  )
+  // The server picks the playlists listed: ask again once it knows.
+  watch(
+    showAllPlaylists,
+    () => save().then(() => useLibrary().refreshPlaylists()),
     { flush: 'post' }
   )
 }
@@ -168,6 +181,7 @@ export function useAccount() {
   return {
     searchAlbums,
     showPublicPlaylists,
+    showAllPlaylists,
     playlistSharing,
     ready,
     start,

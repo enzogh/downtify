@@ -4,7 +4,7 @@ icon: lucide/circle-pause
 
 # Download Queue
 
-Everything you download goes through the **Queue** page: what is downloading (**In progress**), what is **Waiting** for a free slot, what is **Done** and what **Failed**. How many songs download at once is [Parallel downloads](download-settings.md#parallel-downloads). Those slots are shared fairly between accounts: one person's long playlist doesn't make everyone else wait for it to finish.
+Everything you download goes through the **Queue** page: what is downloading (**In progress**), what is **Waiting** for a free slot, what is **Done** (the 100 latest, newest first; older ones stay counted) and what **Failed**. How many songs download at once is [Parallel downloads](download-settings.md#parallel-downloads). Those slots are shared fairly between accounts: one person's long playlist doesn't make everyone else wait for it to finish.
 
 The **All** tab lists every song, grouped under those same four headings. **Retry failed**, **Clear done** and **Clear queue** sit just above the list (icons only on a phone); each song has its own button to remove it. An admin also gets **Stop downloading** in a downloading or failed song's **More** menu, and lists those songs under **Suspended tracks** in the side column, where **Allow again** lets them download.
 

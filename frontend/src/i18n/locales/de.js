@@ -568,6 +568,11 @@ export default {
     otherDevice: 'einem anderen Gerät',
     cannotPlay: 'Dieser Titel kann hier nicht abgespielt werden',
     gone: 'Dieses Gerät ist nicht mehr erreichbar',
+    tapToStart:
+      'Die Wiedergabe wurde hierher gesendet. Tippe auf Abspielen, um sie zu starten.',
+    play: 'Abspielen',
+    tapThere:
+      'Tippe auf {device} auf Abspielen, um dort weiterzuhören. Bis dahin läuft es hier weiter.',
   },
   queue: {
     useOtherLink: 'Anderen Link verwenden',
@@ -636,6 +641,8 @@ export default {
       one: '{count} Titel wartet auf einen freien Platz.',
       other: '{count} Titel warten auf einen freien Platz.',
     },
+    doneTrimmed:
+      'Nur die {shown} zuletzt abgeschlossenen Downloads werden angezeigt (von {total}).',
     showMore: 'Weitere {count} anzeigen',
     statusQueued: 'Wartend',
     statusPaused: 'Pausiert',
@@ -1580,6 +1587,9 @@ export default {
     showPublicPlaylists: 'Öffentliche Playlists anzeigen',
     showPublicPlaylistsHint:
       'Listet öffentliche Playlists anderer in der Bibliothek auf. Playlists, denen du folgst, erscheinen immer.',
+    showAllPlaylists: 'Playlists aller Nutzer anzeigen',
+    showAllPlaylistsHint:
+      'Nur für Admins. Aus: Die Bibliothek zeigt deine Playlists, mit dir geteilte und öffentliche. An: auch die privaten Playlists aller.',
     allowPlaylistSharing: 'Nutzern das Teilen von Playlists erlauben',
     allowPlaylistSharingHint:
       'Nutzer können ihre Playlists mit anderen teilen oder öffentlich machen. Ausgeschaltet bleiben alle geteilten Playlists verborgen, bis du es wieder einschaltest.',

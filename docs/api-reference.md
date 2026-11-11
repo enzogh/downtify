@@ -1004,7 +1004,7 @@ List audio files in the downloads directory (recursive), plus slskd downloads le
 
 ### `GET /playlists`
 
-List downloaded playlists, derived from the `.m3u` files already on disk (see [M3U Export](features/m3u-export.md)). Used by the [Library page](features/library-catalog.md#library-page) to list playlists, and to play or queue just one of them. A user sees their own playlists (with their own liked songs as the liked one) and the ones [shared with them](features/users.md#sharing-playlists); an admin sees everything. Rows also carry the sharing fields described under [`GET /api/v1/playlists`](#get-apiv1playlists) (`owner`, `visibility`, `mine`, `can_edit_tracks`, `editors`, …).
+List downloaded playlists, derived from the `.m3u` files already on disk (see [M3U Export](features/m3u-export.md)). Used by the [Library page](features/library-catalog.md#library-page) to list playlists, and to play or queue just one of them. A user sees their own playlists (with their own liked songs as the liked one) and the ones [shared with them](features/users.md#sharing-playlists); an admin sees the same (plus playlists nobody owns), and everyone's with their `show_all_playlists` preference on — they can open any playlist either way. Rows also carry the sharing fields described under [`GET /api/v1/playlists`](#get-apiv1playlists) (`owner`, `visibility`, `mine`, `can_edit_tracks`, `editors`, …).
 
 **Response:**
 
@@ -3143,7 +3143,7 @@ User. Change your password: `{ "current_password": "…", "new_password": "…" 
 
 ### `GET /api/me/preferences` · `PUT /api/me/preferences`
 
-User. Your preferences (Settings → General): `theme` (`dark`/`light`/`system`), `locale`, `show_lyrics`, `search_albums`, `show_public_playlists` (other people's public playlists in your lists; on unless set to `false`, and the playlists you follow show either way). `PUT` merges what it's sent into them and answers the result; other keys are ignored. `search_albums: false` makes `GET /api/albums/search` answer `[]` for you, whatever the server's setting.
+User. Your preferences (Settings → General): `theme` (`dark`/`light`/`system`), `locale`, `show_lyrics`, `search_albums`, `show_public_playlists` (other people's public playlists in your lists; on unless set to `false`, and the playlists you follow show either way), `show_all_playlists` (admins: list every user's playlists in `GET /playlists`, not just their own; off unless set to `true`). `PUT` merges what it's sent into them and answers the result; other keys are ignored. `search_albums: false` makes `GET /api/albums/search` answer `[]` for you, whatever the server's setting.
 
 ---
 
@@ -3591,7 +3591,7 @@ The same profile as [`GET /api/library/loudness`](#get-apilibraryloudness), by t
 ]
 ```
 
-The playlists [`GET /playlists`](#get-playlists) lists, with track ids in playlist order. A `manual` playlist may [repeat a song](features/playlist-order.md): its id is listed once per copy, so key list rows by position as well as id. A user gets their own (with their own liked songs as the liked one), the ones [shared with them](features/users.md#sharing-playlists) by name, the public ones they follow and — unless they turned *Show public playlists* off — every other public one. An admin gets everything. `cover` is a path for `GET /playlist-cover?file=`, or `""`.
+The playlists [`GET /playlists`](#get-playlists) lists, with track ids in playlist order. A `manual` playlist may [repeat a song](features/playlist-order.md): its id is listed once per copy, so key list rows by position as well as id. A user gets their own (with their own liked songs as the liked one), the ones [shared with them](features/users.md#sharing-playlists) by name, the public ones they follow and — unless they turned *Show public playlists* off — every other public one. An admin gets the same unless their `show_all_playlists` preference is on (then everything), plus playlists nobody owns. `cover` is a path for `GET /playlist-cover?file=`, or `""`.
 
 | Field | Meaning |
 |-------|---------|

@@ -175,7 +175,7 @@ def get_my_preferences(request: Request) -> dict[str, Any]:
 @router.put('/api/me/preferences')
 async def set_my_preferences(request: Request) -> dict[str, Any]:
     """Merge ``{theme, locale, show_lyrics, search_albums,
-    show_public_playlists}`` (any of them)
+    show_public_playlists, show_all_playlists}`` (any of them)
     into your preferences; the result. Yours only - nobody else's
     Downtify changes."""
 

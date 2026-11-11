@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
+  isPlayingOn,
   otherDevices,
   otherPlayers,
   queueToSend,
@@ -85,5 +86,20 @@ describe('devices', () => {
     const sent = queueToSend(list, 700)
     expect(sent.files).toHaveLength(500)
     expect(sent.files[sent.index]).toBe('700')
+  })
+})
+
+describe('isPlayingOn', () => {
+  it('is true only while that player plays a song', () => {
+    const players = [
+      row('phone'),
+      row('tab', { paused: true }),
+      { player: 'idle', track: null },
+    ]
+    expect(isPlayingOn(players, 'phone')).toBe(true)
+    expect(isPlayingOn(players, 'tab')).toBe(false)
+    expect(isPlayingOn(players, 'idle')).toBe(false)
+    expect(isPlayingOn(players, 'gone')).toBe(false)
+    expect(isPlayingOn(null, 'phone')).toBe(false)
   })
 })

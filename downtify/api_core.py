@@ -191,6 +191,7 @@ from .playlist_pending import (
 )
 from .playlist_shares import (
     PRIVATE,
+    PUBLIC,
     PlaylistShares,
     ShareView,
     share_key,
@@ -1137,7 +1138,9 @@ def _playlist_lens(request: Optional[Request]) -> _PlaylistLens:
         visibility=visibility,
         shared_users=shared_users,
         editors=editors,
-        view=ShareView() if admin else _share_view(user_id),
+        # Admins see playlists shared with them like anyone (their list
+        # leaves the rest out unless they ask, see listed_playlists_for).
+        view=_share_view(user_id),
         show_public=admin
         or bool(user_preferences(request).get('show_public_playlists', True)),
         names=_usernames(),
@@ -1353,6 +1356,48 @@ def playlists_for_request(request: Optional[Request]) -> list[dict[str, Any]]:
         ctx.download_dir, ctx.slskd_dir, ctx.extra_dirs, stale_ok=True
     )
     return _filter_playlists_for(found, request)
+
+
+def listed_playlists_for(
+    rows: list[dict[str, Any]], request: Optional[Request]
+) -> list[dict[str, Any]]:
+    """The playlists *request*'s lists show, out of the ones it may open
+    (:func:`playlists_for_request`).
+
+    Everyone's lists start with their own playlists, those shared with
+    them, the public ones they follow and (unless *Show public playlists*
+    is off) the other public ones. An admin may open anyone's playlist,
+    but only lists them all with *Show every user's playlists* on
+    (``show_all_playlists``); playlists nobody owns (from before
+    accounts) stay in admins' lists.
+    """
+
+    if not request_is_admin(request):
+        return rows
+    prefs = user_preferences(request)
+    if prefs.get('show_all_playlists', False):
+        return rows
+    user_id = request_user_id(request)
+    show_public = bool(prefs.get('show_public_playlists', True))
+    return [
+        row
+        for row in rows
+        if row.get('liked')
+        or not row.get('owner_id')
+        or row.get('owner_id') == user_id
+        or row.get('shared_with_me')
+        or row.get('followed')
+        or (show_public and row.get('visibility') == PUBLIC)
+    ]
+
+
+def listed_playlists_for_request(
+    request: Optional[Request],
+) -> list[dict[str, Any]]:
+    """``GET /playlists``: :func:`listed_playlists_for` of what
+    *request* may open."""
+
+    return listed_playlists_for(playlists_for_request(request), request)
 
 
 def request_ip(request: Request) -> str:
@@ -1930,7 +1975,7 @@ def local_catalog_for_request(
     rows = library_only.catalog(entries_for_request(request), query, limit)
     if collections:
         rows['playlists'] = library_only.playlist_rows(
-            playlists_for_request(request), limit
+            listed_playlists_for_request(request), limit
         )
         blocked = (
             state.discover.blocked_keys(request_user_id(request))

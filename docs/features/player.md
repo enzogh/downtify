@@ -23,7 +23,7 @@ When a song can't be played, the bar and **Now playing** say so and offer **Try 
 Castify works like Spotify Connect between the places you're signed in to with the same account — browsers, tabs, the phone app. The **Devices** button in the player bar and in Now playing (green while music plays on another of them) opens **Connect to a device**:
 
 - **This device**, with what plays here, and every other open device below it: playing ones first with their song, then paused ones, then idle ones.
-- Pick another device to **send what plays here** there — the whole queue, the song and the spot in it — and this page pauses. Its own button pauses or resumes it from here.
+- Pick another device to **send what plays here** there — the whole queue, the song and the spot in it — and this page pauses once it plays there. An iPhone won't start music nobody tapped for: it shows *Playback was sent here* with a **Play** button, and this page keeps playing (saying to tap Play over there) until it starts. Its own button pauses or resumes it from here.
 - When music plays elsewhere and nothing plays here, a bar above the player shows that song with a green strip, **Playing on** *device*. **Listen here** (or **This device** in the list) brings the music — queue, song and spot — to this page and pauses the other device. A device that can't send its queue (the phone app) hands over its song alone. The cross hides the bar until that device plays another song.
 
 Only your own devices show up, and a closed or reloaded tab leaves the list at once.

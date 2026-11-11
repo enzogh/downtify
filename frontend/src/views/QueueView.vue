@@ -139,6 +139,17 @@
             />
           </div>
         </div>
+        <p
+          v-if="doneTrimmed && items.length"
+          class="mt-3 text-center text-xs text-muted"
+        >
+          {{
+            t('queue.doneTrimmed', {
+              shown: MAX_DONE_SHOWN,
+              total: counts.done,
+            })
+          }}
+        </p>
       </div>
 
       <aside class="flex flex-col gap-4 xl:sticky xl:top-[96px]">
@@ -226,7 +237,9 @@ import { useLibrary } from '/src/model/library'
 import { useQueuePause } from '/src/model/queuePause'
 import { useUi } from '/src/model/ui'
 import {
+  MAX_DONE_SHOWN,
   QUEUE_SECTION_ORDER,
+  latestDone,
   queueRowEstimate,
   queueRows,
 } from '/src/lib/queueList'
@@ -308,19 +321,22 @@ function sectionLabel(state) {
 }
 
 const items = computed(() => {
+  // Only the latest finished ones (newest first): the rest stay counted.
   if (tab.value === 'all') {
-    return [...queue.value].sort(
+    return latestDone(queue.value).sort(
       (a, b) =>
         QUEUE_SECTION_ORDER.indexOf(a.state) -
         QUEUE_SECTION_ORDER.indexOf(b.state)
     )
   }
   const list = queue.value.filter((item) => item.state === tab.value)
-  // Newest finished first.
-  return tab.value === 'done'
-    ? list.sort((a, b) => b.updatedAt - a.updatedAt)
-    : list
+  return tab.value === 'done' ? latestDone(list) : list
 })
+const doneTrimmed = computed(
+  () =>
+    (tab.value === 'done' || tab.value === 'all') &&
+    counts.value.done > MAX_DONE_SHOWN
+)
 
 // The "All" tab splits the list into sections with a heading each.
 const listRows = computed(() => queueRows(items.value, tab.value === 'all'))

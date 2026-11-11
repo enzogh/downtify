@@ -550,6 +550,10 @@ export default {
     otherDevice: 'başka bir cihaz',
     cannotPlay: 'Bu şarkı burada çalınamıyor',
     gone: 'O cihaza artık ulaşılamıyor',
+    tapToStart: "Oynatma buraya gönderildi. Başlatmak için Oynat'a dokunun.",
+    play: 'Oynat',
+    tapThere:
+      "Orada devam etmek için {device} üzerinde Oynat'a dokunun. O zamana kadar burada çalmaya devam eder.",
   },
   queue: {
     useOtherLink: 'Başka bir bağlantı kullan',
@@ -611,6 +615,8 @@ export default {
       one: '{count} parça boş yer bekliyor.',
       other: '{count} parça boş yer bekliyor.',
     },
+    doneTrimmed:
+      'Yalnızca son {shown} tamamlanan indirme gösterilir ({total} içinden).',
     showMore: '{count} tane daha göster',
     statusQueued: 'Bekliyor',
     statusPaused: 'Duraklatıldı',
@@ -1536,6 +1542,9 @@ export default {
     showPublicPlaylists: 'Herkese açık listeleri göster',
     showPublicPlaylistsHint:
       'Başkalarının herkese açık listelerini Kitaplık’ta gösterir. Takip ettiklerin her zaman görünür.',
+    showAllPlaylists: 'Tüm kullanıcıların çalma listelerini göster',
+    showAllPlaylistsHint:
+      'Yalnızca yöneticiler. Kapalı: kitaplık kendi listelerinizi, sizinle paylaşılanları ve herkese açık olanları gösterir. Açık: herkesin özel listelerini de.',
     allowPlaylistSharing: 'Kullanıcıların liste paylaşmasına izin ver',
     allowPlaylistSharingHint:
       'Kullanıcılar listelerini başkalarıyla paylaşabilir veya herkese açık yapabilir. Kapalıyken paylaşılan tüm listeler, yeniden açana kadar gizli kalır.',

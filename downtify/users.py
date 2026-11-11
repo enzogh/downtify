@@ -68,6 +68,7 @@ PREFERENCES: dict[str, type] = {
     'normalize_volume': bool,
     'search_albums': bool,
     'show_public_playlists': bool,
+    'show_all_playlists': bool,
 }
 
 

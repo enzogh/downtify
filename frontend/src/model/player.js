@@ -79,6 +79,13 @@ const context = ref(null)
 // Sleep timer: epoch ms to stop at, or 'track' to stop after this one.
 const sleepAt = ref(null)
 const playError = ref('')
+// When the browser last refused to start playback without a tap (iPhones
+// do for a song another device sent here): a timestamp, 0 when never.
+const playBlocked = ref(0)
+
+function noteRefused(error) {
+  if (error?.name === 'NotAllowedError') playBlocked.value = Date.now()
+}
 // The unstored stream track being resolved right now (a tap, or the
 // queue advancing into it) - rows spin on it. Prefetches don't land
 // here: they resolve silently one track ahead.
@@ -689,14 +696,14 @@ function startPlayback(a) {
       applyTrackNormalization(profile)
       isBuffering.value = false
       resumeEqualizer()
-      a.play().catch(() => {})
+      a.play().catch(noteRefused)
     })
     return
   }
   holdingStart = false
   applyTrackNormalization(known)
   resumeEqualizer()
-  a.play().catch(() => {})
+  a.play().catch(noteRefused)
 }
 
 function play() {
@@ -1392,6 +1399,7 @@ export function usePlayer() {
     loadingPhase,
     retry,
     playError,
+    playBlocked,
     currentTime,
     duration,
     progressPct,

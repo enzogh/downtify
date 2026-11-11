@@ -556,6 +556,11 @@ export default {
     otherDevice: 'outro dispositivo',
     cannotPlay: 'Esta música não pode tocar aqui',
     gone: 'Não é mais possível alcançar esse dispositivo',
+    tapToStart:
+      'A reprodução foi enviada para cá. Toque em Reproduzir para começar.',
+    play: 'Reproduzir',
+    tapThere:
+      'Toque em Reproduzir em {device} para continuar lá. Até lá, continua tocando aqui.',
   },
   queue: {
     useOtherLink: 'Usar outro link',
@@ -616,6 +621,8 @@ export default {
       one: '{count} faixa aguarda uma vaga livre.',
       other: '{count} faixas aguardam uma vaga livre.',
     },
+    doneTrimmed:
+      'Só os {shown} últimos downloads concluídos são mostrados (de {total}).',
     showMore: 'Mostrar mais {count}',
     statusQueued: 'Aguardando',
     statusPaused: 'Pausado',
@@ -1551,6 +1558,9 @@ export default {
     showPublicPlaylists: 'Mostrar playlists públicas',
     showPublicPlaylistsHint:
       'Lista as playlists públicas de outras pessoas na Biblioteca. As que você segue sempre aparecem.',
+    showAllPlaylists: 'Mostrar as playlists de todos os usuários',
+    showAllPlaylistsHint:
+      'Só administradores. Desligado: a biblioteca mostra suas playlists, as compartilhadas com você e as públicas. Ligado: também as privadas de todos.',
     allowPlaylistSharing: 'Permitir que usuários compartilhem playlists',
     allowPlaylistSharingHint:
       'Usuários podem compartilhar playlists com outros usuários ou torná-las públicas. Desativado, todas as playlists compartilhadas ficam ocultas até você reativar.',

@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   QUEUE_HEADER_HEIGHT,
   QUEUE_ROW_DIVIDER,
+  latestDone,
   queueRowEstimate,
   queueRows,
 } from '../lib/queueList.js'
@@ -57,5 +58,25 @@ describe('queueRows', () => {
     ])
     expect(rows.find((row) => row.key === 'header:done').count).toBe(2)
     expect(rows.some((row) => row.header === 'failed')).toBe(false)
+  })
+})
+
+describe('latestDone', () => {
+  it('keeps only the newest finished items, the others as they are', () => {
+    const items = [
+      { key: 'a', state: 'active' },
+      ...Array.from({ length: 5 }, (_, i) => ({
+        key: `d${i}`,
+        state: 'done',
+        updatedAt: i,
+      })),
+      { key: 'f', state: 'failed' },
+    ]
+    expect(latestDone(items, 2).map((item) => item.key)).toEqual([
+      'a',
+      'f',
+      'd4',
+      'd3',
+    ])
   })
 })

@@ -56,7 +56,7 @@ Playlist watches and Discover history work the same way: each account follows it
 
 ### Sharing playlists
 
-A playlist is private to its owner (and admins) until its owner shares it, from **Share…** on the playlist page or in its **⋯** menu. Playback is already shared between accounts; this is only about who can *see* a list. Every playlist can be shared except *Liked songs*, imported ones included.
+A playlist is private to its owner (and admins) until its owner shares it, from **Share…** on the playlist page or in its **⋯** menu. Playback is already shared between accounts; this is only about who can *see* a list. Every playlist can be shared except *Liked songs*, imported ones included. Admins can open anyone's playlist, but their lists only show their own, those shared with them and public ones, like everyone else's; **Settings › General › Show every user's playlists** (admins only, off by default) lists everyone's.
 
 | Visibility | Who sees it |
 |------------|-------------|

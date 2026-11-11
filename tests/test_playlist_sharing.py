@@ -1091,3 +1091,47 @@ def test_detaching_forgets_the_kept_order(world, monkeypatch):
     )
 
     assert kept.get('Road') == []
+
+
+# ── What an admin's lists show ──────────────────────────────────────────
+
+
+def _listed(request: Request) -> list[str]:
+    return [p['name'] for p in api.listed_playlists_for_request(request)]
+
+
+def test_an_admin_lists_only_their_own_playlists_by_default(world):
+    world.manual.set_owner('Mine', ADMIN_ID)
+    world.found.append(_row('Mine', True))
+    invalidate_library_paths_cache()
+
+    assert _listed(_admin()) == ['Mine']
+    # Every playlist can still be opened, by name, from a link.
+    assert sorted(_names(_admin())) == ['Chill', 'Mine', 'Mix', 'Road']
+    assert api.playlist_entry_for_request('Chill', _admin()) is not None
+
+
+def test_an_admin_lists_everyone_s_playlists_when_they_ask(world):
+    world.users.set_preferences(ADMIN_ID, {'show_all_playlists': True})
+
+    assert sorted(_listed(_admin())) == ['Chill', 'Mix', 'Road']
+
+
+def test_an_admin_lists_shared_public_and_ownerless_playlists(world):
+    world.shares.set_visibility('Mix', SHARED, [ADMIN_ID])
+    world.shares.set_visibility('Chill', PUBLIC)
+    world.found.append(_row('Old'))
+    invalidate_library_paths_cache()
+
+    assert sorted(_listed(_admin())) == ['Chill', 'Mix', 'Old']
+
+    world.users.set_preferences(ADMIN_ID, {'show_public_playlists': False})
+    assert sorted(_listed(_admin())) == ['Mix', 'Old']
+
+
+def test_a_user_s_lists_are_what_they_may_open(world):
+    world.shares.set_visibility('Chill', PUBLIC)
+    world.users.set_preferences(ANA, {'show_all_playlists': True})
+
+    assert sorted(_listed(_request(ANA))) == ['Chill', 'Mix', 'Road']
+    assert _listed(_request(CY)) == ['Chill']

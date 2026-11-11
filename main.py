@@ -918,9 +918,11 @@ def build_app() -> FastAPI:
         ``downtify.playlist_listing.list_library_playlists``.
 
         A user sees their own playlists (and their own liked songs as
-        the liked one) only; the tracks inside leave out hidden songs.
+        the liked one), those shared with them and public ones; an admin
+        lists everyone's only when they ask (``show_all_playlists``).
+        The tracks inside leave out hidden songs.
         """
-        return api.playlists_for_request(request)
+        return api.listed_playlists_for_request(request)
 
     @app.get('/tracks')
     def list_tracks(request: Request) -> list[dict]:

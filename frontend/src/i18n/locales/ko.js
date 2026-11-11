@@ -546,6 +546,10 @@ export default {
     otherDevice: '다른 기기',
     cannotPlay: '이 곡은 여기서 재생할 수 없습니다',
     gone: '그 기기에 더 이상 연결할 수 없습니다',
+    tapToStart: '재생이 이 기기로 전송되었습니다. 재생을 눌러 시작하세요.',
+    play: '재생',
+    tapThere:
+      '{device}에서 재생을 눌러 이어서 들으세요. 그때까지 여기서 계속 재생됩니다.',
   },
   queue: {
     useOtherLink: '다른 링크 사용',
@@ -610,6 +614,8 @@ export default {
       one: '트랙 {count}개가 다운로드 슬롯 대기 중입니다.',
       other: '트랙 {count}개가 다운로드 슬롯 대기 중입니다.',
     },
+    doneTrimmed:
+      '완료된 다운로드 중 최근 {shown}개만 표시됩니다(전체 {total}개).',
     showMore: '{count}개 더보기',
     statusQueued: '대기 중',
     statusPaused: '일시 중지됨',
@@ -1533,6 +1539,9 @@ export default {
     showPublicPlaylists: '공개 재생목록 표시',
     showPublicPlaylistsHint:
       '라이브러리에 다른 사람의 공개 재생목록을 표시합니다. 팔로우한 재생목록은 항상 표시됩니다.',
+    showAllPlaylists: '모든 사용자의 재생목록 표시',
+    showAllPlaylistsHint:
+      '관리자 전용. 끄면 라이브러리에 내 재생목록, 공유받은 재생목록, 공개 재생목록만 표시됩니다. 켜면 모든 사용자의 비공개 재생목록도 표시됩니다.',
     allowPlaylistSharing: '사용자의 재생목록 공유 허용',
     allowPlaylistSharingHint:
       '사용자가 재생목록을 다른 사용자와 공유하거나 공개할 수 있습니다. 끄면 다시 켤 때까지 공유된 재생목록이 모두 숨겨집니다.',

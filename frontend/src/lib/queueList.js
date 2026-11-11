@@ -9,6 +9,22 @@ export const QUEUE_HEADER_HEIGHT = 44
 // Order of the sections in the "All" tab.
 export const QUEUE_SECTION_ORDER = ['active', 'failed', 'queued', 'done']
 
+// Finished downloads shown at most, newest first: a long-running server
+// keeps thousands, and nobody scrolls through them.
+export const MAX_DONE_SHOWN = 100
+
+/**
+ * `items` with only the `max` most recently finished of its done ones
+ * (newest first among them); the others keep their order.
+ */
+export function latestDone(items, max = MAX_DONE_SHOWN) {
+  const done = items
+    .filter((item) => item.state === 'done')
+    .sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0))
+    .slice(0, max)
+  return [...items.filter((item) => item.state !== 'done'), ...done]
+}
+
 /** Estimated row height including the line above it. */
 export function queueRowEstimate(state) {
   if (state === 'header') return QUEUE_HEADER_HEIGHT
