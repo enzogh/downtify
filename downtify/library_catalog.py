@@ -930,6 +930,7 @@ def library_album_index(
     for bucket in grouped.values():
         tracks = bucket['tracks']
         cover_file = ''
+        cover_version = 0
         duration = 0.0
         size = 0
         for track in tracks:
@@ -937,6 +938,7 @@ def library_album_index(
             size += int(track.get('size') or 0)
             if not cover_file and track.get('has_cover'):
                 cover_file = str(track.get('file') or '')
+                cover_version = int(track.get('size') or 0)
         row = {
             'title': bucket['title'],
             'artist': bucket['artist'],
@@ -946,6 +948,9 @@ def library_album_index(
             'size': size,
             'track_count': len(tracks),
             'cover_file': cover_file,
+            # Changes with the file (its size), so the browser asks for a
+            # re-tagged cover again: /cover?file=&v=.
+            'cover_version': cover_version,
         }
         if hidden:
             reason = hidden.album_reason(bucket['artist'], bucket['title'])
@@ -995,6 +1000,7 @@ def library_artist_index(
                     'liked_count': 0,
                     'album_count': 0,
                     'cover_file': '',
+                    'cover_version': 0,
                     '_albums': set(),
                 }
                 artists[key] = bucket
@@ -1007,6 +1013,7 @@ def library_artist_index(
                 bucket['liked_count'] += 1
             if not bucket['cover_file'] and entry.get('has_cover'):
                 bucket['cover_file'] = stored
+                bucket['cover_version'] = int(entry.get('size') or 0)
             if album and key == owner:
                 bucket['_albums'].add(album.casefold())
     rows: list[dict[str, Any]] = []

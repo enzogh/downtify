@@ -267,7 +267,7 @@ const offMessage = API.onMessage((data) => {
   }
   if (data.status === 'done') {
     ui.toast(t('replace.done'), { kind: 'success' })
-    library.load()
+    library.load({ force: true })
   }
 })
 onBeforeUnmount(() => offMessage?.())

@@ -1273,11 +1273,11 @@ Home page payload: how many tracks / albums / artists are in the library, the to
 
 ### `GET /api/library/albums`
 
-Album tiles for **Library → Albums**: title, artist, year, added, duration, size, `track_count`, and `cover_file` (a library path for `/cover`). Tracks themselves are not included — opening an album loads `GET /tracks?artist=&album=`. Users get no tile for an album that is entirely hidden; an admin gets every album, with `hidden_by` (`"album"` or `"artist"`) on the ones [hidden from users](#get-apilibraryvisibility).
+Album tiles for **Library → Albums**: title, artist, year, added, duration, size, `track_count`, and `cover_file` (a library path for `/cover`) with `cover_version` (that file's size: pass it as `/cover?file=&v=` so a re-tagged cover isn't served from the browser's cache). Tracks themselves are not included — opening an album loads `GET /tracks?artist=&album=`. Users get no tile for an album that is entirely hidden; an admin gets every album, with `hidden_by` (`"album"` or `"artist"`) on the ones [hidden from users](#get-apilibraryvisibility).
 
 ### `GET /api/library/artists`
 
-Artist tiles for **Library → Artists** and Discover: `name`, `track_count`, `album_count`, `liked_count`, `cover_file`, added and duration. An artist has a tile when some track belongs to them (its album artist, or its first artist on a compilation or a file with no album artist); their tile then also counts the tracks they are a guest on. A guest credit alone makes no tile, and `Various Artists` never has one. Opening an artist loads `GET /tracks?artist=`. Counts leave out what is hidden from a user; an admin's tiles carry `hidden_by: "artist"` on artists [hidden from users](#get-apilibraryvisibility).
+Artist tiles for **Library → Artists** and Discover: `name`, `track_count`, `album_count`, `liked_count`, `cover_file` (with `cover_version`, as for albums), added and duration. An artist has a tile when some track belongs to them (its album artist, or its first artist on a compilation or a file with no album artist); their tile then also counts the tracks they are a guest on. A guest credit alone makes no tile, and `Various Artists` never has one. Opening an artist loads `GET /tracks?artist=`. Counts leave out what is hidden from a user; an admin's tiles carry `hidden_by: "artist"` on artists [hidden from users](#get-apilibraryvisibility).
 
 ### `GET /api/library/visibility`
 

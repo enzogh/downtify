@@ -241,7 +241,7 @@ async function save() {
       editBody(track.value.file, form.value, coverUrl.value)
     )
     ui.toast(t('tagEdit.saved'), { kind: 'success' })
-    library.load()
+    library.load({ force: true })
     close()
   } catch (err) {
     error.value = errorOf(err)

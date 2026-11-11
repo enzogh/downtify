@@ -28,8 +28,14 @@ export function fileURL(fileName) {
   return `/downloads/${encodePath(path)}`
 }
 
-export function coverURL(fileName) {
-  return `/cover?file=${encodeURIComponent(fileName)}`
+/**
+ * A library track's cover. `version` (the file's size) changes when the
+ * file is re-tagged, so the browser - which keeps a cover for a day -
+ * asks again instead of showing the old picture.
+ */
+export function coverURL(fileName, version = 0) {
+  const base = `/cover?file=${encodeURIComponent(fileName)}`
+  return version ? `${base}&v=${version}` : base
 }
 
 /** The cover sizes the server keeps scaled copies of (`/cover?size=`). */
