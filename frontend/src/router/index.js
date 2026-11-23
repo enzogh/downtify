@@ -1,5 +1,6 @@
 import { createWebHistory, createRouter } from 'vue-router'
 import config from '/src/config'
+import { useJamSheet } from '/src/model/jamSheet'
 
 const LIBRARY_TABS = 'tracks|albums|artists|playlists'
 const CHARTS_TABS = 'tracks|albums|artists|playlists'
@@ -160,5 +161,18 @@ const router = createRouter({
     return saved || { top: 0 }
   },
 })
+
+// The Jam is a sheet over the page, not a page: from inside the app,
+// `/jam` (the nav's Jam entry, an invitation link clicked here) opens
+// the sheet and stays put. Leaving for JamView and coming back unmounted
+// the page and played its entrance again, as if it reloaded. A link
+// opened directly still lands on JamView, which opens it over Home.
+export function jamOverPage(to, from) {
+  if (to.name !== 'Jam' || !from.matched.length) return true
+  useJamSheet().openJamSheet(String(to.query.code || ''))
+  return false
+}
+
+router.beforeEach(jamOverPage)
 
 export default router

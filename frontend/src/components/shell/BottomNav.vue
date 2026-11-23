@@ -145,6 +145,7 @@
 </template>
 
 <script setup>
+import { useJamSheet } from '/src/model/jamSheet'
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import AppIcon from '../ui/AppIcon.vue'
@@ -158,6 +159,7 @@ import { useMotionDuration } from '/src/lib/motion'
 
 const { t } = useI18n()
 const route = useRoute()
+const jamSheet = useJamSheet()
 const theme = useTheme()
 const auth = useAuth()
 const pending = usePendingCount()
@@ -202,6 +204,8 @@ const moreLinks = [
 ]
 
 function isActive(item) {
+  // The Jam is a sheet, not a page: lit while it is open.
+  if (item.name === 'Jam') return jamSheet.open.value
   return route.name === item.name || (item.match || []).includes(route.name)
 }
 
