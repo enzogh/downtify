@@ -14,8 +14,15 @@ describe('availablePanels', () => {
     expect(availablePanels()).toEqual(PANEL_IDS)
   })
 
-  it('puts karaoke right after the lyrics tab', () => {
-    expect(availablePanels().slice(0, 2)).toEqual(['lyrics', 'karaoke'])
+  it('offers only the panels the player draws (no karaoke)', () => {
+    // NowPlaying has a tab for each of these and nothing else: an id
+    // without a tab used to take every tab down (lyrics, EQ...).
+    expect(availablePanels()).toEqual([
+      'lyrics',
+      'queue',
+      'details',
+      'equalizer',
+    ])
   })
 
   it('drops only the lyrics panels when they are hidden', () => {
@@ -54,7 +61,7 @@ describe('requestedPanel', () => {
   it('ignores a link to lyrics once they are hidden', () => {
     // An old ?panel=lyrics link or bookmark must not land on an empty tab.
     expect(requestedPanel('lyrics', off)).toBe('')
-    expect(requestedPanel('karaoke', off)).toBe('')
+    expect(requestedPanel('karaoke', on)).toBe('')
     expect(requestedPanel('queue', off)).toBe('queue')
   })
 

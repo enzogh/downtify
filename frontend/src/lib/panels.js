@@ -2,10 +2,11 @@
 // a preference changes are unit-testable without mounting the view.
 
 /** Every panel, in tab order. */
-export const PANEL_IDS = ['lyrics', 'karaoke', 'queue', 'details', 'equalizer']
+// Castify's player has no karaoke view (upstream's is not ported).
+export const PANEL_IDS = ['lyrics', 'queue', 'details', 'equalizer']
 
 /** The panels that only show a track's lyrics, in different layouts. */
-const LYRICS_PANELS = ['lyrics', 'karaoke']
+const LYRICS_PANELS = ['lyrics']
 
 /**
  * The panels on offer: the lyrics ones only while lyrics are shown, and

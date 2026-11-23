@@ -586,11 +586,15 @@ const panels = computed(() =>
     lyrics: showLyrics.value,
     isPodcast: track.value?.isPodcast,
     isStream: track.value?.stream,
-  }).map((id) => ({
-    id,
-    icon: PANEL_TABS[id].icon,
-    label: t(PANEL_TABS[id].label),
-  }))
+  })
+    // A panel this player can't draw (no tab for it) is left out rather
+    // than taking every tab down with it.
+    .filter((id) => PANEL_TABS[id])
+    .map((id) => ({
+      id,
+      icon: PANEL_TABS[id].icon,
+      label: t(PANEL_TABS[id].label),
+    }))
 )
 
 // ?panel= picks the side panel; phones show it instead of the artwork.
