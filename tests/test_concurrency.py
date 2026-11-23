@@ -111,6 +111,46 @@ def test_download_endpoint_resolves_the_song_off_the_event_loop(monkeypatch):
     assert on_loop == [False]
 
 
+def test_download_endpoint_joins_a_download_already_running(monkeypatch):
+    # A double tap (or a button still on screen while it animates out)
+    # sends the same song twice: the second request waits for the first
+    # download instead of running it again.
+    runs = []
+
+    async def _fake_run_download(song, song_id, **kwargs):
+        runs.append(song_id)
+        await asyncio.sleep(0.05)
+        return 'Artist - Song.mp3'
+
+    monkeypatch.setattr(api.state, 'downloader', object())
+    monkeypatch.setattr(api.state, 'download_jobs', {})
+    monkeypatch.setattr(
+        api, '_song_for_download', lambda url: {**_SONG, 'song_id': 'x'}
+    )
+    monkeypatch.setattr(api, '_run_download', _fake_run_download)
+
+    async def _twice():
+        call = api.download_endpoint(
+            _REQUEST,
+            url='https://open.spotify.com/track/x',
+            client_id='',
+            client_hints=None,
+        )
+        again = api.download_endpoint(
+            _REQUEST,
+            url='https://open.spotify.com/track/x',
+            client_id='',
+            client_hints=None,
+        )
+        return await asyncio.gather(call, again)
+
+    assert asyncio.run(_twice()) == ['Artist - Song.mp3'] * 2
+    assert len(runs) == 1
+    # Once it finished, asking again downloads again (a re-download).
+    asyncio.run(_twice())
+    assert len(runs) == 2
+
+
 def test_download_album_endpoint_resolves_tracks_off_the_event_loop(
     monkeypatch,
 ):

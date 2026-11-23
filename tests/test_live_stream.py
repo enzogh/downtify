@@ -362,6 +362,71 @@ def test_live_resolve_falls_back_to_every_client(monkeypatch):
     assert len(seen[1]) > 1
 
 
+def test_live_resolve_asks_every_client_when_quick_ones_give_video(
+    monkeypatch,
+):
+    # SABR hides the quick clients' audio formats: yt-dlp falls back to a
+    # video file (format 18) that often stops after a few seconds.
+    monkeypatch.setenv('DOWNTIFY_LIVE_PLAYER_CLIENTS', 'web_embedded')
+    seen: list[list[str]] = []
+    video = {
+        'url': 'https://rr.googlevideo.com/video',
+        'ext': 'mp4',
+        'vcodec': 'avc1.42001E',
+    }
+    audio = {
+        'url': 'https://rr.googlevideo.com/audio',
+        'ext': 'm4a',
+        'vcodec': 'none',
+    }
+
+    class FakeYdl:
+        def __init__(self, opts):
+            self.clients = opts['extractor_args']['youtube']['player_client']
+            seen.append(self.clients)
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *exc):
+            return False
+
+        def extract_info(self, url, download):
+            return video if self.clients == ['web_embedded'] else audio
+
+    monkeypatch.setattr(live_stream.yt_dlp, 'YoutubeDL', FakeYdl)
+    source = live_stream.resolve_live_source(VID)
+    assert source.url == audio['url']
+    assert source.ext == 'm4a'
+    assert len(seen) == 2
+
+
+def test_live_resolve_keeps_the_video_when_no_client_has_audio(monkeypatch):
+    monkeypatch.setenv('DOWNTIFY_LIVE_PLAYER_CLIENTS', 'web_embedded')
+    video = {
+        'url': 'https://rr.googlevideo.com/video',
+        'ext': 'mp4',
+        'vcodec': 'avc1.42001E',
+    }
+
+    class FakeYdl:
+        def __init__(self, opts):
+            pass
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *exc):
+            return False
+
+        @staticmethod
+        def extract_info(url, download):
+            return video
+
+    monkeypatch.setattr(live_stream.yt_dlp, 'YoutubeDL', FakeYdl)
+    assert live_stream.resolve_live_source(VID).url == video['url']
+
+
 def test_relayed_bytes_are_counted():
     counted: list[int] = []
     _drain(_streams(), 'bytes=0-99', on_bytes=counted.append)
@@ -471,6 +536,62 @@ def test_endpoint_refuses_a_resolved_long_track(client, monkeypatch):
         api.state, 'live_streams', _streams(resolver=_resolver(duration=900))
     )
     assert client.get(f'/api/stream/live?video_id={VID}').status_code == 400
+
+
+def test_endpoint_downloads_a_track_offered_only_as_fragments(
+    client, monkeypatch, tmp_path
+):
+    # Only HLS on offer: relaying it played the first seconds only, so
+    # the audio is downloaded into the stream cache and served whole.
+    def no_direct(video_id, *, cookies_file=''):
+        raise live_stream.NoDirectAudioError('no direct file')
+
+    audio = tmp_path / f'{VID}.m4a'
+    audio.write_bytes(AUDIO)
+    asked = []
+
+    class FakeCache:
+        @staticmethod
+        def cached_path(vid):
+            return None
+
+        @staticmethod
+        async def get(vid, cookies_file='', max_seconds=None):
+            asked.append(vid)
+            return audio
+
+    monkeypatch.setattr(
+        api.state, 'live_streams', _streams(resolver=no_direct)
+    )
+    monkeypatch.setattr(api.state, 'stream_cache', FakeCache())
+    response = client.get(f'/api/stream/live?video_id={VID}')
+    assert response.status_code == 200
+    assert response.content == AUDIO
+    assert asked == [VID]
+
+
+def test_live_resolve_asks_only_for_plain_files(monkeypatch):
+    formats: list[str] = []
+
+    class FakeYdl:
+        def __init__(self, opts):
+            formats.append(opts['format'])
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *exc):
+            return False
+
+        @staticmethod
+        def extract_info(url, download):
+            raise RuntimeError('Requested format is not available')
+
+    monkeypatch.setattr(live_stream.yt_dlp, 'YoutubeDL', FakeYdl)
+    with pytest.raises(live_stream.NoDirectAudioError):
+        live_stream.resolve_live_source(VID)
+    assert formats and all('protocol=https' in f for f in formats)
+    assert not any('m3u8' in f for f in formats)
 
 
 def test_endpoint_maps_range_past_end_to_416(client, monkeypatch):

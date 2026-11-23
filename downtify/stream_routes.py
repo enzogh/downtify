@@ -53,6 +53,7 @@ from .downloader import (
     TrackTooLongError,
 )
 from .live_stream import (
+    NoDirectAudioError,
     RangeNotSatisfiable,
 )
 from .stream import (
@@ -326,6 +327,10 @@ async def relay_live_audio(
     cookies = stream.resolve_cookies_file(state.cookies_store)
     try:
         source = await live.source(vid, cookies_file=cookies)
+    except NoDirectAudioError:
+        # Only fragments (HLS) to relay: download the audio once and
+        # serve the file, as ``GET /api/stream/file`` does.
+        return await _serve_downloaded_stream(request, vid, cookies, limit)
     except ValueError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
     if limit and source.duration > limit:
@@ -364,6 +369,29 @@ async def relay_live_audio(
         headers=relayed.headers,
         media_type=relayed.media_type,
     )
+
+
+async def _serve_downloaded_stream(
+    request: Request, vid: str, cookies: str, limit: Optional[int]
+) -> Response:
+    """*vid*'s audio from the stream cache, downloaded first when needed."""
+
+    cache = state.stream_cache
+    if cache is None:
+        raise HTTPException(
+            status_code=503, detail='Streaming is not ready yet'
+        )
+    logger.info('Live stream: no direct file for {}, downloading it', vid)
+    was_cached = await asyncio.to_thread(cache.cached_path, vid) is not None
+    try:
+        path = await cache.get(vid, cookies_file=cookies, max_seconds=limit)
+    except TrackTooLongError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    if not was_cached:
+        record_stream_fetch_traffic(path, request_user_id(request))
+    return FileResponse(str(path), media_type=stream.media_type_for(path))
 
 
 async def _prefetch_live_stream(video_id: str, cookies_file: str) -> None:

@@ -286,6 +286,19 @@ def _forget_history(song_ids: Optional[Collection[str]] = None) -> None:
         logger.exception('Could not update the download history')
 
 
+#: ``POST /api/download/url`` downloads running now, by job id.
+_url_downloads: dict[str, asyncio.Future[Any]] = {}
+
+
+def _forget_url_download(song_id: str, task: asyncio.Future[Any]) -> None:
+    if _url_downloads.get(song_id) is task:
+        del _url_downloads[song_id]
+    if not task.cancelled():
+        # Retrieved so a failure nobody awaits any more isn't logged as
+        # "never retrieved".
+        task.exception()
+
+
 @router.post('/api/download/url')
 async def download_endpoint(
     request: Request,
@@ -334,15 +347,27 @@ async def download_endpoint(
     )
 
     try:
-        filename = await _run_download(
-            song,
-            song_id,
-            subdir=pl_ctx.get('subdir'),
-            playlist_name=pl_ctx.get('playlist_name'),
-            spotify_playlist_id=pl_ctx.get('spotify_playlist_id'),
-            track_order=int(pl_ctx.get('track_order') or 0),
-            user_id=user_id,
-        )
+        running = _url_downloads.get(song_id)
+        if running is None:
+            # A second request for a song already on its way (a double
+            # tap, two tabs) waits for that download instead of running
+            # it again.
+            running = asyncio.ensure_future(
+                _run_download(
+                    song,
+                    song_id,
+                    subdir=pl_ctx.get('subdir'),
+                    playlist_name=pl_ctx.get('playlist_name'),
+                    spotify_playlist_id=pl_ctx.get('spotify_playlist_id'),
+                    track_order=int(pl_ctx.get('track_order') or 0),
+                    user_id=user_id,
+                )
+            )
+            _url_downloads[song_id] = running
+            running.add_done_callback(
+                lambda task: _forget_url_download(song_id, task)
+            )
+        filename = await asyncio.shield(running)
     except NoAudioMatchError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     except TrackTooLongError as exc:

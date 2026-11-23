@@ -481,6 +481,12 @@ export function useDownloadManager() {
   }
 
   function queue(song, beginDownload = true) {
+    // A second tap (or a button still on screen while it animates away)
+    // must not send the same song again while it is on its way.
+    const existing = findItem(song)
+    if (existing && (existing.isQueued() || existing.isDownloading())) {
+      return Promise.resolve({ song, filename: null })
+    }
     upsertSong(song)
     if (beginDownload) return download(song)
     return Promise.resolve({ song, filename: null })

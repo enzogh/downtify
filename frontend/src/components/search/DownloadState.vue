@@ -80,6 +80,9 @@ const inLibrary = computed(() => {
 const state = computed(() => songDownloadState(item.value, inLibrary.value))
 
 function download() {
+  // The button lingers while it animates out (swap, mode out-in): a
+  // click then must not send the song again.
+  if (state.value !== 'failed' && state.value !== 'new') return
   if (state.value === 'failed') dm.retry(props.song)
   else dm.queue(props.song)
 }

@@ -77,6 +77,20 @@ _RANGE_RE = re.compile(r'^\s*bytes\s*=\s*(\d*)\s*-\s*(\d*)\s*$', re.I)
 _CONTENT_RANGE_RE = re.compile(r'^\s*bytes\s+(\d+)-(\d+)/(\d+|\*)\s*$', re.I)
 
 
+#: What the relay asks yt-dlp for: AAC first, then any audio, then a
+#: progressive video, all as plain HTTPS files (no HLS/DASH fragments).
+LIVE_FORMAT = (
+    'bestaudio[ext=m4a][protocol=https]'
+    '/bestaudio[protocol=https]'
+    '/best[protocol=https]'
+)
+
+
+class NoDirectAudioError(ValueError):
+    """YouTube only offers this track as fragments (HLS), which the live
+    relay can't pass through: download it instead (``StreamCache``)."""
+
+
 class RangeNotSatisfiable(ValueError):
     """The player asked for bytes past the end of the track."""
 
@@ -195,6 +209,15 @@ def _available_at(info: dict[str, Any]) -> float:
         return 0.0
 
 
+def _is_audio_only(info: Any) -> bool:
+    """Whether yt-dlp picked an audio-only format (not a video file)."""
+
+    if not isinstance(info, dict):
+        return False
+    vcodec = info.get('vcodec')
+    return vcodec in {None, 'none'} or not vcodec
+
+
 def live_player_clients() -> list[str]:
     """``DOWNTIFY_LIVE_PLAYER_CLIENTS``, else the quick default pair."""
 
@@ -216,6 +239,9 @@ def resolve_live_source(
 
     def extract(clients: Optional[list[str]]) -> Any:
         opts = {**_ydl_options(), **_cookie_options(cookies_file)}
+        # Relayed byte for byte: only a plain file works, never an HLS
+        # playlist (``m3u8``), which played its first seconds only.
+        opts['format'] = LIVE_FORMAT
         if clients:
             opts['extractor_args']['youtube']['player_client'] = clients
         with yt_dlp.YoutubeDL(opts) as ydl:
@@ -225,7 +251,7 @@ def resolve_live_source(
 
     def attempt() -> Any:
         try:
-            return extract(live_player_clients())
+            info = extract(live_player_clients())
         except Exception as exc:
             message = str(exc)
             if is_bot_check_error(message) or is_age_restricted_error(message):
@@ -233,6 +259,22 @@ def resolve_live_source(
             # The quick clients had nothing: ask every client.
             logger.debug('Live stream quick resolve failed: {}', message)
             return extract(None)
+        if not _is_audio_only(info):
+            # The quick clients only offered a video file (YouTube's SABR
+            # experiment hides their audio formats): that one often stops
+            # after a few seconds. Every client may still have audio.
+            logger.info(
+                'Live stream: only video for videoId={}, asking every client',
+                vid,
+            )
+            try:
+                fuller = extract(None)
+            except Exception as exc:
+                logger.debug('Live stream full resolve failed: {}', exc)
+                return info
+            if _is_audio_only(fuller):
+                return fuller
+        return info
 
     try:
         info = run_with_ip_rotation(attempt)
@@ -242,6 +284,10 @@ def resolve_live_source(
                 'This track is age-restricted on YouTube: upload a '
                 'YouTube cookies.txt in Settings > YouTube cookies '
                 'to stream it.'
+            ) from exc
+        if 'requested format is not available' in str(exc).lower():
+            raise NoDirectAudioError(
+                'YouTube offers no direct audio file for this track'
             ) from exc
         raise ValueError(
             f'YouTube did not answer: {type(exc).__name__}'
