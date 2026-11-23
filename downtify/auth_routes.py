@@ -409,6 +409,10 @@ async def oidc_callback(request: Request) -> Response:
         response.delete_cookie(_OIDC_STATE_COOKIE, path='/api/auth/oidc')
         return response
 
+    # The provider's profile picture (``picture``), refreshed each sign-in.
+    await asyncio.to_thread(
+        store.users.avatars.set, user['id'], claims.get('picture')
+    )
     ip = _ip(request)
     await asyncio.to_thread(store.users.record_login, user['id'], ip)
     if user['role'] == ROLE_ADMIN:

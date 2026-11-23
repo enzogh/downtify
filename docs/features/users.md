@@ -156,6 +156,8 @@ For example, the provider's client needs the callback `https://music.example.com
 
 The first successful sign-in creates a Castify account. Identity is keyed by the exact `issuer` and OIDC `sub`, not by a mutable username or email. An existing local account is **never** linked automatically by matching username or email; if a claimed username is already taken, Castify adds a stable suffix. Admins can still manage local roles in **Settings → Users**, while a configured admin-group mapping is synchronized on every OIDC sign-in. If the mapped group change would remove the server's last admin, Castify rejects that sign-in until another admin exists.
 
+The provider's profile picture (the standard `picture` claim of the `profile` scope, a plain `https` URL) becomes the account's avatar in the top bar, refreshed on every OIDC sign-in; without one, the avatar shows the username's initial. Authentik sends it from the user's avatar setting (an `avatar_url` attribute or Gravatar).
+
 ::: tip Authentik: superusers as admins
 Authentik's superuser status is a user flag, not a group name. Add a scope mapping (**Customization → Property Mappings → Scope Mapping**, scope name `castify`) with
 

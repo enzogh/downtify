@@ -3014,13 +3014,13 @@ Public. How this request is signed in.
   "min_password_length": 8,
   "signed_in": true,
   "via": "device",
-  "user": { "id": 2, "username": "maria", "role": "user", "default_password": false, "created_at": "…", "last_login_at": "…", "last_login_ip": "192.168.1.31" },
+  "user": { "id": 2, "username": "maria", "role": "user", "default_password": false, "created_at": "…", "last_login_at": "…", "last_login_ip": "192.168.1.31", "avatar_url": "" },
   "device": { "id": "8uz4d35zjpn2", "name": "Pixel 8" },
   "notice": null
 }
 ```
 
-`via` is `session` (a browser), `device` (an app's token) or `null`; `user` is who that is (`null` when signed out); `device` is `null` unless `via` is `device`. The web app shows its sign-in page when `signed_in` is `false`.
+`via` is `session` (a browser), `device` (an app's token) or `null`; `user` is who that is (`null` when signed out); its `avatar_url` is the profile picture an OIDC provider gave at the last sign-in (`''` for none); `device` is `null` unless `via` is `device`. The web app shows its sign-in page when `signed_in` is `false`.
 
 `auth_disabled` is `true` when accounts are turned off (`DOWNTIFY_DISABLE_AUTH`): then `signed_in` is `true`, `via` is `open` and `user` is the first admin.
 

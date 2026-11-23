@@ -14,7 +14,19 @@
         :aria-label="t('account.menu')"
         :title="auth.user.value.username"
       >
+        <!-- The SSO profile picture when the provider gives one, the
+             initial otherwise (or when the picture can't be loaded). -->
+        <img
+          v-if="avatarUrl"
+          :src="avatarUrl"
+          alt=""
+          referrerpolicy="no-referrer"
+          decoding="async"
+          class="size-7 rounded-full object-cover"
+          @error="brokenAvatar = avatarUrl"
+        />
         <span
+          v-else
           class="flex size-7 items-center justify-center rounded-full text-[13px] font-bold"
           :class="
             auth.isAdmin.value
@@ -29,7 +41,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import UiMenu from '../ui/UiMenu.vue'
 import { useAuth } from '/src/model/auth'
@@ -40,6 +52,12 @@ import { avatarLetter } from '/src/lib/viewMode'
 
 const { t } = useI18n()
 const auth = useAuth()
+// A picture that failed to load isn't tried again until it changes.
+const brokenAvatar = ref('')
+const avatarUrl = computed(() => {
+  const url = auth.user.value?.avatar_url || ''
+  return url && url !== brokenAvatar.value ? url : ''
+})
 const theme = useTheme()
 const router = useRouter()
 const install = useInstall()

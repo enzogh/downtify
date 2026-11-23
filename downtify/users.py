@@ -169,6 +169,27 @@ def clean_preferences(values: Any) -> dict[str, Any]:
     return clean
 
 
+#: Longest profile picture URL kept (a provider's URLs are far shorter).
+MAX_AVATAR_URL = 2048
+
+
+def clean_avatar_url(value: Any) -> str:
+    """*value* when it is a plain ``https`` URL, else ``''``: a picture
+    the browser loads as is (never ``data:`` or ``javascript:``)."""
+
+    if not isinstance(value, str):
+        return ''
+    url = value.strip()
+    if (
+        not url.lower().startswith('https://')
+        or len(url) > MAX_AVATAR_URL
+        or any(c.isspace() for c in url)
+        or any(c in url for c in '"<>\\')
+    ):
+        return ''
+    return url
+
+
 def public_user(row: Any) -> dict[str, Any]:
     """A user as the API shows it - never the password hash."""
 
@@ -183,6 +204,53 @@ def public_user(row: Any) -> dict[str, Any]:
     }
 
 
+class UserAvatars:
+    """Each account's profile picture from SSO (the ``picture`` claim),
+    in the ``user_avatars`` table ``UserStore`` creates."""
+
+    def __init__(self, db: Database) -> None:
+        self.db = db
+        self._lock = threading.Lock()
+
+    def url(self, user_id: int) -> str:
+        """The account's profile picture URL, or ``''``."""
+
+        try:
+            with self.db.connect() as conn:
+                row = conn.execute(
+                    'SELECT url FROM user_avatars WHERE user_id = ?',
+                    (user_id,),
+                ).fetchone()
+        except Exception:
+            # PostgreSQL without that table yet: no picture, as before.
+            return ''
+        return str(row['url']) if row else ''
+
+    def set(self, user_id: int, url: Any) -> str:
+        """Keep the picture an SSO sign-in gave; anything but a plain
+        ``https`` URL clears it. Returns the URL kept (``''`` for none).
+        Best effort: never raises."""
+
+        clean = clean_avatar_url(url)
+        try:
+            with self._lock, self.db.connect() as conn:
+                if clean:
+                    conn.execute(
+                        'INSERT INTO user_avatars (user_id, url, updated_at) '
+                        'VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET '
+                        'url = excluded.url, updated_at = excluded.updated_at',
+                        (user_id, clean, _now()),
+                    )
+                else:
+                    conn.execute(
+                        'DELETE FROM user_avatars WHERE user_id = ?',
+                        (user_id,),
+                    )
+        except Exception:
+            return ''
+        return clean
+
+
 class UserStore:
     """The users table (and the one-time accounts notice)."""
 
@@ -194,6 +262,7 @@ class UserStore:
         self._dummy: Optional[str] = None
         if self.db.dialect is Dialect.SQLITE:
             self._init_db()
+        self.avatars = UserAvatars(self.db)
 
     def add_change_listener(self, fn: Callable[[], None]) -> None:
         """Call *fn* after an account's name, role or password changes,
@@ -238,6 +307,15 @@ class UserStore:
                 CREATE TABLE IF NOT EXISTS auth_config (
                     key TEXT PRIMARY KEY,
                     value TEXT NOT NULL
+                )
+            """)
+            # The profile picture an SSO provider gives (its ``picture``
+            # claim), kept from one sign-in to the next.
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS user_avatars (
+                    user_id INTEGER PRIMARY KEY,
+                    url TEXT NOT NULL,
+                    updated_at TEXT NOT NULL
                 )
             """)
             conn.execute("""
@@ -404,7 +482,9 @@ class UserStore:
             row = conn.execute(
                 'SELECT * FROM users WHERE id = ?', (user_id,)
             ).fetchone()
-        return public_user(row) if row else None
+        if not row:
+            return None
+        return {**public_user(row), 'avatar_url': self.avatars.url(user_id)}
 
     def by_username(self, username: str) -> Optional[dict[str, Any]]:
         with self._connect() as conn:

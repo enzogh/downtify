@@ -154,6 +154,32 @@ def test_oidc_identity_is_stable_and_does_not_link_by_username(tmp_path):
     )['id'] not in {local['id'], external['id']}
 
 
+def test_sso_profile_picture_is_kept_and_cleared(tmp_path):
+    users = _users(tmp_path)
+    user = users._get_or_create_oidc_user(
+        'https://id.example', 'subject-1', 'maria', 'user'
+    )
+    assert not users.get(user['id'])['avatar_url']
+
+    url = 'https://intranet.example/storage/avatars/abc'
+    assert users.avatars.set(user['id'], url) == url
+    assert users.get(user['id'])['avatar_url'] == url
+
+    # A sign-in without a picture (or with something that isn't a plain
+    # https URL) takes it away.
+    for bad in (
+        None,
+        '',
+        'http://x/a.png',
+        'data:image/svg+xml;base64,AA',
+        'javascript:alert(1)',
+        'https://x/a b.png',
+    ):
+        users.avatars.set(user['id'], url)
+        assert not users.avatars.set(user['id'], bad)
+        assert not users.get(user['id'])['avatar_url']
+
+
 def test_oidc_group_roles_are_synchronized_without_removing_last_admin(
     tmp_path,
 ):

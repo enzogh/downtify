@@ -829,6 +829,7 @@ def test_oidc_callback_creates_a_local_session(client, monkeypatch):
                     'nonce': transaction['nonce'],
                     'preferred_username': 'maria',
                     'groups': ['downtify-admins'],
+                    'picture': 'https://id.example.test/avatars/maria.png',
                 },
                 key,
             )
@@ -868,6 +869,11 @@ def test_oidc_callback_creates_a_local_session(client, monkeypatch):
     assert status['user']['username'] == 'maria'
     assert status['user']['role'] == 'admin'
     assert status['via'] == 'session'
+    # The provider's profile picture shows in the account's avatar.
+    assert (
+        status['user']['avatar_url']
+        == 'https://id.example.test/avatars/maria.png'
+    )
 
 
 def test_disabling_local_login_keeps_pairing_available(client, monkeypatch):
