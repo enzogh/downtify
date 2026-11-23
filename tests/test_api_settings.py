@@ -706,6 +706,14 @@ def test_update_settings_applies_cover_resolution_to_providers(monkeypatch):
     assert captured == [900]
 
 
+def test_update_settings_applies_cover_minimum_to_providers(monkeypatch):
+    monkeypatch.setitem(api.state.settings, 'cover_min_resolution', 0)
+    captured = []
+    monkeypatch.setattr(api.providers, 'set_cover_minimum', captured.append)
+    _call_update_settings(monkeypatch, {'cover_min_resolution': 1000})
+    assert captured == [1000]
+
+
 def test_update_settings_leaves_providers_untouched_when_key_absent(
     monkeypatch,
 ):
@@ -759,16 +767,22 @@ def test_effective_audio_providers_filters_invalid_and_dedupes():
     ]
 
 
-def test_effective_audio_providers_adds_youtube_fallback_when_only_slskd():
+def test_effective_audio_providers_keeps_slskd_alone():
+    # Issue #471: slskd as the only source must stay the only source, so
+    # turning YouTube Music and YouTube off survives a save.
     settings = {
         'audio_providers': ['slskd'],
         'slskd': {'enabled': True},
     }
-    assert _effective_audio_providers(settings) == [
-        'slskd',
-        'youtube-music',
-        'youtube',
-    ]
+    assert _effective_audio_providers(settings) == ['slskd']
+
+
+def test_effective_audio_providers_falls_back_when_slskd_alone_is_off():
+    settings = {
+        'audio_providers': ['slskd'],
+        'slskd': {'enabled': False},
+    }
+    assert _effective_audio_providers(settings) == ['youtube-music']
 
 
 def test_effective_audio_providers_skips_slskd_when_disabled():
@@ -833,6 +847,31 @@ def test_effective_slskd_settings_normalizes_format_policy():
         _effective_slskd_settings({'slskd': {'min_bitrate': 0}})['min_bitrate']
         == 0
     )
+
+
+def test_effective_slskd_settings_normalizes_fine_tune_quality():
+    out = _effective_slskd_settings({
+        'slskd': {
+            'advanced': True,
+            'unknown_bitrate': 'ALLOW',
+            'format_min_bitrate': {'.M4A': '192', 'opus': None, 'ogg': 'x'},
+            'max_bitrate': 99999,
+            'prefer_bitrate': True,
+        }
+    })
+
+    assert out['advanced'] is True
+    assert out['unknown_bitrate'] == 'allow'
+    assert out['format_min_bitrate'] == {'m4a': 192, 'ogg': 0}
+    assert out['max_bitrate'] == 10000
+    assert out['prefer_bitrate'] is True
+
+    defaults = _effective_slskd_settings({'slskd': {'unknown_bitrate': '?'}})
+    assert defaults['advanced'] is False
+    assert defaults['unknown_bitrate'] == 'auto'
+    assert defaults['format_min_bitrate'] == {}
+    assert defaults['max_bitrate'] == 0
+    assert defaults['prefer_bitrate'] is False
 
 
 def test_effective_slskd_settings_caps_parallelism_at_eight():
@@ -932,3 +971,23 @@ def test_update_settings_applies_providers_and_slskd_to_downloader(
     assert downloader.audio_providers == ['slskd', 'youtube-music']
     assert downloader.slskd_settings['enabled'] is True
     assert downloader.slskd_settings['output_dir'] == str(tmp_path)
+
+
+def test_update_settings_saves_slskd_as_the_only_source(monkeypatch, tmp_path):
+    # Issue #471: switching YouTube Music and YouTube off, leaving slskd,
+    # used to come back with all three on after Save.
+    downloader = Downloader(tmp_path)
+    out = _update(
+        monkeypatch,
+        {
+            'audio_providers': ['slskd'],
+            'slskd': {
+                'enabled': True,
+                'base_url': 'http://slskd:5030',
+                'api_key': 'key',
+            },
+        },
+        downloader=downloader,
+    )
+    assert out['audio_providers'] == ['slskd']
+    assert downloader.audio_providers == ['slskd']

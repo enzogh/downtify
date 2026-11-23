@@ -1,50 +1,52 @@
 <template>
   <!-- A small green mark, like Spotify's "downloaded" one: the song is
        simply there, nothing to do. -->
-  <span
-    v-if="state === 'library'"
-    class="flex size-9 shrink-0 items-center justify-center text-accent"
-    :title="t('search.inLibrary')"
-    role="img"
-    :aria-label="t('search.inLibrary')"
-  >
-    <AppIcon name="check-circle" :size="18" />
-  </span>
-  <UiBadge v-else-if="state === 'done'" tone="accent" icon="check">
-    {{ t('queue.statusDone') }}
-  </UiBadge>
-  <UiBadge v-else-if="state === 'queued'" tone="neutral">
-    {{ t('queue.statusQueued') }}
-  </UiBadge>
-  <div v-else-if="state === 'active'" class="flex w-28 items-center gap-2">
-    <UiProgress :value="item.progress" :indeterminate="!item.progress" />
-    <span class="tabular w-9 text-right text-xs text-muted">{{
-      item.progress ? `${Math.round(item.progress)}%` : ''
-    }}</span>
-  </div>
-  <button
-    v-else
-    type="button"
-    class="flex size-9 shrink-0 items-center justify-center rounded-full transition-colors"
-    :class="
-      state === 'failed'
-        ? 'bg-danger/12 text-danger hover:bg-danger/20'
-        : 'bg-surface-2 text-fg-3 hover:bg-accent hover:text-on-accent'
-    "
-    :title="state === 'failed' ? t('queue.retry') : t('actions.download')"
-    :aria-label="
-      state === 'failed'
-        ? t('queue.retry')
-        : t('actions.downloadItem', { name: song.name })
-    "
-    @click="download"
-  >
-    <AppIcon
-      :name="state === 'failed' ? 'retry' : 'download'"
-      :size="16"
-      stroke-width="2"
-    />
-  </button>
+  <Transition name="swap" mode="out-in">
+    <span
+      v-if="state === 'library'"
+      class="flex size-9 shrink-0 items-center justify-center text-accent"
+      :title="t('search.inLibrary')"
+      role="img"
+      :aria-label="t('search.inLibrary')"
+    >
+      <AppIcon name="check-circle" :size="18" />
+    </span>
+    <UiBadge v-else-if="state === 'done'" tone="accent" icon="check">
+      {{ t('queue.statusDone') }}
+    </UiBadge>
+    <UiBadge v-else-if="state === 'queued'" tone="neutral">
+      {{ t('queue.statusQueued') }}
+    </UiBadge>
+    <div v-else-if="state === 'active'" class="flex w-28 items-center gap-2">
+      <UiProgress :value="item.progress" :indeterminate="!item.progress" />
+      <span class="tabular w-9 text-right text-xs text-muted">{{
+        item.progress ? `${Math.round(item.progress)}%` : ''
+      }}</span>
+    </div>
+    <button
+      v-else
+      type="button"
+      class="flex size-9 shrink-0 items-center justify-center rounded-full transition-colors"
+      :class="
+        state === 'failed'
+          ? 'bg-danger/12 text-danger hover:bg-danger/20'
+          : 'bg-surface-2 text-fg-3 hover:bg-accent hover:text-on-accent'
+      "
+      :title="state === 'failed' ? t('queue.retry') : t('actions.download')"
+      :aria-label="
+        state === 'failed'
+          ? t('queue.retry')
+          : t('actions.downloadItem', { name: song.name })
+      "
+      @click="download"
+    >
+      <AppIcon
+        :name="state === 'failed' ? 'retry' : 'download'"
+        :size="16"
+        stroke-width="2"
+      />
+    </button>
+  </Transition>
 </template>
 
 <script setup>

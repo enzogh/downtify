@@ -339,6 +339,71 @@ describe('queue index lifecycle', () => {
     expect(result.filename).toBe('generated.mp3')
   })
 
+  it('requeues a URL-less failed import for provider search using the same job ID', async () => {
+    const failed = job('csv:import:0', {
+      status: 'error',
+      message: [{ type: 'missing', loc: ['query', 'url'] }],
+    })
+    send(failed)
+    const item = tracker.getBySong(failed.song)
+    await manager.retry(item.song)
+
+    expect(fixture.api.download).not.toHaveBeenCalled()
+    expect(fixture.api.downloadBatch).toHaveBeenCalledWith({
+      songs: [
+        expect.objectContaining({ ...failed.song, _match_by_metadata: true }),
+      ],
+      generate_m3u: false,
+    })
+    expect(tracker.downloadQueue.value).toHaveLength(1)
+    expect(tracker.getBySong(failed.song)).toBe(item)
+    expect(item.state).toBe('queued')
+  })
+
+  it('asks for a playlist saved as one album only when wanted', async () => {
+    const songs = [job('a').song, job('b').song]
+    await manager.fromSongs(songs, {
+      playlistUrl: 'https://open.spotify.com/playlist/x',
+      coverUrl: 'https://img/playlist.jpg',
+      asAlbum: true,
+    })
+    expect(fixture.api.downloadBatch).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        as_album: true,
+        cover_url: 'https://img/playlist.jpg',
+      })
+    )
+    await manager.fromSongs(songs, {
+      playlistUrl: 'https://open.spotify.com/playlist/x',
+    })
+    expect(fixture.api.downloadBatch.mock.lastCall[0]).not.toHaveProperty(
+      'as_album'
+    )
+  })
+
+  it('keeps a failed retry visible when the search queue rejects it', async () => {
+    const item = tracker.appendSong(job('csv:import:0').song)
+    item.setError()
+    fixture.api.downloadBatch.mockRejectedValueOnce({
+      response: { data: { detail: 'Downloader not ready' } },
+    })
+    await manager.retry(item.song)
+    expect(item).toMatchObject({
+      state: 'failed',
+      message: 'Downloader not ready',
+    })
+  })
+
+  it('continues to retry a failed track with a URL through the URL endpoint', async () => {
+    const song = { song_id: 'video', url: 'https://youtu.be/generated' }
+    const item = tracker.appendSong(song)
+    item.setError()
+    await manager.retry(song)
+    expect(fixture.api.download).toHaveBeenCalledWith(song)
+    expect(fixture.api.downloadBatch).not.toHaveBeenCalled()
+    expect(item.state).toBe('done')
+  })
+
   it('retries with a SoundCloud track instead of an earlier video', async () => {
     const item = tracker.appendSong({ song_id: 'a', youtube_id: 'old-video' })
     item.setError()

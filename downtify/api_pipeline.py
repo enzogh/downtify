@@ -138,6 +138,19 @@ from .track_index import (
 from .watch_stats import (
     norm_path,
 )
+from .library_match import LibraryMatcher
+from .library_songs import LibrarySongs
+from .navidrome import NavidromeClient
+from .album_artist import PLAYLIST_ALBUM
+from .navidrome_listens import StoreWithNavidrome
+from .api_core import allowed_entry_keys
+from .album_artist import as_playlist_album
+from .library_match import build_matcher
+from .navidrome_listens import navidrome_taste
+from . import notifications
+from .library_match import request_sources
+from .library_catalog import resolve_library_file
+from .navidrome_listens import with_starred
 
 
 async def after_library_delete(
@@ -771,7 +784,9 @@ async def _finish_with_existing(
         state.downloader,
         song,
         subdir=subdir,
-        track_index=state.track_index,
+        # A playlist saved as an album wants its own copy of a song the
+        # library has elsewhere: only a file already in the album counts.
+        track_index=None if song.get(PLAYLIST_ALBUM) else state.track_index,
     )
     if not existing_hit:
         return None
@@ -906,6 +921,7 @@ async def _run_download_locked(
                 job['filename'] = filename
                 job['progress'] = 100
                 if filename:
+                    notifications.emit('download_done', song_label(song))
                     await _record_finished_download(
                         song,
                         filename,
@@ -954,6 +970,7 @@ async def _run_download_locked(
             message = f'Error: {exc}'
         job['status'] = 'error'
         job['message'] = message
+        notifications.emit('download_failed', song_label(song), message)
         await state.connections.broadcast_job(
             _job_users(job),
             {
@@ -1213,6 +1230,7 @@ async def _process_batch(
     batch_id: Optional[int] = None,
     cover_url: Optional[str] = None,
     user_id: int = 0,
+    as_album: bool = False,
 ) -> None:
     # Resolve the playlist name up-front so all tracks land in a single,
     # per-playlist sub-folder. Loose batches (e.g. albums or unrelated
@@ -1253,6 +1271,9 @@ async def _process_batch(
             batch_id,
             playlist_name,
         )
+    if as_album and playlist_name:
+        # In place: the queue's jobs hold these very dicts.
+        as_playlist_album(songs, playlist_name, cover_url or '')
 
     # A per-song delay only makes sense when there's a "next" song to
     # wait for; skip it entirely for a lone track so a single download
@@ -1469,8 +1490,20 @@ async def _finish_playlist_batch(
 def _rebuild_playlist_catalog_from_library(
     playlist_name: str,
     spotify_playlist_id: str,
+    *,
+    same_songs: bool = True,
 ) -> int:
-    """Link every on-disk Spotify playlist track into the catalog (upsert)."""
+    """Link every on-disk Spotify playlist track into the catalog (upsert).
+
+    A track is found by its Spotify id (track index), the file name a
+    download of it would have, or the playlist's own catalog rows. With
+    *same_songs*, a track none of those find is also looked up as the
+    same song anywhere in the library - the same ISRC, else the same
+    lead artist, title and length (:mod:`downtify.library_songs`) - so a
+    song the library already had (an older download under another name,
+    a file in an existing music folder) joins the playlist instead of
+    staying "missing" (issue #550). Returns the number of tracks linked.
+    """
 
     if (
         state.playlist_catalog is None
@@ -1500,6 +1533,8 @@ def _rebuild_playlist_catalog_from_library(
     state.playlist_catalog.ensure_playlist(pl_name, spotify_id=sid)
 
     linked = 0
+    # The library by song, read once and only when a track needs it.
+    songs: list[Any] = []
     for index, track in enumerate(tracks):
         filename: Optional[str] = None
         full: Optional[Path] = None
@@ -1518,6 +1553,10 @@ def _rebuild_playlist_catalog_from_library(
                 filename = str(catalog_filenames.get(tid) or '').strip()
                 if filename:
                     full = locate_library_file(filename, dl_dir, slskd)
+        if full is None and same_songs:
+            if not songs:
+                songs.append(_library_songs())
+            filename, full = _same_song_file(track, songs[0])
         if (
             filename
             and full is not None
@@ -1528,6 +1567,28 @@ def _rebuild_playlist_catalog_from_library(
             )
             linked += 1
     return linked
+
+
+def _same_song_file(
+    track: dict[str, Any], songs: Any
+) -> tuple[Optional[str], Optional[Path]]:
+    """``(stored path, file)`` of the library file holding *track* as the
+    same song (see :func:`_rebuild_playlist_catalog_from_library`), also
+    indexed under the track's Spotify id; ``(None, None)`` otherwise."""
+
+    if songs is None:
+        return None, None
+    found = songs.find(track)
+    if not found:
+        return None, None
+    full = resolve_library_file(found, library_context())
+    if full is None:
+        return None, None
+    if state.track_index is not None and not state.track_index.lookup_song(
+        track
+    ):
+        state.track_index.register_song(track, found, full_path=full)
+    return found, full
 
 
 def _playlist_subdir_for_name(playlist_name: str) -> str:
@@ -1733,6 +1794,7 @@ async def _submit_playlist_batch(
     playlist_name: Optional[str] = None,
     cover_url: Optional[str] = None,
     user_id: int = 0,
+    as_album: bool = False,
 ) -> dict[str, Any]:
     valid_songs: list[dict[str, Any]] = []
     job_ids: list[str] = []
@@ -1760,6 +1822,7 @@ async def _submit_playlist_batch(
             batch_id=batch_id,
             cover_url=cover_url,
             user_id=user_id,
+            as_album=as_album,
         ),
         name='playlist-batch',
     )
@@ -2103,6 +2166,30 @@ def _require_discover() -> DiscoverStore:
     return state.discover
 
 
+def _discover_inputs(
+    request: Request, store: DiscoverStore, library: list[Any]
+) -> tuple[Any, list[Any]]:
+    """The listens and library Discover weighs for *request*: with
+    *Use Navidrome plays in Discover* on, an admin's also have the
+    Navidrome account's plays and starred songs (see
+    :mod:`downtify.navidrome_listens`). Unchanged otherwise."""
+
+    if state.settings.get(
+        'discover_navidrome_plays'
+    ) is not True or not request_is_admin(request):
+        return store, library
+    cfg = _effective_navidrome_settings(state.settings)
+    if not cfg['enabled'] or not NavidromeClient(cfg).configured():
+        return store, library
+    taste = navidrome_taste(cfg, NavidromeClient)
+    if not taste:
+        return store, library
+    return (
+        StoreWithNavidrome(store, taste['listens']),
+        with_starred(library, taste['starred']),
+    )
+
+
 #: How often the library's size is noted (the day's last reading stays).
 USAGE_SNAPSHOT_INTERVAL = 3600
 
@@ -2170,6 +2257,8 @@ def take_usage_snapshot() -> None:
         )
     if state.download_log is not None:
         state.download_log.prune()
+    if state.slskd_misses is not None:
+        state.slskd_misses.prune()
 
 
 async def usage_snapshot_loop(
@@ -2186,3 +2275,66 @@ async def usage_snapshot_loop(
         except Exception:
             logger.exception('Could not note the library size')
         await asyncio.sleep(interval_seconds)
+
+
+def _library_songs() -> Any:
+    """The library by song (artist, title, length), to count what it has
+    of an artist's releases; ``None`` when it can't be read."""
+
+    try:
+        return LibrarySongs(listing_for_request(library_context()))
+    except Exception:
+        logger.opt(exception=True).warning(
+            'Could not read the library to compare with an artist catalogue'
+        )
+        return None
+
+
+def song_label(song: dict[str, Any]) -> str:
+    """``Artist - Title`` for a song as the download endpoints get it."""
+
+    artists = song.get('artists') or []
+    artist = (
+        ', '.join(str(a) for a in artists)
+        if isinstance(artists, list)
+        else str(artists)
+    )
+    title = str(song.get('name') or song.get('title') or '')
+    return ' - '.join(part for part in (artist, title) if part)
+
+
+def _library_matcher(request: Request, songs: list[Any]) -> LibraryMatcher:
+    return build_matcher(
+        library_context(),
+        allowed_keys=allowed_entry_keys(request),
+        track_index=state.track_index,
+        download_sources=state.download_sources,
+        sources=request_sources(songs),
+    )
+
+
+def _split_owned(
+    request: Request, songs: list[Any]
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """*songs* the library doesn't have yet, and an ``already_in_library``
+    report for each it has: ``{input_index, song_id, filename, match}``
+    (``skip_if_in_library``, issue #636)."""
+
+    matcher = _library_matcher(request, songs)
+    wanted: list[dict[str, Any]] = []
+    owned: list[dict[str, Any]] = []
+    for index, song in enumerate(songs):
+        if not isinstance(song, dict):
+            continue
+        hit = matcher.match(song)
+        if hit is None:
+            wanted.append(song)
+            continue
+        row, how = hit
+        owned.append({
+            'input_index': index,
+            'song_id': str(song.get('song_id') or ''),
+            'filename': str(row.get('file') or ''),
+            'match': how,
+        })
+    return wanted, owned

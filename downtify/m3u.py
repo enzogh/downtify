@@ -9,8 +9,10 @@ the playlist appears as a single unit instead of a pile of loose tracks.
 
 from __future__ import annotations
 
+import contextlib
 import os
 import re
+import uuid
 from collections import defaultdict, deque
 from pathlib import Path
 from typing import Callable, Iterable, Optional, Sequence
@@ -98,7 +100,7 @@ def is_manual_m3u(m3u_path: Path) -> bool:
 
 
 def iter_m3u_files(download_dir: Path) -> list[Path]:
-    """Every ``.m3u`` under *download_dir*, sorted by path."""
+    """Every ``.m3u`` / ``.m3u8`` under *download_dir*, sorted by path."""
 
     base = Path(download_dir)
     found: list[Path] = []
@@ -110,7 +112,7 @@ def iter_m3u_files(download_dir: Path) -> list[Path]:
     for dirpath, _dirnames, filenames in os.walk(base, followlinks=False):
         current = Path(dirpath)
         for name in filenames:
-            if name.lower().endswith('.m3u'):
+            if name.lower().endswith(('.m3u', '.m3u8')):
                 found.append(current / name)
     found.sort()
     return found
@@ -358,9 +360,7 @@ def remove_m3u_tracks(
         pending = []
     kept.extend(pending)
     if removed:
-        m3u_path.write_text(
-            '\n'.join(kept) + '\n', encoding='utf-8', newline='\n'
-        )
+        write_playlist_text(m3u_path, '\n'.join(kept) + '\n')
         forget_cached_playlists()
     return removed
 
@@ -405,9 +405,7 @@ def insert_m3u_track(
         seen += 1
         start = None
     lines[at:at] = block
-    m3u_path.write_text(
-        '\n'.join(lines) + '\n', encoding='utf-8', newline='\n'
-    )
+    write_playlist_text(m3u_path, '\n'.join(lines) + '\n')
     forget_cached_playlists()
     return True
 
@@ -458,6 +456,29 @@ def m3u_path_for(
     return target_dir / f'{sanitize_playlist_name(playlist_name)}.m3u'
 
 
+def write_playlist_text(target: Path, content: str) -> None:
+    """Write *content* to *target* through a temporary file in the same
+    folder and a rename, so a reader - a media server scanning the
+    folder, the Library, a batch's next rewrite - never sees an empty or
+    half-written playlist. An existing file keeps its permissions; a new
+    one gets the umask's, like a plain write.
+
+    UTF-8 without a BOM, LF line endings (*content* is built with
+    ``'\\n'`` already)."""
+
+    temporary = target.with_name(f'.{target.name}.{uuid.uuid4().hex}.tmp')
+    fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o666)
+    try:
+        with os.fdopen(fd, 'w', encoding='utf-8', newline='\n') as handle:
+            handle.write(content)
+        with contextlib.suppress(FileNotFoundError):
+            os.chmod(temporary, target.stat().st_mode & 0o777)
+        os.replace(temporary, target)
+    except BaseException:
+        temporary.unlink(missing_ok=True)
+        raise
+
+
 def write_m3u(
     download_dir: Path,
     playlist_name: str,
@@ -506,9 +527,7 @@ def write_m3u(
         )
         return None, 0
 
-    # UTF-8, no BOM, LF line endings — encoding='utf-8' on text mode
-    # gives us no BOM, and we built the content with '\n' already.
-    target.write_text(content, encoding='utf-8', newline='\n')
+    write_playlist_text(target, content)
     if not manual:
         _keep_custom_order(target, download_dir, slskd_dir, extra_dirs)
     forget_cached_playlists()

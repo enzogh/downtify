@@ -1,6 +1,7 @@
 <template>
   <SignIn v-if="auth.mustSignIn.value" />
   <div v-else class="flex min-h-dvh bg-bg text-fg">
+    <RouteProgress />
     <SideNav class="hidden md:flex" />
     <div class="flex min-w-0 flex-1 flex-col">
       <TopBar />
@@ -8,10 +9,14 @@
         <RouterView v-slot="{ Component, route: viewRoute }">
           <Transition name="page" mode="out-in">
             <component
-              v-if="policyLoaded"
+              v-if="policyLoaded && Component"
               :is="Component"
               :key="viewKey(viewRoute) + ':' + libraryOnly"
             />
+            <!-- What the app may show is still being asked, or the first
+                 page's code is still on its way: the shape of a page
+                 instead of a blank one. -->
+            <PageSkeleton v-else />
           </Transition>
         </RouterView>
       </main>
@@ -73,6 +78,8 @@ import JamSheet from '../jam/JamSheet.vue'
 import JamStrip from '../jam/JamStrip.vue'
 import NowPlaying from './NowPlaying.vue'
 import ShortcutsDialog from './ShortcutsDialog.vue'
+import RouteProgress from './RouteProgress.vue'
+import PageSkeleton from '../ui/PageSkeleton.vue'
 import UiToasts from '../ui/UiToasts.vue'
 import UiDialog from '../ui/UiDialog.vue'
 import CreatePlaylistModal from '../library/CreatePlaylistModal.vue'
@@ -95,9 +102,11 @@ import { usePlayer } from '/src/model/player'
 import { usePlayerPrefs } from '/src/model/playerPrefs'
 import { useLibrary } from '/src/model/library'
 import { useDiscover } from '/src/model/discover'
+import { useKaraokeStage } from '/src/model/karaokeStage'
 import { useNowPlaying, useUi } from '/src/model/ui'
 import { useRemotePlayback } from '/src/model/remotePlayback'
 import { useShortcuts } from './shortcuts'
+import { prefetchRoutes } from '/src/lib/prefetch'
 
 const auth = useAuth()
 const account = useAccount()
@@ -112,9 +121,22 @@ const router = useRouter()
 const ui = useUi()
 const nowPlaying = useNowPlaying()
 const shortcutsOpen = ref(false)
+const PREFETCHED_ROUTES = [
+  'Library',
+  'Queue',
+  'Search',
+  'Album',
+  'Artist',
+  'Playlist',
+  'Discover',
+  'Monitor',
+  'Settings',
+]
 let stopPolicy
 onMounted(() => {
   stopPolicy = startMusicPolicy()
+  // The pages people open most, fetched ahead while nothing else happens.
+  prefetchRoutes(router, PREFETCHED_ROUTES)
 })
 onUnmounted(() => stopPolicy?.())
 
@@ -143,6 +165,7 @@ API.onForbidden(() => {
 })
 // Count listens for Discover, whichever page the music is playing on.
 useDiscover().startListenTracking()
+useKaraokeStage().resume()
 
 useShortcuts({
   player,

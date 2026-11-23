@@ -137,6 +137,9 @@ from .watch_stats import (
     DEFAULT_DAYS,
     clamp_days,
 )
+from .library_catalog import LOOKUP_SONG_MAX
+from .api_pipeline import _library_matcher
+from . import download_sources
 
 
 def rekey_file_owners(
@@ -411,6 +414,153 @@ async def replace_candidates(
     }
 
 
+def _hand_replaced_info(file: str) -> Optional[dict[str, Any]]:
+    store = state.hand_replaced
+    return store.get(file) if store is not None else None
+
+
+def _mark_hand_replaced(file: str, source: str) -> None:
+    if state.hand_replaced is None:
+        return
+    try:
+        state.hand_replaced.mark(file, source)
+    except Exception:
+        logger.opt(exception=True).warning(
+            'Could not remember that {} was replaced by hand', file
+        )
+
+
+def _remember_replacement(
+    file: str, full: Path, entry: dict[str, Any], new_source: str
+) -> None:
+    """*file*'s audio was just replaced with *new_source* (a video id, a
+    SoundCloud track URL, ``''`` for an uploaded file): the upload it came
+    from is rejected for its song, so no later download picks it again,
+    and the new one is remembered as the file's source (best effort)."""
+
+    sources = state.download_sources
+    if sources is None:
+        return
+    summary = _track_summary(file, entry)
+    song: dict[str, Any] = {
+        'name': summary['title'],
+        'artists': [
+            a.strip() for a in summary['artist'].split(',') if a.strip()
+        ],
+        'isrc': str(entry.get('isrc') or ''),
+    }
+    if state.track_index is not None:
+        try:
+            song['spotify_id'] = (
+                state.track_index.spotify_id_for_filename(file) or ''
+            )
+        except Exception:
+            logger.opt(exception=True).debug('No Spotify id for {}', file)
+    try:
+        keys = set(download_sources.track_keys(song))
+        earlier = sources.get(file)
+        keys.update((earlier or {}).get('track_keys') or [])
+        sources.reject_file_source(file, keys, keep=new_source)
+        # Picking a rejected upload again by hand takes the rejection back.
+        sources.allow(new_source, keys)
+        sources.record(file, full, new_source, keys)
+    except Exception:
+        logger.opt(exception=True).warning(
+            'Could not remember the replaced source of {}', file
+        )
+
+
+@router.get('/api/library/replace/protected')
+async def hand_replaced_status(file: str = Query(...)) -> dict[str, Any]:
+    """Whether downloads leave *file* alone because its audio was replaced
+    by hand: ``{file, hand_replaced: {source, replaced_at} | null}``."""
+
+    file = file.strip().replace('\\', '/')
+    return {'file': file, 'hand_replaced': _hand_replaced_info(file)}
+
+
+@router.delete('/api/library/replace/protected')
+async def forget_hand_replaced(file: str = Query(...)) -> dict[str, Any]:
+    """Let downloads overwrite a hand-replaced file again (with
+    "Download again if the file exists" on): ``{file, forgotten}``."""
+
+    file = file.strip().replace('\\', '/')
+    if state.hand_replaced is None:
+        raise HTTPException(status_code=500, detail='Library not ready')
+    forgotten = await asyncio.to_thread(state.hand_replaced.forget, file)
+    return {'file': file, 'forgotten': forgotten}
+
+
+@router.post('/api/library/replace/upload')
+async def replace_track_audio_from_file(
+    request: Request, file: str = Query(...), name: str = Query(...)
+) -> dict[str, Any]:
+    """Replace a library track's audio with an audio file uploaded as the
+    raw request body (``name`` is its file name, for its format):
+    ``{file, duration_before, duration_after, converted,
+    hand_replaced}``. Same format: used as it is; another: converted to
+    the file's own. The file keeps its path and tags, and downloads
+    leave it alone from then on."""
+
+    file = file.strip().replace('\\', '/')
+    try:
+        fmt = audio_replace.upload_format(name)
+    except audio_replace.ReplaceError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    full, entry = await asyncio.to_thread(_replaceable_track, file)
+    if file in _replacing:
+        raise HTTPException(
+            status_code=409, detail='This track is already being replaced'
+        )
+    _replacing.add(file)
+    staged = audio_replace.upload_staging_path(full, fmt)
+    try:
+        size = 0
+        with staged.open('wb') as handle:
+            async for chunk in request.stream():
+                size += len(chunk)
+                if size > audio_replace.MAX_UPLOAD_BYTES:
+                    raise HTTPException(
+                        status_code=413, detail='The file is too large'
+                    )
+                handle.write(chunk)
+        if not size:
+            raise HTTPException(status_code=400, detail='The file is empty')
+        try:
+            old_key = content_key_for(full) or ''
+        except Exception:
+            old_key = ''
+        bitrate = str(getattr(state.downloader, 'audio_bitrate', '') or '320')
+        try:
+            result = await asyncio.to_thread(
+                audio_replace.replace_from_file,
+                full,
+                staged,
+                bitrate=bitrate,
+            )
+        except audio_replace.ReplaceError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+    finally:
+        staged.unlink(missing_ok=True)
+        _replacing.discard(file)
+    await asyncio.to_thread(_after_replacement, file, full, old_key)
+    await asyncio.to_thread(_mark_hand_replaced, file, 'file')
+    await asyncio.to_thread(_remember_replacement, file, full, entry, '')
+    summary = _track_summary(file, entry)
+    await log_activity(
+        request,
+        'audio_replaced',
+        f'{summary["artist"]} - {summary["title"]}'.strip(' -'),
+        {'file': file, 'upload': Path(name).name},
+    )
+    announce_library_changed()
+    return {
+        'file': file,
+        **result,
+        'hand_replaced': _hand_replaced_info(file),
+    }
+
+
 @router.post('/api/library/replace')
 async def replace_track_audio(request: Request) -> dict[str, Any]:
     """Replace a library track's audio with a YouTube video:
@@ -464,7 +614,7 @@ async def replace_track_audio(request: Request) -> dict[str, Any]:
         {'file': file, 'video_id': video_id},
     )
     spawn_task(
-        _run_replacement(job_id, song, file, full, video_id),
+        _run_replacement(job_id, song, file, full, video_id, entry),
         name=f'replace-{video_id}',
     )
     return {'job_id': job_id, 'file': file}
@@ -476,6 +626,7 @@ async def _run_replacement(
     file: str,
     full: Path,
     video_id: str,
+    entry: Optional[dict[str, Any]] = None,
 ) -> None:
     loop = state.loop or asyncio.get_running_loop()
     job = state.download_jobs[job_id]
@@ -537,6 +688,16 @@ async def _run_replacement(
         return
     _replacing.discard(file)
     await asyncio.to_thread(_after_replacement, file, full, old_key)
+    await asyncio.to_thread(
+        _remember_replacement, file, full, entry or {}, video_id
+    )
+    await asyncio.to_thread(
+        _mark_hand_replaced,
+        file,
+        'soundcloud'
+        if providers.parse_soundcloud_url(video_id) is not None
+        else 'youtube',
+    )
     job.update(status='done', progress=100, filename=file, message='Replaced')
     await state.connections.broadcast({
         'song': song,
@@ -1076,16 +1237,40 @@ def _update_visibility(
 
 
 @router.post('/api/library/lookup')
-async def library_lookup(request: Request) -> list[dict[str, Any]]:
-    """Library rows for search/link songs that are already downloaded."""
+async def library_lookup(request: Request) -> Any:
+    """Library rows for search/link songs that are already downloaded.
+
+    With ``detailed: true``: ``{matches: [{input_index, id?, match, row}]}``,
+    one per requested song the library has, matched by catalog id first,
+    then by song key (see :mod:`downtify.library_match`).
+    """
 
     payload = await _json_object(request)
     songs = payload.get('songs')
     if not isinstance(songs, list):
         songs = []
+    if payload.get('detailed') is True:
+        return await asyncio.to_thread(
+            _lookup_detailed, request, songs[:LOOKUP_SONG_MAX]
+        )
     return lookup_library_songs(
         library_context(), songs, allowed_keys=allowed_entry_keys(request)
     )
+
+
+def _lookup_detailed(request: Request, songs: list[Any]) -> dict[str, Any]:
+    matcher = _library_matcher(request, songs)
+    matches: list[dict[str, Any]] = []
+    for index, raw in enumerate(songs):
+        hit = matcher.match(raw)
+        if hit is None:
+            continue
+        row, how = hit
+        item: dict[str, Any] = {'input_index': index, 'match': how, 'row': row}
+        if raw.get('id') is not None:
+            item['id'] = raw['id']
+        matches.append(item)
+    return {'matches': matches}
 
 
 @router.get('/api/library/loudness')

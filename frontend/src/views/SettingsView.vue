@@ -35,9 +35,7 @@
         </RouterLink>
       </nav>
 
-      <div v-if="!sm.loaded.value" class="flex flex-col gap-3">
-        <UiSkeleton v-for="n in 4" :key="n" class="h-20 !rounded-panel" />
-      </div>
+      <UiPanelSkeleton v-if="!sm.loaded.value" :count="2" />
 
       <Transition v-else name="page" mode="out-in">
         <div :key="section" class="flex min-w-0 flex-col gap-8">
@@ -180,6 +178,25 @@
                 @enable-slskd="s.slskd.enabled = true"
                 @enable-deemix="s.deemix.enabled = true"
               />
+              <p
+                v-if="onlyOwnServers"
+                class="px-4 pt-3 text-[13px] text-pretty text-warn"
+                role="status"
+              >
+                {{ t('settings.sourcesOwnServersOnly') }}
+              </p>
+              <div class="px-4 pt-4 pb-1 text-[13px] text-pretty text-muted">
+                <p class="font-semibold text-fg">
+                  {{ t('settings.sourceNeedsTitle') }}
+                </p>
+                <ul class="mt-1.5 flex list-disc flex-col gap-1 pl-5">
+                  <li>{{ t('settings.sourceNeedsSlskd') }}</li>
+                  <li>{{ t('settings.sourceNeedsDeemix') }}</li>
+                  <li>{{ t('settings.sourceNeedsYoutube') }}</li>
+                  <li>{{ t('settings.sourceNeedsSoundcloud') }}</li>
+                </ul>
+                <p class="mt-1.5">{{ t('settings.sourceNeedsCover') }}</p>
+              </div>
             </SettingGroup>
 
             <SettingGroup
@@ -217,6 +234,32 @@
                     placeholder="/slskd"
                     mono
                   />
+                </div>
+                <SettingRow
+                  :label="t('settings.slskdProfile')"
+                  :description="t('settings.slskdProfileHint')"
+                >
+                  <UiSegmented
+                    :model-value="slskdProfile"
+                    show-labels
+                    :options="[
+                      {
+                        value: 'default',
+                        label: t('settings.slskdProfileDefault'),
+                      },
+                      {
+                        value: 'lossless',
+                        label: t('settings.slskdProfileLossless'),
+                      },
+                      {
+                        value: 'lossy',
+                        label: t('settings.slskdProfileLossy'),
+                      },
+                    ]"
+                    @update:model-value="applySlskdProfile"
+                  />
+                </SettingRow>
+                <div class="grid gap-4 px-5 py-4 sm:grid-cols-2">
                   <UiInput
                     v-model.trim="slskdFormatsText"
                     :label="t('settings.slskdFormats')"
@@ -224,43 +267,15 @@
                     placeholder="flac, mp3"
                     mono
                   />
-                  <div class="grid grid-cols-2 gap-3">
-                    <UiInput
-                      v-model="s.slskd.min_bitrate"
-                      :label="t('settings.slskdMinBitrate')"
-                      :hint="t('settings.slskdMinBitrateHint')"
-                      type="number"
-                      min="0"
-                      max="10000"
-                      suffix="kbps"
-                    />
-                    <UiInput
-                      v-model="s.slskd.download_attempts"
-                      :label="t('settings.slskdAttempts')"
-                      :hint="t('settings.slskdAttemptsHint')"
-                      type="number"
-                      min="1"
-                      max="10"
-                    />
-                  </div>
-                  <div class="grid grid-cols-2 gap-3">
-                    <UiInput
-                      v-model="s.slskd.download_timeout_seconds"
-                      :label="t('settings.slskdTimeout')"
-                      type="number"
-                      min="30"
-                      max="3600"
-                      suffix="s"
-                    />
-                    <UiInput
-                      v-model="s.slskd.queued_timeout_seconds"
-                      :label="t('settings.slskdQueuedTimeout')"
-                      type="number"
-                      min="15"
-                      max="3600"
-                      suffix="s"
-                    />
-                  </div>
+                  <UiInput
+                    v-model="s.slskd.min_bitrate"
+                    :label="t('settings.slskdMinBitrate')"
+                    :hint="t('settings.slskdMinBitrateHint')"
+                    type="number"
+                    min="0"
+                    max="10000"
+                    suffix="kbps"
+                  />
                 </div>
                 <SettingRow
                   :label="t('settings.slskdStrictPriority')"
@@ -280,6 +295,111 @@
                     :aria-label="t('settings.slskdWhitelist')"
                   />
                 </SettingRow>
+                <SettingRow
+                  :label="t('settings.slskdAdvanced')"
+                  :description="t('settings.slskdAdvancedHint')"
+                >
+                  <UiSwitch
+                    v-model="s.slskd.advanced"
+                    :aria-label="t('settings.slskdAdvanced')"
+                  />
+                </SettingRow>
+                <div
+                  v-if="s.slskd.advanced"
+                  class="border-l-2 border-accent/40 bg-surface-2/40"
+                >
+                  <SettingRow
+                    :label="t('settings.slskdUnknownBitrate')"
+                    :description="t('settings.slskdUnknownBitrateHint')"
+                  >
+                    <UiSegmented
+                      v-model="s.slskd.unknown_bitrate"
+                      show-labels
+                      :options="[
+                        {
+                          value: 'auto',
+                          label: t('settings.slskdUnknownAuto'),
+                        },
+                        {
+                          value: 'allow',
+                          label: t('settings.slskdUnknownAllow'),
+                        },
+                        {
+                          value: 'reject',
+                          label: t('settings.slskdUnknownReject'),
+                        },
+                      ]"
+                    />
+                  </SettingRow>
+                  <SettingRow
+                    :label="t('settings.slskdPreferBitrate')"
+                    :description="t('settings.slskdPreferBitrateHint')"
+                  >
+                    <UiSwitch
+                      v-model="s.slskd.prefer_bitrate"
+                      :aria-label="t('settings.slskdPreferBitrate')"
+                    />
+                  </SettingRow>
+                  <div v-if="slskdLossyFormats.length" class="px-5 py-4">
+                    <p class="text-sm font-semibold text-fg">
+                      {{ t('settings.slskdFormatFloors') }}
+                    </p>
+                    <p class="mt-0.5 text-[13px] text-pretty text-muted">
+                      {{ t('settings.slskdFormatFloorsHint') }}
+                    </p>
+                    <div class="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                      <UiInput
+                        v-for="ext in slskdLossyFormats"
+                        :key="ext"
+                        :model-value="slskdFormatFloor(ext)"
+                        :label="ext"
+                        :placeholder="String(s.slskd.min_bitrate ?? '')"
+                        type="number"
+                        min="0"
+                        max="10000"
+                        suffix="kbps"
+                        @update:model-value="setSlskdFormatFloor(ext, $event)"
+                      />
+                    </div>
+                  </div>
+                  <div class="grid gap-4 px-5 py-4 sm:grid-cols-2">
+                    <UiInput
+                      v-model="s.slskd.max_bitrate"
+                      :label="t('settings.slskdMaxBitrate')"
+                      :hint="t('settings.slskdMaxBitrateHint')"
+                      type="number"
+                      min="0"
+                      max="10000"
+                      suffix="kbps"
+                    />
+                    <UiInput
+                      v-model="s.slskd.download_attempts"
+                      :label="t('settings.slskdAttempts')"
+                      :hint="t('settings.slskdAttemptsHint')"
+                      type="number"
+                      min="1"
+                      max="10"
+                    />
+                    <UiInput
+                      v-model="s.slskd.download_timeout_seconds"
+                      :label="t('settings.slskdTimeout')"
+                      :hint="t('settings.slskdTimeoutHint')"
+                      type="number"
+                      min="30"
+                      max="3600"
+                      suffix="s"
+                    />
+                    <UiInput
+                      v-model="s.slskd.queued_timeout_seconds"
+                      :label="t('settings.slskdQueuedTimeout')"
+                      :hint="t('settings.slskdQueuedTimeoutHint')"
+                      type="number"
+                      min="15"
+                      max="3600"
+                      suffix="s"
+                    />
+                  </div>
+                </div>
                 <div class="px-5 py-4">
                   <ConnectionTest
                     kind="slskd"
@@ -294,6 +414,15 @@
                   <UiSwitch
                     v-model="s.slskd.leave_in_place"
                     :aria-label="t('settings.slskdInPlace')"
+                  />
+                </SettingRow>
+                <SettingRow
+                  :label="t('settings.slskdKeepCover')"
+                  :description="t('settings.slskdKeepCoverHint')"
+                >
+                  <UiSwitch
+                    v-model="s.slskd.keep_file_cover"
+                    :aria-label="t('settings.slskdKeepCover')"
                   />
                 </SettingRow>
               </template>
@@ -411,6 +540,18 @@
                   "
                 />
               </SettingRow>
+              <SettingRow
+                :label="t('settings.avoidFormats')"
+                :description="t('settings.avoidFormatsHint')"
+                stacked
+              >
+                <FormatPicker
+                  v-model="s.avoid_formats"
+                  :locked="lockedAvoidFormats"
+                  :locked-hint="t('settings.avoidFormatsLocked')"
+                  :label="t('settings.avoidFormats')"
+                />
+              </SettingRow>
             </SettingGroup>
 
             <SettingGroup :title="t('settings.filesGroup')">
@@ -479,6 +620,67 @@
                   v-model="s.overwrite_existing_files"
                   :aria-label="t('settings.overwrite')"
                 />
+              </SettingRow>
+              <SettingRow
+                :label="t('settings.completeAlbums')"
+                :description="t('settings.completeAlbumsHint')"
+              >
+                <UiSwitch
+                  v-model="s.artist_watch_complete_albums"
+                  :aria-label="t('settings.completeAlbums')"
+                />
+              </SettingRow>
+              <SettingRow
+                :label="t('settings.artistWatchDeezer')"
+                :description="t('settings.artistWatchDeezerHint')"
+              >
+                <UiSwitch
+                  v-model="s.artist_watch_deezer"
+                  :aria-label="t('settings.artistWatchDeezer')"
+                />
+              </SettingRow>
+              <SettingRow
+                :label="t('settings.artistWatchMusicbrainz')"
+                :description="t('settings.artistWatchMusicbrainzHint')"
+              >
+                <UiSwitch
+                  v-model="s.artist_watch_musicbrainz"
+                  :aria-label="t('settings.artistWatchMusicbrainz')"
+                />
+              </SettingRow>
+              <SettingRow
+                v-if="s.artist_watch_musicbrainz"
+                :label="t('settings.artistWatchKinds')"
+                :description="t('settings.artistWatchKindsHint')"
+                stacked
+              >
+                <div class="flex flex-wrap gap-2">
+                  <button
+                    v-for="kind in MUSICBRAINZ_KINDS"
+                    :key="kind"
+                    type="button"
+                    class="inline-flex h-8 items-center gap-1.5 rounded-full px-3 text-[13px] font-medium transition-colors"
+                    :class="
+                      musicbrainzKinds.includes(kind)
+                        ? 'bg-fg text-bg'
+                        : 'bg-surface-2 text-fg-3 hover:bg-raised'
+                    "
+                    :aria-pressed="musicbrainzKinds.includes(kind)"
+                    @click="
+                      s.artist_watch_musicbrainz_kinds = toggledKinds(
+                        musicbrainzKinds,
+                        kind
+                      )
+                    "
+                  >
+                    <AppIcon
+                      v-if="musicbrainzKinds.includes(kind)"
+                      name="check"
+                      :size="14"
+                    />
+                    {{ t(`artistReleases.kind.${kind}`) }}
+                  </button>
+                </div>
               </SettingRow>
               <SettingRow
                 :label="t('settings.m3u')"
@@ -674,11 +876,15 @@
               <SettingRow
                 v-if="s.download_cover_art"
                 :label="t('settings.coverSize')"
-                :description="t('settings.coverSizeHint')"
+                :description="coverSizeHint"
                 stacked
               >
                 <PresetPicker
                   :model-value="s.cover_resolution"
+                  :floor="coverFloor"
+                  :floor-title="
+                    t('settings.coverSizeRaisedShort', { px: coverFloor })
+                  "
                   :presets="sm.settingsOptions.cover_resolution_presets"
                   :min="sm.settingsOptions.cover_resolution_min"
                   :max="sm.settingsOptions.cover_resolution_max"
@@ -687,6 +893,33 @@
                   @update:model-value="
                     (v) => (s.cover_resolution = clampCoverResolution(v))
                   "
+                />
+              </SettingRow>
+              <SettingRow
+                v-if="s.download_cover_art"
+                :label="t('settings.coverMin')"
+                :description="t('settings.coverMinHint')"
+                stacked
+              >
+                <PresetPicker
+                  :model-value="s.cover_min_resolution || 0"
+                  :presets="sm.settingsOptions.cover_min_resolution_presets"
+                  :min="0"
+                  :max="3000"
+                  unit="px"
+                  :custom-label="t('settings.custom')"
+                  :format="(v) => (v ? String(v) : t('settings.coverMinOff'))"
+                  @update:model-value="(v) => (s.cover_min_resolution = v)"
+                />
+              </SettingRow>
+              <SettingRow
+                v-if="s.download_cover_art"
+                :label="t('settings.coverLargest')"
+                :description="t('settings.coverLargestHint')"
+              >
+                <UiSwitch
+                  v-model="s.cover_largest"
+                  :aria-label="t('settings.coverLargest')"
                 />
               </SettingRow>
             </SettingGroup>
@@ -698,6 +931,16 @@
                 <UiSwitch
                   v-model="s.download_lyrics"
                   :aria-label="t('settings.lyrics')"
+                />
+              </SettingRow>
+              <SettingRow
+                v-if="s.download_lyrics"
+                :label="t('settings.lyricsSyncedOnly')"
+                :description="t('settings.lyricsSyncedOnlyHint')"
+              >
+                <UiSwitch
+                  v-model="s.lyrics_synced_only"
+                  :aria-label="t('settings.lyricsSyncedOnly')"
                 />
               </SettingRow>
               <SettingRow
@@ -732,6 +975,27 @@
                   class="-mx-4 w-full"
                 />
               </SettingRow>
+            </SettingGroup>
+            <SettingGroup :title="t('settings.idsGroup')">
+              <SettingRow
+                :label="t('settings.isrc')"
+                :description="t('settings.isrcHint')"
+              >
+                <UiSwitch
+                  v-model="s.write_isrc"
+                  :aria-label="t('settings.isrc')"
+                />
+              </SettingRow>
+              <SettingRow
+                :label="t('settings.acoustid')"
+                :description="t('settings.acoustidHint')"
+              >
+                <UiSwitch
+                  v-model="s.acoustid_enabled"
+                  :aria-label="t('settings.acoustid')"
+                />
+              </SettingRow>
+              <AcoustidSettings v-if="s.acoustid_enabled" />
             </SettingGroup>
           </template>
 
@@ -806,7 +1070,73 @@
                     :aria-label="t('settings.navidromePublic')"
                   />
                 </SettingRow>
+                <SettingRow
+                  :label="t('settings.navidromeM3uImport')"
+                  :description="t('settings.navidromeM3uImportHint')"
+                >
+                  <UiSwitch
+                    v-model="s.navidrome.m3u_import"
+                    :aria-label="t('settings.navidromeM3uImport')"
+                  />
+                </SettingRow>
+                <SettingRow
+                  :label="t('settings.navidromeScanWhenIdle')"
+                  :description="t('settings.navidromeScanWhenIdleHint')"
+                >
+                  <UiSwitch
+                    v-model="s.navidrome.scan_when_idle"
+                    :aria-label="t('settings.navidromeScanWhenIdle')"
+                  />
+                </SettingRow>
+                <SettingRow
+                  :label="t('settings.discoverNavidromePlays')"
+                  :description="t('settings.discoverNavidromePlaysHint')"
+                >
+                  <UiSwitch
+                    v-model="s.discover_navidrome_plays"
+                    :aria-label="t('settings.discoverNavidromePlays')"
+                  />
+                </SettingRow>
               </template>
+            </SettingGroup>
+            <SettingGroup
+              v-if="s.navidrome.enabled"
+              :title="t('settings.ratingsGroup')"
+              :description="t('settings.ratingsHint')"
+            >
+              <SettingRow :label="t('settings.ratingsRepeat')">
+                <UiSelect
+                  v-model="s.navidrome_ratings.repeat"
+                  :options="ratingsRepeatOptions"
+                  :label="t('settings.ratingsRepeat')"
+                />
+              </SettingRow>
+              <SettingRow
+                :label="t('settings.ratingsSkipRated')"
+                :description="t('settings.ratingsSkipRatedHint')"
+              >
+                <UiSwitch
+                  v-model="s.navidrome_ratings.skip_rated"
+                  :aria-label="t('settings.ratingsSkipRated')"
+                />
+              </SettingRow>
+              <SettingRow :label="t('settings.ratingsSkipStarred')">
+                <UiSwitch
+                  v-model="s.navidrome_ratings.skip_starred"
+                  :aria-label="t('settings.ratingsSkipStarred')"
+                />
+              </SettingRow>
+              <SettingRow
+                :label="t('settings.ratingsGrading')"
+                :description="t('settings.ratingsGradingHint')"
+              >
+                <UiSelect
+                  v-model="s.navidrome_ratings.grading"
+                  :options="ratingsGradingOptions"
+                  :label="t('settings.ratingsGrading')"
+                />
+              </SettingRow>
+              <NavidromeRatings :options="s.navidrome_ratings" />
             </SettingGroup>
           </template>
 
@@ -838,6 +1168,15 @@
                 <UiSwitch
                   v-model="s.allow_song_links"
                   :aria-label="t('settings.allowSongLinks')"
+                />
+              </SettingRow>
+              <SettingRow
+                :label="t('settings.perUserLibrary')"
+                :description="t('settings.perUserLibraryHint')"
+              >
+                <UiSwitch
+                  v-model="s.per_user_library"
+                  :aria-label="t('settings.perUserLibrary')"
                 />
               </SettingRow>
               <SettingRow
@@ -898,6 +1237,14 @@
             <ActivitySettings />
           </template>
 
+          <template v-else-if="section === 'doctor'">
+            <DoctorSettings />
+          </template>
+
+          <template v-else-if="section === 'notifications'">
+            <NotificationSettings />
+          </template>
+
           <template v-else-if="section === 'server'">
             <SettingGroup
               :title="t('settings.networkGroup')"
@@ -905,6 +1252,7 @@
             >
               <ServerPortSetting />
             </SettingGroup>
+            <BackupSettings />
           </template>
 
           <template v-else-if="section === 'apps'">
@@ -997,13 +1345,15 @@ import UiButton from '/src/components/ui/UiButton.vue'
 import UiInput from '/src/components/ui/UiInput.vue'
 import UiSegmented from '/src/components/ui/UiSegmented.vue'
 import UiSelect from '/src/components/ui/UiSelect.vue'
-import UiSkeleton from '/src/components/ui/UiSkeleton.vue'
+import UiPanelSkeleton from '/src/components/ui/UiPanelSkeleton.vue'
 import UiSwitch from '/src/components/ui/UiSwitch.vue'
 import ExperimentalBadge from '/src/components/ui/ExperimentalBadge.vue'
 import PageHeader from '/src/components/library/PageHeader.vue'
 import CookiesCard from '/src/components/settings/CookiesCard.vue'
+import AcoustidSettings from '/src/components/settings/AcoustidSettings.vue'
+import FormatPicker from '/src/components/settings/FormatPicker.vue'
+import { downloadsFormat } from '/src/lib/audioFormats'
 import ConnectionTest from '/src/components/settings/ConnectionTest.vue'
-import ExternalLibrarySettings from '/src/components/settings/ExternalLibrarySettings.vue'
 import PathSuggestInput from '/src/components/settings/PathSuggestInput.vue'
 import PresetPicker from '/src/components/settings/PresetPicker.vue'
 import AccountSettings from '/src/components/settings/AccountSettings.vue'
@@ -1012,16 +1362,16 @@ import NormalizationSettings from '/src/components/settings/NormalizationSetting
 import FadeSettings from '/src/components/settings/FadeSettings.vue'
 import AutoplaySettings from '/src/components/settings/AutoplaySettings.vue'
 import { libraryOnly as libraryOnlyMode } from '/src/model/musicPolicy'
-import ActivitySettings from '/src/components/settings/ActivitySettings.vue'
-import AppsSettings from '/src/components/settings/AppsSettings.vue'
+import NavidromeRatings from '/src/components/settings/NavidromeRatings.vue'
 import ServerPortSetting from '/src/components/settings/ServerPortSetting.vue'
-import HiddenLibrarySettings from '/src/components/settings/HiddenLibrarySettings.vue'
-import UsersSettings from '/src/components/settings/UsersSettings.vue'
+import { lazyComponent } from '/src/components/ui/lazy'
 import SettingGroup from '/src/components/settings/SettingGroup.vue'
 import SettingRow from '/src/components/settings/SettingRow.vue'
 import SourceOrder from '/src/components/settings/SourceOrder.vue'
+import { onlyOwnServers as onlyOwnServersEnabled } from '/src/lib/providerOrder'
 import LyricsOrder from '/src/components/settings/LyricsOrder.vue'
 import API from '/src/model/api'
+import { MUSICBRAINZ_KINDS, toggledKinds } from '/src/lib/artistReleases'
 import {
   clampCoverResolution,
   clampDownloadDelaySeconds,
@@ -1041,6 +1391,32 @@ import { useUi } from '/src/model/ui'
 import { useUpdateCheck } from '/src/model/updateCheck'
 import { useI18n } from '/src/i18n'
 
+// Sections only some visits open: loaded when shown, a skeleton meanwhile.
+const ExternalLibrarySettings = lazyComponent(
+  () => import('/src/components/settings/ExternalLibrarySettings.vue')
+)
+const ActivitySettings = lazyComponent(
+  () => import('/src/components/settings/ActivitySettings.vue')
+)
+const DoctorSettings = lazyComponent(
+  () => import('/src/components/settings/DoctorSettings.vue')
+)
+const AppsSettings = lazyComponent(
+  () => import('/src/components/settings/AppsSettings.vue')
+)
+const BackupSettings = lazyComponent(
+  () => import('/src/components/settings/BackupSettings.vue')
+)
+const NotificationSettings = lazyComponent(
+  () => import('/src/components/settings/NotificationSettings.vue')
+)
+const HiddenLibrarySettings = lazyComponent(
+  () => import('/src/components/settings/HiddenLibrarySettings.vue')
+)
+const UsersSettings = lazyComponent(
+  () => import('/src/components/settings/UsersSettings.vue')
+)
+
 const { t, locale, setLocale, locales } = useI18n()
 const route = useRoute()
 const sm = useSettingsManager()
@@ -1054,6 +1430,46 @@ const update = useUpdateCheck().status
 
 const hasTrack = computed(() => !!player.currentTrack.value)
 const s = sm.settings
+// The Downloads format can't be one to avoid (the server drops it too).
+const lockedAvoidFormats = computed(() => {
+  const own = downloadsFormat(s.value.format)
+  return own ? [own] : []
+})
+// Artist Watch's default MusicBrainz kinds (a watch can pick its own).
+const musicbrainzKinds = computed(() =>
+  Array.isArray(s.value.artist_watch_musicbrainz_kinds)
+    ? s.value.artist_watch_musicbrainz_kinds
+    : []
+)
+// The minimum cover size raises the first cover request too (capped at
+// the largest cover size), so cover sizes below it make no difference.
+const coverFloor = computed(() =>
+  Math.min(
+    s.value.cover_min_resolution || 0,
+    sm.settingsOptions.cover_resolution_max || 1200
+  )
+)
+const coverSizeHint = computed(() =>
+  coverFloor.value > (s.value.cover_resolution || 0)
+    ? `${t('settings.coverSizeHint')} ${t('settings.coverSizeRaised', { px: coverFloor.value })}`
+    : t('settings.coverSizeHint')
+)
+const ratingsRepeatOptions = computed(() =>
+  ['off', 'daily', 'weekly', 'monthly'].map((value) => ({
+    value,
+    label: t(
+      `settings.ratingsRepeat${value[0].toUpperCase()}${value.slice(1)}`
+    ),
+  }))
+)
+const ratingsGradingOptions = computed(() =>
+  ['absolute', 'artist', 'album'].map((value) => ({
+    value,
+    label: t(
+      `settings.ratingsGrading${value[0].toUpperCase()}${value.slice(1)}`
+    ),
+  }))
+)
 const slskdFormatsText = computed({
   get: () => (s.value.slskd.extensions || []).join(', '),
   set: (value) => {
@@ -1067,6 +1483,49 @@ const slskdFormatsText = computed({
     ]
   },
 })
+// Quality profiles are starting points for the slskd format list; any
+// other combination shows as no profile selected (custom).
+const SLSKD_PROFILES = {
+  default: { extensions: ['mp3', 'flac'], extensions_whitelist: false },
+  lossless: { extensions: ['flac', 'mp3'], extensions_whitelist: false },
+  lossy: {
+    extensions: ['mp3', 'm4a', 'ogg', 'opus'],
+    extensions_whitelist: true,
+  },
+}
+const SLSKD_LOSSLESS = new Set(['flac', 'wav', 'alac', 'ape', 'aiff'])
+const slskdProfile = computed(() => {
+  const current = (s.value.slskd.extensions || []).join(',')
+  const whitelist = !!s.value.slskd.extensions_whitelist
+  const match = Object.entries(SLSKD_PROFILES).find(
+    ([, profile]) =>
+      profile.extensions.join(',') === current &&
+      profile.extensions_whitelist === whitelist
+  )
+  return match ? match[0] : 'custom'
+})
+function applySlskdProfile(name) {
+  const profile = SLSKD_PROFILES[name]
+  if (!profile) return
+  s.value.slskd.extensions = [...profile.extensions]
+  s.value.slskd.extensions_whitelist = profile.extensions_whitelist
+}
+// slskd / Deemix alone: a song they don't have fails (issue #471).
+const onlyOwnServers = computed(() =>
+  onlyOwnServersEnabled(s.value.audio_providers)
+)
+const slskdLossyFormats = computed(() =>
+  (s.value.slskd.extensions || []).filter((ext) => !SLSKD_LOSSLESS.has(ext))
+)
+function slskdFormatFloor(ext) {
+  return (s.value.slskd.format_min_bitrate || {})[ext] ?? ''
+}
+function setSlskdFormatFloor(ext, value) {
+  const floors = { ...(s.value.slskd.format_min_bitrate || {}) }
+  if (value === '' || value === null || value === undefined) delete floors[ext]
+  else floors[ext] = value
+  s.value.slskd.format_min_bitrate = floors
+}
 const version = localStorage.getItem('version')
 
 // Normal users see General, Apps and About; the rest is the server's,
@@ -1102,6 +1561,18 @@ const sections = computed(() =>
         id: 'activity',
         icon: 'activity',
         label: t('settings.activity'),
+        admin: true,
+      },
+      {
+        id: 'doctor',
+        icon: 'stethoscope',
+        label: t('settings.doctor'),
+        admin: true,
+      },
+      {
+        id: 'notifications',
+        icon: 'bell',
+        label: t('settings.notifications'),
         admin: true,
       },
       {

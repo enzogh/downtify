@@ -81,6 +81,8 @@ class DownloadItem {
     // When it ended (ms; `finished_at` from the server, kept across its
     // restarts), 0 while it hasn't.
     this.finishedAt = 0
+    // The Monitor watch downloading this song (see lib/queueWatches.js).
+    this.watch = null
     this.updatedAt = Date.now()
   }
   get key() {
@@ -163,6 +165,7 @@ class DownloadItem {
     if (message.message !== undefined) values.message = message.message
     if (message.provider) values.provider = message.provider
     if (message.reused) values.provider = ''
+    if (message.watch) values.watch = message.watch
     this.patch(values)
   }
 }
@@ -293,10 +296,19 @@ export function staleActiveItems(items, listedKeys, askedAt) {
   )
 }
 
+// Whether the server's queue has been read once (or failed to be): until
+// then an empty queue is "not known yet", not "nothing queued".
+export const queueSynced = ref(false)
+
 export async function syncQueueFromServer() {
   const askedAt = Date.now()
   lastQueueSync = askedAt
-  const res = await API.getQueue()
+  let res
+  try {
+    res = await API.getQueue()
+  } finally {
+    queueSynced.value = true
+  }
   const listed = new Set()
   batchQueueChanges(() => {
     for (const job of res.data || []) {
@@ -373,11 +385,19 @@ export function useDownloadManager() {
    * playlist download (folder, M3U, playlist tracking). Without a real
    * playlist behind it (an artist's top songs), `playlistName` and
    * `coverUrl` name the playlist and its cover instead, and `m3u`
-   * overrides the "generate M3U" setting for this batch.
+   * overrides the "generate M3U" setting for this batch. `asAlbum` saves
+   * the playlist as one album named after it, with `coverUrl` as its
+   * cover (issue #531).
    */
   async function fromSongs(
     list,
-    { playlistUrl = '', playlistName = '', coverUrl = '', m3u } = {}
+    {
+      playlistUrl = '',
+      playlistName = '',
+      coverUrl = '',
+      m3u,
+      asAlbum = false,
+    } = {}
   ) {
     const hints = playlistUrl ? { downtify_playlist_url: playlistUrl } : {}
     const songs = list.map((song, i) => ({
@@ -395,6 +415,7 @@ export function useDownloadManager() {
       playlist_name: playlistName,
       cover_url: coverUrl,
       generate_m3u: m3u ?? generateM3u(),
+      ...(asAlbum ? { as_album: true } : {}),
     })
     await syncQueueFromServer().catch(() => {})
     return songs.length
@@ -529,11 +550,32 @@ export function useDownloadManager() {
     removeItems((item) => item.isDownloaded())
   }
 
-  function retry(song) {
+  async function retry(song) {
     if (song.replace) return replaceAgain(song, song.replace.video_id)
     const item = findItem(song)
-    if (item) item.resetForRetry()
-    return download(song)
+    if (song.url?.trim()) {
+      if (item) item.resetForRetry()
+      return download(song)
+    }
+
+    // CSV imports can have metadata but no URL. Submit them to the same
+    // provider search queue as the import instead of the URL endpoint.
+    const queuedItem = upsertSong(song)
+    ensureQueuePoll()
+    try {
+      await API.downloadBatch({
+        songs: [
+          { ...song, _match_by_metadata: true, soundcloud_url: undefined },
+        ],
+        generate_m3u: false,
+      })
+      await syncQueueFromServer().catch(() => {})
+    } catch (err) {
+      queuedItem.patch({
+        message: err?.response?.data?.detail || err?.message || '',
+      })
+      queuedItem.setError()
+    }
   }
 
   function retryAllFailed() {

@@ -226,6 +226,14 @@ from .transcode import (
 from .update_check import (
     UpdateChecker,
 )
+from typing import Callable
+from .slskd_misses import SlskdMisses
+from . import m3u
+from . import musicbrainz
+from . import navidrome_ratings
+from .audio_formats import normalize_formats
+from .slskd_provider import normalize_slskd_quality
+from .library_paths_cache import peek_cached_path_pairs
 
 MIN_PARALLEL_DOWNLOADS = 1
 
@@ -241,7 +249,9 @@ MAX_TRACK_DURATION_SETTING_SECONDS = 6 * 3600
 
 MIN_COVER_RESOLUTION = 300
 
-MAX_COVER_RESOLUTION = 1200
+MAX_COVER_RESOLUTION = 3000
+#: iTunes serves up to 3000px; nothing larger is ever offered.
+MAX_COVER_MIN_RESOLUTION = 3000
 
 DEFAULT_SETTINGS: dict[str, Any] = {
     'library_only': False,
@@ -249,10 +259,15 @@ DEFAULT_SETTINGS: dict[str, Any] = {
     'deemix': dict(DEEMIX_DEFAULTS),
     'lyrics_providers': list(lyrics.PROVIDER_ORDER),
     'download_lyrics': True,
+    # Keep only time-synced lyrics; plain ones count as none found.
+    'lyrics_synced_only': False,
     'lyrics_lrc_beside': True,
     'lyrics_lrc_dir': lyrics.DEFAULT_LYRICS_LRC_DIR,
     'format': 'mp3',
     'bitrate': '320',
+    # Formats a download never brings into the library, whatever the
+    # source (see downtify/audio_formats.py).
+    'avoid_formats': [],
     'output': '{artists} - {title}.{output-ext}',
     'generate_m3u': True,
     'download_cover_art_playlists': True,
@@ -262,6 +277,19 @@ DEFAULT_SETTINGS: dict[str, Any] = {
     # picker on an artist's Library page never checks these.
     'download_cover_art_artist': True,
     'download_cover_art_artist_banner': False,
+    # Artist Watch also reads Deezer's discography of a watched artist:
+    # YouTube Music's artist page doesn't list every release of every
+    # artist (see ``monitor._artist_discography``).
+    'artist_watch_deezer': True,
+    # ...and MusicBrainz's release groups that neither lists (mixtapes,
+    # older releases), with the secondary types let in by
+    # ``artist_watch_musicbrainz_kinds`` (``musicbrainz.KINDS`` names).
+    'artist_watch_musicbrainz': True,
+    'artist_watch_musicbrainz_kinds': ['mixtape', 'soundtrack'],
+    # Artist Watch gives every release its own copy of a song it shares
+    # with another (a greatest hits, a deluxe edition) instead of linking
+    # the copy the library already has (issue #546).
+    'artist_watch_complete_albums': False,
     'max_parallel_downloads': 3,
     'download_delay_seconds': 0,
     'download_retry_budget_minutes': 0,
@@ -271,6 +299,23 @@ DEFAULT_SETTINGS: dict[str, Any] = {
     'auto_download_after_plays': 0,
     'external_sync_delay_seconds': 0,
     'cover_resolution': providers.DEFAULT_COVER_RESOLUTION,
+    # Smallest acceptable cover (px, short side); 0 = off. Below it a
+    # larger one is looked for (downloader._download_cover_meeting).
+    'cover_min_resolution': 0,
+    # Hours between automatic backups (0: off; downtify/backup.py).
+    'backup_interval_hours': 0,
+    # Ask Spotify, iTunes and YouTube Music for every download's cover and
+    # embed the largest (downloader._download_cover_meeting).
+    'cover_largest': False,
+    # Write each download's ISRC, the recording's own code (downtify.isrc).
+    'write_isrc': True,
+    # Identify songs by their sound with AcoustID (downtify/acoustid.py).
+    # Off until an admin turns it on and saves their own API key, which
+    # is kept apart from these settings.
+    'acoustid_enabled': False,
+    # Let Aurral use Downtify as a download source (downtify/aurral.py,
+    # Settings > Apps > Aurral). Off: nothing changes.
+    'aurral_enabled': False,
     'download_cover_art': True,
     'overwrite_existing_files': True,
     'organize_by_artist': True,
@@ -291,6 +336,9 @@ DEFAULT_SETTINGS: dict[str, Any] = {
         'download_dir': '/downloads',
         'source_dir': '/slskd',
         'leave_in_place': True,
+        # Keep the cover an slskd file came with when it is larger than
+        # the one Downtify fetches (downloader._keep_larger_file_cover).
+        'keep_file_cover': False,
         'timeout_seconds': 20,
         'search_retries': 5,
         'search_poll_seconds': 15,
@@ -306,6 +354,12 @@ DEFAULT_SETTINGS: dict[str, Any] = {
         'strict_format_priority': False,
         'extensions_whitelist': False,
         'min_bitrate': 256,
+        # Fine-tune quality (see slskd_provider.normalize_slskd_quality).
+        'advanced': False,
+        'unknown_bitrate': 'auto',
+        'format_min_bitrate': {},
+        'max_bitrate': 0,
+        'prefer_bitrate': False,
     },
     # Navidrome (Subsonic API) playlist sync after playlist downloads.
     'sync_navidrome': True,
@@ -315,6 +369,13 @@ DEFAULT_SETTINGS: dict[str, Any] = {
     # Whether users may make public links to a song, which anyone can
     # open and play without signing in (see downtify/song_links.py).
     'allow_song_links': True,
+    # Each user sees only their own songs (issue #620): the ones they
+    # downloaded and those of the playlists they may open. Admins still
+    # see everything. See ``allowed_entry_keys``.
+    'per_user_library': False,
+    # The Navidrome account's plays and stars count in admins' Discover
+    # (issue #423, ``downtify/navidrome_listens.py``).
+    'discover_navidrome_plays': False,
     'navidrome': {
         'enabled': False,
         'url': '',
@@ -323,14 +384,22 @@ DEFAULT_SETTINGS: dict[str, Any] = {
         'admin_username': '',
         'admin_password': '',
         'public_playlist': False,
+        # Let Navidrome build playlists from the M3U files (see
+        # navidrome.sync_playlist_to_navidrome) instead of creating them.
+        'm3u_import': False,
         'scan_after_download': True,
         'scan_full': False,
+        # Hold Downtify's scans while a Navidrome client is playing.
+        'scan_when_idle': False,
         'scan_wait_seconds': 120,
         'scan_poll_seconds': 5,
         'scan_retry_seconds': 15,
         'client_name': 'Castify',
         'api_version': '1.16.1',
     },
+    # Deezer-popularity star ratings for the Navidrome library (see
+    # downtify.navidrome_ratings).
+    'navidrome_ratings': dict(navidrome_ratings.DEFAULTS),
     # Folders of already-tagged audio to include in the library (in
     # place). Synced from Settings → Library; see
     # ``downtify.external_library``.
@@ -356,6 +425,7 @@ _NESTED_SETTINGS = (
     'deemix',
     'slskd',
     'navidrome',
+    'navidrome_ratings',
     'library_upgrade',
     'external_library',
 )
@@ -426,21 +496,31 @@ def _clamp_cover_resolution(value: Any) -> int:
     """Coerce and clamp the requested cover art target size, in pixels.
 
     Keeps the setting inside ``[MIN_COVER_RESOLUTION,
-    MAX_COVER_RESOLUTION]``. Affects YouTube Music-sourced cover art
-    (see ``providers.set_cover_resolution``, which resizes a thumbnail
-    URL directly) and Deezer-sourced cover art (see
-    ``deezer._cover_from_images``, which instead picks the smallest of
-    Deezer's four fixed image sizes that still meets it, reading this
-    same value via ``providers.cover_resolution``). Spotify-sourced
-    covers are unaffected: Downtify already uses the largest size
-    Spotify's embed API offers, with no equivalent to resize or pick
-    from.
+    MAX_COVER_RESOLUTION]``. It is the size every download's cover aims
+    for (``downloader.cover_goal``): YouTube Music and iTunes covers are
+    asked for at it (see ``providers.set_cover_resolution``), Deezer's
+    nearest fixed size is picked (``deezer._cover_from_images``), and a
+    track whose own cover is smaller - every Spotify track, whose
+    largest is 640px - gets the largest those sources have.
+    ``MAX_COVER_RESOLUTION`` is the largest master either has been seen
+    to keep.
     """
     try:
         px = int(value)
     except (TypeError, ValueError):
         px = DEFAULT_SETTINGS['cover_resolution']
     return min(MAX_COVER_RESOLUTION, max(MIN_COVER_RESOLUTION, px))
+
+
+def _clamp_cover_min_resolution(value: Any) -> int:
+    """The minimum cover size in pixels: ``0`` (off) up to
+    :data:`MAX_COVER_MIN_RESOLUTION`."""
+
+    try:
+        px = int(value)
+    except (TypeError, ValueError):
+        return 0
+    return min(MAX_COVER_MIN_RESOLUTION, max(0, px))
 
 
 def _setting_int(
@@ -504,6 +584,7 @@ def _effective_slskd_settings(settings: dict[str, Any]) -> dict[str, Any]:
         'download_dir': download_dir,
         'source_dir': source_dir,
         'leave_in_place': leave_in_place,
+        'keep_file_cover': bool(raw.get('keep_file_cover', False)),
         'extensions': _slskd_extensions(raw),
         'timeout_seconds': bounded('timeout_seconds', 20, 5, 120),
         'search_retries': bounded('search_retries', 5, 1, 20),
@@ -531,8 +612,13 @@ def _effective_slskd_settings(settings: dict[str, Any]) -> dict[str, Any]:
         ),
         'extensions_whitelist': bool(raw.get('extensions_whitelist', False)),
         'min_bitrate': min_bitrate,
+        **normalize_slskd_quality(raw),
         'max_parallel_downloads': _setting_int(
             settings, 'max_parallel_downloads', 3, minimum=1, maximum=8
+        ),
+        'avoid_formats': normalize_formats(
+            settings.get('avoid_formats'),
+            exclude=[settings.get('format') or 'mp3'],
         ),
     }
 
@@ -544,9 +630,11 @@ def _effective_deemix_settings(settings: dict[str, Any]) -> dict[str, Any]:
 def _effective_audio_providers(settings: dict[str, Any]) -> list[str]:
     """Enabled audio providers in the configured order.
 
-    slskd is dropped while it's disabled. When slskd is the only provider
-    left, YouTube Music and YouTube are appended as fallbacks so a track
-    slskd can't find still downloads.
+    slskd (and Deemix) is dropped while it's disabled; with nothing left,
+    YouTube Music is used. Otherwise the list is exactly what was chosen:
+    slskd on its own stays on its own (issue #471), so a track slskd
+    can't find fails rather than coming from YouTube behind the user's
+    back.
     """
 
     slskd_enabled = bool(_effective_slskd_settings(settings).get('enabled'))
@@ -562,11 +650,7 @@ def _effective_audio_providers(settings: dict[str, Any]) -> list[str]:
             continue
         if name in AUDIO_PROVIDERS and name not in out:
             out.append(name)
-    if not out:
-        return ['youtube-music']
-    if out == ['slskd']:
-        out += ['youtube-music', 'youtube']
-    return out
+    return out or ['youtube-music']
 
 
 def _organize_enabled() -> bool:
@@ -796,6 +880,11 @@ class AppState:
     lyrics_cache: Optional[LyricsLookupCache] = None
     upgrade_runner: Optional[library_upgrade.LibraryUpgradeRunner] = None
     audio_replacements: Any = None
+    # Files whose audio an admin replaced by hand (downtify/hand_replaced.py).
+    hand_replaced: Any = None
+    # Each file's upload and the uploads rejected per song
+    # (downtify/download_sources.py).
+    download_sources: Any = None
     external_sync: Optional[ExternalSyncJob] = None
     likes: Optional[LikedTracks] = None
     track_owners: Optional[TrackOwners] = None
@@ -816,6 +905,8 @@ class AppState:
     # How each download ended and the library's size day by day, for the
     # library usage page (downtify/download_log.py, library_usage.py).
     download_log: Optional[DownloadLog] = None
+    # Why slskd wasn't used (downtify/slskd_misses.py).
+    slskd_misses: Optional[SlskdMisses] = None
     usage_snapshots: Optional[UsageSnapshots] = None
     external_playlist_imports: Optional[ExternalPlaylistImports] = None
     loudness_analyzer: Optional[LoudnessAnalyzer] = None
@@ -887,7 +978,9 @@ def spawn_task(coro: Any, *, name: Optional[str] = None) -> asyncio.Task[Any]:
         'replace-',
         'monitor-initial-check',
         'monitor-manual-check',
+        'monitor-wanted',
         'queue-restore',
+        'navidrome-ratings',
     )):
         lease = contextlib.ExitStack()
         try:
@@ -984,13 +1077,54 @@ def allowed_entry_keys(request: Optional[Request]) -> Optional[set[str]]:
     if not request_user_id(request):
         return set()
     rules = hidden_rules()
-    if not rules:
+    own = own_entry_test(request)
+    if not rules and own is None:
         return None
     return {
         entry_content_key(entry)
         for entry in listing_for_request(library_context())
-        if not rules.hides(entry)
+        if not (rules and rules.hides(entry)) and (own is None or own(entry))
     }
+
+
+def per_user_library() -> bool:
+    """Whether each user has a library of their own (Settings)."""
+
+    return state.settings.get('per_user_library') is True
+
+
+def own_entry_test(
+    request: Optional[Request],
+) -> Optional[Callable[[dict[str, Any]], bool]]:
+    """With per-user libraries on, which library rows are a non-admin's
+    own: the files they downloaded (``track_owners``, monitor sweeps of
+    their watches included) and those of the playlists they may open -
+    theirs, shared with them or followed, so a playlist someone shares
+    still has its songs. ``None`` when everything counts (shared library,
+    or an admin).
+
+    It narrows listings like the hide rules do, nothing more: streaming
+    a file by its path is not gated.
+    """
+
+    if not per_user_library() or request_is_admin(request):
+        return None
+    user_id = request_user_id(request)
+    owned: set[str] = set()
+    if user_id and state.track_owners is not None:
+        try:
+            owned = set(state.track_owners.owned_keys(user_id))
+        except Exception:
+            logger.opt(exception=True).debug('Could not read track owners')
+    files = {
+        str(file or '').replace('\\', '/')
+        for playlist in playlists_for_request(request)
+        for file in playlist.get('files') or []
+    }
+    return lambda entry: (
+        entry_content_key(entry) in owned
+        or str(entry.get('file') or '') in files
+    )
 
 
 def _playlist_owner_maps() -> tuple[dict[str, int], dict[str, int]]:
@@ -1330,7 +1464,11 @@ def _filter_entries_for(
 def entries_for_request(request: Optional[Request]) -> list[dict[str, Any]]:
     """``GET /tracks`` rows *request* may browse."""
 
-    return _filter_entries_for(listing_for_request(library_context()), request)
+    entries = listing_for_request(library_context())
+    own = own_entry_test(request)
+    if own is not None:
+        entries = [entry for entry in entries if own(entry)]
+    return _filter_entries_for(entries, request)
 
 
 def filter_paths_for_request(
@@ -1365,7 +1503,77 @@ def playlists_for_request(request: Optional[Request]) -> list[dict[str, Any]]:
     found = list_library_playlists(
         ctx.download_dir, ctx.slskd_dir, ctx.extra_dirs, stale_ok=True
     )
+    if state.settings.get('generate_m3u', True) is False:
+        found = _with_catalog_playlists(found, ctx)
     return _filter_playlists_for(found, request)
+
+
+def _with_catalog_playlists(
+    found: list[dict[str, Any]], ctx: LibraryContext
+) -> list[dict[str, Any]]:
+    """The listing with downloaded playlists read from the playlist
+    catalog, for *Write M3U playlists* off (issue #412).
+
+    The Library lists playlists from their M3U files. With none written,
+    a playlist downloaded since never showed up and one written before
+    kept its old songs, though Search and Navidrome had them all. The
+    catalog records every downloaded playlist's songs either way, so
+    here it is the source: it replaces an old M3U's songs (keeping its
+    cover and date) and adds the playlists that have no M3U. Library
+    playlists and liked songs keep their M3U (always written).
+    """
+
+    catalog = state.playlist_catalog
+    if catalog is None:
+        return found
+    try:
+        rows = catalog.all_track_rows()
+    except Exception:
+        logger.opt(exception=True).debug('Could not read the playlist catalog')
+        return found
+    saved: dict[str, list[tuple[int, str]]] = {}
+    for row in rows:
+        saved.setdefault(row['playlist_name'], []).append((
+            row['track_order'],
+            row['filename'],
+        ))
+    pairs = peek_cached_path_pairs(ctx)
+    known = None if pairs is None else {stored for stored, _ in pairs}
+    by_name = {
+        str(p.get('name') or '').casefold(): index
+        for index, p in enumerate(found)
+    }
+    out = list(found)
+    for name, tracks in saved.items():
+        files = [
+            file
+            for _order, file in sorted(tracks)
+            if known is None or file in known
+        ]
+        if not files:
+            continue
+        index = by_name.get(name.casefold())
+        if index is None:
+            index = by_name.get(m3u.sanitize_playlist_name(name).casefold())
+        if index is not None:
+            listed = out[index]
+            if listed.get('manual') or listed.get('liked'):
+                continue
+            out[index] = {**listed, 'files': files, 'count': len(files)}
+            continue
+        out.append({
+            'name': name,
+            'files': files,
+            'count': len(files),
+            # No file to date it by (see playlist_entry_for_request).
+            'added': 0,
+            'cover': '',
+            'liked': False,
+            'manual': False,
+            'explicit_cover': False,
+        })
+    out.sort(key=lambda p: (not p.get('liked'), str(p['name']).casefold()))
+    return out
 
 
 def listed_playlists_for(
@@ -2190,6 +2398,33 @@ def claim_pending_playlist_songs(song: dict[str, Any], filename: str) -> bool:
     return changed
 
 
+def _record_slskd_miss(song: dict[str, Any], outcome: str) -> None:
+    """Keep why slskd had nothing for a download another source fetched,
+    or that failed everywhere (see :mod:`downtify.slskd_misses`)."""
+
+    miss = song.get('slskd_miss')
+    store = state.slskd_misses
+    if not isinstance(miss, dict) or store is None:
+        return
+    provider = str(song.get('download_provider') or '')
+    if outcome == OUTCOME_COMPLETED and provider == 'slskd':
+        return
+    if outcome not in {OUTCOME_COMPLETED, 'failed'}:
+        return
+    try:
+        store.record(
+            str(miss.get('reason') or 'unknown'),
+            detail=str(miss.get('detail') or ''),
+            fallback=provider if outcome == OUTCOME_COMPLETED else '',
+            title=str(song.get('name') or ''),
+            artist=', '.join(str(a) for a in song.get('artists') or []),
+        )
+    except Exception:
+        logger.opt(exception=True).debug(
+            'Could not record why slskd missed {}', song.get('name')
+        )
+
+
 def record_download_outcome(
     song: dict[str, Any], outcome: str, filename: str = ''
 ) -> None:
@@ -2198,6 +2433,7 @@ def record_download_outcome(
     file's size and provider (see :mod:`downtify.download_log`). Runs on
     the download's own thread; never raises."""
 
+    _record_slskd_miss(song, outcome)
     log = state.download_log
     if log is None:
         return
@@ -2219,3 +2455,14 @@ def record_download_outcome(
         logger.opt(exception=True).debug(
             'Could not log the download of {}', song.get('name')
         )
+
+
+def _default_musicbrainz_kinds(value: Any, saved: Any) -> list[str]:
+    """The ``artist_watch_musicbrainz_kinds`` setting from a save: the
+    ``musicbrainz.KINDS`` names in *value*, in their order (unknown ones
+    dropped); the *saved* list when *value* isn't a list."""
+
+    if not isinstance(value, list):
+        value = saved if isinstance(saved, list) else []
+    names = {str(kind) for kind in value}
+    return [kind for kind in musicbrainz.KINDS if kind in names]

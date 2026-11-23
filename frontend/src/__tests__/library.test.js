@@ -13,6 +13,7 @@ import {
   isGuestOn,
   isVariousArtists,
   normalizeTrack,
+  songAlbumKey,
   songKey,
   sortItems,
 } from '../lib/library.js'
@@ -729,5 +730,17 @@ describe('buildPlaylists tracked batches', () => {
       batch('Older'),
     ]).map((playlist) => playlist.name)
     expect(names).toEqual(['Mine', 'Older'])
+  })
+})
+
+describe('songAlbumKey', () => {
+  it('tells the same song on two albums apart (issue #546)', () => {
+    const onAlbum = songAlbumKey('Drake', 'Hotline Bling', 'Views')
+    expect(songAlbumKey('drake', 'Hotline Bling (feat. X)', 'VIEWS')).toBe(
+      onAlbum
+    )
+    expect(songAlbumKey('Drake', 'Hotline Bling', 'Greatest Hits')).not.toBe(
+      onAlbum
+    )
   })
 })

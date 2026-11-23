@@ -9,8 +9,14 @@
       <AppIcon name="arrow-left" :size="16" />{{ t('monitor.title') }}
     </RouterLink>
 
-    <div v-if="loading && !watch" class="flex flex-col gap-3">
-      <UiSkeleton class="h-10 w-1/2" />
+    <div v-if="loading && !watch" class="flex flex-col gap-3" aria-busy="true">
+      <div class="flex items-center gap-4">
+        <UiSkeleton class="size-16 shrink-0 !rounded-cover" />
+        <div class="flex flex-1 flex-col gap-2">
+          <UiSkeleton class="h-9 w-1/2" />
+          <UiSkeleton class="h-4 w-1/3" />
+        </div>
+      </div>
       <UiSkeleton class="h-24 w-full !rounded-panel" />
       <UiSkeleton class="h-64 w-full !rounded-panel" />
     </div>
@@ -26,6 +32,18 @@
 
     <template v-else>
       <PageHeader :title="watch.name" :subtitle="subtitle">
+        <template #cover>
+          <CoverArt
+            :src="watchPicture"
+            :name="watch.name"
+            :round="watch.kind === 'artist'"
+            :icon="watch.kind === 'artist' ? 'user' : 'playlist'"
+            rounded="rounded-[12px]"
+            :letter-size="24"
+            shadow
+            class="size-16 sm:size-20"
+          />
+        </template>
         <UiButton
           v-if="libraryRoute"
           variant="secondary"
@@ -47,7 +65,7 @@
         </UiButton>
       </PageHeader>
       <div class="-mt-3 flex min-w-0 flex-wrap items-center gap-2">
-        <WatchSourceBadge :source="watch.source" />
+        <WatchSourceBadge :source="watch.source" :url="watch.url" />
         <UiBadge>#{{ watch.id }}</UiBadge>
         <UiBadge v-if="!watch.enabled" tone="warn">{{
           t('monitor.activeOff')
@@ -205,7 +223,19 @@
       <UiPanel
         v-if="failures.length"
         :title="t('watchStats.failuresTitle', { count: failures.length })"
+        :description="t('watchStats.failuresClearHint')"
       >
+        <template #actions>
+          <UiButton
+            size="sm"
+            variant="ghost"
+            icon="x"
+            :loading="clearing"
+            @click="clearFailures"
+          >
+            {{ t('watchStats.failuresClear') }}
+          </UiButton>
+        </template>
         <ul class="flex flex-col divide-y divide-line-2">
           <li
             v-for="failure in failures"
@@ -235,6 +265,8 @@
           </li>
         </ul>
       </UiPanel>
+
+      <ArtistReleases v-if="watch.kind === 'artist'" :watch-id="watch.id" />
 
       <section class="flex flex-col gap-3 pb-10">
         <div>
@@ -284,6 +316,7 @@ import { computed, onMounted, ref, watch as watchRef } from 'vue'
 import { useRoute } from 'vue-router'
 import { useLocalStorage } from '@vueuse/core'
 import AppIcon from '/src/components/ui/AppIcon.vue'
+import CoverArt from '/src/components/ui/CoverArt.vue'
 import UiBadge from '/src/components/ui/UiBadge.vue'
 import UiButton from '/src/components/ui/UiButton.vue'
 import UiChips from '/src/components/ui/UiChips.vue'
@@ -294,8 +327,12 @@ import UiSkeleton from '/src/components/ui/UiSkeleton.vue'
 import PageHeader from '/src/components/library/PageHeader.vue'
 import SelectionBar from '/src/components/library/SelectionBar.vue'
 import TrackList from '/src/components/library/TrackList.vue'
+import ArtistReleases from '/src/components/monitor/ArtistReleases.vue'
 import WatchSourceBadge from '/src/components/monitor/WatchSourceBadge.vue'
+import API from '/src/model/api'
 import monitorAPI from '/src/model/monitor'
+import { artistPhotoSource } from '/src/lib/artistPhotoProxy'
+import { watchCoverUrl } from '/src/lib/watches'
 import { useLibrary } from '/src/model/library'
 import { usePlaylistActions } from '/src/model/playlistActions'
 import { useTrackActions } from '/src/model/trackActions'
@@ -326,7 +363,51 @@ const library = useLibrary()
 const watchId = computed(() => Number(route.params.id))
 const watch = ref(null)
 const tracks = ref([])
+
+// The picture by the name: a playlist's cover (see watchCoverUrl), or an
+// artist's saved photo - else the display-only one from the photo proxy,
+// as on the Monitor list. Until the saved-photo lookup answers, the
+// initials show.
+const artistArt = ref({ name: '', entry: null, loaded: false })
+watchRef(
+  () => (watch.value?.kind === 'artist' ? watch.value.name : ''),
+  async (name) => {
+    artistArt.value = { name, entry: null, loaded: false }
+    if (!name) return
+    let entry = null
+    try {
+      entry = (await API.getArtistArt(name)).data || null
+    } catch {
+      // No saved photo known: the proxy's photo, or the initials.
+    }
+    if (artistArt.value.name === name) {
+      artistArt.value = { name, entry, loaded: true }
+    }
+  },
+  { immediate: true }
+)
+const watchPicture = computed(() => {
+  const current = watch.value
+  if (!current) return ''
+  if (current.kind !== 'artist') return watchCoverUrl(current)
+  const art = artistArt.value
+  if (art.name !== current.name) return ''
+  return artistPhotoSource(current.name, art.entry, art.loaded).cover
+})
 const failures = ref([])
+const clearing = ref(false)
+
+// Start the failing list over (after a settings change, say): what still
+// fails shows up again on the next check.
+async function clearFailures() {
+  clearing.value = true
+  try {
+    await monitorAPI.clearWatchFailures(watchId.value)
+    failures.value = []
+  } finally {
+    clearing.value = false
+  }
+}
 const missing = ref(0)
 const loading = ref(false)
 const data = ref(null)

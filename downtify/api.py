@@ -165,10 +165,16 @@ downloads are shared, and files are never stored twice.
   explicit ``playlist_name`` and ``cover_url`` - e.g. an artist's top
   songs selection, which isn't backed by a real playlist id; a Deezer
   ``playlist_url`` gets the same per-playlist folder, M3U and cover as a
-  Spotify/YouTube Music one, but isn't tracked as a resumable batch)
+  Spotify/YouTube Music one, but isn't tracked as a resumable batch;
+  ``as_album: true`` saves the playlist as one album - see
+  ``album_artist.as_playlist_album``)
+  * ``skip_if_in_library: true`` (``/url`` body, ``/batch`` body, ``/album``
+  query) leaves out songs the library already has and reports them as
+  ``already_in_library`` - see ``downtify/library_match.py``
 * ``POST /api/download/album`` (YouTube Music album/browse URL only;
   downloads every track from one shared, already-resolved tracklist so
-  metadata stays consistent across the whole release)
+  metadata stays consistent across the whole release; ``wait=false``
+  queues the tracks and answers at once with their job ids)
 * ``POST /api/download/csv`` (import a library-export CSV from Soundiiz,
   TuneMyMusic, Exportify, etc.; JSON body ``{csv, playlist_name,
   generate_m3u}`` - the raw CSV text, read client-side, not a multipart
@@ -190,7 +196,8 @@ downloads are shared, and files are never stored twice.
 * ``GET  /api/library/summary`` (Home page: counts + recent albums)
 * ``GET  /api/library/albums`` (Library albums tab: albums without tracks)
 * ``GET  /api/library/artists`` (Library artists tab / Discover)
-* ``POST /api/library/lookup`` (search/link songs already in the library)
+* ``POST /api/library/lookup`` (search/link songs already in the library;
+  ``detailed: true`` answers per requested song, by catalog id or song key)
 * ``POST /api/library/playlists`` (create an empty editable playlist)
 * ``POST /api/library/playlists/tracks`` (add or remove tracks on a
   manual playlist - its owner's, or one shared with you as an editor;
@@ -233,7 +240,11 @@ downloads are shared, and files are never stored twice.
   to pick from: YouTube Music and YouTube results, or a pasted link) and
   ``POST /api/library/replace`` (body ``{file, video_id}``: replace the
   track's audio with that video in place, as a queue job - see
-  ``downtify/audio_replace.py``)
+  ``downtify/audio_replace.py``); ``POST /api/library/replace/upload``
+  (``?file=&name=``, the raw audio file as the body: replace with an
+  uploaded file), ``GET|DELETE /api/library/replace/protected``
+  (``?file=``: whether downloads leave a hand-replaced file alone, and
+  lifting that - ``downtify/hand_replaced.py``)
 * ``POST /api/library/compilation`` (body ``{files, compilation}``: mark
   or unmark an album as a various-artists compilation - rewrites its
   album-artist tag and compilation flag in place and remembers it for
@@ -264,7 +275,10 @@ downloads are shared, and files are never stored twice.
   ``downtify/storage_scan.py``)
 * ``GET  /api/playlists/batches`` and
   ``GET|DELETE /api/playlists/batches/{spotify_playlist_id}`` (Spotify
-  playlist downloads and their completeness against Spotify)
+  playlist downloads and their completeness against Spotify);
+  ``POST /api/playlists/batches/{spotify_playlist_id}/link-existing``
+  (add the playlist's songs the library already holds, ``{linked,
+  missing_count, playlist_name}``)
 * ``GET  /api/playlists/incomplete`` and
   ``POST /api/playlists/incomplete/download-missing`` (queue only the
   tracks a downloaded playlist is still missing)
@@ -274,10 +288,18 @@ downloads are shared, and files are never stored twice.
   fields, ``?path=``)
 * ``POST /api/slskd/test`` and ``POST /api/navidrome/test`` (try the
   connection with the settings as they are in the form, saved or not)
+* ``GET  /api/navidrome/ratings`` (admin: the running or last ratings job,
+  the saved last result and when the next scheduled run is due),
+  ``POST /api/navidrome/ratings/run`` (``preview``, and optional
+  ``skip_rated`` / ``skip_starred`` / ``grading`` over the saved options)
+  and ``POST /api/navidrome/ratings/cancel`` (Deezer-popularity star
+  ratings for the Navidrome library, see downtify/navidrome_ratings.py)
 * ``POST /api/proxy/test`` (admin: test outbound proxy reachability)
 * ``GET  /api/cookies`` (current YouTube cookie configuration)
 * ``POST /api/cookies`` (upload a Netscape cookies.txt as the raw request
   body - no multipart, so no ``python-multipart`` dependency)
+* ``POST /api/cookies/check`` (keep-alive now: rotate and save the session
+  cookies, then report ``health``)
 * ``DELETE /api/cookies`` (remove the uploaded cookies.txt)
 * ``GET|POST /api/monitor/playlists`` and
   ``PATCH|DELETE /api/monitor/playlists/{playlist_id}`` (playlist and
@@ -307,6 +329,17 @@ downloads are shared, and files are never stored twice.
   /api/monitor/artist-suggestions/resolve`` (``?name=``: ``{candidates,
   url}`` - the YouTube Music artist to follow, ``url`` only when exactly
   one is named so) - see ``downtify/artist_suggestions.py``
+* ``GET  /api/monitor/wanted`` (the Wanted list: per enabled artist
+  watch - all for an admin, their own for a user - the releases it
+  downloads that the library has partly or not at all, ``{artists:
+  [{watch, releases, missing, checking}], totals: {tracks, releases,
+  artists, unchecked}, job}``; reads what the sweeps kept, fetches
+  nothing) and ``POST /api/monitor/wanted/(check-all|download-all|stop)``
+  (read every artist's unchecked tracklists, or download every artist's
+  gaps, one artist at a time as one job - ``409 wanted_busy`` while one
+  runs; stop ends download-all after the artist it is on, check-all at
+  the next release it reads) - see
+  ``downtify/wanted_routes.py``
 * ``GET|PUT /api/likes`` and ``POST /api/likes/clear`` (the heart on a
   library track; while any song is liked they are also written out as a
   playlist)
@@ -383,7 +416,8 @@ downloads are shared, and files are never stored twice.
   ``downtify/account_routes.py``
 * ``/api/v1/...``: the apps' API, by track id - ``GET /api/v1/library``
   (``?since=`` change feed), ``GET /api/v1/tracks/{id}`` (and
-  ``/stream``, ``/cover``, ``/lyrics``), ``GET /api/v1/playlists``,
+  ``/stream``, ``/cover``, ``/lyrics``), ``GET|POST|DELETE
+  /api/v1/playlists`` (``/rename``, ``/tracks``, ``/order``),
   ``POST|DELETE /api/v1/playlists/follow``, ``POST /api/v1/playlists/seen``,
   ``GET|POST /api/v1/playlists/hidden``,
   ``GET /api/v1/usernames``, ``GET|PUT /api/v1/likes`` and

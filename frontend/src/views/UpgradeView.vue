@@ -47,6 +47,78 @@
         :description="t('upgrade.deleteOriginalsHint')"
       />
     </UiPanel>
+    <UiPanel
+      v-if="canScan"
+      :title="t('upgrade.lyricsQuickTitle')"
+      :description="t('upgrade.lyricsQuickHint')"
+    >
+      <UiButton
+        variant="secondary"
+        icon="lyrics"
+        :loading="loading"
+        @click="scanForLyrics"
+      >
+        {{ t('upgrade.lyricsQuickButton') }}
+      </UiButton>
+    </UiPanel>
+    <UiPanel
+      v-if="canScan"
+      :title="t('upgrade.isrcQuickTitle')"
+      :description="t('upgrade.isrcQuickHint')"
+    >
+      <div class="flex flex-wrap gap-2">
+        <UiButton
+          variant="secondary"
+          icon="search"
+          :loading="loading"
+          @click="scanForIsrcs(true)"
+        >
+          {{ t('upgrade.isrcLookupButton') }}
+        </UiButton>
+        <UiButton
+          variant="secondary"
+          icon="tag"
+          :loading="loading"
+          @click="scanForIsrcs(false)"
+        >
+          {{ t('upgrade.isrcAddButton') }}
+        </UiButton>
+      </div>
+    </UiPanel>
+    <UiPanel
+      v-if="canScan"
+      :title="t('upgrade.acoustidQuickTitle')"
+      :description="t('upgrade.acoustidQuickHint')"
+    >
+      <p v-if="acoustidWhyNot" class="mb-3 text-[13px] text-muted">
+        {{ t(`upgrade.${acoustidWhyNot}`) }}
+        <RouterLink
+          :to="{ name: 'Settings', params: { section: 'tags' } }"
+          class="text-accent underline"
+          >{{ t('upgrade.acoustidOpenSettings') }}</RouterLink
+        >
+      </p>
+      <div class="flex flex-wrap gap-2">
+        <UiButton
+          variant="secondary"
+          icon="search"
+          :loading="loading"
+          :disabled="Boolean(acoustidWhyNot)"
+          @click="scanBySound(true)"
+        >
+          {{ t('upgrade.acoustidLookupButton') }}
+        </UiButton>
+        <UiButton
+          variant="secondary"
+          icon="tag"
+          :loading="loading"
+          :disabled="Boolean(acoustidWhyNot)"
+          @click="scanBySound(false)"
+        >
+          {{ t('upgrade.acoustidAddButton') }}
+        </UiButton>
+      </div>
+    </UiPanel>
     <p v-if="status.finalizationError" role="alert" class="text-sm text-danger">
       {{ status.finalizationError }}
     </p>
@@ -70,8 +142,14 @@
       }}
     </p>
 
+    <!-- Asking where the last scan got to: not "never scanned" meanwhile. -->
+    <div v-if="!loaded && !error" class="flex flex-col gap-4" aria-busy="true">
+      <UiSkeleton class="h-28 w-full !rounded-panel" />
+      <UiSkeleton class="h-48 w-full !rounded-panel" />
+    </div>
+
     <!-- Scanning -->
-    <UiPanel v-if="isScanning" :title="t('upgrade.scanning')">
+    <UiPanel v-else-if="isScanning" :title="t('upgrade.scanning')">
       <UiProgress :value="scan.pct" :indeterminate="!scan.total" :height="6" />
       <p class="mt-2.5 text-[13px] text-muted">
         {{
@@ -114,6 +192,25 @@
         </div>
       </dl>
       <p
+        v-if="lyricsRan"
+        class="mt-3 flex items-start gap-2 text-[13px] text-muted"
+      >
+        <AppIcon name="lyrics" :size="16" class="mt-0.5 shrink-0" />
+        {{
+          t('upgrade.lyricsOutcome', {
+            added: status.lyrics.added,
+            notFound: status.lyrics.notFound,
+            failed: status.lyrics.failed,
+          })
+        }}
+      </p>
+      <p
+        v-if="lyricsRan && summary.plainLyricsOnly"
+        class="mt-1 pl-6 text-[13px] text-muted"
+      >
+        {{ t('upgrade.lyricsPlainOnly', { count: summary.plainLyricsOnly }) }}
+      </p>
+      <p
         v-if="isRunning"
         class="mt-4 flex items-start gap-2 text-[13px] text-muted"
       >
@@ -143,7 +240,18 @@
               :description="t(`upgrade.${name}Hint`)"
               class="flex-1"
               @update:model-value="(on) => toggle(name, on)"
-            />
+            >
+              <span
+                v-if="name === 'lyrics' && summary.plainLyricsOnly"
+                class="mt-1 block text-[13px] text-muted"
+              >
+                {{
+                  t('upgrade.lyricsPlainOnly', {
+                    count: summary.plainLyricsOnly,
+                  })
+                }}
+              </span>
+            </UiSwitch>
             <UiBadge tone="accent">
               {{
                 t('upgrade.tracksAffected', {
@@ -330,10 +438,13 @@ import UiPanel from '/src/components/ui/UiPanel.vue'
 import UiProgress from '/src/components/ui/UiProgress.vue'
 import UiSelect from '/src/components/ui/UiSelect.vue'
 import UiSwitch from '/src/components/ui/UiSwitch.vue'
+import UiSkeleton from '/src/components/ui/UiSkeleton.vue'
 import PageHeader from '/src/components/library/PageHeader.vue'
 import DeemixRecordingDialog from '/src/components/library/DeemixRecordingDialog.vue'
 import { formatBytes } from '/src/lib/format'
 import { ARTWORK_SIZES } from '/src/lib/upgrade'
+import { acoustidBlocker, normalizeAcoustid } from '/src/lib/acoustid'
+import API from '/src/model/api'
 import { useUpgrade } from '/src/model/upgrade'
 import { useI18n } from '/src/i18n'
 
@@ -352,6 +463,7 @@ const {
   selected,
   willRun,
   loading,
+  loaded,
   error,
   load,
   startScan,
@@ -369,7 +481,7 @@ const {
   canCancel,
 } = useUpgrade()
 
-const artworkMin = ref(600)
+const artworkMin = ref(1200)
 const artworkSource = ref('highest')
 const recheckDays = ref(30)
 const replaceAudio = ref(false)
@@ -402,6 +514,54 @@ const runScan = () =>
     recheck_days: recheckDays.value,
   })
 
+// Scan, then look lyrics up for the tracks without them at once: the
+// other categories are left for another run.
+const scanForLyrics = () =>
+  startScan({
+    artwork_min_px: artworkMin.value,
+    artwork_source: artworkSource.value,
+    recheck_days: recheckDays.value,
+    categories: ['lyrics'],
+    start_after_scan: true,
+  })
+
+// ISRCs for older files: a scan of the ISRC tag alone, then at once the
+// lookups. *lookupOnly* lists the codes it would add and writes nothing.
+const scanForIsrcs = (lookupOnly) =>
+  startScan({
+    recheck_days: recheckDays.value,
+    categories: lookupOnly ? ['isrc', 'isrc_lookup'] : ['isrc'],
+    start_after_scan: true,
+  })
+
+// ISRCs by sound (AcoustID): the same run, for files Deezer can't place.
+// Off until AcoustID is set up in Settings.
+const acoustid = ref(normalizeAcoustid(null))
+const acoustidWhyNot = computed(() => acoustidBlocker(acoustid.value))
+const scanBySound = (lookupOnly) =>
+  startScan({
+    recheck_days: recheckDays.value,
+    categories: lookupOnly ? ['acoustid', 'acoustid_lookup'] : ['acoustid'],
+    start_after_scan: true,
+  })
+
+async function loadAcoustid() {
+  try {
+    acoustid.value = normalizeAcoustid((await API.getAcoustid()).data)
+  } catch {
+    // Shown as "turned off".
+  }
+}
+
+const lyricsRan = computed(
+  () =>
+    (status.value.run?.categories || []).includes('lyrics') &&
+    status.value.lyrics.added +
+      status.value.lyrics.notFound +
+      status.value.lyrics.failed >
+      0
+)
+
 // "Nothing to upgrade" when everything was simply checked recently is a
 // dead end without a way past the memory.
 function rescanEverything() {
@@ -409,7 +569,10 @@ function rescanEverything() {
   return runScan()
 }
 
-onMounted(() => load())
+onMounted(() => {
+  load()
+  loadAcoustid()
+})
 
 // Show the values the last scan actually ran with, so re-running it
 // from another device doesn't silently use different ones.
@@ -491,6 +654,7 @@ const STAGE_KEYS = {
   artwork: 'upgrade.stageArtwork',
   lyrics: 'upgrade.stageLyrics',
   writing: 'upgrade.stageWriting',
+  fingerprint: 'upgrade.stageFingerprint',
 }
 
 const toneFor = (job) => JOB_TONES[job.status] || 'neutral'

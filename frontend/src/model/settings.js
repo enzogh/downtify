@@ -23,6 +23,7 @@ const settings = ref({
     api_key: '',
     source_dir: '/slskd',
     leave_in_place: true,
+    keep_file_cover: false,
     timeout_seconds: 20,
     search_retries: 5,
     search_poll_seconds: 15,
@@ -38,6 +39,11 @@ const settings = ref({
     strict_format_priority: false,
     extensions_whitelist: false,
     min_bitrate: 256,
+    advanced: false,
+    unknown_bitrate: 'auto',
+    format_min_bitrate: {},
+    max_bitrate: 0,
+    prefer_bitrate: false,
   },
   external_library: {
     primary_folder: '',
@@ -45,10 +51,13 @@ const settings = ref({
   },
   lyrics_providers: [''],
   download_lyrics: true,
+  lyrics_synced_only: false,
   lyrics_lrc_beside: true,
   lyrics_lrc_dir: '/data/lyrics',
   format: '',
   bitrate: '320',
+  cover_min_resolution: 0,
+  cover_largest: false,
   output: '',
   generate_m3u: true,
   download_cover_art_playlists: true,
@@ -57,6 +66,8 @@ const settings = ref({
   sync_navidrome: true,
   allow_playlist_sharing: true,
   allow_song_links: true,
+  per_user_library: false,
+  discover_navidrome_plays: false,
   navidrome: {
     enabled: false,
     url: '',
@@ -65,11 +76,19 @@ const settings = ref({
     admin_username: '',
     admin_password: '',
     public_playlist: false,
+    m3u_import: false,
     scan_after_download: true,
+    scan_when_idle: false,
     scan_wait_seconds: 120,
     scan_poll_seconds: 30,
     client_name: 'Castify',
     api_version: '1.16.1',
+  },
+  navidrome_ratings: {
+    repeat: 'off',
+    skip_rated: true,
+    skip_starred: false,
+    grading: 'absolute',
   },
   organize_by_artist: true,
   cache_cover_art: false,
@@ -79,9 +98,17 @@ const settings = ref({
   max_track_duration_seconds: 600,
   auto_download_after_plays: 0,
   external_sync_delay_seconds: 0,
-  cover_resolution: 600,
+  cover_resolution: 1200,
   download_cover_art: true,
   overwrite_existing_files: true,
+  artist_watch_deezer: true,
+  artist_watch_musicbrainz: true,
+  artist_watch_musicbrainz_kinds: ['mixtape', 'soundtrack'],
+  artist_watch_complete_albums: false,
+  write_isrc: true,
+  acoustid_enabled: false,
+  aurral_enabled: false,
+  avoid_formats: [],
   search_albums: true,
   mini_player_enabled: true,
 })
@@ -98,7 +125,7 @@ const MAX_TRACK_DURATION_SECONDS = 21600
 const MAX_AUTO_DOWNLOAD_PLAYS = 100
 
 const MIN_COVER_RESOLUTION = 300
-const MAX_COVER_RESOLUTION = 1200
+const MAX_COVER_RESOLUTION = 3000
 
 const settingsOptions = {
   audio_providers: [
@@ -125,7 +152,8 @@ const settingsOptions = {
   external_sync_delay_seconds_presets: [0, 5, 15, 30, 60],
   external_sync_delay_seconds_min: MIN_DOWNLOAD_DELAY_SECONDS,
   external_sync_delay_seconds_max: MAX_DOWNLOAD_DELAY_SECONDS,
-  cover_resolution_presets: [300, 600, 800, 1000, 1200],
+  cover_resolution_presets: [600, 1000, 1200, 1400, 2000],
+  cover_min_resolution_presets: [0, 600, 1000, 1200],
   cover_resolution_min: MIN_COVER_RESOLUTION,
   cover_resolution_max: MAX_COVER_RESOLUTION,
   output: '{artists} - {title}.{output-ext}',
@@ -232,6 +260,10 @@ function loadServerSettings() {
         slskd: { ...settings.value.slskd, ...(rest.slskd || {}) },
         deemix: { ...settings.value.deemix, ...(rest.deemix || {}) },
         navidrome: { ...settings.value.navidrome, ...(rest.navidrome || {}) },
+        navidrome_ratings: {
+          ...settings.value.navidrome_ratings,
+          ...(rest.navidrome_ratings || {}),
+        },
         external_library: {
           ...settings.value.external_library,
           ...(rest.external_library || {}),
@@ -317,6 +349,10 @@ async function saveSettings() {
       slskd: { ...settings.value.slskd, ...(rest.slskd || {}) },
       deemix: { ...settings.value.deemix, ...(rest.deemix || {}) },
       navidrome: { ...settings.value.navidrome, ...(rest.navidrome || {}) },
+      navidrome_ratings: {
+        ...settings.value.navidrome_ratings,
+        ...(rest.navidrome_ratings || {}),
+      },
       external_library: {
         ...settings.value.external_library,
         ...(rest.external_library || {}),

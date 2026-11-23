@@ -773,12 +773,18 @@ async def create_library_playlist_endpoint(request: Request) -> dict[str, Any]:
     name = str(payload.get('name') or '').strip()
     ctx = library_context()
     try:
-        result = await asyncio.to_thread(create_manual_playlist, ctx, name)
+        result = await asyncio.to_thread(
+            create_manual_playlist,
+            ctx,
+            name,
+            state.manual_playlist_owners,
+            request_user_id(request),
+            state.playlist_shares,
+        )
     except ManualPlaylistError as exc:
         raise HTTPException(
             status_code=exc.status_code, detail=str(exc)
         ) from exc
-    claim_manual_playlist(str(result.get('name') or name), request)
     invalidate_library_paths_cache()
     return result
 
@@ -1469,12 +1475,19 @@ async def copy_library_playlist_endpoint(request: Request) -> dict[str, Any]:
             new_name = f'{base} {number}'
             number += 1
     try:
-        result = await asyncio.to_thread(copy_playlist, ctx, files, new_name)
+        result = await asyncio.to_thread(
+            copy_playlist,
+            ctx,
+            files,
+            new_name,
+            state.manual_playlist_owners,
+            request_user_id(request),
+            state.playlist_shares,
+        )
     except ManualPlaylistError as exc:
         raise HTTPException(
             status_code=exc.status_code, detail=str(exc)
         ) from exc
-    claim_manual_playlist(str(result.get('name') or new_name), request)
     invalidate_library_paths_cache()
     await announce_playlists_changed()
     return result
@@ -2048,6 +2061,112 @@ async def get_playlist_batch_detail_endpoint(
     return report
 
 
+@router.post('/api/playlists/batches/{spotify_playlist_id}/link-existing')
+async def link_existing_playlist_tracks_endpoint(
+    request: Request,
+    spotify_playlist_id: str,
+) -> dict[str, Any]:
+    """Add the playlist's songs the library already holds to it.
+
+    A downloaded Spotify playlist lists a song as missing when no file was
+    downloaded *for it*, even if the library has the very same song from
+    another download or an existing music folder (issue #550). This links
+    each such song - the same ISRC, else the same lead artist, title and
+    length - into the playlist (catalog, M3U, Navidrome) without
+    downloading anything. ``{linked, missing_count, playlist_name}``.
+    """
+
+    if state.downloader is None or state.playlist_catalog is None:
+        raise HTTPException(status_code=500, detail='Downloader not ready')
+    sid = str(spotify_playlist_id or '').strip()
+    scope = _batch_scope(request)
+    meta = _known_spotify_playlist_sources(scope).get(sid) if sid else None
+    if meta is None:
+        raise HTTPException(status_code=404, detail='Playlist not found')
+    name = str(meta.get('playlist_name') or '').strip()
+    added = await _link_library_songs(name, sid)
+    report = await asyncio.to_thread(
+        _report_for_spotify_playlist,
+        sid,
+        mode='spotify',
+        include_missing_tracks=False,
+        refresh=False,
+        user_id=scope,
+    )
+    return {
+        'linked': added,
+        'missing_count': int((report or {}).get('missing_count') or 0),
+        'playlist_name': name,
+    }
+
+
+async def _link_library_songs_for(request: Request, sid: str) -> int:
+    """:func:`_link_library_songs` for a playlist *request* may see
+    (``0`` for one it can't)."""
+
+    if state.playlist_catalog is None:
+        return 0
+    meta = _known_spotify_playlist_sources(_batch_scope(request)).get(sid)
+    if meta is None:
+        return 0
+    return await _link_library_songs(
+        str(meta.get('playlist_name') or '').strip(), sid
+    )
+
+
+async def _link_library_songs(name: str, sid: str) -> int:
+    """Link playlist *sid*'s songs the library already holds into its
+    catalog and rewrite its M3U / Navidrome playlist when that added
+    any. Returns how many songs joined it."""
+
+    before = await asyncio.to_thread(_catalog_track_count, name)
+    await asyncio.to_thread(
+        _rebuild_playlist_catalog_from_library, name or sid, sid
+    )
+    added = max(
+        0, await asyncio.to_thread(_catalog_track_count, name) - before
+    )
+    if added:
+        await _refresh_playlist_outputs(name)
+    logger.info(
+        'Playlist {!r}: {} song(s) added from the library', name, added
+    )
+    return added
+
+
+def _catalog_track_count(playlist_name: str) -> int:
+    if state.playlist_catalog is None or not playlist_name:
+        return 0
+    return len(state.playlist_catalog.list_tracks(playlist_name))
+
+
+async def _refresh_playlist_outputs(playlist_name: str) -> None:
+    """Rewrite a playlist's M3U and Navidrome playlist from its catalog,
+    when those are on."""
+
+    do_m3u, do_navidrome = playlist_refresh_enabled(state.settings)
+    if not playlist_name or not (do_m3u or do_navidrome):
+        return
+    await asyncio.to_thread(
+        refresh_playlists_after_moves,
+        {playlist_name},
+        settings=state.settings,
+        downloader=state.downloader,
+        playlist_catalog=state.playlist_catalog,
+        track_index=state.track_index,
+        monitor_db=state.monitor_db,
+        navidrome_index=state.navidrome_index,
+        navidrome_scan=bool(
+            state.settings.get('navidrome', {}).get(
+                'scan_after_download', True
+            )
+        ),
+        playlist_spotify_cache=state.playlist_spotify_cache,
+        cover_cache=state.cover_cache,
+        metadata_cache=state.metadata_cache,
+    )
+
+
 def _purge_playlist_tracking(spotify_playlist_id: str) -> None:
     sid = str(spotify_playlist_id or '').strip()
     if not sid:
@@ -2174,6 +2293,14 @@ async def download_missing_playlist_tracks_endpoint(
             detail='spotify_playlist_id or playlist_url required',
         )
 
+    # Songs the library already holds join the playlist rather than
+    # being downloaded a second time (issue #550).
+    linked_first = (
+        0
+        if state.downloader.overwrite_existing_files
+        else await _link_library_songs_for(request, spotify_playlist_id)
+    )
+
     playlist_name, resolved_url, missing = await asyncio.to_thread(
         _missing_tracks_for_playlist,
         spotify_playlist_id,
@@ -2213,6 +2340,7 @@ async def download_missing_playlist_tracks_endpoint(
             'count': 0,
             'message': 'Playlist already complete',
             'catalog_linked': linked,
+            'linked_from_library': linked_first,
             'playlist_refresh': bool(linked and (do_m3u or do_navidrome)),
         }
 
@@ -2244,6 +2372,7 @@ async def download_missing_playlist_tracks_endpoint(
     )
     result['missing_count'] = len(missing)
     result['playlist_name'] = playlist_name
+    result['linked_from_library'] = linked_first
     return result
 
 

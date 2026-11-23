@@ -62,6 +62,7 @@ from .discover import (
 from .ttl_cache import (
     TTLCache,
 )
+from .api_pipeline import _discover_inputs
 
 
 def local_discovery_for_request(request: Request) -> dict[str, Any]:
@@ -493,6 +494,9 @@ async def discover_endpoint(request: Request) -> dict[str, Any]:
     library = payload.get('library')
     if not isinstance(library, list):
         raise HTTPException(status_code=400, detail='library is required')
+    store, library = await asyncio.to_thread(
+        _discover_inputs, request, store, library
+    )
     return await asyncio.to_thread(
         recommendations, store, library, user_id=request_user_id(request)
     )
@@ -515,6 +519,9 @@ async def discover_collections_endpoint(request: Request) -> dict[str, Any]:
     library = payload.get('library')
     if not isinstance(library, list):
         raise HTTPException(status_code=400, detail='library is required')
+    store, library = await asyncio.to_thread(
+        _discover_inputs, request, store, library
+    )
     albums = payload.get('albums')
     playlist_ids = payload.get('playlist_ids')
     return await asyncio.to_thread(
@@ -550,6 +557,9 @@ async def discover_deezer_collections_endpoint(
     library = payload.get('library')
     if not isinstance(library, list):
         raise HTTPException(status_code=400, detail='library is required')
+    store, library = await asyncio.to_thread(
+        _discover_inputs, request, store, library
+    )
     return await asyncio.to_thread(
         deezer_collections,
         store,
@@ -584,6 +594,9 @@ async def discover_spotify_collections_endpoint(
     library = payload.get('library')
     if not isinstance(library, list):
         raise HTTPException(status_code=400, detail='library is required')
+    store, library = await asyncio.to_thread(
+        _discover_inputs, request, store, library
+    )
     return await asyncio.to_thread(
         spotify_collections,
         store,

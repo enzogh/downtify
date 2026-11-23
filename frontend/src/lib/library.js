@@ -129,6 +129,7 @@ export function normalizeTrack(row) {
     trackNumber: Number(raw.track_number) || 0,
     year: String(raw.year || ''),
     releaseDate: String(raw.release_date || raw.year || ''),
+    genre: String(raw.genre || ''),
     duration: Number(raw.duration) || 0,
     explicit: Boolean(raw.explicit),
     // Admins only: why users can't see this track ('track', 'album' or
@@ -637,6 +638,18 @@ export function songKey(artist, title) {
     .split(/,|;| & /)[0]
     .trim()
   return `${clean(first)}|${clean(title)}`
+}
+
+/**
+ * `songKey` plus the album: the key of a song *on one album*, so an album
+ * page can tell a song the library has on that album from one it only
+ * has on another (a greatest hits, a single) - issue #546.
+ */
+export function songAlbumKey(artist, title, album) {
+  const albumKey = fold(album)
+    .replace(/[^\p{L}\p{N}]+/gu, ' ')
+    .trim()
+  return `${songKey(artist, title)}|${albumKey}`
 }
 
 /**

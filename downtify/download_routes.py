@@ -65,19 +65,8 @@ from .monitor import (
     SOURCE_SPOTIFY,
     parse_playlist_url,
 )
-
-
-def song_label(song: dict[str, Any]) -> str:
-    """``Artist - Title`` for a song as the download endpoints get it."""
-
-    artists = song.get('artists') or []
-    artist = (
-        ', '.join(str(a) for a in artists)
-        if isinstance(artists, list)
-        else str(artists)
-    )
-    title = str(song.get('name') or song.get('title') or '')
-    return ' - '.join(part for part in (artist, title) if part)
+from .api_pipeline import _split_owned
+from .api_pipeline import song_label
 
 
 def _playlist_context_from_hints(
@@ -203,6 +192,9 @@ def _merge_client_track_hints(
 
 _CLIENT_RESOLVED_SOURCES = {'text_search', 'deezer'}
 
+#: The status of a song ``skip_if_in_library`` didn't download (#636).
+ALREADY_IN_LIBRARY = 'already_in_library'
+
 
 def _song_from_download_request(
     url: str, client_hints: Optional[dict[str, Any]]
@@ -309,6 +301,17 @@ async def download_endpoint(
     song = await asyncio.to_thread(
         _song_from_download_request, url, client_hints
     )
+    if (
+        isinstance(client_hints, dict)
+        and client_hints.get('skip_if_in_library') is True
+    ):
+        _wanted, owned = await asyncio.to_thread(_split_owned, request, [song])
+        if owned:
+            return {
+                'status': ALREADY_IN_LIBRARY,
+                'filename': owned[0]['filename'],
+                'match': owned[0]['match'],
+            }
     # A retried track from a playlist carries its playlist in the hints,
     # so it lands in that playlist's folder and catalog.
     pl_ctx = await asyncio.to_thread(
@@ -364,6 +367,11 @@ async def download_batch_endpoint(request: Request) -> dict[str, Any]:
         raise HTTPException(
             status_code=400, detail='songs must be a non-empty list'
         )
+    owned: list[dict[str, Any]] = []
+    if payload.get('skip_if_in_library') is True:
+        songs, owned = await asyncio.to_thread(_split_owned, request, songs)
+        if not songs:
+            return {'job_ids': [], 'count': 0, ALREADY_IN_LIBRARY: owned}
     playlist_url = str(payload.get('playlist_url') or '')
     generate_m3u = bool(payload.get('generate_m3u', True))
     # No real Spotify/YouTube Music playlist id backs this batch (e.g. an
@@ -371,6 +379,8 @@ async def download_batch_endpoint(request: Request) -> dict[str, Any]:
     # directly instead of us deriving them from playlist_url.
     playlist_name = str(payload.get('playlist_name') or '') or None
     cover_url = str(payload.get('cover_url') or '') or None
+    # Save the playlist as one album (see album_artist.as_playlist_album).
+    as_album = payload.get('as_album') is True
     first_song = next((s for s in songs if isinstance(s, dict)), {})
     await log_activity(
         request,
@@ -401,7 +411,7 @@ async def download_batch_endpoint(request: Request) -> dict[str, Any]:
             user_id=batch_user_id,
         )
 
-    return await _submit_playlist_batch(
+    result = await _submit_playlist_batch(
         songs,
         playlist_url,
         generate_m3u=generate_m3u,
@@ -409,7 +419,11 @@ async def download_batch_endpoint(request: Request) -> dict[str, Any]:
         playlist_name=playlist_name,
         cover_url=cover_url,
         user_id=request_user_id(request),
+        as_album=as_album,
     )
+    if payload.get('skip_if_in_library') is True:
+        result[ALREADY_IN_LIBRARY] = owned
+    return result
 
 
 def _scope_csv_song_ids(songs: list[dict[str, Any]]) -> None:
@@ -525,8 +539,11 @@ def _songs_for_album_download(url: str) -> list[dict[str, Any]]:
 
 @router.post('/api/download/album')
 async def download_album_endpoint(
-    request: Request, url: str = Query(...)
-) -> dict[str, str]:
+    request: Request,
+    url: str = Query(...),
+    wait: bool = Query(True),
+    skip_if_in_library: bool = Query(False),
+) -> dict[str, Any]:
     """Download every track of a YouTube Music album/browse URL.
 
     Unlike ``POST /api/download/url`` (which only accepts a single video URL
@@ -540,6 +557,13 @@ async def download_album_endpoint(
 
     Returns a mapping of ``song_id -> downloaded filename`` for every track
     that downloaded successfully (failed tracks are omitted, not raised).
+
+    With ``wait=false`` it queues one job per track and answers at once:
+    ``{album, album_artist, track_count, job_ids}``, progress then being
+    ``GET /api/queue``'s. ``skip_if_in_library`` leaves out the tracks
+    the library already has (issue #636): listed under
+    ``already_in_library`` with ``wait=false``, mapped to their existing
+    file otherwise.
     """
     if state.downloader is None:
         raise HTTPException(status_code=500, detail='Downloader not ready')
@@ -552,6 +576,31 @@ async def download_album_endpoint(
         str(first_song.get('album_name') or '') or url[:200],
         {'songs': len(songs), 'url': url[:500]},
     )
+    total = len(songs)
+    owned: list[dict[str, Any]] = []
+    # ``is``: called directly (tests), the defaults are Query objects.
+    skip = skip_if_in_library is True
+    if skip:
+        songs, owned = await asyncio.to_thread(_split_owned, request, songs)
+    if wait is False:
+        queued = (
+            await _submit_playlist_batch(
+                songs, '', generate_m3u=False, user_id=request_user_id(request)
+            )
+            if songs
+            else {'job_ids': []}
+        )
+        return {
+            'album': str(first_song.get('album_name') or ''),
+            'album_artist': str(
+                first_song.get('album_artist')
+                or first_song.get('artist')
+                or ''
+            ),
+            'track_count': total,
+            'job_ids': queued['job_ids'],
+            **({ALREADY_IN_LIBRARY: owned} if skip else {}),
+        }
     # See _process_batch: only meaningful when there's a "next" track to
     # wait for, so a single-track album never waits around for nothing.
     delay_seconds = (
@@ -580,11 +629,15 @@ async def download_album_endpoint(
 
     async with _searching_ahead(songs, None) as progress:
         results = await asyncio.gather(*(_one(song) for song in songs))
-    return {
+    done = {
         song_id: filename
         for song_id, filename in results
         if song_id and filename
     }
+    for item in owned:
+        if item['song_id']:
+            done[item['song_id']] = item['filename']
+    return done
 
 
 def _queue_job_visible(job: dict[str, Any], request: Request) -> bool:

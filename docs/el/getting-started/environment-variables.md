@@ -16,6 +16,25 @@ icon: lucide/settings
 | `DOWNTIFY_LOG_LEVEL` | `info` | Επίπεδο καταγραφής της εφαρμογής (`debug`, `info`, `warning`, …). |
 | `TZ` | `UTC` | Τοπική ζώνη ώρας (όνομα IANA, π.χ. `America/Sao_Paulo`), που χρησιμοποιείται για την ερμηνεία του `DOWNTIFY_MONITOR_SYNC_TIME` παρακάτω. |
 
+## Βάση δεδομένων
+
+Από προεπιλογή το Downtify κρατά τα δεδομένα του σε αρχεία SQLite μέσα στον `DATABASE_DIR`. Όρισε το `DATABASE_URL` για να χρησιμοποιήσεις PostgreSQL· η σελίδα [Βάση δεδομένων](../database.md) καλύπτει τη ρύθμιση, τις μεταναστεύσεις και το τι αποθηκεύεται πού.
+
+| Μεταβλητή | Προεπιλογή | Περιγραφή |
+|----------|---------|-------------|
+| `DATABASE_URL` | _(μη ορισμένη)_ | URL σύνδεσης PostgreSQL, `postgresql://χρήστης:κωδικός@host:5432/όνομα_βάσης` (λειτουργεί και το `postgres://`). Μη ορισμένη: SQLite. Ορισμένη: οι αποθήκες που αλλιώς θα ήταν αρχεία SQLite (βιβλιοθήκη, monitor, λογαριασμοί, δραστηριότητα, doctor) χρησιμοποιούν PostgreSQL. Τιμή με άλλο σχήμα απορρίπτεται. Το URL δεν εμφανίζεται ποτέ σε μηνύματα σφάλματος. |
+| `DB_POOL_MIN` | `2` | Συνδέσεις που κρατά ανοιχτές το pool του PostgreSQL. Πρέπει να είναι `0` ή περισσότερες. |
+| `DB_POOL_MAX` | `20` | Οι περισσότερες συνδέσεις που ανοίγει το pool του PostgreSQL. Πρέπει να είναι τουλάχιστον `1` και τουλάχιστον `DB_POOL_MIN`. |
+| `DB_POOL_TIMEOUT` | `10` | Δευτερόλεπτα που περιμένει ένα αίτημα για ελεύθερη σύνδεση πριν αποτύχει. |
+| `DB_SEARCH_PATH` | _(μη ορισμένη)_ | Σχήμα (schema) PostgreSQL για χρήση, για βάση που μοιράζονται και άλλες εφαρμογές. Μόνο απλό αναγνωριστικό: γράμματα, ψηφία και κάτω παύλες, χωρίς αρχή με ψηφίο. Μη ορισμένη: το προεπιλεγμένο του διακομιστή (`public`). |
+| `DATABASE_DIR` | `/data` | Κατάλογος για ρυθμίσεις, cache και τα αρχεία SQLite. Χρησιμοποιείται και με PostgreSQL, για ό,τι δεν είναι πίνακας βάσης. |
+| `POSTGRES_PASSWORD` | `downtify` | Μόνο Docker Compose (το διαβάζει το `docker-compose.yml` του αποθετηρίου, όχι ο διακομιστής): ο κωδικός του χρήστη `downtify` στη συνοδευτική υπηρεσία `postgres`, τον οποίο χρησιμοποιεί και το `DATABASE_URL`. Όρισέ τον σε ένα αρχείο `.env` δίπλα στο αρχείο Compose πριν την πρώτη εκκίνηση. Το PostgreSQL τον εφαρμόζει μόνο όταν δημιουργεί τον τόμο δεδομένων του, οπότε αλλάζοντάς τον αργότερα δεν αλλάζει ο κωδικός μιας υπάρχουσας βάσης. |
+
+```yaml
+environment:
+  - DATABASE_URL=postgresql://downtify:change-me@postgres:5432/downtify
+```
+
 ## Παρακολούθηση λιστών
 
 | Μεταβλητή | Προεπιλογή | Περιγραφή |
@@ -68,7 +87,7 @@ OIDC is optional. Configure the issuer, client ID and secret together; partial c
 
 ## Έλεγχος υγείας
 
-Η εικόνα έχει ενσωματωμένο [`HEALTHCHECK` του Docker](https://docs.docker.com/reference/dockerfile/#healthcheck) — δεν χρειάζεται δικό σου `--health-cmd`. Ρωτά το `GET /api/health` στη θύρα του ίδιου του κοντέινερ κάθε 30 δευτερόλεπτα (timeout 5 δευτερολέπτων, περίοδος χάριτος 20 δευτερολέπτων κατά την εκκίνηση, 3 επαναλήψεις πριν το κοντέινερ σημανθεί ως μη υγιές). Το `docker ps` και το `docker inspect` δείχνουν το αποτέλεσμα, και εργαλεία όπως το `condition: service_healthy` του Compose ή το Watchtower μπορούν να ενεργήσουν βάσει αυτού.
+Η εικόνα έχει ενσωματωμένο [`HEALTHCHECK` του Docker](https://docs.docker.com/reference/dockerfile/#healthcheck) — δεν χρειάζεται δικό σου `--health-cmd`. Ρωτά το `GET /api/health` στη θύρα του ίδιου του κοντέινερ κάθε 30 δευτερόλεπτα (timeout 5 δευτερολέπτων, περίοδος χάριτος 20 δευτερολέπτων κατά την εκκίνηση, 3 επαναλήψεις πριν το κοντέινερ σημανθεί ως μη υγιές). Το `docker ps` και το `docker inspect` δείχνουν το αποτέλεσμα, και εργαλεία όπως το `condition: service_healthy` του Compose ή το Watchtower μπορούν να ενεργήσουν βάσει αυτού. Με PostgreSQL, ο έλεγχος αποτυγχάνει επίσης όσο η βάση δεδομένων δεν είναι προσβάσιμη (`503`, δες [`GET /api/health`](../api-reference.md#get-apihealth)).
 
 | Μεταβλητή | Προεπιλογή | Περιγραφή |
 |----------|---------|-------------|
@@ -94,6 +113,7 @@ environment:
 | `DOWNTIFY_IP_ROTATE_URL` | _(unset)_ | Endpoint στο οποίο το Castify κάνει `POST` για νέα IP εξόδου όταν το YouTube μπλοκάρει την τρέχουσα με «Sign in to confirm you're not a bot» — π.χ. `http://warp:8081/rotate`, από το `contrib/warp-control` μέσα σε container Cloudflare WARP. Η μπλοκαρισμένη λήψη ή το stream ξαναδοκιμάζεται με τη νέα IP (έως 3 νέες IP το καθένα, 30 την ώρα), ώστε ο χρήστης να μη δει ποτέ το σφάλμα. Παράλληλες λήψεις που μπλοκάρονται μαζί μοιράζονται μία εναλλαγή. |
 | `DOWNTIFY_IP_ROTATE_TOKEN` | _(unset)_ | Στέλνεται ως `Authorization: Bearer <token>` στο `DOWNTIFY_IP_ROTATE_URL` (το `WARP_CONTROL_TOKEN` του `contrib/warp-control`). |
 | `DOWNTIFY_COOKIES_FILE` | _(μη ορισμένη)_ | Διαδρομή ενός `cookies.txt` σε μορφή Netscape **μέσα στο κοντέινερ**. Επιτρέπει στο yt-dlp να πιστοποιείται ως πραγματική συνεδρία browser — απαραίτητο για ακατάλληλα/περιορισμένης ηλικίας κομμάτια και όποτε το YouTube επιβάλλει τείχος σύνδεσης. Υπερισχύει ενός αρχείου που ανέβηκε στη web διεπαφή και κάνει εκείνο το τμήμα της διεπαφής μόνο για ανάγνωση. Δες [Cookies του YouTube](../features/youtube-cookies.md). |
+| `DOWNTIFY_COOKIES_REFRESH_MINUTES` | `15` | Κάθε πόσα λεπτά (`5`–`1440`) η συντήρηση των cookies ανανεώνει και αποθηκεύει τα cookies συνεδρίας του YouTube. Το `0` την απενεργοποιεί. Ανανεώνει το αρχείο που ανέβηκε ή αυτό του `DOWNTIFY_COOKIES_FILE` (όταν είναι εγγράψιμο). Δες [Διατήρηση της λειτουργίας τους](../features/youtube-cookies.md#keeping-them-working). |
 | `DOWNTIFY_COOKIES_FROM_BROWSER` | _(μη ορισμένη)_ | Όνομα browser από τον οποίο θα εξαχθούν cookies (π.χ. `chrome`, `firefox`). Απαιτεί το αποθηκευτικό cookies του browser να είναι προσβάσιμο μέσα στο κοντέινερ, οπότε σπάνια χρησιμοποιείται στο Docker. |
 
 ::: tip Μάλλον δεν τις χρειάζεσαι
@@ -111,7 +131,7 @@ services:
     volumes:
       - ./downloads:/downloads
       - downtify_data:/data
-      - ./cookies.txt:/cookies.txt:ro
+      - ./cookies.txt:/cookies.txt
     environment:
       - DOWNTIFY_FORCE_IPV4=1
       - DOWNTIFY_COOKIES_FILE=/cookies.txt

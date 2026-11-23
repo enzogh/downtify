@@ -1,258 +1,322 @@
 <template>
   <div>
-    <!-- Loading -->
-    <div
-      v-if="loading"
-      class="mx-auto flex max-w-[1680px] flex-col gap-8 px-4 pt-10 sm:px-6 md:flex-row md:items-end lg:px-10"
-    >
-      <UiSkeleton
-        class="size-48 self-center !rounded-[16px] sm:size-56 md:self-auto"
-      />
-      <div class="flex flex-1 flex-col gap-3">
-        <UiSkeleton class="h-3 w-32" />
-        <UiSkeleton class="h-12 w-2/3" />
-        <p class="flex items-center gap-2 text-sm text-muted">
-          <span
-            class="size-4 animate-spin rounded-full border-2 border-accent border-r-transparent"
-          />
-          {{ t('link.resolving') }}
-        </p>
-      </div>
-    </div>
-
-    <div
-      v-else-if="error"
-      class="mx-auto max-w-[1680px] px-4 pt-10 sm:px-6 lg:px-10"
-    >
-      <UiEmpty icon="alert" :title="t('link.failed')" :body="error">
-        <UiButton icon="refresh" @click="resolve">{{
-          t('common.retry')
-        }}</UiButton>
-      </UiEmpty>
-    </div>
-
-    <div v-else-if="details" class="animate-rise">
-      <CollectionHero
-        :title="details.name || t('link.untitled')"
-        :kicker="kicker"
-        :cover="heroCover.cover"
-        :cover-fallback="heroCover.fallback"
-        :covers="details.cover_url ? [] : mosaic"
-        :name="details.name"
-        :icon="
-          details.kind === 'artist'
-            ? 'user'
-            : details.kind === 'playlist'
-              ? 'playlist'
-              : 'disc'
-        "
-        :round="details.kind === 'artist'"
+    <Transition name="reveal">
+      <!-- Loading -->
+      <div
+        v-if="loading"
+        class="mx-auto flex max-w-[1680px] flex-col gap-8 px-4 pt-10 sm:px-6 md:flex-row md:items-end lg:px-10"
       >
-        <template #subtitle>
-          <span v-if="details.subtitle" class="line-clamp-2">{{
-            details.subtitle
-          }}</span>
-          <span v-if="details.tracks.length" class="tabular">
-            {{
-              [
-                details.year,
-                t('common.tracks', { count: details.tracks.length }),
-                lengthLabel,
-              ]
-                .filter(Boolean)
-                .join(' · ')
-            }}
-          </span>
-          <span v-else-if="details.albums.length">
-            {{ t('link.releases', { count: details.albums.length }) }}
-          </span>
-        </template>
-        <template #actions>
-          <template v-if="details.tracks.length">
-            <UiButton
-              v-if="newSongs.length"
-              variant="primary"
-              size="lg"
-              icon="download"
-              :loading="submitting"
-              @click="download(newSongs)"
-            >
-              {{
-                newSongs.length === details.tracks.length
-                  ? t('link.downloadAll', { count: newSongs.length })
-                  : t('link.downloadNew', { count: newSongs.length })
-              }}
-            </UiButton>
+        <UiSkeleton
+          class="size-48 self-center !rounded-[16px] sm:size-56 md:self-auto"
+        />
+        <div class="flex flex-1 flex-col gap-3">
+          <UiSkeleton class="h-3 w-32" />
+          <UiSkeleton class="h-12 w-2/3" />
+          <p class="flex items-center gap-2 text-sm text-muted">
             <span
-              v-else
-              class="inline-flex h-12 items-center gap-2 rounded-control bg-accent/12 px-5 text-[15px] font-semibold text-accent"
-            >
-              <AppIcon
-                :name="allInLibrary ? 'check-circle' : 'queue'"
-                :size="18"
-              />{{ t(allInLibrary ? 'link.allInLibrary' : 'link.allHandled') }}
-            </span>
-            <UiButton
-              v-if="newSongs.length && newSongs.length < details.tracks.length"
-              variant="ghost"
-              size="lg"
-              @click="download(details.tracks)"
-            >
-              {{ t('link.redownloadAll') }}
-            </UiButton>
-          </template>
-          <UiButton
-            v-if="details.kind === 'playlist' && details.tracks.length"
-            variant="primary"
-            size="lg"
-            icon="playlist"
-            :loading="savingPlaylist"
-            @click="savePlaylist"
-          >
-            {{ t('link.addPlaylist') }}
-          </UiButton>
-          <UiButton
-            v-if="watchable"
-            variant="ghost"
-            size="lg"
-            icon="radar"
-            :loading="watching"
-            @click="watch"
-          >
-            {{
-              details.kind === 'artist'
-                ? t('link.watchArtist')
-                : t('link.watchPlaylist')
-            }}
-          </UiButton>
-          <UiButton
-            v-if="details.kind === 'artist'"
-            variant="ghost"
-            size="lg"
-            icon="trending"
-            :to="{ name: 'TopSongs', query: { url } }"
-          >
-            {{ t('link.topSongs') }}
-          </UiButton>
-          <UiButton variant="plain" size="lg" icon="arrow-up-right" :href="url">
-            <span class="max-sm:sr-only">{{ sourceLabel }}</span>
-          </UiButton>
-        </template>
-      </CollectionHero>
+              class="size-4 animate-spin rounded-full border-2 border-accent border-r-transparent"
+            />
+            {{ t('link.resolving') }}
+          </p>
+        </div>
+      </div>
 
       <div
-        class="mx-auto flex max-w-[1680px] flex-col gap-6 px-4 sm:px-6 lg:px-10"
+        v-else-if="error"
+        class="mx-auto max-w-[1680px] px-4 pt-10 sm:px-6 lg:px-10"
       >
-        <!-- Tracks -->
-        <template v-if="details.tracks.length">
-          <div class="flex flex-wrap items-center gap-3">
-            <UiChips v-model="filter" :items="filters" />
-            <span v-if="selected.size" class="ml-auto flex items-center gap-2">
-              <span class="tabular text-sm text-muted">{{
-                t('library.selectedCount', { count: selected.size })
-              }}</span>
-              <UiButton
-                size="sm"
-                variant="primary"
-                icon="download"
-                @click="download(selectedSongs)"
-              >
-                {{ t('link.downloadSelected') }}
-              </UiButton>
-              <UiIconButton
-                icon="x"
-                :label="t('library.clearSelection')"
-                size="sm"
-                @click="selected = new Set()"
-              />
+        <UiEmpty icon="alert" :title="t('link.failed')" :body="error">
+          <UiButton icon="refresh" @click="resolve">{{
+            t('common.retry')
+          }}</UiButton>
+        </UiEmpty>
+      </div>
+
+      <div v-else-if="details">
+        <CollectionHero
+          :title="details.name || t('link.untitled')"
+          :kicker="kicker"
+          :cover="heroCover.cover"
+          :cover-fallback="heroCover.fallback"
+          :covers="details.cover_url ? [] : mosaic"
+          :name="details.name"
+          :icon="
+            details.kind === 'artist'
+              ? 'user'
+              : details.kind === 'playlist'
+                ? 'playlist'
+                : 'disc'
+          "
+          :round="details.kind === 'artist'"
+        >
+          <template #subtitle>
+            <span v-if="details.subtitle" class="line-clamp-2">{{
+              details.subtitle
+            }}</span>
+            <span v-if="details.tracks.length" class="tabular">
+              {{
+                [
+                  details.year,
+                  t('common.tracks', { count: details.tracks.length }),
+                  lengthLabel,
+                ]
+                  .filter(Boolean)
+                  .join(' · ')
+              }}
             </span>
-          </div>
-          <ol class="-mx-3 flex flex-col">
-            <li
-              v-for="row in visibleRows"
-              :key="row.key"
-              class="group flex h-16 items-center gap-3 rounded-[12px] px-3 transition-colors hover:bg-surface"
-              :class="selected.has(row.key) ? 'bg-accent/8' : ''"
-            >
-              <button
-                type="button"
-                role="checkbox"
-                :aria-checked="selected.has(row.key)"
-                :aria-label="t('library.selectTrack', { title: row.song.name })"
-                class="flex size-[18px] shrink-0 items-center justify-center rounded-[5px] border-[1.5px] transition-colors"
-                :class="
-                  selected.has(row.key)
-                    ? 'border-accent bg-accent text-on-accent'
-                    : 'border-line-3 hover:border-fg-3'
-                "
-                @click="toggle(row.key)"
+            <span v-else-if="details.albums.length">
+              {{ t('link.releases', { count: details.albums.length }) }}
+            </span>
+          </template>
+          <template #actions>
+            <template v-if="details.tracks.length">
+              <UiButton
+                v-if="newSongs.length"
+                variant="primary"
+                size="lg"
+                icon="download"
+                :loading="submitting"
+                @click="download(newSongs)"
+              >
+                {{
+                  newSongs.length === details.tracks.length
+                    ? t('link.downloadAll', { count: newSongs.length })
+                    : t('link.downloadNew', { count: newSongs.length })
+                }}
+              </UiButton>
+              <span
+                v-else
+                class="inline-flex h-12 items-center gap-2 rounded-control bg-accent/12 px-5 text-[15px] font-semibold text-accent"
               >
                 <AppIcon
-                  v-if="selected.has(row.key)"
-                  name="check"
-                  :size="13"
-                  stroke-width="3"
-                />
-              </button>
-              <SongPlayCell
-                :song="row.song"
-                :index="row.index"
-                :queue="playQueue"
-                :context="playContext"
-                :songs="playSongs"
-              />
-              <CoverArt
-                :src="row.song.cover_url"
-                :name="row.song.album_name || row.song.name"
-                rounded="rounded-[8px]"
-                :letter-size="14"
-                class="size-11"
-              />
-              <div class="min-w-0 flex-1">
-                <p class="truncate text-sm font-semibold">
-                  {{ row.song.name }}
-                </p>
-                <p class="truncate text-[13px] text-muted">
-                  {{ (row.song.artists || []).join(', ') || row.song.artist }}
-                </p>
-              </div>
-              <span
-                class="hidden w-[28%] truncate text-[13px] text-muted lg:block"
-                >{{ row.song.album_name }}</span
-              >
-              <span
-                class="tabular hidden w-12 text-right text-[13px] text-muted sm:block"
-              >
-                {{ row.song.duration ? formatDuration(row.song.duration) : '' }}
+                  :name="allInLibrary ? 'check-circle' : 'queue'"
+                  :size="18"
+                />{{
+                  t(allInLibrary ? 'link.allInLibrary' : 'link.allHandled')
+                }}
               </span>
-              <div class="flex w-28 shrink-0 justify-end">
-                <DownloadState :song="row.song" />
-              </div>
-            </li>
-          </ol>
-          <p
-            v-if="!visibleRows.length"
-            class="py-10 text-center text-sm text-muted"
-          >
-            {{ t('library.noMatches') }}
-          </p>
-        </template>
+              <UiButton
+                v-if="
+                  newSongs.length && newSongs.length < details.tracks.length
+                "
+                variant="ghost"
+                size="lg"
+                @click="download(details.tracks)"
+              >
+                {{ t('link.redownloadAll') }}
+              </UiButton>
+            </template>
+            <!-- Every song, as one album named after the playlist, in
+                 one folder (issue #531). -->
+            <UiButton
+              v-if="details.kind === 'playlist' && details.tracks.length"
+              variant="ghost"
+              size="lg"
+              icon="disc"
+              :loading="submitting"
+              :title="t('link.downloadAsAlbumHint')"
+              @click="download(details.tracks, { asAlbum: true })"
+            >
+              {{ t('link.downloadAsAlbum') }}
+            </UiButton>
+            <UiButton
+              v-if="details.kind === 'playlist' && details.tracks.length"
+              variant="primary"
+              size="lg"
+              icon="playlist"
+              :loading="savingPlaylist"
+              @click="savePlaylist"
+            >
+              {{ t('link.addPlaylist') }}
+            </UiButton>
+            <!-- Already watched: say so, with its page and Stop watching. -->
+            <UiMenu v-if="watchable && existingWatch" :items="watchedMenu">
+              <template #trigger>
+                <UiButton
+                  variant="ghost"
+                  size="lg"
+                  icon="check"
+                  :loading="watching"
+                >
+                  {{ t('monitor.watched') }}
+                </UiButton>
+              </template>
+            </UiMenu>
+            <UiButton
+              v-else-if="watchable"
+              variant="ghost"
+              size="lg"
+              icon="radar"
+              :loading="watching"
+              @click="watch"
+            >
+              {{
+                details.kind === 'artist'
+                  ? t('link.watchArtist')
+                  : t('link.watchPlaylist')
+              }}
+            </UiButton>
+            <UiButton
+              v-if="details.kind === 'artist'"
+              variant="ghost"
+              size="lg"
+              icon="trending"
+              :to="{ name: 'TopSongs', query: { url } }"
+            >
+              {{ t('link.topSongs') }}
+            </UiButton>
+            <UiButton
+              variant="plain"
+              size="lg"
+              icon="arrow-up-right"
+              :href="url"
+            >
+              <span class="max-sm:sr-only">{{ sourceLabel }}</span>
+            </UiButton>
+          </template>
+        </CollectionHero>
 
-        <!-- Artist releases -->
         <div
-          v-else-if="details.albums.length"
-          class="grid grid-cols-2 gap-x-5 gap-y-7 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-6"
+          class="mx-auto flex max-w-[1680px] flex-col gap-6 px-4 sm:px-6 lg:px-10"
         >
-          <ReleaseCard
-            v-for="album in details.albums"
-            :key="album.album_id || album.url"
-            :release="album"
-          />
-        </div>
+          <!-- A Spotify mix made for one listener: what Downtify reads is
+               the signed-out version, not the listener's own. -->
+          <p
+            v-if="personalMix"
+            class="flex items-start gap-3 rounded-[12px] border border-line-2 bg-surface px-4 py-3 text-[13px] text-pretty text-fg-3"
+            role="note"
+          >
+            <AppIcon
+              name="alert"
+              :size="18"
+              class="mt-0.5 shrink-0 text-warn"
+            />
+            <span>
+              <span class="font-semibold text-fg">{{
+                t('monitor.personalMixTitle')
+              }}</span>
+              {{ t('monitor.personalMixBody') }}
+            </span>
+          </p>
 
-        <UiEmpty v-else icon="search" :title="t('link.empty')" />
+          <!-- Tracks -->
+          <template v-if="details.tracks.length">
+            <div class="flex flex-wrap items-center gap-3">
+              <UiChips v-model="filter" :items="filters" />
+              <span
+                v-if="selected.size"
+                class="ml-auto flex items-center gap-2"
+              >
+                <span class="tabular text-sm text-muted">{{
+                  t('library.selectedCount', { count: selected.size })
+                }}</span>
+                <UiButton
+                  size="sm"
+                  variant="primary"
+                  icon="download"
+                  @click="download(selectedSongs)"
+                >
+                  {{ t('link.downloadSelected') }}
+                </UiButton>
+                <UiIconButton
+                  icon="x"
+                  :label="t('library.clearSelection')"
+                  size="sm"
+                  @click="selected = new Set()"
+                />
+              </span>
+            </div>
+            <ol class="-mx-3 flex flex-col">
+              <li
+                v-for="row in visibleRows"
+                :key="row.key"
+                class="group flex h-16 items-center gap-3 rounded-[12px] px-3 transition-colors hover:bg-surface"
+                :class="selected.has(row.key) ? 'bg-accent/8' : ''"
+              >
+                <button
+                  type="button"
+                  role="checkbox"
+                  :aria-checked="selected.has(row.key)"
+                  :aria-label="
+                    t('library.selectTrack', { title: row.song.name })
+                  "
+                  class="flex size-[18px] shrink-0 items-center justify-center rounded-[5px] border-[1.5px] transition-colors"
+                  :class="
+                    selected.has(row.key)
+                      ? 'border-accent bg-accent text-on-accent'
+                      : 'border-line-3 hover:border-fg-3'
+                  "
+                  @click="toggle(row.key)"
+                >
+                  <AppIcon
+                    v-if="selected.has(row.key)"
+                    name="check"
+                    :size="13"
+                    stroke-width="3"
+                  />
+                </button>
+                <SongPlayCell
+                  :song="row.song"
+                  :index="row.index"
+                  :queue="playQueue"
+                  :context="playContext"
+                  :songs="playSongs"
+                />
+                <CoverArt
+                  :src="row.song.cover_url"
+                  :name="row.song.album_name || row.song.name"
+                  rounded="rounded-[8px]"
+                  :letter-size="14"
+                  class="size-11"
+                />
+                <div class="min-w-0 flex-1">
+                  <p class="truncate text-sm font-semibold">
+                    {{ row.song.name }}
+                  </p>
+                  <p class="truncate text-[13px] text-muted">
+                    {{ (row.song.artists || []).join(', ') || row.song.artist }}
+                  </p>
+                </div>
+                <span
+                  class="hidden w-[28%] truncate text-[13px] text-muted lg:block"
+                  >{{ row.song.album_name }}</span
+                >
+                <span
+                  class="tabular hidden w-12 text-right text-[13px] text-muted sm:block"
+                >
+                  {{
+                    row.song.duration ? formatDuration(row.song.duration) : ''
+                  }}
+                </span>
+                <div class="flex w-28 shrink-0 justify-end">
+                  <DownloadState :song="row.song" />
+                </div>
+              </li>
+            </ol>
+            <p
+              v-if="!visibleRows.length"
+              class="py-10 text-center text-sm text-muted"
+            >
+              {{ t('library.noMatches') }}
+            </p>
+          </template>
+
+          <!-- Artist releases -->
+          <div
+            v-else-if="details.albums.length"
+            class="grid grid-cols-2 gap-x-5 gap-y-7 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-6"
+          >
+            <ReleaseCard
+              v-for="album in details.albums"
+              :key="album.album_id || album.url"
+              :release="album"
+            />
+          </div>
+
+          <UiEmpty v-else icon="search" :title="t('link.empty')" />
+        </div>
       </div>
-    </div>
+    </Transition>
   </div>
 </template>
 
@@ -265,6 +329,7 @@ import UiButton from '/src/components/ui/UiButton.vue'
 import UiChips from '/src/components/ui/UiChips.vue'
 import UiEmpty from '/src/components/ui/UiEmpty.vue'
 import UiIconButton from '/src/components/ui/UiIconButton.vue'
+import UiMenu from '/src/components/ui/UiMenu.vue'
 import UiSkeleton from '/src/components/ui/UiSkeleton.vue'
 import CollectionHero from '/src/components/library/CollectionHero.vue'
 import { knownArtistPhoto } from '/src/lib/artistPhotoProxy'
@@ -282,7 +347,11 @@ import { useLibrary } from '/src/model/library'
 import { usePlaylistActions } from '/src/model/playlistActions'
 import { songDownloadState } from '/src/lib/downloadState'
 import { useUi } from '/src/model/ui'
+import { useAuth } from '/src/model/auth'
 import { classifyInput } from '/src/lib/input'
+import { findWatch } from '/src/lib/watchMatch'
+import { watchRouteFor } from '/src/lib/watchStats'
+import { confirmWatchMix, isPersonalMix } from '/src/lib/spotifyMix'
 import { playableQueue } from '/src/lib/topSongs'
 import { formatDuration, splitLength } from '/src/lib/format'
 import { requestErrorText } from '/src/lib/httpError'
@@ -296,6 +365,7 @@ const tracker = useProgressTracker()
 const library = useLibrary()
 const playlistActions = usePlaylistActions()
 const ui = useUi()
+const auth = useAuth()
 
 const details = ref(null)
 // An artist link's photo: the one saved in the library when there is one,
@@ -311,6 +381,8 @@ const loading = ref(false)
 const error = ref('')
 const submitting = ref(false)
 const watching = ref(false)
+// This user's watch of the link (or, for an artist, of their name).
+const existingWatch = ref(null)
 const savingPlaylist = ref(false)
 const filter = ref('all')
 const selected = ref(new Set())
@@ -323,12 +395,14 @@ async function resolve() {
   loading.value = true
   error.value = ''
   details.value = null
+  existingWatch.value = null
   selected.value = new Set()
   filter.value = 'all'
   try {
     const res = await API.resolveUrl(url.value)
     details.value = res.data
     library.lookupSongs(res.data?.tracks || [])
+    lookupWatch()
   } catch (err) {
     error.value = requestErrorText(err, {
       gatewayText: t('link.serverFailed'),
@@ -391,6 +465,10 @@ const watchable = computed(
     (kind.value.source !== 'deezer' || details.value?.kind === 'playlist')
 )
 
+const personalMix = computed(
+  () => details.value?.kind === 'playlist' && isPersonalMix(url.value)
+)
+
 const mosaic = computed(() =>
   [
     ...new Set(
@@ -420,10 +498,18 @@ function keyOf(song, index) {
 function statusOf(song) {
   tracker.queueVersion.value
   const artist = (song.artists || [])[0] || song.artist
-  const state = songDownloadState(
-    tracker.getBySong(song),
-    library.hasSong(artist, song.name)
-  )
+  // On an album, a song only counts as in the library when it's there on
+  // this album: one it has from another release (a greatest hits, a
+  // single) is still offered, so the album can be completed (#546).
+  const inLibrary =
+    details.value?.kind === 'album'
+      ? library.hasSongOnAlbum(
+          artist,
+          song.name,
+          song.album_name || details.value.name
+        )
+      : library.hasSong(artist, song.name)
+  const state = songDownloadState(tracker.getBySong(song), inLibrary)
   // Every queue state shows the same neutral chip here; a song that is
   // neither queued nor in the library is downloadable.
   return state === 'library' || state === 'new' ? state : 'queue'
@@ -504,7 +590,7 @@ function toggle(key) {
   selected.value = next
 }
 
-async function download(songs) {
+async function download(songs, { asAlbum = false } = {}) {
   if (!songs.length) return
   submitting.value = true
   try {
@@ -517,6 +603,9 @@ async function download(songs) {
     }))
     const count = await dm.fromSongs(withOrder, {
       playlistUrl: isPlaylist ? url.value : '',
+      ...(asAlbum
+        ? { asAlbum: true, coverUrl: details.value.cover_url || '' }
+        : {}),
     })
     selected.value = new Set()
     ui.toast(t('toast.queuedTracks', { count, name: details.value.name }), {
@@ -535,10 +624,67 @@ async function download(songs) {
   }
 }
 
-async function watch() {
+// Whether this user already watches the link; a failed lookup leaves the
+// Watch button (the server refuses a second watch anyway).
+async function lookupWatch() {
+  const shown = details.value
+  if (!watchable.value) return
+  try {
+    const { data } = await monitorAPI.listMonitoredPlaylists()
+    if (details.value !== shown) return
+    existingWatch.value = findWatch(data, {
+      kind: shown.kind,
+      url: url.value,
+      name: shown.kind === 'artist' ? shown.name : '',
+      userId: auth.user.value?.id ?? null,
+    })
+  } catch {
+    /* keep offering to watch */
+  }
+}
+
+const watchedMenu = computed(() => [
+  {
+    label: t('watchStats.details'),
+    icon: 'activity',
+    action: () => router.push(watchRouteFor(existingWatch.value)),
+  },
+  { divider: true },
+  {
+    label: t('monitor.stop'),
+    icon: 'trash',
+    danger: true,
+    action: stopWatching,
+  },
+])
+
+async function stopWatching() {
+  const target = existingWatch.value
+  if (!target?.id) return
+  const ok = await ui.confirm({
+    title: t('confirm.stopWatchingTitle', { name: target.name }),
+    body: t('confirm.stopWatchingBody'),
+    confirmLabel: t('monitor.stop'),
+    danger: true,
+  })
+  if (!ok) return
   watching.value = true
   try {
-    await monitorAPI.addMonitoredPlaylist(url.value, 360)
+    await monitorAPI.deleteMonitoredPlaylist(target.id)
+    if (existingWatch.value === target) existingWatch.value = null
+  } catch {
+    ui.toast(t('toast.actionFailed'), { kind: 'error' })
+  } finally {
+    watching.value = false
+  }
+}
+
+async function watch() {
+  if (!(await confirmWatchMix(url.value, { ui, t }))) return
+  watching.value = true
+  try {
+    const res = await monitorAPI.addMonitoredPlaylist(url.value, 360)
+    if (res?.data?.id) existingWatch.value = res.data
     ui.toast(t('toast.watching', { name: details.value.name }), {
       kind: 'success',
       action: {
@@ -556,6 +702,8 @@ async function watch() {
     ui.toast(err?.response?.data?.detail || t('toast.actionFailed'), {
       kind: 'error',
     })
+    // Watched already (another tab, or under another link): show it.
+    if (err?.response?.status === 409) lookupWatch()
   } finally {
     watching.value = false
   }

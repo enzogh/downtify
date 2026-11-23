@@ -8,6 +8,8 @@ Castify mantiene un pequeño **catálogo** de los archivos bajo `/downloads` (la
 
 ## Qué se guarda
 
+Las ubicaciones siguientes se aplican al backend SQLite predeterminado. Con PostgreSQL ([Base de datos](../database.md)), los mismos datos se guardan en la base de datos PostgreSQL.
+
 | Almacén | Ubicación | Finalidad |
 |-------|----------|---------|
 | **Índice de canciones** | `/data/downtify_library.db` | Asocia ids de canción de Spotify con rutas de la biblioteca, para reconocer una canción que ya está en disco |
@@ -81,6 +83,8 @@ Al lado, unos filtros acotan la lista. Cada uno muestra cuántas canciones tiene
 | **Fallidas** | Las canciones que faltan cuya descarga falló, cada una con el botón de reintentar, una vez consultado **Faltan** |
 | **YouTube Music**, **Soulseek (slskd)**, **Deemix**… | Las canciones que descargó esa fuente. Castify lo recuerda para las canciones descargadas desde ahora; las anteriores cuentan como **Origen desconocido**, salvo los archivos de slskd dejados en su sitio y las canciones de tus propias carpetas |
 | **Fuera de Navidrome** | Con la [sincronización con Navidrome](slskd-navidrome.md) activada, las canciones que Castify aún no ha emparejado con una canción de Navidrome |
+
+Una canción puede faltar en la lista aunque tu biblioteca ya la tenga: una descarga antigua guardada con otro nombre, o un archivo de una de tus [carpetas de música existentes](external-library.md). **Faltan** indica entonces cuántas de sus canciones ya están en tu biblioteca y ofrece **Añadir … de la biblioteca** (con el número), que las añade a la lista (y a su M3U y a la lista de Navidrome) sin descargar nada. Una canción se añade cuando un archivo de la biblioteca tiene el mismo ISRC, o el mismo artista principal y título y una duración con menos de 3 segundos de diferencia, así que una versión en directo o un remix no cuentan. Con **Descargar de nuevo si el archivo existe** desactivado, **Descargar … faltantes** hace lo mismo primero y solo descarga el resto, y la descarga de una lista de Spotify añade al terminar las canciones que ya tenías.
 
 La búsqueda y un filtro funcionan juntos, y el número de canciones mostradas aparece debajo. Cada canción conserva su número en la playlist, y ordenar, reproducir y el menú de cada canción actúan sobre lo que se muestra.
 

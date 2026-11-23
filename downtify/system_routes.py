@@ -88,6 +88,16 @@ from .navidrome import (
 from .slskd_provider import (
     reset_slskd_parallelism,
 )
+from fastapi.responses import JSONResponse
+from .api_core import _clamp_cover_min_resolution
+from .api_core import _default_musicbrainz_kinds
+from . import backup
+from . import cookie_refresh
+from .db import runtime as db_runtime
+from . import navidrome_ratings
+from .audio_formats import normalize_formats
+from .api_core import request_is_admin
+from .api_core import spawn_task
 
 
 def _clamp_retry_budget(value: Any) -> int:
@@ -138,15 +148,29 @@ def get_version() -> str:
 
 
 @router.get('/api/health')
-def get_health() -> dict[str, Any]:
+def get_health() -> Any:
     """Liveness probe: the process is up and FastAPI is serving requests.
 
     Deliberately doesn't check the downloader/monitor DB — those are
     only set up once ``main.py``'s startup hook finishes, so gating
     health on them would report unhealthy during the brief, normal
     window right after boot. Docker's ``HEALTHCHECK`` already has a
-    ``--start-period`` for that; this endpoint just needs to answer.
+    ``--start-period`` for that.
+
+    The one exception is a PostgreSQL server that cannot be reached:
+    then the answer is ``503`` (``database_unavailable``). On SQLite
+    ``healthcheck()`` is ``None`` and nothing changes. Runs as a plain
+    ``def`` handler, so FastAPI keeps the ``select 1`` off the loop.
     """
+    try:
+        db_ok = db_runtime.healthcheck()
+    except Exception:
+        logger.opt(exception=True).debug('Database healthcheck failed')
+        db_ok = False
+    if db_ok is False:
+        return JSONResponse(
+            {'status': 'database_unavailable'}, status_code=503
+        )
     return {'status': 'ok', 'version': state.version}
 
 
@@ -208,7 +232,23 @@ async def upload_cookies_endpoint(request: Request) -> dict[str, Any]:
         raise HTTPException(
             status_code=500, detail=f'Could not save the file: {exc}'
         ) from exc
+    # Tell the settings page right away whether the new jar is signed in,
+    # instead of waiting for the next keep-alive run.
+    spawn_task(
+        asyncio.to_thread(cookie_refresh.refresh_cookies, store),
+        name='cookie-check-after-upload',
+    )
     return {**store.status(), 'warnings': warnings}
+
+
+@router.post('/api/cookies/check')
+async def check_cookies_endpoint() -> dict[str, Any]:
+    """Run the cookie keep-alive now: rotate the session cookies, save the
+    new values and report whether YouTube still sees a signed-in account
+    (``health`` in the answer - see ``downtify/cookie_refresh.py``)."""
+    store = _require_cookies_store()
+    await asyncio.to_thread(cookie_refresh.refresh_cookies, store)
+    return store.status()
 
 
 @router.delete('/api/cookies')
@@ -310,6 +350,24 @@ async def update_settings_endpoint(
                 state.settings[key] = _clamp_download_delay(raw_value)
             elif key == 'cover_resolution':
                 state.settings[key] = _clamp_cover_resolution(raw_value)
+            elif key == 'cover_min_resolution':
+                state.settings[key] = _clamp_cover_min_resolution(raw_value)
+            elif key == 'backup_interval_hours':
+                state.settings[key] = backup.clamp_interval(raw_value)
+            elif key == 'artist_watch_musicbrainz_kinds':
+                state.settings[key] = _default_musicbrainz_kinds(
+                    raw_value, state.settings.get(key)
+                )
+            elif key in {
+                'cover_largest',
+                'artist_watch_deezer',
+                'artist_watch_musicbrainz',
+                'artist_watch_complete_albums',
+                'aurral_enabled',
+                'per_user_library',
+                'discover_navidrome_plays',
+            }:
+                state.settings[key] = raw_value is True
             elif key == 'ui_language':
                 # Not a language code: the saved one stays.
                 state.settings[key] = _clean_ui_language(raw_value) or (
@@ -325,6 +383,17 @@ async def update_settings_endpoint(
                 }
             elif key == 'navidrome':
                 state.settings[key] = navidrome_cfg
+            elif key == 'avoid_formats':
+                state.settings[key] = normalize_formats(
+                    raw_value,
+                    exclude=[
+                        payload.get('format') or state.settings['format']
+                    ],
+                )
+            elif key == 'navidrome_ratings':
+                state.settings[key] = navidrome_ratings.effective_settings(
+                    raw_value
+                )
             elif key == 'deemix':
                 state.settings[key] = deemix_cfg
             elif key == 'external_library':
@@ -343,6 +412,12 @@ async def update_settings_endpoint(
             state.settings['audio_providers'] = _effective_audio_providers(
                 state.settings
             )
+        if 'format' in payload:
+            # The Downloads format can't be one to avoid.
+            state.settings['avoid_formats'] = normalize_formats(
+                state.settings.get('avoid_formats'),
+                exclude=[state.settings['format']],
+            )
         if state.downloader is not None:
             state.downloader.deemix_settings = deemix_cfg
             if {
@@ -350,6 +425,8 @@ async def update_settings_endpoint(
                 'slskd',
                 'deemix',
                 'max_parallel_downloads',
+                'avoid_formats',
+                'format',
             } & set(payload):
                 state.downloader.slskd_settings = (
                     state.downloader._normalize_slskd_settings(
@@ -377,6 +454,10 @@ async def update_settings_endpoint(
                 state.downloader.lyrics_providers = (
                     _effective_lyrics_providers(state.settings)
                 )
+            if 'lyrics_synced_only' in payload:
+                state.downloader.lyrics_synced_only = bool(
+                    state.settings.get('lyrics_synced_only')
+                )
             if 'organize_by_artist' in payload:
                 state.downloader.organize_by_artist = bool(
                     payload['organize_by_artist']
@@ -388,6 +469,18 @@ async def update_settings_endpoint(
             if 'download_cover_art' in payload:
                 state.downloader.download_cover_art = bool(
                     payload['download_cover_art']
+                )
+            if 'cover_min_resolution' in payload:
+                state.downloader.cover_min_resolution = state.settings[
+                    'cover_min_resolution'
+                ]
+            if 'cover_largest' in payload:
+                state.downloader.cover_largest = state.settings[
+                    'cover_largest'
+                ]
+            if 'write_isrc' in payload:
+                state.downloader.write_isrc = bool(
+                    state.settings['write_isrc']
                 )
             if 'overwrite_existing_files' in payload:
                 state.downloader.overwrite_existing_files = bool(
@@ -410,6 +503,8 @@ async def update_settings_endpoint(
             reset_slskd_parallelism(_effective_slskd_settings(state.settings))
         if 'cover_resolution' in payload:
             providers.set_cover_resolution(state.settings['cover_resolution'])
+        if 'cover_min_resolution' in payload:
+            providers.set_cover_minimum(state.settings['cover_min_resolution'])
         if 'external_library' in payload:
             invalidate_library_paths_cache()
             _unmap_removed_extra_folders(previous, state.settings)
@@ -577,3 +672,32 @@ async def announce_devices(user_id: int) -> None:
         )
     except Exception:
         logger.opt(exception=True).debug('Could not announce devices')
+
+
+@router.get('/api/slskd/misses')
+def slskd_misses_summary(request: Request) -> dict[str, Any]:
+    """Why downloads didn't come from slskd: counts per reason, what was
+    used instead, and the latest songs (admins only)."""
+
+    if not request_is_admin(request):
+        raise HTTPException(status_code=403, detail='Admins only')
+    store = state.slskd_misses
+    if store is None:
+        return {
+            'total': 0,
+            'since': None,
+            'reasons': [],
+            'fallbacks': {},
+            'recent': [],
+        }
+    return store.summary()
+
+
+@router.delete('/api/slskd/misses')
+def slskd_misses_reset(request: Request) -> dict[str, Any]:
+    """Start the count over (after changing a setting, say)."""
+
+    if not request_is_admin(request):
+        raise HTTPException(status_code=403, detail='Admins only')
+    store = state.slskd_misses
+    return {'removed': store.reset() if store is not None else 0}

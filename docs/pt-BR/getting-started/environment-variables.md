@@ -16,6 +16,25 @@ Todas as variáveis de ambiente são opcionais. O Castify funciona de imediato s
 | `DOWNTIFY_LOG_LEVEL` | `info` | Nível de log da aplicação (`debug`, `info`, `warning`, …). |
 | `TZ` | `UTC` | Fuso horário local (nome IANA, por exemplo `America/Sao_Paulo`), usado para interpretar `DOWNTIFY_MONITOR_SYNC_TIME` abaixo. |
 
+## Banco de dados
+
+Por padrão, o Downtify guarda os dados em arquivos SQLite dentro de `DATABASE_DIR`. Defina `DATABASE_URL` para usar PostgreSQL; a página [Banco de dados](../database.md) cobre a configuração, as migrações e o que fica em cada lugar.
+
+| Variável | Padrão | Descrição |
+|----------|---------|-----------|
+| `DATABASE_URL` | _(não definida)_ | URL de conexão do PostgreSQL, `postgresql://usuario:senha@host:5432/nomedobanco` (`postgres://` também funciona). Não definida: SQLite. Definida: as stores que seriam arquivos SQLite (biblioteca, monitor, contas, atividade, doctor) passam a usar PostgreSQL. Um valor com outro esquema é rejeitado. A URL nunca aparece em mensagens de erro. |
+| `DB_POOL_MIN` | `2` | Conexões que o pool do PostgreSQL mantém abertas. Deve ser `0` ou mais. |
+| `DB_POOL_MAX` | `20` | Número máximo de conexões que o pool do PostgreSQL abre. Deve ser pelo menos `1` e pelo menos `DB_POOL_MIN`. |
+| `DB_POOL_TIMEOUT` | `10` | Segundos que uma requisição espera por uma conexão livre antes de falhar. |
+| `DB_SEARCH_PATH` | _(não definida)_ | Schema do PostgreSQL a usar, para um banco compartilhado com outras aplicações. Apenas um identificador simples: letras, dígitos e underscores, sem começar com dígito. Não definida: o padrão do servidor (`public`). |
+| `DATABASE_DIR` | `/data` | Diretório das configurações, caches e dos arquivos SQLite. Continua em uso com PostgreSQL, para tudo que não é tabela do banco. |
+| `POSTGRES_PASSWORD` | `downtify` | Somente Docker Compose (lida pelo `docker-compose.yml` do repositório, não pelo servidor): a senha do usuário `downtify` no serviço `postgres` incluído, que o `DATABASE_URL` também usa. Coloque-a em um arquivo `.env` ao lado do Compose antes da primeira inicialização. O PostgreSQL só a aplica ao criar o volume de dados, então mudá-la depois não altera a senha de um banco existente. |
+
+```yaml
+environment:
+  - DATABASE_URL=postgresql://downtify:change-me@postgres:5432/downtify
+```
+
 ## Monitor de playlists
 
 | Variável | Padrão | Descrição |
@@ -68,7 +87,7 @@ Veja [Lixeira de músicas](../features/music-trash.md). Desligada, a menos que u
 
 ## Verificação de saúde
 
-A imagem tem um [`HEALTHCHECK` do Docker](https://docs.docker.com/reference/dockerfile/#healthcheck) integrado — não é preciso um `--health-cmd` próprio. Ele consulta `GET /api/health` na porta do próprio contêiner a cada 30 segundos (timeout de 5 segundos, carência de 20 segundos na inicialização, 3 tentativas antes de marcar o contêiner como não saudável). `docker ps` e `docker inspect` mostram o resultado, e ferramentas como o `condition: service_healthy` do Compose ou o Watchtower podem agir com base nele.
+A imagem tem um [`HEALTHCHECK` do Docker](https://docs.docker.com/reference/dockerfile/#healthcheck) integrado — não é preciso um `--health-cmd` próprio. Ele consulta `GET /api/health` na porta do próprio contêiner a cada 30 segundos (timeout de 5 segundos, carência de 20 segundos na inicialização, 3 tentativas antes de marcar o contêiner como não saudável). `docker ps` e `docker inspect` mostram o resultado, e ferramentas como o `condition: service_healthy` do Compose ou o Watchtower podem agir com base nele. Com PostgreSQL, a verificação também falha enquanto o banco não puder ser alcançado (`503`, veja [`GET /api/health`](../api-reference.md#get-apihealth)).
 
 | Variável | Padrão | Descrição |
 |----------|---------|-------------|
@@ -94,6 +113,7 @@ O YouTube desafia periodicamente baixadores automatizados. Estas variáveis dão
 | `DOWNTIFY_IP_ROTATE_URL` | _(unset)_ | Endpoint para o qual o Castify faz um `POST` pedindo um novo IP de saída quando o YouTube bloqueia o atual com "Sign in to confirm you're not a bot" — ex.: `http://warp:8081/rotate`, servido por `contrib/warp-control` dentro de um contêiner Cloudflare WARP. O download ou stream bloqueado é repetido com o novo IP (até 3 IPs novos cada, 30 por hora), então o usuário nunca vê o erro. Downloads paralelos bloqueados juntos compartilham uma rotação. |
 | `DOWNTIFY_IP_ROTATE_TOKEN` | _(unset)_ | Enviado como `Authorization: Bearer <token>` para `DOWNTIFY_IP_ROTATE_URL` (o `WARP_CONTROL_TOKEN` do `contrib/warp-control`). |
 | `DOWNTIFY_COOKIES_FILE` | _(não definida)_ | Caminho de um `cookies.txt` em formato Netscape **dentro do contêiner**. Permite ao yt-dlp se autenticar como uma sessão real de navegador — necessário para faixas explícitas/com restrição de idade e sempre que o YouTube impõe uma barreira de login. Tem precedência sobre um arquivo enviado na interface web e deixa essa seção da interface somente leitura. Veja [Cookies do YouTube](../features/youtube-cookies.md). |
+| `DOWNTIFY_COOKIES_REFRESH_MINUTES` | `15` | De quanto em quanto tempo, em minutos (`5`–`1440`), a manutenção dos cookies renova e salva os cookies de sessão do YouTube. `0` desativa. Renova o arquivo enviado ou o de `DOWNTIFY_COOKIES_FILE` (quando é gravável). Veja [Mantendo-os funcionando](../features/youtube-cookies.md#keeping-them-working). |
 | `DOWNTIFY_COOKIES_FROM_BROWSER` | _(não definida)_ | Nome do navegador de onde extrair os cookies (por exemplo `chrome`, `firefox`). Exige que o armazenamento de cookies do navegador esteja acessível dentro do contêiner, então raramente é utilizável no Docker. |
 
 ::: tip Você provavelmente não precisa delas
@@ -111,7 +131,7 @@ services:
     volumes:
       - ./downloads:/downloads
       - downtify_data:/data
-      - ./cookies.txt:/cookies.txt:ro
+      - ./cookies.txt:/cookies.txt
     environment:
       - DOWNTIFY_FORCE_IPV4=1
       - DOWNTIFY_COOKIES_FILE=/cookies.txt
