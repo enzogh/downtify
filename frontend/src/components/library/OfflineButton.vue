@@ -5,10 +5,11 @@
     :icon="icon"
     :loading="busy"
     :class="saved && !job ? 'text-accent' : ''"
-    :title="hint"
+    :title="hint || label"
     @click="onClick"
   >
-    {{ label }}
+    <!-- An icon on a phone, where the header's buttons share one row. -->
+    <span class="max-sm:sr-only">{{ label }}</span>
   </UiButton>
 </template>
 

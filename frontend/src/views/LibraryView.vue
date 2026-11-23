@@ -8,9 +8,10 @@
       <UiButton
         variant="primary"
         icon="plus"
+        :title="t('playlists.create')"
         @click="playlistActions.openCreate()"
       >
-        {{ t('playlists.create') }}
+        <span class="max-sm:sr-only">{{ t('playlists.create') }}</span>
       </UiButton>
       <!-- Songs kept on this device, for listening without a network:
            a button of its own, not buried in the menu. -->
@@ -451,10 +452,17 @@ function artistCover(item) {
   )
 }
 
+// Mobile first: on a phone, playlists start as a list (Spotify's "Your
+// Library"), where a grid shows two big tiles per row; the choice made
+// with the switch is kept either way.
+const onPhone =
+  typeof window !== 'undefined' &&
+  typeof window.matchMedia === 'function' &&
+  window.matchMedia('(max-width: 639px)').matches
 const views = useLocalStorage('downtify-library-views', {
   albums: 'grid',
   artists: 'grid',
-  playlists: 'grid',
+  playlists: onPhone ? 'list' : 'grid',
 })
 const view = computed({
   get: () => views.value[tab.value] || 'grid',

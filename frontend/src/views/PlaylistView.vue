@@ -61,35 +61,10 @@
             v-if="playlist.canEditTracks"
             variant="secondary"
             icon="plus"
+            :title="t('playlists.addSongs')"
             @click="playlistActions.openAddSongs(playlist)"
           >
-            {{ t('playlists.addSongs') }}
-          </UiButton>
-          <UiButton
-            v-if="playlist.manual && playlist.mine && !playlist.liked"
-            variant="ghost"
-            icon="upload"
-            :disabled="coverBusy"
-            @click="coverPicker?.click()"
-          >
-            {{ t('playlists.uploadCover') }}
-          </UiButton>
-          <UiButton
-            v-if="playlist.manual && playlist.mine && playlist.explicitCover"
-            variant="ghost"
-            icon="trash"
-            :disabled="coverBusy"
-            @click="removeCover"
-          >
-            {{ t('playlists.removeCover') }}
-          </UiButton>
-          <UiButton
-            v-if="!playlist.liked && playlist.mine"
-            variant="ghost"
-            icon="pencil"
-            @click="playlistActions.openRename(playlist)"
-          >
-            {{ t('playlists.rename') }}
+            <span class="max-sm:sr-only">{{ t('playlists.addSongs') }}</span>
           </UiButton>
           <UiButton
             v-if="!playlist.mine && playlist.visibility === 'public'"
@@ -102,14 +77,6 @@
             }}
           </UiButton>
           <UiButton
-            v-if="!playlist.mine"
-            variant="secondary"
-            icon="copy"
-            @click="playlistActions.copy(playlist)"
-          >
-            {{ t('sharing.saveCopy') }}
-          </UiButton>
-          <UiButton
             v-if="canShare"
             variant="ghost"
             :icon="
@@ -119,26 +86,10 @@
                   ? 'users'
                   : 'share'
             "
+            :title="t('sharing.share')"
             @click="playlistActions.openShare(playlist)"
           >
-            {{ t('sharing.share') }}
-          </UiButton>
-          <UiButton
-            v-if="canDetach"
-            variant="ghost"
-            icon="link"
-            @click="playlistActions.detach(playlist)"
-          >
-            {{ t('sharing.detach') }}
-          </UiButton>
-          <UiButton
-            v-if="playlist.tracks.length"
-            variant="ghost"
-            icon="zip"
-            class="max-sm:hidden"
-            @click="actions.downloadZip(playlist.tracks)"
-          >
-            {{ t('library.downloadZip') }}
+            <span class="max-sm:sr-only">{{ t('sharing.share') }}</span>
           </UiButton>
           <UiMenu :items="menu" :label="t('common.more')" size="lg" />
         </template>
@@ -760,14 +711,6 @@ const canShare = computed(
     !playlist.value.liked &&
     account.playlistSharing.value
 )
-// An imported playlist can be turned into an editable one.
-const canDetach = computed(
-  () =>
-    playlist.value?.mine &&
-    !playlist.value.liked &&
-    !playlist.value.manual &&
-    playlist.value.fileCount > 0
-)
 
 // Songs are hidden from the user's own imported playlists (a Library one
 // is edited instead).
@@ -879,9 +822,31 @@ async function removeCover() {
   }
 }
 
-const menu = computed(() =>
-  playlistActions.menuFor(playlist.value).map((item) =>
-    item.icon === 'trash'
+// The page's own cover actions join the playlist's menu, before
+// "Delete": the header keeps to what is used all the time.
+const coverItems = computed(() => {
+  const own = playlist.value?.manual && playlist.value?.mine
+  if (!own || playlist.value.liked) return []
+  return [
+    {
+      label: t('playlists.uploadCover'),
+      icon: 'upload',
+      disabled: coverBusy.value,
+      action: () => coverPicker.value?.click(),
+    },
+    {
+      label: t('playlists.removeCover'),
+      icon: 'trash',
+      hidden: !playlist.value.explicitCover,
+      disabled: coverBusy.value,
+      action: removeCover,
+    },
+  ]
+})
+
+const menu = computed(() => {
+  const items = playlistActions.menuFor(playlist.value).map((item) =>
+    item.danger && item.icon === 'trash'
       ? {
           ...item,
           action: async () => {
@@ -892,7 +857,11 @@ const menu = computed(() =>
         }
       : item
   )
-)
+  if (!coverItems.value.length) return items
+  const danger = items.findIndex((item) => item.danger)
+  const at = danger > 0 && items[danger - 1].divider ? danger - 1 : items.length
+  return [...items.slice(0, at), ...coverItems.value, ...items.slice(at)]
+})
 
 async function loadMissing() {
   if (!batch.value) return

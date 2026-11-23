@@ -1,6 +1,6 @@
 <template>
   <aside
-    class="sticky top-0 h-dvh shrink-0 flex-col gap-7 overflow-y-auto border-r border-line bg-side px-3 py-6 transition-[width] duration-300 ease-out-soft"
+    class="sticky top-0 h-dvh shrink-0 flex-col gap-5 overflow-hidden border-r border-line bg-side px-3 py-6 transition-[width] duration-300 ease-out-soft"
     :class="collapsed ? 'w-[72px]' : 'w-[72px] xl:w-[248px] xl:px-4'"
   >
     <div class="flex items-center gap-2.5 px-2.5">
@@ -52,103 +52,98 @@
       </RouterLink>
     </nav>
 
-    <div
-      v-if="recentPlaylists.length"
-      class="flex flex-col gap-1"
-      :class="labelClass"
+    <!-- Your playlists, as on Spotify: the one part that scrolls, so the
+         pages above and the account below always stay in reach. Narrow
+         (tablet, or collapsed) it keeps the covers, named on hover. -->
+    <section
+      class="-mx-1 flex min-h-0 flex-1 flex-col border-t border-line pt-4"
+      :aria-label="t('nav.playlists')"
     >
-      <div class="flex items-center justify-between px-3 pb-1.5">
-        <span class="eyebrow">{{ t('nav.playlists') }}</span>
-        <RouterLink
-          :to="{ name: 'Library', params: { tab: 'playlists' } }"
-          class="text-xs font-semibold text-faint hover:text-fg"
-          >{{ t('common.seeAll') }}</RouterLink
-        >
-      </div>
-      <RouterLink
-        v-for="playlist in recentPlaylists"
-        :key="playlist.key"
-        :to="{ name: 'Playlist', query: { name: playlist.name } }"
-        class="flex h-11 items-center gap-2.5 rounded-control px-3 transition-colors hover:bg-surface-2/60"
+      <div
+        class="flex items-center gap-1 px-3 pb-2"
         :class="
-          dropTarget === playlist.key
-            ? 'bg-accent/15 ring-2 ring-accent ring-inset'
-            : ''
+          collapsed ? 'justify-center' : 'justify-center xl:justify-between'
         "
-        @dragover="onDragOver($event, playlist)"
-        @dragleave="onDragLeave(playlist)"
-        @drop="onDrop($event, playlist)"
       >
-        <CoverArt
-          :thumb="150"
-          :src="playlist.cover"
-          :covers="playlist.covers"
-          :name="playlist.title"
-          rounded="rounded-[7px]"
-          :letter-size="13"
-          :icon-size="14"
-          :icon="playlist.liked ? 'heart' : 'playlist'"
-          :symbol="playlist.liked"
-          class="size-[30px]"
-        />
-        <span class="flex min-w-0 flex-col">
-          <span class="truncate text-[13px] font-medium text-fg-2">{{
-            playlist.title
-          }}</span>
-          <span class="tabular text-[11px] text-faint">{{
-            t('common.tracks', { count: itemTrackCount(playlist) })
-          }}</span>
-        </span>
-      </RouterLink>
-    </div>
-
-    <div
-      v-if="sharedNav.length"
-      class="flex flex-col gap-1"
-      :class="labelClass"
-    >
-      <div class="flex items-center justify-between px-3 pb-1.5">
-        <span class="eyebrow">{{ t('sharing.navTitle') }}</span>
         <RouterLink
           :to="{ name: 'Library', params: { tab: 'playlists' } }"
-          class="text-xs font-semibold text-faint hover:text-fg"
-          >{{ t('common.seeAll') }}</RouterLink
+          class="eyebrow hover:text-fg"
+          :class="labelClass"
+          >{{ t('nav.playlists') }}</RouterLink
         >
+        <button
+          type="button"
+          class="press transition-press flex size-8 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface-2 hover:text-fg"
+          :title="t('playlists.create')"
+          :aria-label="t('playlists.create')"
+          @click="playlistActions.openCreate()"
+        >
+          <AppIcon name="plus" :size="18" />
+        </button>
       </div>
-      <RouterLink
-        v-for="playlist in sharedNav"
-        :key="playlist.key"
-        :to="{ name: 'Playlist', query: { name: playlist.name } }"
-        class="flex h-11 items-center gap-2.5 rounded-control px-3 transition-colors hover:bg-surface-2/60"
+      <div
+        class="flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto overscroll-contain px-1 pb-2 [scrollbar-width:thin]"
       >
-        <CoverArt
-          :thumb="150"
-          :src="playlist.cover"
-          :covers="playlist.covers"
-          :name="playlist.title"
-          rounded="rounded-[7px]"
-          :letter-size="13"
-          :icon-size="14"
-          icon="playlist"
-          class="size-[30px]"
-        />
-        <span class="flex min-w-0 flex-col">
-          <span class="truncate text-[13px] font-medium text-fg-2">{{
-            playlist.title
-          }}</span>
-          <span class="truncate text-[11px] text-faint">{{
-            playlist.owner
-          }}</span>
-        </span>
-        <span
-          v-if="playlist.isNew"
-          class="ml-auto size-2 shrink-0 rounded-full bg-accent"
-          :title="t('sharing.new')"
-        />
-      </RouterLink>
-    </div>
+        <RouterLink
+          v-for="playlist in navPlaylists"
+          :key="playlist.key"
+          :to="{ name: 'Playlist', query: { name: playlist.name } }"
+          class="flex h-12 shrink-0 items-center gap-2.5 rounded-control px-2 transition-colors"
+          :class="[
+            rowAlign,
+            dropTarget === playlist.key
+              ? 'bg-accent/15 ring-2 ring-accent ring-inset'
+              : isOpen(playlist)
+                ? 'bg-surface-2'
+                : 'hover:bg-surface-2/60',
+          ]"
+          :title="playlist.title"
+          :aria-current="isOpen(playlist) ? 'page' : undefined"
+          @dragover="onDragOver($event, playlist)"
+          @dragleave="onDragLeave(playlist)"
+          @drop="onDrop($event, playlist)"
+        >
+          <CoverArt
+            :thumb="150"
+            :src="playlist.cover"
+            :covers="playlist.covers"
+            :name="playlist.title"
+            rounded="rounded-[7px]"
+            :letter-size="13"
+            :icon-size="16"
+            :icon="playlist.liked ? 'heart' : 'playlist'"
+            :symbol="playlist.liked"
+            class="size-9 shrink-0"
+          />
+          <span class="min-w-0 flex-col" :class="labelFlex">
+            <span
+              class="truncate text-[13px] font-medium"
+              :class="isPlaying(playlist) ? 'text-accent' : 'text-fg-2'"
+              >{{ playlist.title }}</span
+            >
+            <span class="truncate text-[11px] text-faint">{{
+              playlist.shared
+                ? playlist.owner
+                : t('common.tracks', { count: itemTrackCount(playlist) })
+            }}</span>
+          </span>
+          <EqBars
+            v-if="isPlaying(playlist)"
+            :size="10"
+            class="shrink-0"
+            :class="labelClass"
+          />
+          <span
+            v-else-if="playlist.isNew"
+            class="size-2 shrink-0 rounded-full bg-accent"
+            :class="labelClass"
+            :title="t('sharing.new')"
+          />
+        </RouterLink>
+      </div>
+    </section>
 
-    <div class="mt-auto flex flex-col gap-0.5">
+    <div class="flex shrink-0 flex-col gap-0.5">
       <a
         v-if="update?.update_available"
         :href="update.release_url"
@@ -222,6 +217,7 @@ import { useLocalStorage } from '@vueuse/core'
 import AppIcon from '../ui/AppIcon.vue'
 import AppLogo from '../ui/AppLogo.vue'
 import CoverArt from '../ui/CoverArt.vue'
+import EqBars from '../ui/EqBars.vue'
 import { useI18n } from '/src/i18n'
 import { itemTrackCount } from '/src/lib/library'
 import { useAuth } from '/src/model/auth'
@@ -232,6 +228,7 @@ import { usePendingCount } from './navState'
 import { usePlaylistActions } from '/src/model/playlistActions'
 import { isSongDrag, readDragSongs } from '/src/lib/dragSongs'
 import { useMyPlaylists } from '/src/model/myPlaylists'
+import { usePlayer } from '/src/model/player'
 
 const { t } = useI18n()
 const playlistActions = usePlaylistActions()
@@ -240,6 +237,7 @@ const jamSheet = useJamSheet()
 const library = useLibrary()
 const myPlaylists = useMyPlaylists()
 const auth = useAuth()
+const player = usePlayer()
 const pending = usePendingCount()
 const queuePaused = useQueuePause().paused
 const update = useUpdateCheck().status
@@ -289,6 +287,27 @@ function isActive(item) {
 const labelClass = computed(() =>
   collapsed.value ? 'hidden' : 'hidden xl:inline xl:flex-1 xl:truncate'
 )
+// A playlist row's title block, and its alignment: centred on the cover
+// while the bar is narrow.
+const labelFlex = computed(() =>
+  collapsed.value ? 'hidden' : 'hidden xl:flex xl:flex-1'
+)
+const rowAlign = computed(() =>
+  collapsed.value ? 'justify-center' : 'justify-center xl:justify-start'
+)
+
+function isOpen(playlist) {
+  return route.name === 'Playlist' && route.query.name === playlist.name
+}
+
+function isPlaying(playlist) {
+  const ctx = player.context.value
+  return (
+    player.isPlaying?.value !== false &&
+    ctx?.type === 'playlist' &&
+    ctx?.title === playlist.title
+  )
+}
 
 // Songs dragged from a list are dropped on a playlist here, as on
 // Spotify: library files go in at once, the rest download first.
@@ -314,29 +333,29 @@ async function onDrop(event, playlist) {
   await playlistActions.addDropped(playlist, dropped)
 }
 
-const recentPlaylists = computed(() =>
-  // The user's own only - an admin may open everyone's, but "See all"
-  // is where those are. Watched (imported) ones included.
-  [...myPlaylists.value]
+// Every playlist of the user's own (an admin may open everyone's, but
+// "See all" is where those are; watched ones included), liked songs
+// first, then the newest; then what was shared with them (new ones
+// first) and the public ones they follow.
+const NAV_PLAYLISTS_MAX = 80
+const navPlaylists = computed(() => {
+  const own = [...myPlaylists.value]
     // An empty Library playlist stays listed: songs can be dropped on it;
     // so does a watch still downloading its first songs.
     .filter(
       (playlist) =>
         itemTrackCount(playlist) || playlist.manual || playlist.batch
     )
-    // The liked songs stay at the top; the rest are the newest.
     .sort((a, b) => Number(b.liked) - Number(a.liked) || b.added - a.added)
-    .slice(0, 6)
-)
-
-// Other people's: what was shared with the user (new ones first) and the
-// public playlists they follow.
-const sharedNav = computed(() =>
-  [
+  const shared = [
     ...library.sharedPlaylists.value,
     ...library.publicPlaylists.value.filter((playlist) => playlist.followed),
   ]
     .sort((a, b) => Number(b.isNew) - Number(a.isNew))
-    .slice(0, 4)
-)
+    .map((playlist) => ({ ...playlist, shared: true }))
+  const seen = new Set()
+  return [...own, ...shared]
+    .filter((playlist) => !seen.has(playlist.key) && seen.add(playlist.key))
+    .slice(0, NAV_PLAYLISTS_MAX)
+})
 </script>
