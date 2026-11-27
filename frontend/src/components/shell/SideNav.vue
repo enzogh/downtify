@@ -127,16 +127,19 @@
                 : t('common.tracks', { count: itemTrackCount(playlist) })
             }}</span>
           </span>
+          <!-- Its own visibility class: the label's (inline, truncated)
+               clipped the bars down to a single jittering one. -->
           <EqBars
             v-if="isPlaying(playlist)"
-            :size="10"
-            class="shrink-0"
-            :class="labelClass"
+            :size="12"
+            :playing="player.isAdvancing?.value !== false"
+            class="mr-1 shrink-0"
+            :class="markClass('bars')"
           />
           <span
             v-else-if="playlist.isNew"
-            class="size-2 shrink-0 rounded-full bg-accent"
-            :class="labelClass"
+            class="mr-1 size-2 shrink-0 rounded-full bg-accent"
+            :class="markClass('dot')"
             :title="t('sharing.new')"
           />
         </RouterLink>
@@ -287,6 +290,17 @@ function isActive(item) {
 const labelClass = computed(() =>
   collapsed.value ? 'hidden' : 'hidden xl:inline xl:flex-1 xl:truncate'
 )
+// The mark at the end of a playlist row, shown with the labels but in
+// its own display (the label's inline/truncate clipped it): the playing
+// bars are a flex row, the "new" dot a block. Full class names, so
+// Tailwind sees them.
+const MARK_DISPLAY = {
+  bars: 'hidden xl:inline-flex',
+  dot: 'hidden xl:block',
+}
+function markClass(kind) {
+  return collapsed.value ? 'hidden' : MARK_DISPLAY[kind]
+}
 // A playlist row's title block, and its alignment: centred on the cover
 // while the bar is narrow.
 const labelFlex = computed(() =>
