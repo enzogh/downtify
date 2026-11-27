@@ -107,7 +107,7 @@ An Android app is in development: it signs in to your server, plays the library 
 
 ## Troubleshooting
 
-Most download problems mean YouTube wants a signed-in session: upload a `cookies.txt` in **Settings → YouTube cookies**. See **[Troubleshooting](https://downtify.henriquesebastiao.com/troubleshooting/)** for the rest.
+Most download problems mean YouTube wants a signed-in session: upload a `cookies.txt` (or a JSON cookie export) in **Settings → YouTube cookies**. See **[Troubleshooting](https://downtify.henriquesebastiao.com/troubleshooting/)** for the rest.
 
 ## Translations
 

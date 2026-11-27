@@ -11,11 +11,16 @@ volume, so it survives container updates the same way ``settings.json``
 and the Playlist Monitor database do. The environment variable still
 wins when it's set: a deployment that mounts its own cookie file stays
 in charge, and the web UI shows the upload controls as locked.
+
+Uploads may also be the JSON array that cookie-editor extensions
+(Cookie-Editor, EditThisCookie...) export: it is converted to a Netscape
+``cookies.txt`` before it is stored, since that's all yt-dlp reads.
 """
 
 from __future__ import annotations
 
 import contextlib
+import json
 import os
 from datetime import datetime, timezone
 from pathlib import Path
@@ -35,8 +40,130 @@ _NETSCAPE_FIELD_COUNT = 7
 _USEFUL_DOMAINS = ('youtube.com', 'google.com')
 
 
+#: First line yt-dlp (``http.cookiejar.MozillaCookieJar``) expects.
+_NETSCAPE_HEADER = '# Netscape HTTP Cookie File'
+
+#: Keys a JSON export may use for the expiry, as a Unix timestamp:
+#: Cookie-Editor / EditThisCookie, Playwright, Selenium.
+_EXPIRY_KEYS = ('expirationDate', 'expires', 'expiry')
+
+
 class InvalidCookiesFile(ValueError):
     """Raised when an upload isn't a usable Netscape cookies.txt."""
+
+
+def _looks_like_json(text: str) -> bool:
+    return text.lstrip().startswith(('[', '{'))
+
+
+def _json_cookie_list(text: str) -> list[Any]:
+    """The cookie objects of a JSON export.
+
+    Accepts a bare array (Cookie-Editor, EditThisCookie, Selenium) or an
+    object holding it under ``cookies`` (Playwright's storage state).
+    """
+
+    try:
+        data = json.loads(text)
+    except ValueError as exc:
+        raise InvalidCookiesFile(
+            'The file looks like JSON but could not be read as JSON. '
+            'Export it again, or export it as a Netscape cookies.txt.'
+        ) from exc
+    if isinstance(data, dict):
+        data = data.get('cookies')
+    if not isinstance(data, list):
+        raise InvalidCookiesFile(
+            'This JSON file is not a cookie export: it must be a list of '
+            'cookies, as Cookie-Editor or EditThisCookie export them.'
+        )
+    return data
+
+
+def _expiry_of(cookie: dict[str, Any]) -> int:
+    """The cookie's expiry as a Unix timestamp; ``0`` for a session one."""
+
+    if cookie.get('session') is True:
+        return 0
+    for key in _EXPIRY_KEYS:
+        value = cookie.get(key)
+        if isinstance(value, (int, float)) and not isinstance(value, bool):
+            return max(int(value), 0)
+    return 0
+
+
+def _netscape_line(cookie: Any) -> Optional[str]:
+    """One Netscape record for a JSON cookie, or ``None`` if unusable."""
+
+    if not isinstance(cookie, dict):
+        return None
+    domain = str(cookie.get('domain') or '').strip()
+    name = str(cookie.get('name') or '').strip()
+    value = cookie.get('value')
+    value = '' if value is None else str(value)
+    path = str(cookie.get('path') or '/')
+    fields = (domain, name, value, path)
+    if (
+        not domain
+        or not name
+        or any(char in field for field in fields for char in '\t\r\n')
+    ):
+        return None
+    # A host-only cookie must not be widened to the subdomains; without
+    # the flag the leading dot is what says it, as in a cookies.txt.
+    host_only = cookie.get('hostOnly')
+    if host_only is None:
+        host_only = not domain.startswith('.')
+    if not host_only and not domain.startswith('.'):
+        domain = f'.{domain}'
+    line = '\t'.join((
+        domain,
+        'FALSE' if host_only else 'TRUE',
+        path,
+        'TRUE' if cookie.get('secure') else 'FALSE',
+        str(_expiry_of(cookie)),
+        name,
+        value,
+    ))
+    if cookie.get('httpOnly'):
+        line = f'#HttpOnly_{line}'
+    return line
+
+
+def json_to_netscape(text: str) -> str:
+    """Convert a JSON cookie export into a Netscape ``cookies.txt``.
+
+    Raises :class:`InvalidCookiesFile` when it isn't a cookie export or
+    holds no usable cookie.
+    """
+
+    lines = [
+        line
+        for line in map(_netscape_line, _json_cookie_list(text))
+        if line is not None
+    ]
+    if not lines:
+        raise InvalidCookiesFile(
+            'No cookies found in this JSON file. Each cookie needs at '
+            'least a domain and a name.'
+        )
+    return '\n'.join([_NETSCAPE_HEADER, *lines]) + '\n'
+
+
+def normalize_cookies(content: bytes) -> bytes:
+    """*content* as a Netscape ``cookies.txt``, converting JSON exports.
+
+    A Netscape file is returned unchanged. Only decoding is checked here;
+    :func:`validate_cookies` does the rest.
+    """
+
+    try:
+        text = content.decode('utf-8-sig')
+    except UnicodeDecodeError:
+        return content
+    if not _looks_like_json(text):
+        return content
+    return json_to_netscape(text).encode('utf-8')
 
 
 def _cookie_lines(text: str) -> list[list[str]]:
@@ -78,6 +205,7 @@ def validate_cookies(content: bytes) -> list[str]:
             f'{MAX_COOKIES_BYTES // (1024 * 1024)} MB, so it is not a '
             f'cookies.txt.'
         )
+    content = normalize_cookies(content)
     try:
         text = content.decode('utf-8')
     except UnicodeDecodeError as exc:
@@ -90,8 +218,10 @@ def validate_cookies(content: bytes) -> list[str]:
     if not records:
         raise InvalidCookiesFile(
             'No cookies found. The file must be in Netscape format — one '
-            'cookie per line, fields separated by tabs. Use a browser '
-            'extension such as "Get cookies.txt LOCALLY" to export it.'
+            'cookie per line, fields separated by tabs — or the JSON '
+            'list that Cookie-Editor or EditThisCookie export. Use a '
+            'browser extension such as "Get cookies.txt LOCALLY" to '
+            'export it.'
         )
 
     warnings: list[str] = []
@@ -175,10 +305,13 @@ class CookiesStore:
     def save(self, content: bytes) -> list[str]:
         """Validate and persist *content*, replacing any previous file.
 
-        Returns the non-fatal warnings from :func:`validate_cookies`.
+        A JSON export is stored converted to Netscape, the only format
+        yt-dlp reads. Returns the non-fatal warnings from
+        :func:`validate_cookies`.
         """
 
         warnings = validate_cookies(content)
+        content = normalize_cookies(content)
         self._path.parent.mkdir(parents=True, exist_ok=True)
         # Write-then-replace so a failed write can't leave a truncated
         # jar behind that would break every subsequent download.

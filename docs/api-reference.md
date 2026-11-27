@@ -968,13 +968,13 @@ Current cookie configuration.
 
 ### `POST /api/cookies`
 
-Upload a Netscape `cookies.txt`, replacing any previous one. The body is the **raw file**, not multipart form-data.
+Upload a Netscape `cookies.txt`, replacing any previous one. The body is the **raw file**, not multipart form-data. A JSON cookie export (an array of `{domain, name, value, path, secure, httpOnly, hostOnly, expirationDate}` objects, or an object with that array under `cookies`) is accepted too and stored converted to Netscape.
 
 **Response:** the `GET /api/cookies` object plus a `warnings` array (e.g. when the file has no `youtube.com` cookies).
 
 | Status | Meaning |
 |--------|---------|
-| `400` | Not a valid Netscape cookie jar (empty, binary, or no cookie lines). |
+| `400` | Not a valid cookie jar (empty, binary, malformed JSON, or no cookies). |
 | `409` | `DOWNTIFY_COOKIES_FILE` is set, so the file is managed outside the UI. |
 | `413` | Larger than 2 MB, so it isn't a cookies.txt. |
 

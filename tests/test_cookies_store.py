@@ -10,9 +10,11 @@ container update.
 from __future__ import annotations
 
 import asyncio
+import json
 
 import pytest
 from fastapi import HTTPException
+from yt_dlp.cookies import YoutubeDLCookieJar
 
 from downtify import api
 from downtify.cookies import (
@@ -20,6 +22,8 @@ from downtify.cookies import (
     MAX_COOKIES_BYTES,
     CookiesStore,
     InvalidCookiesFile,
+    json_to_netscape,
+    normalize_cookies,
     validate_cookies,
 )
 from downtify.downloader import Downloader
@@ -34,6 +38,141 @@ VALID_COOKIES = (
 
 def _store(tmp_path) -> CookiesStore:
     return CookiesStore(tmp_path / 'cookies.txt')
+
+
+#: The shape Cookie-Editor / EditThisCookie export (fake values).
+JSON_COOKIES = [
+    {
+        'domain': '.youtube.com',
+        'expirationDate': 1830337267.374028,
+        'hostOnly': False,
+        'httpOnly': True,
+        'name': '__Secure-3PSID',
+        'path': '/',
+        'sameSite': 'no_restriction',
+        'secure': True,
+        'session': False,
+        'value': 'fake-session-value',
+    },
+    {
+        'domain': 'www.youtube.com',
+        'hostOnly': True,
+        'httpOnly': False,
+        'name': 'YSC',
+        'path': '/',
+        'secure': False,
+        'session': True,
+        'value': 'fake-ysc',
+    },
+]
+
+
+def _json_bytes(data) -> bytes:
+    return json.dumps(data).encode()
+
+
+# ── JSON exports ─────────────────────────────────────────────────────────────
+
+
+def test_json_export_converts_to_netscape():
+    text = json_to_netscape(json.dumps(JSON_COOKIES))
+    lines = text.splitlines()
+    assert lines[0] == '# Netscape HTTP Cookie File'
+    assert lines[1] == (
+        '#HttpOnly_.youtube.com\tTRUE\t/\tTRUE\t1830337267'
+        '\t__Secure-3PSID\tfake-session-value'
+    )
+    # Host-only and session: no subdomains, expiry 0.
+    assert lines[2] == 'www.youtube.com\tFALSE\t/\tFALSE\t0\tYSC\tfake-ysc'
+
+
+def test_json_export_reads_playwright_storage_state():
+    data = {
+        'cookies': [
+            {
+                'domain': '.youtube.com',
+                'name': 'SID',
+                'value': 'v',
+                'path': '/',
+                'expires': 1800000000,
+                'httpOnly': False,
+                'secure': True,
+            }
+        ],
+        'origins': [],
+    }
+    text = json_to_netscape(json.dumps(data))
+    assert '.youtube.com\tTRUE\t/\tTRUE\t1800000000\tSID\tv' in text
+
+
+def test_json_export_skips_unusable_cookies():
+    data = [
+        *JSON_COOKIES,
+        {'domain': '', 'name': 'NO_DOMAIN', 'value': 'x'},
+        {'domain': '.youtube.com', 'name': 'TAB', 'value': 'a\tb'},
+        'not a cookie',
+    ]
+    text = json_to_netscape(json.dumps(data))
+    assert 'NO_DOMAIN' not in text
+    assert 'TAB' not in text
+    assert len(text.splitlines()) == 3
+
+
+def test_normalize_leaves_netscape_file_untouched():
+    assert normalize_cookies(VALID_COOKIES) == VALID_COOKIES
+
+
+def test_validate_accepts_json_export():
+    assert validate_cookies(_json_bytes(JSON_COOKIES)) == []
+
+
+def test_validate_rejects_malformed_json():
+    with pytest.raises(InvalidCookiesFile, match='JSON'):
+        validate_cookies(b'[{"domain": ".youtube.com",')
+
+
+def test_validate_rejects_json_that_is_not_a_cookie_list():
+    with pytest.raises(InvalidCookiesFile):
+        validate_cookies(b'{"hello": "world"}')
+    with pytest.raises(InvalidCookiesFile):
+        validate_cookies(b'[]')
+
+
+def test_validate_warns_on_json_without_youtube_cookies():
+    data = [{'domain': '.example.com', 'name': 'SID', 'value': 'v'}]
+    warnings = validate_cookies(_json_bytes(data))
+    assert len(warnings) == 1
+
+
+def test_save_stores_json_export_as_netscape(tmp_path, monkeypatch):
+    monkeypatch.delenv(ENV_VAR, raising=False)
+    store = _store(tmp_path)
+    store.save(_json_bytes(JSON_COOKIES))
+    stored = store.path.read_text()
+    assert stored.startswith('# Netscape HTTP Cookie File\n')
+    assert not stored.lstrip().startswith('[')
+
+
+def test_converted_json_loads_in_yt_dlp(tmp_path, monkeypatch):
+    monkeypatch.delenv(ENV_VAR, raising=False)
+    store = _store(tmp_path)
+    store.save(_json_bytes(JSON_COOKIES))
+    jar = YoutubeDLCookieJar(str(store.path))
+    jar.load()
+    names = {cookie.name: cookie for cookie in jar}
+    assert names['__Secure-3PSID'].value == 'fake-session-value'
+    assert names['__Secure-3PSID'].domain == '.youtube.com'
+    assert names['YSC'].domain == 'www.youtube.com'
+
+
+def test_endpoint_accepts_json_upload(tmp_path, monkeypatch):
+    monkeypatch.delenv(ENV_VAR, raising=False)
+    monkeypatch.setattr(api.state, 'cookies_store', _store(tmp_path))
+    result = asyncio.run(
+        api.upload_cookies_endpoint(_FakeRequest(_json_bytes(JSON_COOKIES)))
+    )
+    assert result['configured'] is True
+    assert result['warnings'] == []
 
 
 # ── validate_cookies ─────────────────────────────────────────────────────────
