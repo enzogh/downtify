@@ -1630,8 +1630,6 @@ const allSections = computed(() =>
         id: 'apps',
         icon: 'monitor',
         label: t('settings.apps'),
-        // The apps themselves are still being built (AppsSettings).
-        experimental: true,
       },
       { id: 'about', icon: 'info', label: t('settings.about') },
     ],

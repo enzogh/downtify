@@ -2364,17 +2364,6 @@ export default {
     signOutEverywhereHint:
       '取消你所有应用的配对，并退出你已登录的所有浏览器，包括当前浏览器。',
     signOutEverywhereBody: '已配对的应用需重新配对，所有浏览器也需重新登录。',
-    androidGroup: 'Castify Android 版',
-    androidHint: '直接从此服务器浏览和播放音乐库的应用。',
-    androidBody:
-      '应用通过扫描本页的二维码完成配对。之后可浏览音乐库、以原音质或更省流量的音质播放、下载歌曲到手机供离线收听，以及投放到 Chromecast。本页中的配对、服务器名称和已配对应用等服务器端功能均已可用。',
-    androidUnreleased: '应用仍在开发，尚未发布任何版本，目前没有可安装版本。',
-    androidRepo: '查看仓库',
-    iosGroup: 'iOS 版 Downtify',
-    iosHint: '一款可浏览和播放此服务器上音乐库的 iPhone 和 iPad 应用。',
-    iosBody:
-      '使用账号登录，或通过此页面上的代码配对应用。浏览和播放音乐库，保存歌曲以供离线收听，并从锁屏控制播放。',
-    iosRepo: '查看仓库',
   },
   tagEdit: {
     menu: '编辑信息…',

@@ -2600,20 +2600,6 @@ export default {
       'Trennt die Kopplung aller deiner Apps und meldet dich in jedem Browser ab, auch in diesem.',
     signOutEverywhereBody:
       'Deine Apps müssen erneut gekoppelt werden und du musst dich in jedem Browser wieder anmelden.',
-    androidGroup: 'Castify für Android',
-    androidHint:
-      'Eine App, mit der du deine Bibliothek direkt von diesem Server durchsuchen und abspielen kannst.',
-    androidBody:
-      'Kopple die App, indem du einen Code auf dieser Seite scannst. Danach kannst du deine Bibliothek durchsuchen, Musik in Originalqualität oder datenfreundlicher Qualität abspielen, Titel zum Offlinehören auf dem Telefon speichern und auf einen Chromecast übertragen. Alles auf dieser Seite - Kopplung, Servername und verbundene Apps - funktioniert bereits serverseitig.',
-    androidUnreleased:
-      'Es wurde noch keine Version veröffentlicht: Die App befindet sich noch in Entwicklung und kann derzeit nicht installiert werden.',
-    androidRepo: 'Repository ansehen',
-    iosGroup: 'Downtify für iOS',
-    iosHint:
-      'Eine iPhone- und iPad-App zum Durchsuchen und Abspielen deiner Bibliothek auf diesem Server.',
-    iosBody:
-      'Melde dich mit deinem Konto an oder kopple die App mit einem Code von dieser Seite. Durchsuche und spiele deine Bibliothek, speichere Titel für die Offline-Wiedergabe und steuere die Wiedergabe auf dem Sperrbildschirm.',
-    iosRepo: 'Repository ansehen',
   },
   tagEdit: {
     menu: 'Infos bearbeiten…',

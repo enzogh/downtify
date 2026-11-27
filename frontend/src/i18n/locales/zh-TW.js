@@ -2522,18 +2522,6 @@ export default {
       '取消配對你的所有應用程式，並登出你已登入的所有瀏覽器，包含這一個。',
     signOutEverywhereBody:
       '你已配對的應用程式必須重新配對，每個瀏覽器也都要重新登入。',
-    androidGroup: 'Downtify for Android',
-    androidHint: '直接從這台伺服器瀏覽和播放媒體庫的應用程式。',
-    androidBody:
-      '掃描此頁面的配對碼即可配對應用程式。配對後可以瀏覽媒體庫，以原始音質播放，或在使用行動網路時改用較省流量的音質；也能將歌曲存在手機上離線收聽，或投放到 Chromecast。此頁面的所有內容（配對、伺服器名稱、已配對的應用程式）都是伺服器端的部分，目前已可使用。',
-    androidUnreleased:
-      '目前尚未發布任何版本：應用程式仍在開發中，所以現在還沒有東西可以安裝。',
-    androidRepo: '查看程式碼存放庫',
-    iosGroup: 'Downtify for iOS',
-    iosHint: '在 iPhone 和 iPad 上直接從這台伺服器瀏覽和播放媒體庫。',
-    iosBody:
-      '使用你的帳號登入，或使用此頁面的配對碼配對應用程式。接著就能瀏覽和播放媒體庫、將歌曲儲存在裝置上離線收聽，並從鎖定畫面控制播放。',
-    iosRepo: '查看程式碼存放庫',
   },
   tagEdit: {
     menu: 'Edit info…',

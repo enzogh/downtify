@@ -2542,20 +2542,6 @@ export default {
       'Megszünteti az összes alkalmazásod párosítását, és minden böngészőből kijelentkeztet, ebből is.',
     signOutEverywhereBody:
       'Az alkalmazásaidat újra párosítanod kell, és minden böngészőben újra be kell jelentkezned.',
-    androidGroup: 'Castify Androidra',
-    androidHint:
-      'Alkalmazás, amely közvetlenül erről a szerverről böngészi és játssza a könyvtáradat.',
-    androidBody:
-      'Az alkalmazás az oldalon látható kód beolvasásával párosítható. Ezután böngészi a könyvtáradat, eredeti minőségben vagy mobiladathoz kisebb minőségben játssza le, dalokat tárol a telefonon offline hallgatáshoz, és Chromecastra küldi őket. Minden ezen az oldalon — a párosítás, a szerver neve, a párosított alkalmazások — ennek a szerveroldala, és már működik.',
-    androidUnreleased:
-      'Még nem jelent meg egyetlen verzió sem: az alkalmazás még fejlesztés alatt áll, így egyelőre nincs mit telepíteni.',
-    androidRepo: 'Tárhely megtekintése',
-    iosGroup: 'Downtify iOS-re',
-    iosHint:
-      'iPhone- és iPad-alkalmazás a kiszolgálón lévő könyvtár böngészéséhez és lejátszásához.',
-    iosBody:
-      'Jelentkezz be a fiókoddal, vagy párosítsd az alkalmazást az ezen az oldalon látható kóddal. Böngészd és játszd le a könyvtáradat, ments dalokat offline hallgatáshoz, és vezéreld a lejátszást a zárolási képernyőről.',
-    iosRepo: 'Tárhely megtekintése',
   },
   tagEdit: {
     menu: 'Adatok szerkesztése…',

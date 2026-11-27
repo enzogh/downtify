@@ -2588,20 +2588,6 @@ export default {
       'Dissocie toutes vos applis et vous déconnecte de tous vos navigateurs, y compris celui-ci.',
     signOutEverywhereBody:
       'Vos applis devront être associées à nouveau, et vous devrez vous reconnecter dans chaque navigateur.',
-    androidGroup: 'Castify pour Android',
-    androidHint:
-      'Une appli qui parcourt et lit votre bibliothèque directement depuis ce serveur.',
-    androidBody:
-      'L’appli s’associe en scannant un code de cette page. Elle parcourt ensuite votre bibliothèque, la lit en qualité d’origine ou dans une qualité réduite pour les données mobiles, garde des titres sur le téléphone pour l’écoute hors ligne et les envoie vers un Chromecast. Tout ce qui est sur cette page — l’association, le nom du serveur, les applis associées — en est la partie serveur, et fonctionne déjà.',
-    androidUnreleased:
-      'Aucune version n’a encore été publiée : l’appli est toujours en développement, il n’y a donc rien à installer pour l’instant.',
-    androidRepo: 'Voir le dépôt',
-    iosGroup: 'Downtify pour iOS',
-    iosHint:
-      'Une application iPhone et iPad pour parcourir et écouter votre bibliothèque depuis ce serveur.',
-    iosBody:
-      'Connectez-vous avec votre compte ou associez l’application avec un code de cette page. Parcourez et écoutez votre bibliothèque, gardez des titres hors ligne et contrôlez la lecture depuis l’écran verrouillé.',
-    iosRepo: 'Voir le dépôt',
   },
   tagEdit: {
     menu: 'Modifier les infos…',

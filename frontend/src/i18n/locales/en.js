@@ -2487,20 +2487,6 @@ export default {
       'Unpairs every app of yours and signs out every browser you’re signed in to, this one too.',
     signOutEverywhereBody:
       'Your paired apps have to be paired again, and you’ll have to sign in again in every browser.',
-    androidGroup: 'Castify for Android',
-    androidHint:
-      'An app that browses and plays your library straight from this server.',
-    androidBody:
-      'The app is paired by scanning a code from this page. It then browses your library, plays it in the original quality or a smaller one for mobile data, keeps songs on the phone for offline listening, and casts to a Chromecast. Everything on this page — pairing, the server name, the paired apps — is the server side of it, and already works.',
-    androidUnreleased:
-      'No version has been published yet: the app is still in development, so there is nothing to install for now.',
-    androidRepo: 'See the repository',
-    iosGroup: 'Downtify for iOS',
-    iosHint:
-      'An iPhone and iPad app that browses and plays your library straight from this server.',
-    iosBody:
-      'Sign in with your account or pair the app with a code from this page. Then browse and play your library, keep songs on the device for offline listening, and control playback from the lock screen.',
-    iosRepo: 'See the repository',
   },
   tagEdit: {
     menu: 'Edit info…',

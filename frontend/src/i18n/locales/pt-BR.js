@@ -2542,20 +2542,6 @@ export default {
       'Despareia todos os seus apps e sai de todos os navegadores em que você entrou, inclusive este.',
     signOutEverywhereBody:
       'Seus apps pareados vão precisar ser pareados de novo, e você vai precisar entrar de novo em cada navegador.',
-    androidGroup: 'Castify para Android',
-    androidHint:
-      'Um app que navega e toca sua biblioteca direto deste servidor.',
-    androidBody:
-      'O app é pareado escaneando um código desta página. Depois ele navega pela sua biblioteca, toca na qualidade original ou numa menor para dados móveis, guarda músicas no celular para ouvir sem internet e envia para um Chromecast. Tudo nesta página — parear, o nome do servidor, os apps pareados — é o lado do servidor disso, e já funciona.',
-    androidUnreleased:
-      'Nenhuma versão foi publicada ainda: o app continua em desenvolvimento, então não há nada para instalar por enquanto.',
-    androidRepo: 'Ver o repositório',
-    iosGroup: 'Downtify para iOS',
-    iosHint:
-      'Um aplicativo para iPhone e iPad que navega e reproduz sua biblioteca neste servidor.',
-    iosBody:
-      'Entre com sua conta ou vincule o aplicativo com um código desta página. Navegue e reproduza sua biblioteca, salve músicas para ouvir offline e controle a reprodução pela tela bloqueada.',
-    iosRepo: 'Ver o repositório',
   },
   tagEdit: {
     menu: 'Editar informações…',

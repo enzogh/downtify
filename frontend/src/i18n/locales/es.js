@@ -2561,20 +2561,6 @@ export default {
       'Desvincula todas tus apps y cierra tu sesión en todos los navegadores, también en este.',
     signOutEverywhereBody:
       'Tendrás que volver a vincular tus apps e iniciar sesión de nuevo en cada navegador.',
-    androidGroup: 'Castify para Android',
-    androidHint:
-      'Una app que explora y reproduce tu biblioteca directamente desde este servidor.',
-    androidBody:
-      'La app se vincula escaneando un código de esta página. Después explora tu biblioteca, la reproduce en la calidad original o en una menor para datos móviles, guarda canciones en el teléfono para escucharlas sin conexión y las envía a un Chromecast. Todo lo que hay en esta página — vincular, el nombre del servidor, las apps vinculadas — es la parte del servidor, y ya funciona.',
-    androidUnreleased:
-      'Todavía no se ha publicado ninguna versión: la app sigue en desarrollo, así que por ahora no hay nada que instalar.',
-    androidRepo: 'Ver el repositorio',
-    iosGroup: 'Downtify para iOS',
-    iosHint:
-      'Una app para iPhone y iPad que explora y reproduce tu biblioteca desde este servidor.',
-    iosBody:
-      'Inicia sesión con tu cuenta o vincula la app con un código de esta página. Explora y reproduce tu biblioteca, guarda canciones para escucharlas sin conexión y controla la reproducción desde la pantalla de bloqueo.',
-    iosRepo: 'Ver el repositorio',
   },
   tagEdit: {
     menu: 'Editar información…',

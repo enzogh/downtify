@@ -2517,20 +2517,6 @@ export default {
       'Tüm uygulamalarınızın eşleşmesini kaldırır ve bu dahil giriş yaptığınız tüm tarayıcılardan çıkış yapar.',
     signOutEverywhereBody:
       'Uygulamalarınızı yeniden eşlemeniz ve her tarayıcıda yeniden giriş yapmanız gerekecek.',
-    androidGroup: 'Android için Castify',
-    androidHint:
-      'Kitaplığınıza doğrudan bu sunucudan göz atıp çalan bir uygulama.',
-    androidBody:
-      'Uygulama, bu sayfadaki bir kodu taratarak eşlenir. Ardından kitaplığınıza göz atar, orijinal kalitede ya da mobil veri için daha küçük bir kalitede çalar, çevrimdışı dinlemek için şarkıları telefonda tutar ve Chromecast’e gönderir. Bu sayfadaki her şey — eşleme, sunucu adı, eşlenen uygulamalar — bunun sunucu tarafıdır ve hâlihazırda çalışıyor.',
-    androidUnreleased:
-      'Henüz hiçbir sürüm yayımlanmadı: uygulama hâlâ geliştirme aşamasında, dolayısıyla şimdilik kurulacak bir şey yok.',
-    androidRepo: 'Depoyu görüntüle',
-    iosGroup: 'iOS için Downtify',
-    iosHint:
-      'Bu sunucudaki kitaplığınıza göz atmanızı ve müzik çalmanızı sağlayan iPhone ve iPad uygulaması.',
-    iosBody:
-      'Hesabınızla giriş yapın veya uygulamayı bu sayfadaki bir kodla eşleştirin. Kitaplığınıza göz atın, müzik çalın, çevrimdışı dinlemek için şarkıları kaydedin ve kilit ekranından oynatmayı kontrol edin.',
-    iosRepo: 'Depoyu görüntüle',
   },
   tagEdit: {
     menu: 'Bilgileri düzenle…',
