@@ -13,7 +13,7 @@
         {{ t('artistSuggestions.retry') }}
       </UiButton>
     </div>
-    <div class="grid gap-4 lg:grid-cols-2">
+    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
       <div
         v-for="column in columns"
         :key="column.key"

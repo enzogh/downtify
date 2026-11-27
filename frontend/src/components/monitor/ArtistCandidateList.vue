@@ -3,7 +3,9 @@
        photo and profile link to tell namesakes apart. Used by the
        Monitor's artist suggestions and the Library artist page's Watch
        artist. -->
-  <ul class="grid max-h-[60vh] gap-3 overflow-y-auto sm:grid-cols-2">
+  <ul
+    class="grid grid-cols-1 max-h-[60vh] gap-3 overflow-y-auto sm:grid-cols-2"
+  >
     <li
       v-for="candidate in candidates"
       :key="candidate.artist_id"

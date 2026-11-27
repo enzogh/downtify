@@ -9,7 +9,9 @@
       "
     />
 
-    <div class="grid items-start gap-8 lg:grid-cols-[220px_minmax(0,1fr)]">
+    <div
+      class="grid grid-cols-1 items-start gap-8 lg:grid-cols-[220px_minmax(0,1fr)]"
+    >
       <!-- Section navigation -->
       <nav
         class="-mx-4 flex gap-1 overflow-x-auto px-4 [scrollbar-width:none] lg:sticky lg:top-[96px] lg:mx-0 lg:flex-col lg:px-0"
@@ -224,7 +226,7 @@
                 />
               </SettingRow>
               <template v-if="s.slskd.enabled">
-                <div class="grid gap-4 px-5 py-4 sm:grid-cols-2">
+                <div class="grid grid-cols-1 gap-4 px-5 py-4 sm:grid-cols-2">
                   <UiInput
                     v-model.trim="s.slskd.base_url"
                     :label="t('settings.slskdUrl')"
@@ -270,7 +272,7 @@
                     @update:model-value="applySlskdProfile"
                   />
                 </SettingRow>
-                <div class="grid gap-4 px-5 py-4 sm:grid-cols-2">
+                <div class="grid grid-cols-1 gap-4 px-5 py-4 sm:grid-cols-2">
                   <UiInput
                     v-model.trim="slskdFormatsText"
                     :label="t('settings.slskdFormats')"
@@ -373,7 +375,7 @@
                       />
                     </div>
                   </div>
-                  <div class="grid gap-4 px-5 py-4 sm:grid-cols-2">
+                  <div class="grid grid-cols-1 gap-4 px-5 py-4 sm:grid-cols-2">
                     <UiInput
                       v-model="s.slskd.max_bitrate"
                       :label="t('settings.slskdMaxBitrate')"
@@ -453,7 +455,7 @@
                 />
               </SettingRow>
               <template v-if="s.deemix.enabled">
-                <div class="grid gap-4 px-5 py-4 sm:grid-cols-2">
+                <div class="grid grid-cols-1 gap-4 px-5 py-4 sm:grid-cols-2">
                   <UiInput
                     v-model.trim="s.deemix.base_url"
                     :label="t('settings.deemixUrl')"
@@ -1026,7 +1028,7 @@
                 />
               </SettingRow>
               <template v-if="s.navidrome.enabled">
-                <div class="grid gap-4 px-5 py-4 sm:grid-cols-2">
+                <div class="grid grid-cols-1 gap-4 px-5 py-4 sm:grid-cols-2">
                   <UiInput
                     v-model.trim="s.navidrome.url"
                     class="sm:col-span-2"

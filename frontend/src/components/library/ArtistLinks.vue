@@ -7,7 +7,7 @@
       :aria-label="group.title"
     >
       <h2 class="eyebrow">{{ group.title }}</h2>
-      <ul class="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+      <ul class="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-3">
         <li v-for="link in group.links" :key="link.key">
           <a
             :href="link.url"

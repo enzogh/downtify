@@ -30,7 +30,7 @@
     <!-- Shaped like ArtistCandidateList's cards. -->
     <ul
       v-else-if="loading && !candidates.length"
-      class="grid gap-3 sm:grid-cols-2"
+      class="grid grid-cols-1 gap-3 sm:grid-cols-2"
       aria-busy="true"
     >
       <li v-for="n in 2" :key="n" class="rounded-xl border border-line-2 p-3">

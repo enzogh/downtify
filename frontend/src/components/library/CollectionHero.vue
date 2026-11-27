@@ -30,7 +30,7 @@
       <AppIcon name="pencil" :size="16" />
     </button>
     <div
-      class="mr-auto flex max-w-[1680px] flex-col gap-6 px-4 pt-6 pb-6 sm:px-6 md:flex-row md:items-end md:gap-8 md:pt-10 lg:px-10"
+      class="mr-auto flex w-full max-w-[1680px] flex-col gap-6 px-4 pt-6 pb-6 sm:px-6 md:flex-row md:items-end md:gap-8 md:pt-10 lg:px-10"
     >
       <div
         v-if="!banner"

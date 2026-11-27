@@ -23,7 +23,7 @@
             @click="$emit('update:open', false)"
           />
         </div>
-        <ul class="grid gap-x-8 gap-y-2.5 sm:grid-cols-2">
+        <ul class="grid grid-cols-1 gap-x-8 gap-y-2.5 sm:grid-cols-2">
           <li
             v-for="item in shortcuts"
             :key="item.label"

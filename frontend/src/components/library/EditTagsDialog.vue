@@ -30,7 +30,7 @@
             {{ t('tagEdit.coverUndo') }}
           </button>
         </div>
-        <div class="grid min-w-0 flex-1 gap-3 sm:grid-cols-2">
+        <div class="grid grid-cols-1 min-w-0 flex-1 gap-3 sm:grid-cols-2">
           <UiInput v-model="form.name" :label="t('tagEdit.fields.title')" />
           <UiInput
             v-model="form.artists"

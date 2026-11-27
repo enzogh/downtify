@@ -79,7 +79,7 @@
         </div>
       </div>
 
-      <div class="grid gap-4 sm:grid-cols-2">
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <label class="flex flex-col gap-1.5">
           <span class="text-[13px] font-semibold text-fg-3">{{
             t('monitor.interval')

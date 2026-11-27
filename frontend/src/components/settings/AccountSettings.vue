@@ -64,7 +64,7 @@
       stacked
     >
       <form
-        class="grid w-full gap-2 sm:grid-cols-[1fr_1fr_1fr_auto] sm:items-end"
+        class="grid grid-cols-1 w-full gap-2 sm:grid-cols-[1fr_1fr_1fr_auto] sm:items-end"
         @submit.prevent="savePassword"
       >
         <UiInput

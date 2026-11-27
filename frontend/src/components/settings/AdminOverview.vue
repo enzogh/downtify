@@ -117,7 +117,7 @@
     </SettingGroup>
 
     <!-- What is played most -->
-    <div class="grid gap-6 lg:grid-cols-2">
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
       <SettingGroup
         v-for="list in topLists"
         :key="list.id"
@@ -211,7 +211,7 @@
       </ul>
     </SettingGroup>
 
-    <div class="grid gap-6 lg:grid-cols-2">
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
       <!-- Playing right now -->
       <SettingGroup
         :title="t('activity.nowTitle')"
@@ -300,7 +300,7 @@
 
     <!-- Where to go next -->
     <SettingGroup :title="t('admin.shortcutsTitle')">
-      <div class="grid gap-2 p-3 sm:grid-cols-2 lg:grid-cols-3">
+      <div class="grid grid-cols-1 gap-2 p-3 sm:grid-cols-2 lg:grid-cols-3">
         <RouterLink
           v-for="link in shortcuts"
           :key="link.label"

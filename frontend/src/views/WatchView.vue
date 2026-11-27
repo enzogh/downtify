@@ -133,7 +133,9 @@
           show-labels
           class="mb-4 sm:hidden"
         />
-        <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
+        <div
+          class="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]"
+        >
           <div class="min-w-0">
             <p class="text-display tabular text-4xl font-bold">
               {{ stats.period.added }}

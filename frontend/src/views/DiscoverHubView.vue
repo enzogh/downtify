@@ -7,7 +7,7 @@
       class="mx-auto max-w-[1680px] px-4 pt-6 sm:px-6 md:pt-8 lg:px-10"
     >
       <div
-        class="grid gap-4 lg:grid-cols-[minmax(0,42rem)_minmax(0,1fr)] lg:items-start lg:gap-10"
+        class="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,42rem)_minmax(0,1fr)] lg:items-start lg:gap-10"
       >
         <FinderSearchBar v-model="text" @submit="search" @clear="clearSearch" />
         <FinderRecentSearches
@@ -29,7 +29,7 @@
       <DiscoverView v-else key="discover">
         <template #search>
           <div
-            class="-mt-2 grid gap-4 lg:grid-cols-[minmax(0,42rem)_minmax(0,1fr)] lg:items-start lg:gap-10"
+            class="-mt-2 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,42rem)_minmax(0,1fr)] lg:items-start lg:gap-10"
           >
             <FinderSearchBar
               v-model="text"

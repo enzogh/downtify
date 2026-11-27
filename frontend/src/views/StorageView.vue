@@ -231,7 +231,7 @@
           </div>
         </UiPanel>
 
-        <div class="grid gap-6 lg:grid-cols-2">
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <!-- Where the audio came from -->
           <UiPanel
             :title="t('usage.sourcesTitle')"
@@ -309,7 +309,9 @@
           :title="t('usage.downloadsTitle')"
           :description="t('usage.downloadsHint', { count: days })"
         >
-          <div class="grid gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+          <div
+            class="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]"
+          >
             <div class="flex min-w-0 flex-col gap-4">
               <div
                 v-for="row in outcomeRows"
@@ -405,7 +407,7 @@
           :title="t('usage.cleanupTitle')"
           :description="t('usage.cleanupHint')"
         >
-          <div class="grid gap-3 sm:grid-cols-2">
+          <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <details
               v-for="card in cleanupCards"
               :key="card.key"
@@ -506,7 +508,7 @@
             <UiSkeleton class="h-24 w-full" />
           </div>
           <template v-else>
-            <div class="grid gap-6 lg:grid-cols-2">
+            <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
               <div v-for="folder in scanFolders" :key="folder.id">
                 <div class="flex items-baseline justify-between gap-3">
                   <p class="text-sm font-semibold">

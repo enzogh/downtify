@@ -5,12 +5,16 @@
       :description="t('backup.scheduleHint', { keep: status?.keep ?? 2 })"
       stacked
     >
-      <UiSegmented
-        :options="intervalOptions"
-        :model-value="status?.interval_hours ?? 0"
-        show-labels
-        @update:model-value="setInterval"
-      />
+      <!-- Four labelled choices are wider than a phone: scroll them in
+           place rather than the whole page. -->
+      <div class="max-w-full overflow-x-auto [scrollbar-width:none]">
+        <UiSegmented
+          :options="intervalOptions"
+          :model-value="status?.interval_hours ?? 0"
+          show-labels
+          @update:model-value="setInterval"
+        />
+      </div>
     </SettingRow>
     <SettingRow
       :label="t('backup.saved')"

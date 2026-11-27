@@ -61,7 +61,9 @@
 
     <UiTabs :items="tabs" :model-value="tab" />
 
-    <div class="grid items-start gap-8 xl:grid-cols-[minmax(0,1fr)_340px]">
+    <div
+      class="grid grid-cols-1 items-start gap-8 xl:grid-cols-[minmax(0,1fr)_340px]"
+    >
       <div class="flex min-w-0 flex-col gap-3">
         <!-- One action in plain words (retry what failed), the rest
              named in a menu - no row of bare icons. -->

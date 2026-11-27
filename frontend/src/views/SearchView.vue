@@ -162,7 +162,7 @@
         <!-- As on Spotify: the best hit next to the first songs. -->
         <div
           v-if="filter === 'all' && topResult"
-          class="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]"
+          class="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]"
         >
           <section class="flex flex-col gap-3">
             <h2 class="text-display text-xl font-semibold">

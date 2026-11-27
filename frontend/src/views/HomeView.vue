@@ -86,7 +86,7 @@
           action
           :label="t('home.suggestedTitle')"
         />
-        <div v-else class="-mx-3 grid gap-x-6 lg:grid-cols-2">
+        <div v-else class="-mx-3 grid grid-cols-1 gap-x-6 lg:grid-cols-2">
           <SongRow
             v-for="item in suggested"
             :key="item.key"
@@ -196,7 +196,7 @@
     <!-- First run: the search bar takes links as well as words -->
     <section
       v-if="library.loaded.value && !library.trackCount.value"
-      class="grid gap-4 md:grid-cols-3"
+      class="grid grid-cols-1 gap-4 md:grid-cols-3"
     >
       <div
         v-for="(step, i) in onboarding"
