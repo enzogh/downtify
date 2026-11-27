@@ -393,6 +393,9 @@ downloads are shared, and files are never stored twice.
  * ``POST /api/stream/live/prefetch`` (body ``{video_id}``: resolve
    that video's audio URL in the background and answer ``{queued:
    true}`` at once - how the player warms the next track up)
+ * ``GET  /api/stream/live/plays`` (``?video_id=``: ``{plays,
+   threshold, queued}`` - how close a streamed song is to *Download
+   after live plays* saving it, for the player's hint)
 * ``GET|POST /api/song-links`` and ``DELETE /api/song-links/{token}``
   (public links to one song), and the pages they open without signing
   in, ``GET /s/{token}`` (plus ``/info``, ``/audio``, ``/cover``) - see

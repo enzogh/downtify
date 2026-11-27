@@ -14,10 +14,12 @@ Supplying a `cookies.txt` fixes both: yt-dlp then talks to YouTube as your logge
 ## Uploading a cookies.txt (recommended)
 
 1. Install a cookie-export extension: [Get cookies.txt LOCALLY](https://chrome.google.com/webstore/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc) (Chrome/Edge) or [cookies.txt](https://addons.mozilla.org/en-US/firefox/addon/cookies-txt/) (Firefox)
-2. Open `youtube.com` **logged into your Google account** and export the cookies for that site — the file must be in **Netscape** format
+2. Open `youtube.com` **logged into your Google account** and export the cookies for that site — in **Netscape** format, or as the **JSON** list that extensions such as Cookie-Editor or EditThisCookie export
 3. In Castify, open **Settings** (⚙️) → **YouTube cookies** → **Upload cookies.txt**
 
-The file is validated on upload — a file that isn't a Netscape cookie jar is rejected immediately rather than silently breaking every later download. If it contains no `youtube.com` or `google.com` cookies you get a warning, since that usually means it was exported from the wrong tab.
+A JSON export (a list of cookies with `domain`, `name`, `value`, …, or Playwright's `{"cookies": [...]}`) is converted to a Netscape `cookies.txt` when it is uploaded, since that is the only format yt-dlp reads; the stored file is the converted one. The `DOWNTIFY_COOKIES_FILE` variable below still needs a Netscape file.
+
+The file is validated on upload — a file that isn't a cookie jar is rejected immediately rather than silently breaking every later download. If it contains no `youtube.com` or `google.com` cookies you get a warning, since that usually means it was exported from the wrong tab.
 
 Once uploaded you can **replace** it (upload another file) or **delete** it from the same screen.
 

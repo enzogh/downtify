@@ -162,13 +162,18 @@ function close() {
   target.value = ''
 }
 
-// Shown a tick after the drag starts: changing the page during
-// `dragstart` itself can cancel the drag in some browsers.
+// Shown only once the drag has gone on for a moment: a click that moves
+// the pointer a pixel starts an HTML drag too (playing a playlist's
+// song, say), and the panel used to flash in and out on every such
+// click. Never during `dragstart` itself either: changing the page then
+// can cancel the drag in some browsers.
+const SHOW_AFTER_MS = 350
+
 let timer = 0
 function onDragStart(event) {
   if (!isSongDrag(event)) return
   clearTimeout(timer)
-  timer = setTimeout(() => (active.value = true), 0)
+  timer = setTimeout(() => (active.value = true), SHOW_AFTER_MS)
 }
 
 function onDragEnd() {

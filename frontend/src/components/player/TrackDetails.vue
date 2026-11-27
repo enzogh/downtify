@@ -11,7 +11,7 @@
     </dl>
     <div class="flex flex-wrap gap-2">
       <RouterLink
-        v-if="track.album"
+        v-if="track.album && !track.stream"
         :to="{
           name: 'Album',
           query: { artist: track.albumArtist, title: track.album },
@@ -27,7 +27,10 @@
       >
         <AppIcon name="user" :size="15" />{{ t('player.goToArtist') }}
       </RouterLink>
+      <!-- A stream isn't a file on the server yet: nothing to save to
+           the device (Now playing offers to save it to the server). -->
       <a
+        v-if="!track.stream"
         :href="track.url"
         :download="saveName(track.file)"
         class="flex h-9 items-center gap-2 rounded-full bg-white/10 px-3.5 text-[13px] font-semibold text-white hover:bg-white/15"
@@ -71,6 +74,10 @@ const rows = computed(() => {
       value: tr.added ? timeAgo(tr.added, locale.value) : '',
     },
     { label: t('track.file'), value: tr.file },
+    {
+      label: t('stream.source'),
+      value: tr.stream ? t('stream.sourceLive') : '',
+    },
   ].filter((row) => row.value !== '' && row.value !== undefined)
 })
 </script>

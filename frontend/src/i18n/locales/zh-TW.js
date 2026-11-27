@@ -411,6 +411,8 @@ export default {
       '可以直接在這裡播放、用播放清單監控保持同步，或讓 Jellyfin、Plex、Navidrome 讀取你的媒體庫。',
   },
   search: {
+    legendOnServer: 'On your server',
+    legendLive: 'Others play live from YouTube',
     whatToPlay: 'What do you want to listen to?',
     linkHint: 'You can paste a link too:',
     browseAll: 'Browse all',
@@ -459,6 +461,24 @@ export default {
   },
   stream: {
     failed: '無法串流「{name}」。',
+    liveTitle: 'Streaming live — not on your server yet',
+    save: 'Save to server',
+    playLive: 'Play “{name}” live',
+    saveItem: 'Save “{name}” to the server',
+    queued: 'Queued — it will be saved to your server',
+    saving: 'Saving to your server…',
+    saved: 'On your server',
+    savedHint: 'On your server — next plays come from your library',
+    saveFailed: "Couldn't save it to the server",
+    queuedToast: '“{name}” will be saved to your server',
+    savedToast: '“{name}” is now on your server',
+    autoIn: {
+      one: 'Saved automatically on the next play',
+      other: 'Saved automatically after {count} more plays',
+    },
+    autoQueued: 'Played often — being saved automatically',
+    source: 'Source',
+    sourceLive: 'Streamed live from YouTube',
   },
   finder: {
     placeholder: '搜尋藝人、專輯或歌曲',
@@ -1113,6 +1133,8 @@ export default {
     fetchFailed: '無法取得這位藝人的簡介',
   },
   playlists: {
+    pendingHint:
+      'They play live meanwhile and join the playlist once they are on your server.',
     addFromCatalog: 'Not in your library yet',
     toDownload: 'Will download',
     addSearchPlaceholder: 'Search your library or for new songs',

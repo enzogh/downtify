@@ -446,6 +446,8 @@ export default {
     showAllSongs: 'Alle {count} Titel anzeigen',
     recent: 'Letzte Suchen',
     inLibrary: 'In der Bibliothek',
+    legendOnServer: 'Auf deinem Server',
+    legendLive: 'Die anderen laufen live von YouTube',
     explicit: 'Explizite Inhalte',
     openSource: 'Auf YouTube Music öffnen',
     typeAlbum: 'Album',
@@ -472,6 +474,25 @@ export default {
   },
   stream: {
     failed: '„{name}“ konnte nicht wiedergegeben werden.',
+    liveTitle: 'Live-Stream – noch nicht auf deinem Server',
+    save: 'Auf dem Server speichern',
+    playLive: '„{name}“ live abspielen',
+    saveItem: '„{name}“ auf dem Server speichern',
+    queued: 'In der Warteschlange – wird auf deinem Server gespeichert',
+    saving: 'Wird auf deinem Server gespeichert…',
+    saved: 'Auf deinem Server',
+    savedHint:
+      'Auf deinem Server – die nächsten Wiedergaben kommen aus deiner Bibliothek',
+    saveFailed: 'Konnte nicht auf dem Server gespeichert werden',
+    queuedToast: '„{name}“ wird auf deinem Server gespeichert',
+    savedToast: '„{name}“ ist jetzt auf deinem Server',
+    autoIn: {
+      one: 'Wird bei der nächsten Wiedergabe automatisch gespeichert',
+      other: 'Wird nach {count} weiteren Wiedergaben automatisch gespeichert',
+    },
+    autoQueued: 'Oft gehört – wird automatisch gespeichert',
+    source: 'Quelle',
+    sourceLive: 'Live von YouTube gestreamt',
   },
   finder: {
     placeholder: 'Nach Künstler, Album oder Titel suchen',
@@ -1153,9 +1174,11 @@ export default {
     toDownload: 'Wird geladen',
     addSearchPlaceholder: 'In der Bibliothek oder nach neuen Songs suchen',
     pendingTitle: {
-      one: '{count} Song wird geladen',
-      other: '{count} Songs werden geladen',
+      one: '{count} Song noch nicht auf deinem Server',
+      other: '{count} Songs noch nicht auf deinem Server',
     },
+    pendingHint:
+      'Sie laufen bis dahin live und kommen in die Playlist, sobald sie auf deinem Server sind.',
     recommendedTitle: 'Empfohlene Songs',
     recommendedHint:
       'Basierend auf den Songs dieser Playlist. Beim Hinzufügen wird er bei Bedarf heruntergeladen.',

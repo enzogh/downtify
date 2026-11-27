@@ -100,9 +100,19 @@
                   }}</span>
                   <ExplicitBadge v-if="item.track.explicit" tone="onDark" />
                 </span>
-                <span class="block truncate text-xs text-white/55">{{
-                  item.track.artist
-                }}</span>
+                <span
+                  class="flex min-w-0 items-center gap-1 text-xs text-white/55"
+                >
+                  <!-- Not on the server: it will stream live. -->
+                  <span
+                    v-if="item.track.stream"
+                    class="shrink-0"
+                    role="img"
+                    :title="t('stream.liveTitle')"
+                    :aria-label="t('stream.liveTitle')"
+                    ><AppIcon name="radio" :size="12" /></span
+                  ><span class="truncate">{{ item.track.artist }}</span>
+                </span>
               </span>
             </button>
             <span class="tabular text-xs text-white/45 group-hover:hidden">

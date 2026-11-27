@@ -176,7 +176,7 @@ Quand un morceau est ignoré :
 
 ## Télécharger après des écoutes en streaming
 
-**Réglages → Téléchargements → Télécharger après des écoutes en streaming** télécharge une musique toute seule quand elle a été assez écoutée en streaming : après le nombre d'écoutes choisi (**3**, **5**, **10** ou une valeur personnalisée jusqu'à 100 ; **Désactivé** par défaut), elle est mise en file comme tout autre téléchargement. Les écoutes sont comptées par musique pour tous les comptes ; un démarrage depuis le début compte une écoute (deux démarrages à moins d'une minute d'écart comptent une fois), et une musique n'est mise en file qu'une seule fois. Les métadonnées viennent de YouTube Music. Rien n'est compté en mode bibliothèque seule.
+**Réglages → Téléchargements → Télécharger après des écoutes en streaming** télécharge une musique toute seule quand elle a été assez écoutée en streaming : après le nombre d'écoutes choisi (**3**, **5**, **10** ou une valeur personnalisée jusqu'à 100 ; **Désactivé** par défaut), elle est mise en file comme tout autre téléchargement. Les écoutes sont comptées par musique pour tous les comptes ; un démarrage depuis le début compte une écoute (deux démarrages à moins d'une minute d'écart comptent une fois), et une musique n'est mise en file qu'une seule fois. Les métadonnées viennent de YouTube Music. Rien n'est compté en mode bibliothèque seule. Pendant qu’une telle musique est en streaming, Lecture en cours indique à chaque compte combien d’écoutes il lui reste (*Enregistré automatiquement dans 2 écoutes*) — voir [Lecteur intégré](player.md).
 
 ## Fournisseur audio
 

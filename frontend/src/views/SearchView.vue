@@ -91,6 +91,9 @@
           :subtitle="search.loading.value ? t('search.searching') : ''"
         />
         <UiChips v-model="filter" :items="filters" />
+        <StreamLegend
+          v-if="!search.loading.value && search.songs.value.length"
+        />
       </div>
 
       <div v-if="search.loading.value" class="flex flex-col gap-2">
@@ -261,6 +264,7 @@ import UiSkeleton from '/src/components/ui/UiSkeleton.vue'
 import PageHeader from '/src/components/library/PageHeader.vue'
 import ReleaseCard from '/src/components/search/ReleaseCard.vue'
 import SongRow from '/src/components/search/SongRow.vue'
+import StreamLegend from '/src/components/search/StreamLegend.vue'
 import TopResult from '/src/components/search/TopResult.vue'
 import TrackList from '/src/components/library/TrackList.vue'
 import { pickTopResult } from '/src/lib/topResult'

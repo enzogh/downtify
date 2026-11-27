@@ -176,7 +176,7 @@ Bir şarkı atlandığında:
 
 ## Canlı dinlemelerden sonra indir
 
-**Ayarlar → İndirmeler → Canlı dinlemelerden sonra indir**, yeterince akışla dinlenen bir şarkıyı kendiliğinden indirir: seçilen sayıdan sonra (**3**, **5**, **10** veya 100'e kadar özel bir değer; varsayılan **Kapalı**) her indirme gibi kuyruğa eklenir. Sayım tüm hesaplarda şarkı başınadır; baştan başlatmak bir kez sayılır (bir dakika içindeki iki başlatma bir sayılır) ve bir şarkı yalnızca bir kez kuyruğa alınır. Meta veriler YouTube Music'ten gelir. Yalnızca kitaplık modunda hiçbir şey sayılmaz.
+**Ayarlar → İndirmeler → Canlı dinlemelerden sonra indir**, yeterince akışla dinlenen bir şarkıyı kendiliğinden indirir: seçilen sayıdan sonra (**3**, **5**, **10** veya 100'e kadar özel bir değer; varsayılan **Kapalı**) her indirme gibi kuyruğa eklenir. Sayım tüm hesaplarda şarkı başınadır; baştan başlatmak bir kez sayılır (bir dakika içindeki iki başlatma bir sayılır) ve bir şarkı yalnızca bir kez kuyruğa alınır. Meta veriler YouTube Music'ten gelir. Yalnızca kitaplık modunda hiçbir şey sayılmaz. Böyle bir şarkı canlı çalarken Şimdi çalıyor her hesaba kaç çalma kaldığını gösterir (*2 çalma daha sonra otomatik kaydedilecek*) — bkz. [Yerleşik oynatıcı](player.md).
 
 ## Ses sağlayıcı
 

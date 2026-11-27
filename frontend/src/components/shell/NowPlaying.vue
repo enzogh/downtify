@@ -192,6 +192,7 @@
               </div>
               <!-- A song that won't play: say so, and offer the two ways
                    out instead of leaving the listener stuck on it. -->
+              <StreamNotice v-if="track.stream && !player.playError.value" />
               <div
                 v-if="player.playError.value"
                 class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm"
@@ -373,31 +374,10 @@
                     :size="22"
                   />
                 </button>
-                <!-- Right of repeat: a stream queues its download (once -
-                     while queued it spins instead), a downloaded track
-                     shows a static check that does nothing. -->
-                <button
-                  v-if="showPlayerDownload"
-                  type="button"
-                  class="flex size-11 items-center justify-center rounded-full text-white/80 transition-colors hover:bg-white/10 disabled:opacity-50"
-                  :aria-label="t('actions.downloadItem', { name: track.title })"
-                  :disabled="downloadBusy"
-                  @click="downloadCurrent"
-                >
-                  <AppIcon
-                    :name="downloadBusy ? 'refresh' : 'download'"
-                    :size="22"
-                    :class="downloadBusy ? 'animate-spin' : ''"
-                  />
-                </button>
-                <span
-                  v-else-if="showDownloadedCheck"
-                  class="flex size-11 items-center justify-center rounded-full text-accent"
-                  :title="t('search.inLibrary')"
-                  aria-hidden="true"
-                >
-                  <AppIcon name="check" :size="22" />
-                </span>
+                <!-- Right of repeat: a stream saves to the server (a ring
+                     fills while it downloads), a song already there shows
+                     a static check. -->
+                <StreamSaveButton v-if="!track.isPodcast" size="lg" on-dark />
               </div>
 
               <div class="hidden flex-1 items-center justify-end gap-2 lg:flex">
@@ -507,9 +487,9 @@ import TrackArtistLinks from '../library/TrackArtistLinks.vue'
 import EqualizerPanel from '../player/EqualizerPanel.vue'
 import { usePlaybackLoading } from '../player/usePlaybackLoading'
 import { usePlayer } from '/src/model/player'
-import { useDownloadManager, useProgressTracker } from '/src/model/download'
-import { useLibrary } from '/src/model/library'
-import { useUi } from '/src/model/ui'
+import StreamNotice from '../player/StreamNotice.vue'
+import StreamSaveButton from '../player/StreamSaveButton.vue'
+import { useStreamSave } from '/src/model/streamSave'
 import { usePlayerPrefs } from '/src/model/playerPrefs'
 import { useNowPlaying } from '/src/model/ui'
 import { formatBytes, formatDuration, hueFor } from '/src/lib/format'
@@ -524,11 +504,8 @@ import { hasLyricsSource, prefetchLyrics } from '/src/model/lyrics'
 import { useI18n } from '/src/i18n'
 
 const player = usePlayer()
-const library = useLibrary()
 const playlistActions = usePlaylistActions()
-const dm = useDownloadManager()
-const tracker = useProgressTracker()
-const ui = useUi()
+const streamSave = useStreamSave()
 const { showLyrics } = usePlayerPrefs()
 const nowPlaying = useNowPlaying()
 const auth = useAuth()
@@ -693,12 +670,22 @@ const trackMenu = computed(() => {
   const tr = track.value
   if (!tr) return []
   const addTo = playlistActions.playerMenuItems(tr)
+  const saveState = streamSave.state.value
+  const canSave =
+    !!streamSave.song.value && (saveState === 'new' || saveState === 'failed')
   return [
     ...(addTo.length ? [...addTo, { divider: true }] : []),
     {
+      label: saveState === 'failed' ? t('common.retry') : t('stream.save'),
+      icon: saveState === 'failed' ? 'retry' : 'download',
+      hidden: !canSave,
+      action: () => streamSave.save(),
+    },
+    {
       label: t('player.goToAlbum'),
       icon: 'disc',
-      hidden: !tr.album || tr.isPodcast,
+      // A stream's album isn't in the library: its page would be empty.
+      hidden: !tr.album || tr.isPodcast || !!tr.stream,
       action: () =>
         navigate({
           name: 'Album',
@@ -746,68 +733,6 @@ function saveFile(tr) {
   document.body.appendChild(a)
   a.click()
   a.remove()
-}
-
-// A stream that landed in the library while playing (downloaded from
-// anywhere) offers deletion instead of another download.
-const streamDownloaded = computed(
-  () =>
-    !!track.value?.stream &&
-    library.hasSong(track.value.artist, track.value.title)
-)
-
-const showPlayerDownload = computed(
-  () => !!track.value?.stream && !streamDownloaded.value
-)
-// A downloaded track shows a static check where the download button
-// was; deleting happens from the library rows.
-const showDownloadedCheck = computed(
-  () =>
-    !!track.value &&
-    !track.value.isPodcast &&
-    (!track.value.stream || streamDownloaded.value)
-)
-
-// The playing stream as a downloadable song: the watch URL is the
-// download key (so it can't be queued twice) and the known video id
-// pins the exact version, like a resolved search row.
-const pendingSong = computed(() => {
-  const tr = track.value
-  if (!tr?.stream || !tr.video_id) return null
-  return {
-    name: tr.title,
-    artists: tr.artist ? [tr.artist] : [],
-    artist: tr.artist || '',
-    album_name: tr.album || '',
-    cover_url: tr.cover && String(tr.cover).startsWith('http') ? tr.cover : '',
-    duration: tr.duration || 0,
-    url: `https://music.youtube.com/watch?v=${tr.video_id}`,
-    youtube_id: tr.video_id,
-  }
-})
-
-// The queued/finished job behind the button, if any - while one exists
-// the button spins instead of queueing a duplicate.
-const downloadJob = computed(() => {
-  tracker.queueVersion.value
-  return pendingSong.value ? tracker.getBySong(pendingSong.value) : null
-})
-const downloadBusy = computed(() => {
-  const state = downloadJob.value?.state
-  return state === 'queued' || state === 'active'
-})
-
-/** Queue the playing stream as a download (it keeps streaming). */
-function downloadCurrent() {
-  const song = pendingSong.value
-  if (!song || downloadBusy.value) return
-  if (downloadJob.value?.state === 'failed') dm.retry(song)
-  else {
-    dm.queue(song)
-    ui.toast(t('toast.queuedTracks', { count: 1, name: song.name }), {
-      kind: 'success',
-    })
-  }
 }
 
 function commitSeek(value) {

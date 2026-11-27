@@ -14,7 +14,7 @@ Songs from a search, the charts or the recommendations below a playlist can go s
 - **Add songs** on the playlist page: the search box looks in the library *and* for new songs, listed under **Not in your library yet**;
 - dragging the song onto a playlist in the sidebar.
 
-A song that is already in the library goes into the playlist at once. Any other song is queued for download and shows on the playlist page under **songs downloading**. You can play it there straight away (it streams), and it moves into the playlist, at the end, as soon as its download finishes: an open playlist page shows it there without a reload, on every device and for every editor. The same happens when the queue finds the song already in the library. If a download fails, the song stays in that list until you retry it from the [queue](download-queue.md) or take it out with the **×** next to it.
+A song that is already in the library goes into the playlist at once. Any other song is queued for download and shows on the playlist page under **songs not on your server yet**. You can play it there straight away (it streams live) — the playlist's play button plays these songs too while nothing else is saved yet — and it moves into the playlist, at the end, as soon as its download finishes: an open playlist page shows it there without a reload, on every device and for every editor. The same happens when the queue finds the song already in the library. If a download fails, the song stays in that list until you retry it from the [queue](download-queue.md) or take it out with the **×** next to it.
 
 ::: info Where the waiting songs live
 A playlist's M3U file only ever lists files that exist, so media servers reading it never see a missing song. The songs still waiting are kept in Castify's database (`/data/downtify_library.db`). Renaming the playlist keeps them, and deleting it forgets them.
@@ -26,7 +26,7 @@ In [library-only mode](library-only.md) nothing can be downloaded, so the **+** 
 
 Drag any song from a track list (an album, an artist, the Library, a playlist) or from a search result — the **Top result** card included — to add it to a playlist. To drag several songs at once, select them first.
 
-As soon as you start dragging, an **Add to a playlist** panel opens on the right with every playlist you can add to (yours, empty ones included, and those shared with you as an editor). Drop the songs on one of them, or on **New playlist…** to create a playlist with them. On a wide screen you can also drop onto the playlists in the sidebar: it lists your own playlists — imported ones included, everyone else's are under **See all** even for an admin.
+Once a drag has lasted a moment, an **Add to a playlist** panel opens on the right (a click that barely moves the pointer no longer flashes it open) with every playlist you can add to (yours, empty ones included, and those shared with you as an editor). Drop the songs on one of them, or on **New playlist…** to create a playlist with them. On a wide screen you can also drop onto the playlists in the sidebar: it lists your own playlists — imported ones included, everyone else's are under **See all** even for an admin.
 
 Your **imported playlists** — the ones that follow a Spotify or YouTube Music playlist, through a link or a [Playlist Monitor](playlist-monitor.md) watch — are listed below, under their own heading. They follow their source, so they can't take songs of their own: dropping a song on one first asks to [detach it from its source](library-catalog.md#detach-an-imported-playlist). Once detached it is a Library playlist like the others and gets the song.
 
@@ -40,7 +40,7 @@ The suggestions are kept in the browser for a day, so opening the playlist again
 
 ## Search
 
-When you search, the results open with a **Top result**: the artist, album or song your search names (the first song otherwise). Its first songs sit beside it, as on Spotify. **In your library** lists the matching songs you already have, including those from [extra folders](external-library.md), which play straight from disk. A song you already have is marked with a small green check rather than a download button.
+When you search, the results open with a **Top result**: the artist, album or song your search names (the first song otherwise). Its first songs sit beside it, as on Spotify. **In your library** lists the matching songs you already have, including those from [extra folders](external-library.md), which play straight from disk. A song you already have is marked with a small green check rather than a download button; a line under the filters says what the marks mean (on your server, the others play live from YouTube, the arrow saves one to the server). The button on a song's cover plays it — live when it isn't on the server — and the song playing right now is highlighted in its list.
 
 ## Made for you
 

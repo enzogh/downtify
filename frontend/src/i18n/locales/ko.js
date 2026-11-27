@@ -426,6 +426,8 @@ export default {
     showAllSongs: '곡 {count}개 모두 보기',
     recent: '최근 검색어',
     inLibrary: '라이브러리에 있음',
+    legendOnServer: '서버에 있음',
+    legendLive: '나머지는 YouTube에서 라이브로 재생됩니다',
     explicit: '선정적 콘텐츠 (Explicit)',
     openSource: 'YouTube Music에서 열기',
     typeAlbum: '앨범',
@@ -452,6 +454,24 @@ export default {
   },
   stream: {
     failed: '“{name}” 스트리밍에 실패했습니다.',
+    liveTitle: '라이브 스트리밍 중 — 아직 서버에 없습니다',
+    save: '서버에 저장',
+    playLive: '“{name}” 라이브로 재생',
+    saveItem: '“{name}”을(를) 서버에 저장',
+    queued: '대기 중 — 서버에 저장됩니다',
+    saving: '서버에 저장하는 중…',
+    saved: '서버에 있음',
+    savedHint: '서버에 있음 — 다음 재생부터 라이브러리에서 재생됩니다',
+    saveFailed: '서버에 저장하지 못했습니다',
+    queuedToast: '“{name}”이(가) 서버에 저장됩니다',
+    savedToast: '“{name}”이(가) 이제 서버에 있습니다',
+    autoIn: {
+      one: '다음 재생 시 자동으로 저장됩니다',
+      other: '{count}번 더 재생하면 자동으로 저장됩니다',
+    },
+    autoQueued: '자주 재생됨 — 자동으로 저장하는 중',
+    source: '출처',
+    sourceLive: 'YouTube에서 라이브 스트리밍',
   },
   finder: {
     placeholder: '아티스트, 앨범 또는 곡 검색',
@@ -1117,9 +1137,11 @@ export default {
     toDownload: '다운로드 예정',
     addSearchPlaceholder: '보관함 또는 새 곡 검색',
     pendingTitle: {
-      one: '{count}곡 다운로드 중',
-      other: '{count}곡 다운로드 중',
+      one: '{count}곡이 아직 서버에 없습니다',
+      other: '{count}곡이 아직 서버에 없습니다',
     },
+    pendingHint:
+      '그동안 라이브로 재생되며, 서버에 저장되면 플레이리스트에 들어갑니다.',
     recommendedTitle: '추천 곡',
     recommendedHint:
       '이 플레이리스트의 곡을 바탕으로 합니다. 추가하면 필요할 때 다운로드됩니다.',

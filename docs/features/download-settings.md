@@ -176,7 +176,7 @@ When a song is skipped:
 
 ## Download after live plays
 
-**Settings → Downloads → Download after live plays** downloads a song on its own once it has been streamed enough: a song that isn't in the library plays live from YouTube, and after the chosen number of plays (**3**, **5**, **10** or a custom value up to 100; **Off** by default) it is queued like any other download and lands in the library with its tags, cover and lyrics. Plays are counted per song across every account, since the library is shared. A play is a start from the beginning — seeking, skipping back within a minute or opening the same song twice in a row counts once — and a song is only ever queued once by this setting. The metadata comes from YouTube Music for the video that played. Nothing is counted in library-only mode.
+**Settings → Downloads → Download after live plays** downloads a song on its own once it has been streamed enough: a song that isn't in the library plays live from YouTube, and after the chosen number of plays (**3**, **5**, **10** or a custom value up to 100; **Off** by default) it is queued like any other download and lands in the library with its tags, cover and lyrics. Plays are counted per song across every account, since the library is shared. A play is a start from the beginning — seeking, skipping back within a minute or opening the same song twice in a row counts once — and a song is only ever queued once by this setting. The metadata comes from YouTube Music for the video that played. Nothing is counted in library-only mode. While such a song streams, Now playing tells every account how many more plays it needs (*Saved automatically after 2 more plays*) — see [Built-in player](player.md).
 
 ## Audio provider
 

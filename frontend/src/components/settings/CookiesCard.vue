@@ -34,7 +34,7 @@
       <input
         ref="picker"
         type="file"
-        accept=".txt,text/plain"
+        accept=".txt,.json,text/plain,application/json"
         class="hidden"
         @change="onPick"
       />

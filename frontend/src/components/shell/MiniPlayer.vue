@@ -177,25 +177,9 @@
           class="max-lg:hidden"
           @click="player.cycleRepeat()"
         />
-        <UiIconButton
-          v-if="showMiniDownload"
-          :icon="downloadBusy ? 'refresh' : 'download'"
-          :label="t('actions.downloadItem', { name: trackTitle })"
-          :disabled="downloadBusy"
-          :class="downloadBusy ? '[&_svg]:animate-spin' : ''"
-          @click="downloadCurrent"
-        />
-        <!-- Downloaded tracks show a static check in the download
-             button's slot: it does nothing, deleting happens from the
-             library rows. -->
-        <span
-          v-if="showDownloadedCheck"
-          class="inline-flex size-10 shrink-0 items-center justify-center text-accent"
-          :title="t('search.inLibrary')"
-          aria-hidden="true"
-        >
-          <AppIcon name="check" :size="18" />
-        </span>
+        <!-- A stream saves to the server from here (a ring fills while
+             it downloads); a song already there shows a check. -->
+        <StreamSaveButton v-if="!track.isPodcast" />
       </div>
 
       <!-- A size container: the clock and the volume slider only show
@@ -265,6 +249,7 @@ import EqBars from '../ui/EqBars.vue'
 import ExplicitBadge from '../ui/ExplicitBadge.vue'
 import UiIconButton from '../ui/UiIconButton.vue'
 import UiMenu from '../ui/UiMenu.vue'
+import StreamSaveButton from '../player/StreamSaveButton.vue'
 import { useMiniGestures } from '../player/useMiniGestures'
 import { groupingArtistName } from '/src/lib/library'
 import LikeButton from '../player/LikeButton.vue'
@@ -278,10 +263,9 @@ import VolumeControl from '../player/VolumeControl.vue'
 import { useRouter } from 'vue-router'
 import { usePlayer } from '/src/model/player'
 import { useJam } from '/src/model/jam'
-import { useDownloadManager, useProgressTracker } from '/src/model/download'
-import { useLibrary } from '/src/model/library'
+import { useStreamSave } from '/src/model/streamSave'
 import { usePlayerPrefs } from '/src/model/playerPrefs'
-import { useNowPlaying, useUi } from '/src/model/ui'
+import { useNowPlaying } from '/src/model/ui'
 import { usePlaylistActions } from '/src/model/playlistActions'
 import { formatDuration, widestClock } from '/src/lib/format'
 import { useI18n } from '/src/i18n'
@@ -295,10 +279,7 @@ const nowPlaying = useNowPlaying()
 const { t } = useI18n()
 const auth = useAuth()
 const { openJamSheet } = useJamSheet()
-const library = useLibrary()
-const dm = useDownloadManager()
-const tracker = useProgressTracker()
-const ui = useUi()
+const streamSave = useStreamSave()
 const scrub = ref(null)
 const loading = usePlaybackLoading(() => player.loadingPhase.value)
 
@@ -317,6 +298,7 @@ const songMenuItems = computed(() => {
   const addTo = playlistActions.playerMenuItems(tr)
   return [
     ...(addTo.length ? [...addTo, { divider: true }] : []),
+    ...streamSaveMenuItems(),
     {
       label: t('player.goToAlbum'),
       icon: 'disc',
@@ -355,67 +337,20 @@ const songMenuItems = computed(() => {
 
 const track = computed(() => player.currentTrack.value)
 
-const trackArtist = computed(
-  () =>
-    (track.value?.artists || [])[0] ||
-    track.value?.artist ||
-    t('common.unknownArtist')
-)
-const trackTitle = computed(() => track.value?.name || track.value?.title || '')
-
-// A stream that isn't in the library yet can be queued from here; while
-// queued it spins instead of queueing a duplicate.
-const streamDownloadable = computed(
-  () =>
-    !!track.value?.stream &&
-    !!track.value.video_id &&
-    !library.hasSong(trackArtist.value, trackTitle.value)
-)
-const pendingSong = computed(() => {
-  if (!streamDownloadable.value) return null
-  const tr = track.value
-  return {
-    name: trackTitle.value,
-    artists: tr.artist ? [tr.artist] : [],
-    artist: tr.artist || '',
-    album_name: tr.album || '',
-    cover_url: tr.cover && String(tr.cover).startsWith('http') ? tr.cover : '',
-    duration: tr.duration || 0,
-    url: `https://music.youtube.com/watch?v=${tr.video_id}`,
-    youtube_id: tr.video_id,
-  }
-})
-const downloadJob = computed(() => {
-  tracker.queueVersion.value
-  return pendingSong.value ? tracker.getBySong(pendingSong.value) : null
-})
-const downloadBusy = computed(() => {
-  const state = downloadJob.value?.state
-  return state === 'queued' || state === 'active'
-})
-const showMiniDownload = computed(() => !!streamDownloadable.value)
-
-function downloadCurrent() {
-  const song = pendingSong.value
-  if (!song || downloadBusy.value) return
-  if (downloadJob.value?.state === 'failed') dm.retry(song)
-  else {
-    dm.queue(song)
-    ui.toast(t('toast.queuedTracks', { count: 1, name: song.name }), {
-      kind: 'success',
-    })
-  }
+// Holding a stream offers to save it, like the button beside repeat.
+function streamSaveMenuItems() {
+  const state = streamSave.state.value
+  if (!streamSave.song.value || (state !== 'new' && state !== 'failed'))
+    return []
+  return [
+    {
+      label: state === 'failed' ? t('common.retry') : t('stream.save'),
+      icon: state === 'failed' ? 'retry' : 'download',
+      action: () => streamSave.save(),
+    },
+    { divider: true },
+  ]
 }
-
-// A downloaded track (or a stream that landed in the library while
-// playing) shows a static check where the download button was.
-const showDownloadedCheck = computed(
-  () =>
-    !!track.value &&
-    !track.value.isPodcast &&
-    (!track.value.stream ||
-      library.hasSong(trackArtist.value, trackTitle.value))
-)
 
 // The phone hairline glides like the desktop scrubber (only animated
 // while it's the one on screen).

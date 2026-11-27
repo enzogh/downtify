@@ -434,6 +434,8 @@ export default {
     showAllSongs: '{count} şarkının tümünü göster',
     recent: 'Son aramalar',
     inLibrary: 'Kitaplıkta',
+    legendOnServer: 'Sunucunda',
+    legendLive: 'Diğerleri YouTube’dan canlı çalar',
     explicit: 'Açık içerik',
     openSource: 'YouTube Music’te aç',
     typeAlbum: 'Albüm',
@@ -460,6 +462,24 @@ export default {
   },
   stream: {
     failed: '“{name}” çalınamadı.',
+    liveTitle: 'Canlı yayın — henüz sunucunda değil',
+    save: 'Sunucuya kaydet',
+    playLive: '“{name}” canlı çal',
+    saveItem: '“{name}” sunucuya kaydet',
+    queued: 'Sırada — sunucuna kaydedilecek',
+    saving: 'Sunucuna kaydediliyor…',
+    saved: 'Sunucunda',
+    savedHint: 'Sunucunda — sonraki çalmalar kitaplığından gelir',
+    saveFailed: 'Sunucuya kaydedilemedi',
+    queuedToast: '“{name}” sunucuna kaydedilecek',
+    savedToast: '“{name}” artık sunucunda',
+    autoIn: {
+      one: 'Bir sonraki çalmada otomatik kaydedilecek',
+      other: '{count} çalma daha sonra otomatik kaydedilecek',
+    },
+    autoQueued: 'Sık dinlendi — otomatik kaydediliyor',
+    source: 'Kaynak',
+    sourceLive: 'YouTube’dan canlı yayınlandı',
   },
   finder: {
     placeholder: 'Sanatçı, albüm veya şarkı arayın',
@@ -1125,9 +1145,11 @@ export default {
     toDownload: 'İndirilecek',
     addSearchPlaceholder: 'Kitaplıkta veya yeni şarkılarda ara',
     pendingTitle: {
-      one: '{count} şarkı indiriliyor',
-      other: '{count} şarkı indiriliyor',
+      one: '{count} şarkı henüz sunucunda değil',
+      other: '{count} şarkı henüz sunucunda değil',
     },
+    pendingHint:
+      'O zamana kadar canlı çalarlar ve sunucuna kaydedilince çalma listesine girerler.',
     recommendedTitle: 'Önerilen şarkılar',
     recommendedHint:
       'Bu çalma listesindeki şarkılara göre. Eklemek gerekirse indirir.',

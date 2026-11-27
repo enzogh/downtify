@@ -454,6 +454,8 @@ export default {
       'Играйте здесь, держите плейлисты в актуальном состоянии через монитор плейлистов или подключите Jellyfin, Plex или Navidrome к вашей библиотеке.',
   },
   search: {
+    legendOnServer: 'On your server',
+    legendLive: 'Others play live from YouTube',
     whatToPlay: 'What do you want to listen to?',
     linkHint: 'You can paste a link too:',
     browseAll: 'Browse all',
@@ -506,6 +508,24 @@ export default {
   },
   stream: {
     failed: 'Не удалось воспроизвести «{name}».',
+    liveTitle: 'Streaming live — not on your server yet',
+    save: 'Save to server',
+    playLive: 'Play “{name}” live',
+    saveItem: 'Save “{name}” to the server',
+    queued: 'Queued — it will be saved to your server',
+    saving: 'Saving to your server…',
+    saved: 'On your server',
+    savedHint: 'On your server — next plays come from your library',
+    saveFailed: "Couldn't save it to the server",
+    queuedToast: '“{name}” will be saved to your server',
+    savedToast: '“{name}” is now on your server',
+    autoIn: {
+      one: 'Saved automatically on the next play',
+      other: 'Saved automatically after {count} more plays',
+    },
+    autoQueued: 'Played often — being saved automatically',
+    source: 'Source',
+    sourceLive: 'Streamed live from YouTube',
   },
   finder: {
     placeholder: 'Найдите артиста, альбом или песню',
@@ -1235,6 +1255,8 @@ export default {
     fetchFailed: 'Не удалось получить биографию этого артиста',
   },
   playlists: {
+    pendingHint:
+      'They play live meanwhile and join the playlist once they are on your server.',
     addFromCatalog: 'Not in your library yet',
     toDownload: 'Will download',
     addSearchPlaceholder: 'Search your library or for new songs',

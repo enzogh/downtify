@@ -160,11 +160,14 @@ export function useSongPlay(props) {
     () => !!track.value || (!!songArtist(props.song) && !!songTitle(props.song))
   )
   const highlighted = computed(() => isCurrent.value)
-  const playLabel = computed(() =>
-    isCurrent.value && player.isPlaying.value
-      ? t('player.pause')
-      : t('actions.playItem', { name: songTitle(props.song) })
-  )
+  // A song that isn't on the server says it will play live.
+  const playLabel = computed(() => {
+    if (isCurrent.value && player.isPlaying.value) return t('player.pause')
+    const name = songTitle(props.song)
+    return track.value
+      ? t('actions.playItem', { name })
+      : t('stream.playLive', { name })
+  })
 
   function play() {
     if (!track.value) return

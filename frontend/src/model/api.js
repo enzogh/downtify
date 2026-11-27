@@ -226,6 +226,12 @@ function prefetchLiveStream(videoId) {
   return API.post('/api/stream/live/prefetch', { video_id: videoId })
 }
 
+// How close a streamed video is to *Download after live plays* saving
+// it: `{plays, threshold, queued}` (threshold 0 = off).
+function getLiveStreamPlays(videoId) {
+  return API.get('/api/stream/live/plays', { params: { video_id: videoId } })
+}
+
 // ── Artist photo & banner ───────────────────────────────────────────
 function getArtistArt(name) {
   return API.get('/api/artists/art', { params: { name } })
@@ -1349,6 +1355,7 @@ export default {
   getStreamUrl,
   prefetchStream,
   prefetchLiveStream,
+  getLiveStreamPlays,
   getArtistArt,
   getArtistArtBulk,
   searchArtistArt,

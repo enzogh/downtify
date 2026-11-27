@@ -1,9 +1,12 @@
 <template>
   <section v-if="songs.length" class="flex flex-col gap-2">
-    <p class="eyebrow flex items-center gap-2">
-      <AppIcon name="download" :size="13" />
-      {{ t('playlists.pendingTitle', { count: songs.length }) }}
-    </p>
+    <div class="flex flex-col gap-0.5">
+      <p class="eyebrow flex items-center gap-2">
+        <AppIcon name="radio" :size="13" />
+        {{ t('playlists.pendingTitle', { count: songs.length }) }}
+      </p>
+      <p class="text-xs text-muted">{{ t('playlists.pendingHint') }}</p>
+    </div>
     <ul class="-mx-3 flex flex-col">
       <li
         v-for="song in songs"

@@ -176,7 +176,7 @@ Quando uma música é pulada:
 
 ## Baixar após reproduções ao vivo
 
-**Configurações → Downloads → Baixar após reproduções ao vivo** baixa uma música sozinha quando ela foi tocada em streaming o bastante: após o número escolhido (**3**, **5**, **10** ou um valor próprio até 100; **Desligado** por padrão) ela entra na fila como qualquer outro download. A contagem é por música, somando todas as contas; começar do início conta uma vez (dois inícios com menos de um minuto contam um), e uma música só entra na fila uma vez. Os metadados vêm do YouTube Music. No modo só biblioteca nada é contado.
+**Configurações → Downloads → Baixar após reproduções ao vivo** baixa uma música sozinha quando ela foi tocada em streaming o bastante: após o número escolhido (**3**, **5**, **10** ou um valor próprio até 100; **Desligado** por padrão) ela entra na fila como qualquer outro download. A contagem é por música, somando todas as contas; começar do início conta uma vez (dois inícios com menos de um minuto contam um), e uma música só entra na fila uma vez. Os metadados vêm do YouTube Music. No modo só biblioteca nada é contado. Enquanto uma música assim toca em streaming, Tocando agora mostra a qualquer conta quantas reproduções faltam (*Salva automaticamente após mais 2 reproduções*) — veja [Player integrado](player.md).
 
 ## Provedor de áudio
 

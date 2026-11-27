@@ -427,6 +427,8 @@ export default {
     showAllSongs: 'Show all {count} songs',
     recent: 'Recent searches',
     inLibrary: 'In library',
+    legendOnServer: 'On your server',
+    legendLive: 'Others play live from YouTube',
     explicit: 'Explicit',
     openSource: 'Open on YouTube Music',
     typeAlbum: 'Album',
@@ -453,6 +455,24 @@ export default {
   },
   stream: {
     failed: "Couldn't stream “{name}”.",
+    liveTitle: 'Streaming live — not on your server yet',
+    save: 'Save to server',
+    playLive: 'Play “{name}” live',
+    saveItem: 'Save “{name}” to the server',
+    queued: 'Queued — it will be saved to your server',
+    saving: 'Saving to your server…',
+    saved: 'On your server',
+    savedHint: 'On your server — next plays come from your library',
+    saveFailed: "Couldn't save it to the server",
+    queuedToast: '“{name}” will be saved to your server',
+    savedToast: '“{name}” is now on your server',
+    autoIn: {
+      one: 'Saved automatically on the next play',
+      other: 'Saved automatically after {count} more plays',
+    },
+    autoQueued: 'Played often — being saved automatically',
+    source: 'Source',
+    sourceLive: 'Streamed live from YouTube',
   },
   finder: {
     placeholder: 'Search for an artist, album or song',
@@ -1111,9 +1131,11 @@ export default {
     toDownload: 'Will download',
     addSearchPlaceholder: 'Search your library or for new songs',
     pendingTitle: {
-      one: '{count} song downloading',
-      other: '{count} songs downloading',
+      one: '{count} song not on your server yet',
+      other: '{count} songs not on your server yet',
     },
+    pendingHint:
+      'They play live meanwhile and join the playlist once they are on your server.',
     recommendedTitle: 'Recommended songs',
     recommendedHint:
       'Based on the songs in this playlist. Adding one downloads it if needed.',

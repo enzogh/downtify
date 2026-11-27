@@ -21,6 +21,7 @@
     <button
       type="button"
       class="relative shrink-0"
+      :title="play.playLabel.value"
       :aria-label="play.playLabel.value"
       :disabled="!play.playable.value"
       @click.stop="play.toggle()"
@@ -48,8 +49,18 @@
     </button>
     <div class="min-w-0 flex-1">
       <p class="flex items-center gap-1.5">
-        <span class="truncate text-sm font-semibold">{{ song.name }}</span>
+        <span
+          class="truncate text-sm font-semibold"
+          :class="play.isCurrent.value ? 'text-accent' : ''"
+          >{{ song.name }}</span
+        >
         <ExplicitBadge v-if="song.explicit" />
+        <!-- The song playing right now, streamed or from the library. -->
+        <EqBars
+          v-if="play.isCurrent.value && player.isPlaying.value"
+          :size="10"
+          :playing="player.isAdvancing.value"
+        />
       </p>
       <p class="truncate text-[13px] text-muted">
         <template v-if="artistLinks.length">
@@ -65,8 +76,10 @@
             ><template v-else>{{ artist.name }}</template></template
           >
         </template>
-        <template v-else>{{ artists }}</template
-        ><span v-if="song.album_name" :class="compact ? '' : 'lg:hidden'">
+        <template v-else>{{ artists }}</template><span
+          v-if="song.album_name"
+          :class="compact ? '' : 'lg:hidden'"
+        >
           ·
           <RouterLink
             v-if="albumTo"
@@ -74,8 +87,9 @@
             class="hover:text-fg hover:underline"
             @click.stop
             @dblclick.stop
-            >{{ song.album_name }}</RouterLink
-          ><template v-else>{{ song.album_name }}</template></span
+            >{{ song.album_name }}</RouterLink><template v-else>{{
+            song.album_name
+          }}</template></span
         >
       </p>
     </div>
@@ -89,8 +103,9 @@
         class="hover:text-fg hover:underline"
         @click.stop
         @dblclick.stop
-        >{{ song.album_name }}</RouterLink
-      ><template v-else>{{ song.album_name }}</template>
+        >{{ song.album_name }}</RouterLink><template v-else>{{
+        song.album_name
+      }}</template>
     </span>
     <span
       class="tabular hidden w-12 text-right text-[13px] text-muted sm:block"
@@ -149,6 +164,7 @@ import { setDragSongs } from '/src/lib/dragSongs'
 import { useLibrary } from '/src/model/library'
 import AppIcon from '../ui/AppIcon.vue'
 import CoverArt from '../ui/CoverArt.vue'
+import EqBars from '../ui/EqBars.vue'
 import ExplicitBadge from '../ui/ExplicitBadge.vue'
 import DownloadState from './DownloadState.vue'
 import UiMenu from '../ui/UiMenu.vue'
