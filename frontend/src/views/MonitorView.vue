@@ -331,7 +331,7 @@
 
       <template v-else>
         <div
-          class="monitor-table-scroll rounded-panel focus-visible:outline-accent"
+          class="monitor-table-scroll relative rounded-panel focus-visible:outline-accent"
           tabindex="0"
           role="region"
           :aria-label="
