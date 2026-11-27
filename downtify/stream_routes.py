@@ -277,19 +277,53 @@ def count_live_play(vid: str, user_id: int) -> None:
     been played ``auto_download_after_plays`` times (see
     :mod:`downtify.stream_plays`)."""
 
-    store = state.stream_plays
-    threshold = stream_plays.clamp_threshold(
-        state.settings.get('auto_download_after_plays', 0)
-    )
-    if store is None or not threshold:
+    threshold = auto_download_threshold()
+    if not threshold:
         return
-    if library_only.enabled(state.settings) or state.downloader is None:
-        return
-    if store.record(vid, threshold):
+    if state.stream_plays.record(vid, threshold):
         spawn_task(
             _auto_download_played(vid, user_id),
             name=f'stream-auto-download-{vid}',
         )
+
+
+def auto_download_threshold() -> int:
+    """Live plays before a song is downloaded on its own; ``0`` when
+    that is off (the setting, library-only mode, no downloader)."""
+
+    if state.stream_plays is None or state.downloader is None:
+        return 0
+    if library_only.enabled(state.settings):
+        return 0
+    return stream_plays.clamp_threshold(
+        state.settings.get('auto_download_after_plays', 0)
+    )
+
+
+@router.get('/api/stream/live/plays')
+def stream_live_plays_endpoint(
+    video_id: str = Query(..., min_length=1, max_length=64),
+) -> dict[str, int | bool]:
+    """How close a streamed video is to being downloaded on its own.
+
+    ``{plays, threshold, queued}``: its live plays so far, the *Download
+    after live plays* setting (``0`` = off) and whether that counter
+    already queued it - what the player shows as "saved automatically
+    after N more plays". Readable by every account, unlike the
+    settings. ``400`` for a malformed id.
+    """
+
+    try:
+        vid = stream.clean_video_id(video_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    store = state.stream_plays
+    plays, queued = store.status(vid) if store is not None else (0, False)
+    return {
+        'plays': plays,
+        'threshold': auto_download_threshold(),
+        'queued': queued,
+    }
 
 
 async def _auto_download_played(vid: str, user_id: int) -> None:

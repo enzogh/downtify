@@ -176,7 +176,7 @@ Cuando se omite una canción:
 
 ## Descargar tras reproducciones en streaming
 
-**Ajustes → Descargas → Descargar tras reproducciones en streaming** descarga una canción por sí sola cuando se ha escuchado en streaming lo suficiente: tras el número elegido (**3**, **5**, **10** o un valor propio hasta 100; **Desactivado** por defecto) entra en la cola como cualquier otra descarga. Se cuenta por canción entre todas las cuentas; empezar desde el principio cuenta una vez (dos inicios en menos de un minuto cuentan una), y una canción solo se encola una vez. Los metadatos vienen de YouTube Music. En modo solo biblioteca no se cuenta nada.
+**Ajustes → Descargas → Descargar tras reproducciones en streaming** descarga una canción por sí sola cuando se ha escuchado en streaming lo suficiente: tras el número elegido (**3**, **5**, **10** o un valor propio hasta 100; **Desactivado** por defecto) entra en la cola como cualquier otra descarga. Se cuenta por canción entre todas las cuentas; empezar desde el principio cuenta una vez (dos inicios en menos de un minuto cuentan una), y una canción solo se encola una vez. Los metadatos vienen de YouTube Music. En modo solo biblioteca no se cuenta nada. Mientras una canción así se reproduce en streaming, Reproduciendo indica a cada cuenta cuántas reproducciones le faltan (*Se guardará automáticamente tras 2 reproducciones más*); consulta [Reproductor integrado](player.md).
 
 ## Proveedor de audio
 

@@ -423,6 +423,8 @@ export default {
     showAllSongs: 'Mind a(z) {count} dal megjelenítése',
     recent: 'Legutóbbi keresések',
     inLibrary: 'A könyvtárban',
+    legendOnServer: 'A szervereden',
+    legendLive: 'A többi élőben szól a YouTube-ról',
     explicit: 'Explicit',
     openSource: 'Megnyitás a YouTube Musicban',
     typeAlbum: 'Album',
@@ -449,6 +451,25 @@ export default {
   },
   stream: {
     failed: 'Nem játszható le: „{name}”.',
+    liveTitle: 'Élő stream – még nincs a szervereden',
+    save: 'Mentés a szerverre',
+    playLive: '„{name}” lejátszása élőben',
+    saveItem: '„{name}” mentése a szerverre',
+    queued: 'Sorban áll – a szerveredre kerül',
+    saving: 'Mentés a szerveredre…',
+    saved: 'A szervereden',
+    savedHint:
+      'A szervereden – a következő lejátszások a könyvtáradból szólnak',
+    saveFailed: 'Nem sikerült a szerverre menteni',
+    queuedToast: '„{name}” a szerveredre kerül',
+    savedToast: '„{name}” már a szervereden van',
+    autoIn: {
+      one: 'A következő lejátszáskor automatikusan mentődik',
+      other: 'Még {count} lejátszás után automatikusan mentődik',
+    },
+    autoQueued: 'Gyakran hallgatott – automatikus mentés folyamatban',
+    source: 'Forrás',
+    sourceLive: 'Élőben a YouTube-ról',
   },
   finder: {
     placeholder: 'Előadó, album vagy dal keresése',
@@ -1024,9 +1045,11 @@ export default {
     toDownload: 'Letöltésre kerül',
     addSearchPlaceholder: 'Keresés a könyvtárban vagy új dalok',
     pendingTitle: {
-      one: '{count} dal töltődik le',
-      other: '{count} dal töltődik le',
+      one: '{count} dal még nincs a szervereden',
+      other: '{count} dal még nincs a szervereden',
     },
+    pendingHint:
+      'Addig élőben szólnak, és bekerülnek a listába, amint a szervereden vannak.',
     recommendedTitle: 'Ajánlott dalok',
     recommendedHint:
       'A lejátszási lista dalai alapján. Hozzáadáskor szükség esetén letöltődik.',

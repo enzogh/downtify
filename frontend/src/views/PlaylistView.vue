@@ -34,7 +34,7 @@
           <PlayButton
             :label="t('actions.playItem', { name: playlist.title })"
             :playing="isThisPlaying"
-            :disabled="!playlist.tracks.length"
+            :disabled="!playlist.tracks.length && !pendingSongs.length"
             @click="togglePlay"
           />
           <UiIconButton
@@ -320,8 +320,9 @@
             />
           </template>
         </div>
+        <!-- Songs still waiting to be saved say so themselves below. -->
         <UiEmpty
-          v-else
+          v-else-if="!pendingSongs.length"
           icon="download"
           :title="t('playlists.nothingYet')"
           :body="
@@ -391,6 +392,7 @@
 
 <script setup>
 import PlaylistPendingSongs from '/src/components/library/PlaylistPendingSongs.vue'
+import { useSongStarter } from '/src/model/songPlay'
 import PlaylistRecommendations from '/src/components/library/PlaylistRecommendations.vue'
 import { computed, ref, watch } from 'vue'
 import { useEventListener, useLocalStorage } from '@vueuse/core'
@@ -440,6 +442,7 @@ const library = useLibrary()
 const player = usePlayer()
 const actions = useTrackActions()
 const playlistActions = usePlaylistActions()
+const startSong = useSongStarter()
 const account = useAccount()
 const tracker = useProgressTracker()
 const ui = useUi()
@@ -756,7 +759,14 @@ const isThisPlaying = computed(
 
 function togglePlay() {
   if (isThisPlaying.value) player.pause()
-  else playlistActions.play(playlist.value, { tracks: sortedTracks.value })
+  else if (playlist.value.tracks.length)
+    playlistActions.play(playlist.value, { tracks: sortedTracks.value })
+  // Nothing saved yet: its waiting songs play live, as one queue.
+  else if (pendingSongs.value.length)
+    startSong(pendingSongs.value[0], {
+      songs: pendingSongs.value,
+      context: playlistActions.contextFor(playlist.value),
+    })
 }
 
 async function refreshCoverContext(name) {

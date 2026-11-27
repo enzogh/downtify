@@ -427,6 +427,8 @@ export default {
     showAllSongs: 'Mostrar las {count} canciones',
     recent: 'Búsquedas recientes',
     inLibrary: 'En la biblioteca',
+    legendOnServer: 'En tu servidor',
+    legendLive: 'Las demás se reproducen en vivo desde YouTube',
     explicit: 'Explícito',
     openSource: 'Abrir en YouTube Music',
     typeAlbum: 'Álbum',
@@ -453,6 +455,25 @@ export default {
   },
   stream: {
     failed: 'No se pudo reproducir “{name}”.',
+    liveTitle: 'En streaming: aún no está en tu servidor',
+    save: 'Guardar en el servidor',
+    playLive: 'Reproducir “{name}” en vivo',
+    saveItem: 'Guardar “{name}” en el servidor',
+    queued: 'En cola: se guardará en tu servidor',
+    saving: 'Guardando en tu servidor…',
+    saved: 'En tu servidor',
+    savedHint:
+      'En tu servidor: las próximas reproducciones vendrán de tu biblioteca',
+    saveFailed: 'No se pudo guardar en el servidor',
+    queuedToast: '“{name}” se guardará en tu servidor',
+    savedToast: '“{name}” ya está en tu servidor',
+    autoIn: {
+      one: 'Se guardará automáticamente en la próxima reproducción',
+      other: 'Se guardará automáticamente tras {count} reproducciones más',
+    },
+    autoQueued: 'Escuchada a menudo: guardándose automáticamente',
+    source: 'Origen',
+    sourceLive: 'Transmitida en directo desde YouTube',
   },
   finder: {
     placeholder: 'Busca un artista, álbum o canción',
@@ -1033,9 +1054,11 @@ export default {
     toDownload: 'Se descargará',
     addSearchPlaceholder: 'Busca en tu biblioteca o canciones nuevas',
     pendingTitle: {
-      one: '{count} canción descargándose',
-      other: '{count} canciones descargándose',
+      one: '{count} canción aún no está en tu servidor',
+      other: '{count} canciones aún no están en tu servidor',
     },
+    pendingHint:
+      'Mientras tanto se reproducen en vivo y entran en la playlist cuando están en tu servidor.',
     recommendedTitle: 'Canciones recomendadas',
     recommendedHint:
       'Según las canciones de esta playlist. Al añadir una se descarga si hace falta.',

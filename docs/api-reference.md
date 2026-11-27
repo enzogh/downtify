@@ -2516,6 +2516,20 @@ The web UI plays the queue through undownloaded rows without stopping and warms 
 
 Resolve a video's live audio URL without waiting for it. Body `{ "video_id" }`; answers `{ "queued": true }` at once while the resolution continues detached — how the player warms the next track (and a hovered row) up, so it starts instantly. Nothing is downloaded. `400` for a malformed id.
 
+### `GET /api/stream/live/plays`
+
+How close a streamed video is to being downloaded on its own by *Download after live plays* — what Now playing shows as *Saved automatically after N more plays*. Readable by any signed-in account or paired app (unlike the settings).
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `video_id` | string | yes | The song's YouTube video id (11 characters) |
+
+```json
+{ "plays": 1, "threshold": 3, "queued": false }
+```
+
+`plays` is the video's live plays so far, `threshold` the setting (`0` when it is off, in library-only mode, or with no downloader), `queued` whether this counter has already queued its download. `400` for a malformed id; `409` in library-only mode, like every `/api/stream` route.
+
 ### `GET /api/stream/file`
 
 A track's full audio, downloaded once into `/data/stream_cache` and served from this server with seeking support. Playback can only start once the download is done, which is why the web player uses [`GET /api/stream/live`](#get-apistreamlive) instead; this endpoint stays for clients that want a cached copy (the second play of a track never touches YouTube at all).

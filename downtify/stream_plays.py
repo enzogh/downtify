@@ -100,6 +100,22 @@ class StreamPlays:
             logger.exception('Could not count a live play of {}', video_id)
             return False
 
+    def status(self, video_id: str) -> tuple[int, bool]:
+        """*video_id*'s live play count and whether this counter has
+        already queued its download."""
+
+        try:
+            with self._connect() as conn:
+                row = conn.execute(
+                    'SELECT plays, queued FROM stream_plays'
+                    ' WHERE video_id = ?',
+                    (video_id,),
+                ).fetchone()
+        except sqlite3.Error:
+            logger.exception('Could not read the live plays of {}', video_id)
+            return 0, False
+        return (int(row[0]), bool(row[1])) if row else (0, False)
+
     def plays(self, video_id: str) -> int:
         """How many live plays *video_id* has had."""
 

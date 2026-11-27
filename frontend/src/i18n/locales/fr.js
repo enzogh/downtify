@@ -435,6 +435,8 @@ export default {
     showAllSongs: 'Afficher les {count} titres',
     recent: 'Recherches récentes',
     inLibrary: 'Dans la bibliothèque',
+    legendOnServer: 'Sur votre serveur',
+    legendLive: 'Les autres se lisent en streaming depuis YouTube',
     explicit: 'Explicite',
     openSource: 'Ouvrir dans YouTube Music',
     typeAlbum: 'Album',
@@ -461,6 +463,25 @@ export default {
   },
   stream: {
     failed: 'Impossible de lire « {name} ».',
+    liveTitle: 'En streaming — pas encore sur votre serveur',
+    save: 'Enregistrer sur le serveur',
+    playLive: 'Écouter « {name} » en streaming',
+    saveItem: 'Enregistrer « {name} » sur le serveur',
+    queued: 'En file d’attente — il sera enregistré sur votre serveur',
+    saving: 'Enregistrement sur votre serveur…',
+    saved: 'Sur votre serveur',
+    savedHint:
+      'Sur votre serveur — les prochaines écoutes viennent de votre bibliothèque',
+    saveFailed: 'Impossible de l’enregistrer sur le serveur',
+    queuedToast: '« {name} » sera enregistré sur votre serveur',
+    savedToast: '« {name} » est maintenant sur votre serveur',
+    autoIn: {
+      one: 'Enregistré automatiquement à la prochaine écoute',
+      other: 'Enregistré automatiquement dans {count} écoutes',
+    },
+    autoQueued: 'Souvent écouté — enregistrement automatique en cours',
+    source: 'Source',
+    sourceLive: 'Diffusé en direct depuis YouTube',
   },
   finder: {
     placeholder: 'Cherchez un artiste, un album ou un titre',
@@ -1048,9 +1069,11 @@ export default {
     toDownload: 'Sera téléchargé',
     addSearchPlaceholder: 'Chercher dans la bibliothèque ou de nouveaux titres',
     pendingTitle: {
-      one: '{count} titre en téléchargement',
-      other: '{count} titres en téléchargement',
+      one: '{count} titre pas encore sur votre serveur',
+      other: '{count} titres pas encore sur votre serveur',
     },
+    pendingHint:
+      'Ils se lisent en streaming en attendant et rejoignent la playlist une fois sur votre serveur.',
     recommendedTitle: 'Titres recommandés',
     recommendedHint:
       'D’après les titres de cette playlist. En ajouter un le télécharge si besoin.',

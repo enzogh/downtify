@@ -1105,7 +1105,7 @@ RULES: list[tuple[frozenset[str], re.Pattern[str], str]] = [
             r'^/api/(song/url|url|url/resolve|preview|stream|buy)$',
             CLIENT,
         ),
-        (_READ, r'^/api/stream/(file|live)$', CLIENT),
+        (_READ, r'^/api/stream/(file|live|live/plays)$', CLIENT),
         (_m('POST'), r'^/api/stream/(live/)?prefetch$', CLIENT),
         (_m('POST'), r'^/api/download/(url|batch|album)$', CLIENT),
         (_READ, r'^/api/queue(/state)?$', CLIENT),

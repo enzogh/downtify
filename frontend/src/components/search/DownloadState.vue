@@ -4,9 +4,9 @@
   <span
     v-if="state === 'library'"
     class="flex size-9 shrink-0 items-center justify-center text-accent"
-    :title="t('search.inLibrary')"
+    :title="t('stream.saved')"
     role="img"
-    :aria-label="t('search.inLibrary')"
+    :aria-label="t('stream.saved')"
   >
     <AppIcon name="check-circle" :size="18" />
   </span>
@@ -31,12 +31,8 @@
         ? 'bg-danger/12 text-danger hover:bg-danger/20'
         : 'bg-surface-2 text-fg-3 hover:bg-accent hover:text-on-accent'
     "
-    :title="state === 'failed' ? t('queue.retry') : t('actions.download')"
-    :aria-label="
-      state === 'failed'
-        ? t('queue.retry')
-        : t('actions.downloadItem', { name: song.name })
-    "
+    :title="label"
+    :aria-label="label"
     @click="download"
   >
     <AppIcon
@@ -76,6 +72,13 @@ const inLibrary = computed(() => {
 })
 
 const state = computed(() => songDownloadState(item.value, inLibrary.value))
+
+// A download here saves the song to the server (not to this device).
+const label = computed(() =>
+  state.value === 'failed'
+    ? `${t('stream.saveFailed')} · ${t('queue.retry')}`
+    : t('stream.saveItem', { name: props.song.name })
+)
 
 function download() {
   if (state.value === 'failed') dm.retry(props.song)

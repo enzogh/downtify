@@ -176,7 +176,7 @@ Wenn ein Song übersprungen wird:
 
 ## Nach Live-Wiedergaben herunterladen
 
-**Einstellungen → Downloads → Nach Live-Wiedergaben herunterladen** lädt einen Song von selbst herunter, wenn er oft genug gestreamt wurde: nach der gewählten Anzahl (**3**, **5**, **10** oder ein eigener Wert bis 100; standardmäßig **Aus**) wird er wie jeder andere Download eingereiht. Gezählt wird pro Song über alle Konten; ein Start von vorn zählt einmal (zwei Starts innerhalb einer Minute zählen einmal), und ein Song wird nur einmal eingereiht. Die Metadaten stammen von YouTube Music. Im Nur-Bibliothek-Modus wird nichts gezählt.
+**Einstellungen → Downloads → Nach Live-Wiedergaben herunterladen** lädt einen Song von selbst herunter, wenn er oft genug gestreamt wurde: nach der gewählten Anzahl (**3**, **5**, **10** oder ein eigener Wert bis 100; standardmäßig **Aus**) wird er wie jeder andere Download eingereiht. Gezählt wird pro Song über alle Konten; ein Start von vorn zählt einmal (zwei Starts innerhalb einer Minute zählen einmal), und ein Song wird nur einmal eingereiht. Die Metadaten stammen von YouTube Music. Im Nur-Bibliothek-Modus wird nichts gezählt. Während ein solcher Song streamt, zeigt „Wird gespielt“ jedem Konto, wie viele Wiedergaben noch fehlen (*Wird nach 2 weiteren Wiedergaben automatisch gespeichert*) — siehe [Integrierter Player](player.md).
 
 ## Audioanbieter
 

@@ -176,7 +176,7 @@ A **Beállítások → Letöltések és fájlok → Leghosszabb szám** a számh
 
 ## Letöltés élő lejátszások után
 
-**Beállítások → Letöltések → Letöltés élő lejátszások után** magától letölt egy dalt, ha elég sokszor streamelték: a választott szám után (**3**, **5**, **10** vagy saját érték 100-ig; alapból **Ki**) a dal bekerül a sorba, mint bármely letöltés. A számlálás dalonként, minden fiókra együtt történik; az elejéről indítás egyszer számít (egy percen belüli két indítás egynek számít), és egy dal csak egyszer kerül sorba. A metaadatok a YouTube Musicból jönnek. Csak könyvtár módban semmi nem számít.
+**Beállítások → Letöltések → Letöltés élő lejátszások után** magától letölt egy dalt, ha elég sokszor streamelték: a választott szám után (**3**, **5**, **10** vagy saját érték 100-ig; alapból **Ki**) a dal bekerül a sorba, mint bármely letöltés. A számlálás dalonként, minden fiókra együtt történik; az elejéről indítás egyszer számít (egy percen belüli két indítás egynek számít), és egy dal csak egyszer kerül sorba. A metaadatok a YouTube Musicból jönnek. Csak könyvtár módban semmi nem számít. Amíg egy ilyen dal élőben szól, a Most szól minden fióknak megmutatja, hány lejátszás van még hátra (*Még 2 lejátszás után automatikusan mentődik*) — lásd [Beépített lejátszó](player.md).
 
 ## Hangszolgáltató
 

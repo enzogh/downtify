@@ -427,6 +427,8 @@ export default {
     showAllSongs: 'Mostrar todas as {count} músicas',
     recent: 'Buscas recentes',
     inLibrary: 'Na biblioteca',
+    legendOnServer: 'No seu servidor',
+    legendLive: 'As outras tocam ao vivo do YouTube',
     explicit: 'Explícito',
     openSource: 'Abrir no YouTube Music',
     typeAlbum: 'Álbum',
@@ -453,6 +455,25 @@ export default {
   },
   stream: {
     failed: 'Não foi possível tocar “{name}”.',
+    liveTitle: 'Em streaming — ainda não está no seu servidor',
+    save: 'Salvar no servidor',
+    playLive: 'Tocar “{name}” ao vivo',
+    saveItem: 'Salvar “{name}” no servidor',
+    queued: 'Na fila — será salva no seu servidor',
+    saving: 'Salvando no seu servidor…',
+    saved: 'No seu servidor',
+    savedHint:
+      'No seu servidor — as próximas reproduções vêm da sua biblioteca',
+    saveFailed: 'Não foi possível salvar no servidor',
+    queuedToast: '“{name}” será salva no seu servidor',
+    savedToast: '“{name}” agora está no seu servidor',
+    autoIn: {
+      one: 'Salva automaticamente na próxima reprodução',
+      other: 'Salva automaticamente após mais {count} reproduções',
+    },
+    autoQueued: 'Muito ouvida — sendo salva automaticamente',
+    source: 'Origem',
+    sourceLive: 'Transmitida ao vivo do YouTube',
   },
   finder: {
     placeholder: 'Busque um artista, álbum ou música',
@@ -1029,9 +1050,11 @@ export default {
     toDownload: 'Será baixada',
     addSearchPlaceholder: 'Busque na biblioteca ou novas músicas',
     pendingTitle: {
-      one: '{count} música baixando',
-      other: '{count} músicas baixando',
+      one: '{count} música ainda não está no seu servidor',
+      other: '{count} músicas ainda não estão no seu servidor',
     },
+    pendingHint:
+      'Enquanto isso tocam ao vivo e entram na playlist quando estiverem no seu servidor.',
     recommendedTitle: 'Músicas recomendadas',
     recommendedHint:
       'Com base nas músicas desta playlist. Adicionar uma baixa ela se preciso.',
