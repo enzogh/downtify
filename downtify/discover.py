@@ -71,6 +71,7 @@ from . import deezer, spotify
 from .db.config import Dialect
 from .db.core import Database, as_database
 from .file_naming import file_name_key, title_key
+from .listening_history import ListeningHistory
 
 #: How long a seed's related artists are trusted before asking Deezer again.
 RELATED_TTL = timedelta(days=7)
@@ -266,6 +267,8 @@ class DiscoverStore:
         else:
             self._path = str(db_path)
         self._init_db()
+        # Every play, per user: what the recommendations learn from.
+        self.history = ListeningHistory(self.db)
 
     def _connect(self):
         return self.db.connect()
@@ -498,8 +501,9 @@ class DiscoverStore:
             return listens + blocked
 
     def remove_user(self, user_id: int) -> None:
-        """Forget a deleted account's listens and blocks."""
+        """Forget a deleted account's listens, plays and blocks."""
 
+        self.history.clear(user_id)
         with self._connect() as conn:
             conn.execute(
                 'DELETE FROM discover_listens WHERE user_id = ?',

@@ -1,6 +1,8 @@
 // What this device has listened to: one entry per library song played for
 // at least half a minute (or to its end), kept in localStorage for a month.
-// It only feeds the Home mixes (lib/mixes.js) - nothing leaves the browser.
+// It feeds the Home mixes (lib/mixes.js); the account's full history,
+// every device's, is model/playHistory.js, which adds its library plays
+// here (mergePlays).
 import { ref, watch } from 'vue'
 import { usePlayer } from '/src/model/player'
 import { RECENT_DAYS } from '/src/lib/mixes'
@@ -39,6 +41,36 @@ export function recordPlay(file, now = Date.now()) {
     { file, at: now },
   ].slice(-MAX_ENTRIES)
   persist()
+}
+
+/**
+ * Add plays this device didn't make (`{ file, at }`, from the account's
+ * history on the server - model/playHistory.js): one within a minute of a
+ * play of the same file already here is that same play.
+ */
+export function mergePlays(list, now = Date.now()) {
+  const since = now - RECENT_DAYS * DAY_MS
+  const byFile = new Map()
+  for (const play of plays.value) {
+    if (!byFile.has(play.file)) byFile.set(play.file, [])
+    byFile.get(play.file).push(play.at)
+  }
+  const added = []
+  for (const play of list || []) {
+    if (!play?.file || !(play.at >= since)) continue
+    const times = byFile.get(play.file) || []
+    if (times.some((at) => Math.abs(at - play.at) < 60_000)) continue
+    times.push(play.at)
+    byFile.set(play.file, times)
+    added.push({ file: play.file, at: play.at })
+  }
+  if (!added.length) return 0
+  plays.value = [...plays.value, ...added]
+    .filter((play) => play.at >= since)
+    .sort((a, b) => a.at - b.at)
+    .slice(-MAX_ENTRIES)
+  persist()
+  return added.length
 }
 
 /** Start logging the player's songs (once, from the app shell). */

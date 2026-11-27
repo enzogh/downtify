@@ -364,6 +364,10 @@ downloads are shared, and files are never stored twice.
   one listen to an artist - body ``{artist}`` - or forget them all) and
   ``GET|POST|DELETE /api/discover/blocked`` (artists never to suggest -
   ``POST`` body ``{name}``, ``DELETE`` takes ``?name=``)
+ * ``GET|DELETE /api/history`` and ``POST /api/history/plays`` (one's
+   own listening history, one row per play with ``played_s`` and
+   ``skipped`` - ``?days=&limit=``; ``POST`` body ``{plays: [...]}``, a
+   ``play_id`` counted once; see ``downtify.listening_history``)
  * ``GET  /api/preview`` (a song's 30 s preview clip from Deezer, for a
    song with no ``preview_url`` of its own - ``?artist=&title=&duration=``,
    response ``{preview_url}``, ``""`` when Deezer has no matching song)

@@ -181,8 +181,21 @@ export default {
   mix: {
     kicker: 'Mix',
     notFound: 'Bu mix artık yok.',
+    forYouHint:
+      'En çok dinlediğin sanatçıların çevresinden, henüz sende olmayan şarkılar. İndirene kadar akışla çalınır.',
+    discoverHint:
+      'Her gün dinlediklerinden bulunan, henüz dinlemediğin sanatçılar. İndirene kadar akışla çalınır.',
+    downloadAll: 'Tümünü indir ({count})',
     completing: 'Uyan şarkılar ekleniyor…',
     with: '{artists} ve diğerleri',
+  },
+  reco: {
+    because: '{artist} dinlediğin için',
+    again: 'Sık sık dinliyorsun',
+    dismiss: 'Bana göre değil: {title}',
+    dismissShort: 'Bana göre değil',
+    dismissed: 'Anlaşıldı, bir daha önerilmeyecek',
+    refresh: 'Yeni seçim',
   },
   autoplay: {
     repeatOn: 'Tekrar açık: kapattığında bunlar çalar.',
@@ -363,6 +376,13 @@ export default {
     mixWith: '{artists} ve diğerleri',
     onRepeat: 'Tekrarda',
     onRepeatHint: 'Son zamanlarda en çok dinlediğin şarkılar',
+    forYouMix: 'Senin için',
+    forYouMixHint: 'Sevdiklerinin çevresinden, sende olmayan şarkılar',
+    suggestedTitle: 'Senin için önerilenler',
+    suggestedHint:
+      'Dinlediklerine göre seçildi. İndirene kadar akışla çalınır.',
+    discoverMix: "Keşif mix'i",
+    discoverMixHint: 'Henüz dinlemediğin sanatçılar',
     greetingMorning: 'Günaydın',
     greetingAfternoon: 'Tünaydın',
     greetingEvening: 'İyi akşamlar',
@@ -422,6 +442,8 @@ export default {
     open: 'Aç',
     resultsFor: '“{query}” için sonuçlar',
     searching: 'Aranıyor…',
+    searchingOnline: "YouTube Music'te aranıyor…",
+    onlineResults: "YouTube Music'ten: indirene kadar canlı çalınır",
     failed: 'Arama başarısız oldu',
     noResults: 'Hiçbir şey bulunamadı',
     noResultsHint:
@@ -711,6 +733,20 @@ export default {
     retry: 'Tekrar dene',
     remove: 'Kuyruktan kaldır',
     failedGeneric: 'İndirme başarısız oldu.',
+    reason: {
+      blocked:
+        "YouTube şu an bu sunucuyu reddediyor. Sonra tekrar deneyin ya da Ayarlar'dan çerez ekleyin.",
+      unavailable: 'Bu video artık mevcut değil. Başka bir bağlantı deneyin.',
+      ageRestricted:
+        "Bu videoda yaş sınırı var. Ayarlar'dan YouTube çerezleri ekleyin.",
+      region: 'Bu video sunucunun ülkesinden oynatılamıyor.',
+      conversion:
+        'Ses dönüştürülemedi (ffmpeg). Tekrar deneyin ya da başka bir biçim seçin.',
+      notFound: 'Eşleşen ses bulunamadı. Başka bir bağlantı deneyin.',
+      network: 'İndirme sırasında ağ koptu. Tekrar deneyin.',
+      diskFull: 'Sunucunun diski dolu.',
+      permission: 'Sunucu müzik klasörüne yazamıyor (izinler).',
+    },
     overridePlaceholder:
       'Ses olarak kullanılacak YouTube veya SoundCloud bağlantısını yapıştır',
     useLink: 'Bu bağlantıyı kullan',

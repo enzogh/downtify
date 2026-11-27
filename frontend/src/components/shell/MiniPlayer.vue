@@ -47,7 +47,7 @@
              song's menu (useMiniGestures). -->
         <button
           type="button"
-          class="flex min-w-0 flex-1 touch-pan-y items-center gap-3 text-left transition-transform duration-150 select-none [-webkit-touch-callout:none]"
+          class="flex min-w-0 flex-1 touch-pan-y items-center gap-3 text-left transition-transform duration-(--dur-fast) ease-out-soft select-none [-webkit-touch-callout:none]"
           :style="
             gestures.shift.value
               ? {

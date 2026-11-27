@@ -74,7 +74,7 @@
               >{{ tile.label }}</span
             >
             <span
-              class="absolute -right-2 -bottom-2 flex size-16 rotate-[25deg] items-center justify-center rounded-[8px] bg-black/20 shadow-lg transition-transform duration-300 group-hover:rotate-[18deg] sm:size-[4.5rem]"
+              class="absolute -right-2 -bottom-2 flex size-16 rotate-[25deg] items-center justify-center rounded-[8px] bg-black/20 shadow-lg transition-transform duration-(--dur-slow) ease-out-soft [@media(hover:hover)]:group-hover:rotate-[18deg] sm:size-[4.5rem]"
               aria-hidden="true"
             >
               <AppIcon :name="tile.icon" :size="30" />
@@ -86,14 +86,48 @@
 
     <template v-else>
       <div class="flex flex-col gap-4">
-        <PageHeader
-          :title="t('search.resultsFor', { query })"
-          :subtitle="search.loading.value ? t('search.searching') : ''"
-        />
+        <PageHeader :title="t('search.resultsFor', { query })" />
         <UiChips v-model="filter" :items="filters" />
-        <StreamLegend
-          v-if="!search.loading.value && search.songs.value.length"
+      </div>
+
+      <!-- What the server already has comes first, at once: it is local,
+           so it never waits for the online search below. -->
+      <section
+        v-if="filter === 'all' && libraryHits.length"
+        class="flex flex-col gap-3"
+      >
+        <h2 class="text-display text-xl font-semibold">
+          {{ t('search.inYourLibrary') }}
+        </h2>
+        <TrackList :tracks="libraryHits" />
+      </section>
+
+      <!-- Where the rest comes from, said while it is being looked up and
+           once it is there: nothing on the page happens silently. -->
+      <div
+        v-if="!libraryOnly && (search.loading.value || hasOnline)"
+        class="-mb-4 flex flex-col gap-2"
+        role="status"
+        aria-live="polite"
+      >
+        <p class="flex items-center gap-2 text-[13px] text-muted">
+          <AppIcon
+            name="youtube-music"
+            :size="16"
+            class="shrink-0 text-src-ytm"
+          />
+          {{
+            search.loading.value
+              ? t('search.searchingOnline')
+              : t('search.onlineResults')
+          }}
+        </p>
+        <UiProgress
+          v-if="search.loading.value"
+          indeterminate
+          class="max-w-xs"
         />
+        <StreamLegend v-else-if="search.songs.value.length" />
       </div>
 
       <div v-if="search.loading.value" class="flex flex-col gap-2">
@@ -158,16 +192,6 @@
             </div>
           </section>
         </div>
-
-        <section
-          v-if="filter === 'all' && libraryHits.length"
-          class="flex flex-col gap-3"
-        >
-          <h2 class="text-display text-xl font-semibold">
-            {{ t('search.inYourLibrary') }}
-          </h2>
-          <TrackList :tracks="libraryHits" />
-        </section>
 
         <section
           v-if="
@@ -260,6 +284,7 @@ import AppIcon from '/src/components/ui/AppIcon.vue'
 import UiButton from '/src/components/ui/UiButton.vue'
 import UiChips from '/src/components/ui/UiChips.vue'
 import UiEmpty from '/src/components/ui/UiEmpty.vue'
+import UiProgress from '/src/components/ui/UiProgress.vue'
 import UiSkeleton from '/src/components/ui/UiSkeleton.vue'
 import PageHeader from '/src/components/library/PageHeader.vue'
 import ReleaseCard from '/src/components/search/ReleaseCard.vue'
@@ -272,6 +297,7 @@ import { useSearch } from '/src/model/search'
 import { useLibrary } from '/src/model/library'
 import { useUi } from '/src/model/ui'
 import { useJamSheet } from '/src/model/jamSheet'
+import { libraryOnly } from '/src/model/musicPolicy'
 import { knownArtistPhoto } from '/src/lib/artistPhotoProxy'
 import { useI18n } from '/src/i18n'
 
@@ -307,24 +333,39 @@ watch(
   { immediate: true }
 )
 
-const filters = computed(() => [
-  { id: 'all', label: t('search.all') },
-  { id: 'songs', label: t('search.songs'), count: search.songs.value.length },
-  {
-    id: 'albums',
-    label: t('search.albums'),
-    count: search.albums.value.length,
-  },
-  {
-    id: 'artists',
-    label: t('search.artists'),
-    count: search.artists.value.length,
-  },
-])
+// No count while the search runs: "0" would read as "nothing found".
+const filters = computed(() => {
+  const count = (list) => (search.loading.value ? null : list.length)
+  return [
+    { id: 'all', label: t('search.all') },
+    {
+      id: 'songs',
+      label: t('search.songs'),
+      count: count(search.songs.value),
+    },
+    {
+      id: 'albums',
+      label: t('search.albums'),
+      count: count(search.albums.value),
+    },
+    {
+      id: 'artists',
+      label: t('search.artists'),
+      count: count(search.artists.value),
+    },
+  ]
+})
 
 function show(section) {
   return filter.value === 'all' || filter.value === section
 }
+
+const hasOnline = computed(
+  () =>
+    search.songs.value.length ||
+    search.albums.value.length ||
+    search.artists.value.length
+)
 
 const hasResults = computed(
   () =>

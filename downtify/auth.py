@@ -1099,6 +1099,7 @@ RULES: list[tuple[frozenset[str], re.Pattern[str], str]] = [
         (_m('POST'), r'^/api/playlist/m3u$', USER),
         (_m('POST', 'DELETE'), r'^/api/playlists/(incomplete|batches)', USER),
         (_m('DELETE'), r'^/api/discover/listens$', USER),
+        (_m('DELETE'), r'^/api/history$', USER),
         (_m('POST', 'PATCH', 'DELETE'), r'^/api/monitor/playlists', USER),
         # Where a song came from and what each watch added, and a
         # playlist watch's picture (own watches; every one for an admin).
@@ -1181,6 +1182,11 @@ RULES: list[tuple[frozenset[str], re.Pattern[str], str]] = [
             CLIENT,
         ),
         (_ALL, r'^/api/discover/blocked$', CLIENT),
+        # One's own listening history (every device of the account): an
+        # app may read and report plays too; forgetting it is the
+        # browser's (USER, above).
+        (_READ, r'^/api/history$', CLIENT),
+        (_m('POST'), r'^/api/history/plays$', CLIENT),
         (_m('GET', 'POST'), r'^/api/song-links$', CLIENT),
         (_m('DELETE'), r'^/api/song-links/[A-Za-z0-9_-]+$', CLIENT),
         (_m('POST'), r'^/api/activity/playback$', CLIENT),
@@ -1206,6 +1212,7 @@ RULES: list[tuple[frozenset[str], re.Pattern[str], str]] = [
         (_m('POST'), r'^/api/queue/(pause|resume)$', ADMIN),
         (_m('POST'), r'^/api/likes/clear$', ADMIN),
         (_m('DELETE'), r'^/api/discover/listens$', ADMIN),
+        (_m('DELETE'), r'^/api/history$', ADMIN),
         (_m('POST', 'PATCH', 'DELETE'), r'^/api/monitor/', ADMIN),
         (_ALL, r'^/api/(users|activity)(/|$)', ADMIN),
     ]

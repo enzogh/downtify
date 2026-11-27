@@ -2415,6 +2415,39 @@ Forget every counted listen. The library and likes are untouched.
 
 ---
 
+### `GET /api/history`
+
+Your own listening history, newest first: one row per song played, on every device of the account. The web app's recommendations learn from it ([Recommendations](features/recommendations.md)).
+
+| Query | Type | Default | Description |
+|-------|------|---------|-------------|
+| `days` | int | `90` | How far back (1–365) |
+| `limit` | int | `5000` | The most rows returned (1–20000) |
+
+**Response:** `{ "plays": [ { "play_id": "…", "played_at": "2026-11-27T11:57:00+00:00", "artist": "PLK", "title": "Pas les mêmes", "album": "", "file": "PLK/….mp3", "video_id": "", "source": "library", "played_s": 182.4, "duration_s": 201.0, "skipped": false, "context": "playlist" } ] }`
+
+`source` is `library` (a file on the server) or `stream` (played from YouTube Music without being downloaded). `skipped` is true for a song stopped early — before a minute, half its length and its last seconds.
+
+---
+
+### `POST /api/history/plays`
+
+Keep plays in your history. The web app sends them in batches as songs end, and keeps those it couldn't send for later.
+
+**Request body:** `{ "plays": [ … ] }` — up to 500 rows with the fields of [`GET /api/history`](#get-apihistory); `play_id`, `played_at` (ISO 8601 or milliseconds since the epoch), `artist` and `title` are required. A row without them, in the future or older than a year is left out, and a `play_id` already kept is ignored, so an upload can be retried.
+
+**Response:** `{ "recorded": 12 }` — the plays that were new. `400` when `plays` isn't a list. Each user keeps a year of plays, 20,000 at most.
+
+---
+
+### `DELETE /api/history`
+
+Forget your own listening history. Listen counts, likes and the library are untouched.
+
+**Response:** `{ "cleared": 240 }`
+
+---
+
 ### `GET /api/discover/blocked`
 
 Hidden artists, most recently hidden first.

@@ -186,8 +186,21 @@ export default {
   mix: {
     kicker: 'Mix',
     notFound: 'Este mix não está mais disponível.',
+    forYouHint:
+      'Músicas que você ainda não tem, em torno dos artistas que você mais ouve. Tocam em streaming até você baixá-las.',
+    discoverHint:
+      'Artistas que você ainda não ouviu, encontrados a partir do que você ouve todo dia. Tocam em streaming até você baixá-las.',
+    downloadAll: 'Baixar tudo ({count})',
     completing: 'Adicionando músicas que combinam…',
     with: 'Com {artists} e mais',
+  },
+  reco: {
+    because: 'Porque você ouve {artist}',
+    again: 'Você ouve sempre',
+    dismiss: 'Não é pra mim: {title}',
+    dismissShort: 'Não é pra mim',
+    dismissed: 'Entendido, não vai aparecer de novo',
+    refresh: 'Nova seleção',
   },
   autoplay: {
     repeatOn: 'A repetição está ativada: elas tocam quando você desativá-la.',
@@ -369,6 +382,13 @@ export default {
     mixWith: '{artists} e mais',
     onRepeat: 'No repeat',
     onRepeatHint: 'As músicas que você mais ouve ultimamente',
+    forYouMix: 'Para você',
+    forYouMixHint: 'Músicas que você não tem, em torno do que você ama',
+    suggestedTitle: 'Recomendado para você',
+    suggestedHint:
+      'Escolhidas pelo que você ouve. Tocam em streaming até você baixá-las.',
+    discoverMix: 'Mix descoberta',
+    discoverMixHint: 'Artistas que você ainda não ouviu',
     greetingMorning: 'Bom dia',
     greetingAfternoon: 'Boa tarde',
     greetingEvening: 'Boa noite',
@@ -427,6 +447,8 @@ export default {
     open: 'Abrir',
     resultsFor: 'Resultados para “{query}”',
     searching: 'Buscando…',
+    searchingOnline: 'Buscando no YouTube Music…',
+    onlineResults: 'Do YouTube Music: tocam ao vivo até você baixá-las',
     failed: 'A busca não funcionou',
     noResults: 'Nada encontrado',
     noResultsHint:
@@ -718,6 +740,21 @@ export default {
     retry: 'Tentar de novo',
     remove: 'Remover da fila',
     failedGeneric: 'O download falhou.',
+    reason: {
+      blocked:
+        'O YouTube está recusando este servidor no momento. Tente mais tarde ou adicione cookies em Ajustes.',
+      unavailable: 'Este vídeo não está mais disponível. Tente outro link.',
+      ageRestricted:
+        'Este vídeo tem restrição de idade. Adicione cookies do YouTube em Ajustes.',
+      region: 'Este vídeo não pode ser reproduzido no país do servidor.',
+      conversion:
+        'Não foi possível converter o áudio (ffmpeg). Tente de novo ou escolha outro formato.',
+      notFound: 'Nenhum áudio correspondente encontrado. Tente outro link.',
+      network: 'A rede caiu durante o download. Tente de novo.',
+      diskFull: 'O disco do servidor está cheio.',
+      permission:
+        'O servidor não consegue gravar na pasta de música (permissões).',
+    },
     overridePlaceholder:
       'Cole um link do YouTube ou do SoundCloud para usar como áudio',
     useLink: 'Usar este link',

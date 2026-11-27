@@ -186,8 +186,21 @@ export default {
   mix: {
     kicker: 'Mix',
     notFound: 'Ez a mix már nem érhető el.',
+    forYouHint:
+      'Dalok, amik még nincsenek meg, a legtöbbet hallgatott előadóid körül. Letöltésig streamelve szólnak.',
+    discoverHint:
+      'Előadók, akiket még nem hallottál, aszerint, amit nap mint nap hallgatsz. Letöltésig streamelve szólnak.',
+    downloadAll: 'Összes letöltése ({count})',
     completing: 'Illő dalok hozzáadása…',
     with: '{artists} és mások',
+  },
+  reco: {
+    because: 'Mert {artist} előadót hallgatod',
+    again: 'Sokszor hallgatod',
+    dismiss: 'Nem nekem való: {title}',
+    dismissShort: 'Nem nekem való',
+    dismissed: 'Értem, többé nem ajánljuk',
+    refresh: 'Új válogatás',
   },
   autoplay: {
     repeatOn: 'Az ismétlés be van kapcsolva: ezek a kikapcsolása után szólnak.',
@@ -368,6 +381,13 @@ export default {
     mixWith: '{artists} és mások',
     onRepeat: 'Ismétlésen',
     onRepeatHint: 'A mostanában legtöbbet hallgatott dalok',
+    forYouMix: 'Neked',
+    forYouMixHint: 'Dalok, amik nincsenek meg, a kedvenceid körül',
+    suggestedTitle: 'Ajánlott neked',
+    suggestedHint:
+      'Aszerint válogatva, amit hallgatsz. Letöltésig streamelve szólnak.',
+    discoverMix: 'Felfedező mix',
+    discoverMixHint: 'Előadók, akiket még nem hallottál',
     greetingMorning: 'Jó reggelt',
     greetingAfternoon: 'Jó napot',
     greetingEvening: 'Jó estét',
@@ -423,6 +443,9 @@ export default {
     open: 'Megnyitás',
     resultsFor: 'Találatok erre: „{query}”',
     searching: 'Keresés…',
+    searchingOnline: 'Keresés a YouTube Musicon…',
+    onlineResults:
+      'A YouTube Musicról: élőben szólnak, amíg le nem töltöd őket',
     failed: 'A keresés nem sikerült',
     noResults: 'Nincs találat',
     noResultsHint:
@@ -716,6 +739,20 @@ export default {
     retry: 'Újra',
     remove: 'Eltávolítás a sorból',
     failedGeneric: 'A letöltés nem sikerült.',
+    reason: {
+      blocked:
+        'A YouTube most elutasítja ezt a szervert. Próbáld később, vagy adj meg sütiket a Beállításokban.',
+      unavailable: 'Ez a videó már nem érhető el. Próbálj másik linket.',
+      ageRestricted:
+        'Ez a videó korhatáros. Adj meg YouTube-sütiket a Beállításokban.',
+      region: 'Ez a videó nem játszható le a szerver országából.',
+      conversion:
+        'A hangot nem sikerült átalakítani (ffmpeg). Próbáld újra, vagy válassz más formátumot.',
+      notFound: 'Nem található megfelelő hang. Próbálj másik linket.',
+      network: 'A hálózat megszakadt letöltés közben. Próbáld újra.',
+      diskFull: 'A szerver lemeze megtelt.',
+      permission: 'A szerver nem tud írni a zenei mappába (jogosultság).',
+    },
     overridePlaceholder:
       'Illessz be egy YouTube vagy SoundCloud linket hangforrásként',
     useLink: 'Link használata',

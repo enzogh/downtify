@@ -77,9 +77,10 @@
           >
         </template>
         <template v-else>{{ artists }}</template><span
-          v-if="song.album_name"
-          :class="compact ? '' : 'lg:hidden'"
-        >
+          v-if="note"
+          class="text-faint"
+          >&nbsp;· {{ note }}</span
+        ><span v-else-if="song.album_name" :class="compact ? '' : 'lg:hidden'">
           ·
           <RouterLink
             v-if="albumTo"
@@ -191,6 +192,9 @@ const props = defineProps({
   // recommendations): no + menu on a phone, where room is short - the
   // same menu still opens on a long press.
   hideAddOnPhone: { type: Boolean, default: false },
+  // Why the song is here (a recommendation's "Because you play X"),
+  // in place of the album on the second line.
+  note: { type: String, default: '' },
 })
 const { t } = useI18n()
 const player = usePlayer()

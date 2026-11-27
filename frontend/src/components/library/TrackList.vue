@@ -91,8 +91,11 @@
         @dblclick="playRow(row)"
         @contextmenu="openMenu($event, row)"
         :style="rowStyle(row)"
-        :draggable="reorder.dragging.value < 0 ? 'true' : 'false'"
+        :draggable="
+          !reorderable && reorder.dragging.value < 0 ? 'true' : 'false'
+        "
         @dragstart="onDragStart($event, row)"
+        @pointerdown="reorderable && reorder.press($event, row.index)"
       >
         <span v-if="selectable" class="max-md:hidden" @click.stop>
           <Checkbox
@@ -147,6 +150,8 @@
             v-if="showCover"
             type="button"
             class="relative shrink-0"
+            :class="reorderable ? 'cursor-grab touch-none' : ''"
+            :data-reorder-handle="reorderable || undefined"
             :aria-label="t('actions.playItem', { name: row.track.title })"
             @click.stop="playRow(row)"
           >
@@ -428,6 +433,12 @@ function onRowClick(event, row) {
 // Dragging a row (or the selection it belongs to) onto a sidebar
 // playlist adds it there.
 function onDragStart(event, row) {
+  // A playlist's rows move by pointer (useRowReorder): no native drag of
+  // the row or of its cover image, which would cancel that.
+  if (props.reorderable) {
+    event.preventDefault()
+    return
+  }
   const files =
     isSelected(row.track) && props.selected?.size
       ? [...props.selected]

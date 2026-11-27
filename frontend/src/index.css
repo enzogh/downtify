@@ -40,11 +40,17 @@ html {
 }
 
 /* Now playing overlay */
-.now-playing-enter-active,
+/* Arrives like a sheet, leaves a step faster (motion system: exits are
+   quicker and ease in). */
+.now-playing-enter-active {
+  transition:
+    opacity var(--dur-slow) var(--ease-out-soft),
+    transform var(--dur-sheet) var(--ease-drawer);
+}
 .now-playing-leave-active {
   transition:
-    opacity 260ms ease,
-    transform 360ms var(--ease-out-soft);
+    opacity var(--dur-base) var(--ease-in-soft),
+    transform var(--dur-slow) var(--ease-in-soft);
 }
 .now-playing-enter-from,
 .now-playing-leave-to {
@@ -58,11 +64,11 @@ html {
    stays smooth on phones; reduced motion collapses it (tokens.css). */
 .np-cross-enter-active {
   transition:
-    opacity 420ms ease,
+    opacity var(--dur-sheet) var(--ease-out-soft),
     transform 520ms var(--ease-out-soft);
 }
 .np-cross-leave-active {
-  transition: opacity 160ms ease 380ms;
+  transition: opacity var(--dur-fast) var(--ease-in-soft) 380ms;
 }
 .np-cross-enter-from {
   opacity: 0;
@@ -73,7 +79,7 @@ html {
 }
 .np-backdrop-enter-active,
 .np-backdrop-leave-active {
-  transition: opacity 700ms ease;
+  transition: opacity 700ms var(--ease-in-out-soft);
 }
 .np-backdrop-enter-from,
 .np-backdrop-leave-to {

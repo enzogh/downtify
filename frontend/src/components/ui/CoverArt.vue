@@ -20,6 +20,7 @@
         referrerpolicy="no-referrer"
         class="size-full min-h-0 min-w-0 object-cover"
         :class="i === 0 && mosaic.length === 3 ? 'row-span-2' : ''"
+        @error="onMosaicError(url)"
       />
     </div>
     <img
@@ -140,8 +141,21 @@ function onImageError() {
 
 // A real cover always wins: a playlist with its own artwork shows it
 // instead of a grid of the tracks it happens to contain.
+// Pictures of the mosaic that didn't load (a song without art): left
+// out, so a tile never shows a broken image - fewer than two left, and
+// it is one picture or the initials instead.
+const broken = ref(new Set())
+watch(
+  () => props.covers.join('\n'),
+  () => (broken.value = new Set())
+)
+function onMosaicError(url) {
+  broken.value = new Set([...broken.value, url])
+}
 const mosaic = computed(() =>
-  props.symbol || props.src ? [] : props.covers.filter(Boolean)
+  props.symbol || props.src
+    ? []
+    : props.covers.filter((url) => url && !broken.value.has(url))
 )
 const imageSrc = computed(() => {
   if (props.symbol) return ''

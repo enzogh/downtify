@@ -92,7 +92,9 @@
           class="mt-1 flex items-start gap-1.5 text-xs text-danger"
         >
           <AppIcon name="alert" :size="14" class="mt-px shrink-0" />
-          <span class="line-clamp-2">{{ failure }}</span>
+          <span class="line-clamp-2" :title="item.message || undefined">{{
+            failure
+          }}</span>
         </p>
       </div>
 
@@ -206,6 +208,7 @@ import { useUi } from '/src/model/ui'
 import AppIcon from '../ui/AppIcon.vue'
 import CoverArt from '../ui/CoverArt.vue'
 import SourceBadge from '../ui/SourceBadge.vue'
+import { failureReasonKey } from '/src/lib/failureReason'
 import UiBadge from '../ui/UiBadge.vue'
 import UiButton from '../ui/UiButton.vue'
 import UiIconButton from '../ui/UiIconButton.vue'
@@ -241,6 +244,9 @@ const FAILURE_CODES = {
 const failure = computed(() => {
   const message = props.item.message
   if (FAILURE_CODES[message]) return t(FAILURE_CODES[message])
+  // yt-dlp / ffmpeg words, said plainly (the raw text stays in a tooltip).
+  const reason = failureReasonKey(message)
+  if (reason) return t(reason)
   return message || t('queue.failedGeneric')
 })
 const auth = useAuth()

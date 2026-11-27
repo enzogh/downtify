@@ -1034,6 +1034,19 @@ function clearListens() {
   return API.delete('/api/discover/listens')
 }
 
+// One's listening history (every device): what recommendations learn from.
+function getHistory(days = 180) {
+  return API.get('/api/history', { params: { days } })
+}
+
+function recordPlays(plays) {
+  return API.post('/api/history/plays', { plays })
+}
+
+function clearHistory() {
+  return API.delete('/api/history')
+}
+
 function getBlockedArtists() {
   return API.get('/api/discover/blocked')
 }
@@ -1505,6 +1518,9 @@ export default {
   findPreview,
   getBuyLinks,
   recordListen,
+  getHistory,
+  recordPlays,
+  clearHistory,
   clearListens,
   getBlockedArtists,
   blockArtist,

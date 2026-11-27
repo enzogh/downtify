@@ -9,14 +9,16 @@
     >
       <CoverArt
         :src="entry.cover"
+        :fallback="entry.fallback || ''"
         :covers="entry.covers"
         :name="entry.title"
         :icon="
-          entry.icon || entry.type === 'artist'
+          entry.icon ||
+          (entry.type === 'artist'
             ? 'user'
             : entry.type === 'playlist'
               ? 'playlist'
-              : 'disc'
+              : 'disc')
         "
         rounded="rounded-none"
         :letter-size="16"

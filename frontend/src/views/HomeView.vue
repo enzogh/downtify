@@ -48,7 +48,7 @@
           :title="mix.title"
           :subtitle="mix.subtitle"
           :covers="mix.covers"
-          :cover="mix.covers[0] || ''"
+          :cover="mix.mosaic ? '' : mix.covers[0] || ''"
           :name="mix.title"
           icon="sparkle"
           :playing="isMixPlaying(mix)"
@@ -56,6 +56,48 @@
         />
       </div>
     </HomeRow>
+
+    <!-- Songs to try now: streamed until downloaded, each saying which
+         artist of yours it comes from. -->
+    <section
+      v-if="suggested.length || (reco.loading.value && !reco.ready.value)"
+      class="flex min-w-0 flex-col gap-3"
+    >
+      <div class="flex items-end justify-between gap-4">
+        <div class="min-w-0">
+          <h2 class="text-display truncate text-xl font-bold">
+            {{ t('home.suggestedTitle') }}
+          </h2>
+          <p class="truncate text-[13px] text-muted">
+            {{ t('home.suggestedHint') }}
+          </p>
+        </div>
+        <RouterLink
+          v-if="suggested.length"
+          :to="{ name: 'Mix', params: { id: 'foryou' } }"
+          class="shrink-0 text-[13px] font-semibold text-muted hover:text-fg hover:underline"
+          >{{ t('common.seeAll') }}</RouterLink
+        >
+      </div>
+      <Transition name="reveal" mode="out-in">
+        <UiSkeletonRows
+          v-if="!suggested.length"
+          :count="4"
+          action
+          :label="t('home.suggestedTitle')"
+        />
+        <div v-else class="-mx-3 grid gap-x-6 lg:grid-cols-2">
+          <SongRow
+            v-for="item in suggested"
+            :key="item.key"
+            :song="item.song"
+            :songs="suggestedSongs"
+            :note="reasonOf(item)"
+            compact
+          />
+        </div>
+      </Transition>
+    </section>
 
     <HomeRow v-if="jumpBackIn.length" :title="t('home.jumpBackIn')">
       <div
@@ -68,6 +110,7 @@
           :title="entry.title"
           :subtitle="entry.subtitle || t(`home.kind.${entry.type}`)"
           :cover="entry.cover || ''"
+          :fallback="entry.fallback || ''"
           :covers="entry.covers || []"
           :name="entry.title"
           :round="entry.type === 'artist'"
@@ -186,6 +229,10 @@ import { useLibrary } from '/src/model/library'
 import { useLikes } from '/src/model/likes'
 import { useListening } from '/src/model/listening'
 import { useMixes } from '/src/model/mixes'
+import { listCovers, useRecommendations } from '/src/model/recommendations'
+import { songToPlayerTrack } from '/src/model/songPlay'
+import SongRow from '/src/components/search/SongRow.vue'
+import UiSkeletonRows from '/src/components/ui/UiSkeletonRows.vue'
 import { usePlayer } from '/src/model/player'
 import { usePlaylistActions } from '/src/model/playlistActions'
 import { useTrackActions } from '/src/model/trackActions'
@@ -207,6 +254,7 @@ const tracker = useProgressTracker()
 const actions = useTrackActions()
 const playlistActions = usePlaylistActions()
 const offline = useOffline()
+const reco = useRecommendations()
 const favoriteActions = playlistActions
 
 const greeting = computed(() => {
@@ -228,7 +276,10 @@ const pending = computed(() => {
 // alone doesn't load: fetched once the page is idle.
 onMounted(() => {
   const later = window.requestIdleCallback || ((fn) => setTimeout(fn, 600))
-  later(() => mixes.ensure())
+  later(() => {
+    mixes.ensure()
+    reco.ensure()
+  })
 })
 
 function isPlaying(entry) {
@@ -247,9 +298,29 @@ function entryIcon(entry) {
   return 'disc'
 }
 
+// Saved artist photos (artist page picker), asked once per set of names.
+const artistPhotos = ref({})
+const artistPhotosLoaded = ref(false)
+
+// An artist played from their page was remembered with a cover of one of
+// their albums: shown with the artist's photo instead, like "Your artists".
+function artistEntry(entry) {
+  const name = String(entry.title || '')
+  return {
+    ...entry,
+    covers: [],
+    ...artistPhotoSource(
+      name,
+      artistPhotos.value[name],
+      artistPhotosLoaded.value
+    ),
+  }
+}
+
 const jumpBackIn = computed(() =>
   history.recent.value
     .map((entry) => {
+      if (entry.type === 'artist') return artistEntry(entry)
       if (entry.type !== 'playlist') return entry
       const name = String(entry.route?.query?.name || entry.title || '')
       const live = library.findPlaylist(name)
@@ -355,12 +426,18 @@ const topArtistSeeds = computed(() => {
   })
 })
 
-// Their saved photos (artist page picker), asked once per set of names,
-// as the Library's artists tab does.
-const artistPhotos = ref({})
-const artistPhotosLoaded = ref(false)
+// Their saved photos, and those of the artists in "Jump back in" (and
+// the quick access above it), asked once per set of names, as the
+// Library's artists tab does.
+const photoNames = computed(() => {
+  const names = new Set(topArtistSeeds.value.map((seed) => seed.name))
+  for (const entry of history.recent.value) {
+    if (entry.type === 'artist' && entry.title) names.add(entry.title)
+  }
+  return [...names]
+})
 watch(
-  () => topArtistSeeds.value.map((seed) => seed.name).join('\n'),
+  () => photoNames.value.join('\n'),
   async (joined) => {
     if (!joined) return
     try {
@@ -415,8 +492,55 @@ const madeForYou = computed(() => {
       tracks: repeat,
     })
   }
+  // The recommendations lead: what is new comes first.
+  // Each a mosaic of its own songs, so the two never look alike.
+  const discover = reco.discover.value
+  const discoverCovers = listCovers(discover)
+  const forYou = reco.forYou.value
+  if (forYou.length >= 5) {
+    made.unshift({
+      id: 'foryou',
+      title: t('home.forYouMix'),
+      subtitle: t('home.forYouMixHint'),
+      mosaic: true,
+      covers: listCovers(
+        forYou.filter((item) => !discoverCovers.includes(item.song?.cover_url))
+      ),
+      tracks: forYou.map((item) =>
+        songToPlayerTrack(item.song, library.findTrack)
+      ),
+    })
+  }
+  if (discover.length >= 5) {
+    made.unshift({
+      id: 'discover',
+      title: t('home.discoverMix'),
+      subtitle: t('home.discoverMixHint'),
+      mosaic: true,
+      covers: listCovers(discover),
+      tracks: discover.map((item) =>
+        songToPlayerTrack(item.song, library.findTrack)
+      ),
+    })
+  }
   return made
 })
+
+// A few songs to try right away, under the mixes.
+// One song you already stream at most: this is for finding new ones.
+const suggested = computed(() => {
+  let again = 0
+  return reco.forYou.value
+    .filter((item) => item.kind !== 'again' || again++ < 1)
+    .slice(0, 6)
+})
+const suggestedSongs = computed(() => suggested.value.map((item) => item.song))
+
+/** Why a song is suggested, in a few words. */
+function reasonOf(item) {
+  if (item.kind === 'again') return t('reco.again')
+  return item.because ? t('reco.because', { artist: item.because }) : ''
+}
 
 function isMixPlaying(mix) {
   const ctx = player.context.value

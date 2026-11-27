@@ -7,10 +7,11 @@
         class="flex flex-1 flex-col justify-center gap-5 px-2"
         aria-hidden="true"
       >
-        <div
+        <UiSkeleton
           v-for="n in 6"
           :key="n"
-          class="h-7 animate-pulse rounded-lg bg-white/10"
+          glass
+          class="h-7 !rounded-lg"
           :style="{ width: `${50 + ((n * 37) % 45)}%` }"
         />
       </div>
@@ -27,7 +28,7 @@
           :key="i"
           :ref="(el) => (lineEls[i] = el)"
           type="button"
-          class="text-display block w-full origin-left py-2 text-left leading-tight font-semibold transition-all duration-300"
+          class="text-display block w-full origin-left py-2 text-left leading-tight font-semibold transition-[scale,color] duration-(--dur-slow) ease-in-out-soft"
           :class="[
             compact ? 'now-playing-lyric-compact' : 'now-playing-lyric',
             i === active
@@ -73,6 +74,7 @@
 <script setup>
 import { computed, nextTick, ref, watch } from 'vue'
 import AppIcon from '../ui/AppIcon.vue'
+import UiSkeleton from '../ui/UiSkeleton.vue'
 import { usePlayer } from '/src/model/player'
 import { cachedLyrics, loadLyrics } from '/src/model/lyrics'
 import { activeLineIndex } from '/src/lib/lrc'

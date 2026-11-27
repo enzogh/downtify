@@ -2,11 +2,17 @@
   <span
     v-if="meta"
     class="inline-flex h-[22px] shrink-0 items-center gap-1.5 rounded-full border text-[11px] font-semibold whitespace-nowrap"
-    :class="[meta.classes, compact ? 'w-[22px] justify-center' : 'px-2']"
+    :class="[
+      meta.classes,
+      compact
+        ? 'w-[22px] justify-center'
+        : 'px-2 max-sm:w-[22px] max-sm:justify-center max-sm:px-0',
+    ]"
     :title="t('source.from', { source: meta.label })"
   >
     <AppIcon :name="meta.icon" :size="11" />
-    <span v-if="!compact">{{ meta.label }}</span>
+    <!-- Icon only on a phone: the song's title needs the room. -->
+    <span v-if="!compact" class="max-sm:sr-only">{{ meta.label }}</span>
   </span>
 </template>
 

@@ -154,11 +154,22 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onMounted, ref, useId, watch } from 'vue'
+import {
+  computed,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  useId,
+  watch,
+} from 'vue'
 import AppIcon from '../ui/AppIcon.vue'
 import UiIconButton from '../ui/UiIconButton.vue'
 import { useInstall } from '/src/model/install'
+import { usePlayer } from '/src/model/player'
 import { useI18n } from '/src/i18n'
+
+const OFFER_AFTER_MS = 45_000
 
 const { t } = useI18n()
 const install = useInstall()
@@ -213,18 +224,41 @@ watch(install.open, async (isOpen) => {
   panel.value?.focus()
 })
 
-// Give the page a moment to settle before sliding the sheet in.
-onMounted(() => setTimeout(() => install.offer(), 1200))
+// Not over the page someone just opened: once they have started a song
+// (they came to listen - the app is worth keeping), or after a while.
+const player = usePlayer()
+let offerTimer = 0
+let stopWatch = null
+function offerOnce() {
+  clearTimeout(offerTimer)
+  stopWatch?.()
+  stopWatch = null
+  install.offer()
+}
+onMounted(() => {
+  offerTimer = setTimeout(offerOnce, OFFER_AFTER_MS)
+  stopWatch = watch(player.isPlaying, (playing) => {
+    if (playing) setTimeout(offerOnce, 4000)
+  })
+})
+onBeforeUnmount(() => {
+  clearTimeout(offerTimer)
+  stopWatch?.()
+})
 </script>
 
 <style scoped>
-.install-sheet-enter-active,
-.install-sheet-leave-active {
-  transition: opacity 240ms ease;
+.install-sheet-enter-active {
+  transition: opacity var(--dur-slow) var(--ease-out-soft);
 }
-.install-sheet-enter-active .install-panel,
+.install-sheet-leave-active {
+  transition: opacity var(--dur-base) var(--ease-in-soft);
+}
+.install-sheet-enter-active .install-panel {
+  transition: transform var(--dur-sheet) var(--ease-drawer);
+}
 .install-sheet-leave-active .install-panel {
-  transition: transform 380ms var(--ease-out-soft);
+  transition: transform var(--dur-slow) var(--ease-in-soft);
 }
 .install-sheet-enter-from,
 .install-sheet-leave-to {
@@ -241,7 +275,7 @@ onMounted(() => setTimeout(() => install.offer(), 1200))
   }
 }
 .install-step {
-  animation: rise 420ms var(--ease-out-soft) both;
+  animation: rise var(--dur-sheet) var(--ease-out-soft) both;
 }
 @media (prefers-reduced-motion: reduce) {
   .install-sheet-enter-active .install-panel,

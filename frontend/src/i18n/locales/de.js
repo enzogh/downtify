@@ -190,8 +190,21 @@ export default {
   mix: {
     kicker: 'Mix',
     notFound: 'Dieser Mix ist nicht mehr verfügbar.',
+    forYouHint:
+      'Songs, die du noch nicht hast, rund um die Künstler, die du am meisten hörst. Gestreamt, bis du sie herunterlädst.',
+    discoverHint:
+      'Künstler, die du noch nicht gehört hast, gefunden über das, was du täglich hörst. Gestreamt, bis du sie herunterlädst.',
+    downloadAll: 'Alle herunterladen ({count})',
     completing: 'Passende Songs werden ergänzt…',
     with: 'Mit {artists} und mehr',
+  },
+  reco: {
+    because: 'Weil du {artist} hörst',
+    again: 'Du hörst es immer wieder',
+    dismiss: 'Nicht meins: {title}',
+    dismissShort: 'Nicht meins',
+    dismissed: 'Verstanden, wird nicht mehr vorgeschlagen',
+    refresh: 'Neue Auswahl',
   },
   autoplay: {
     repeatOn:
@@ -376,6 +389,13 @@ export default {
     mixWith: '{artists} und mehr',
     onRepeat: 'Dauerschleife',
     onRepeatHint: 'Die Songs, die du zuletzt am meisten hörst',
+    forYouMix: 'Für dich',
+    forYouMixHint: 'Songs, die du nicht hast, rund um deine Lieblinge',
+    suggestedTitle: 'Für dich empfohlen',
+    suggestedHint:
+      'Ausgewählt nach dem, was du hörst. Gestreamt, bis du sie herunterlädst.',
+    discoverMix: 'Entdeckungs-Mix',
+    discoverMixHint: 'Künstler, die du noch nicht gehört hast',
     greetingMorning: 'Guten Morgen',
     greetingAfternoon: 'Guten Tag',
     greetingEvening: 'Guten Abend',
@@ -434,6 +454,9 @@ export default {
     open: 'Öffnen',
     resultsFor: 'Ergebnisse für „{query}“',
     searching: 'Suche läuft …',
+    searchingOnline: 'Suche auf YouTube Music …',
+    onlineResults:
+      'Von YouTube Music: live abgespielt, bis du sie herunterlädst',
     failed: 'Suche fehlgeschlagen',
     noResults: 'Nichts gefunden',
     noResultsHint:
@@ -738,6 +761,22 @@ export default {
     retry: 'Erneut versuchen',
     remove: 'Aus Warteschlange entfernen',
     failedGeneric: 'Der Download ist fehlgeschlagen.',
+    reason: {
+      blocked:
+        'YouTube lehnt diesen Server gerade ab. Später erneut versuchen oder Cookies in den Einstellungen hinzufügen.',
+      unavailable:
+        'Dieses Video ist nicht mehr verfügbar. Versuche einen anderen Link.',
+      ageRestricted:
+        'Dieses Video ist altersbeschränkt. Füge YouTube-Cookies in den Einstellungen hinzu.',
+      region: 'Dieses Video ist im Land des Servers nicht abspielbar.',
+      conversion:
+        'Das Audio konnte nicht umgewandelt werden (ffmpeg). Erneut versuchen oder ein anderes Format wählen.',
+      notFound: 'Kein passendes Audio gefunden. Versuche einen anderen Link.',
+      network: 'Das Netzwerk ist beim Download abgebrochen. Erneut versuchen.',
+      diskFull: 'Die Festplatte des Servers ist voll.',
+      permission:
+        'Der Server kann nicht in den Musikordner schreiben (Rechte).',
+    },
     overridePlaceholder:
       'YouTube- oder SoundCloud-Link als Audioquelle einfügen',
     useLink: 'Diesen Link verwenden',

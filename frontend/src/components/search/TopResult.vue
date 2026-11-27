@@ -30,7 +30,7 @@
     <button
       v-if="result.kind === 'song'"
       type="button"
-      class="absolute right-5 bottom-5 flex size-12 items-center justify-center rounded-full bg-accent text-on-accent shadow-float transition-all hover:scale-105 lg:translate-y-2 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100"
+      class="absolute right-5 bottom-5 flex size-12 items-center justify-center rounded-full bg-accent text-on-accent shadow-float transition-[opacity,translate,scale] duration-(--dur-base) ease-out-soft hover:scale-105 lg:translate-y-2 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100"
       :class="play.isCurrent.value ? 'lg:translate-y-0 lg:opacity-100' : ''"
       :aria-label="play.playLabel.value"
       :disabled="!play.playable.value"

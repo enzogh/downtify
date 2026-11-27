@@ -179,8 +179,21 @@ export default {
   mix: {
     kicker: '믹스',
     notFound: '이 믹스는 더 이상 없습니다.',
+    forYouHint:
+      '가장 많이 듣는 아티스트 주변의, 아직 없는 곡이에요. 다운로드하기 전까지 스트리밍으로 재생돼요.',
+    discoverHint:
+      '매일 듣는 음악으로 찾은, 아직 들어보지 않은 아티스트예요. 다운로드하기 전까지 스트리밍으로 재생돼요.',
+    downloadAll: '모두 다운로드 ({count})',
     completing: '어울리는 곡을 추가하는 중…',
     with: '{artists} 외',
+  },
+  reco: {
+    because: '{artist}을(를) 들어서',
+    again: '자주 듣는 곡',
+    dismiss: '관심 없음: {title}',
+    dismissShort: '관심 없음',
+    dismissed: '알겠어요, 다시 추천하지 않을게요',
+    refresh: '새로 추천',
   },
   autoplay: {
     repeatOn: '반복이 켜져 있습니다. 반복을 끄면 이 곡들이 재생됩니다.',
@@ -360,6 +373,13 @@ export default {
     mixWith: '{artists} 외',
     onRepeat: '반복 재생 중',
     onRepeatHint: '최근 가장 많이 들은 곡',
+    forYouMix: '나를 위한 추천',
+    forYouMixHint: '좋아하는 음악 주변의, 아직 없는 곡',
+    suggestedTitle: '추천 곡',
+    suggestedHint:
+      '듣는 음악을 바탕으로 골랐어요. 다운로드하기 전까지 스트리밍으로 재생돼요.',
+    discoverMix: '발견 믹스',
+    discoverMixHint: '아직 들어보지 않은 아티스트',
     greetingMorning: '좋은 아침입니다',
     greetingAfternoon: '좋은 오후입니다',
     greetingEvening: '좋은 저녁입니다',
@@ -414,6 +434,9 @@ export default {
     open: '열기',
     resultsFor: '“{query}” 검색 결과',
     searching: '검색 중…',
+    searchingOnline: 'YouTube Music에서 찾는 중…',
+    onlineResults:
+      'YouTube Music 결과: 다운로드하기 전까지 실시간으로 재생돼요',
     failed: '검색에 실패했습니다',
     noResults: '결과를 찾을 수 없습니다',
     noResultsHint:
@@ -708,6 +731,20 @@ export default {
     retry: '다시 시도',
     remove: '대기열에서 제거',
     failedGeneric: '다운로드에 실패했습니다.',
+    reason: {
+      blocked:
+        'YouTube가 지금 이 서버를 거부하고 있어요. 나중에 다시 시도하거나 설정에서 쿠키를 추가하세요.',
+      unavailable: '이 동영상은 더 이상 볼 수 없어요. 다른 링크를 시도하세요.',
+      ageRestricted:
+        '연령 제한 동영상이에요. 설정에서 YouTube 쿠키를 추가하세요.',
+      region: '서버 국가에서는 이 동영상을 재생할 수 없어요.',
+      conversion:
+        '오디오를 변환하지 못했어요(ffmpeg). 다시 시도하거나 다른 형식을 고르세요.',
+      notFound: '일치하는 오디오를 찾지 못했어요. 다른 링크를 시도하세요.',
+      network: '다운로드 중 네트워크가 끊겼어요. 다시 시도하세요.',
+      diskFull: '서버 디스크가 가득 찼어요.',
+      permission: '서버가 음악 폴더에 쓸 수 없어요(권한).',
+    },
     overridePlaceholder:
       '음원으로 사용할 YouTube 또는 SoundCloud 링크 붙여넣기',
     useLink: '이 링크 사용',

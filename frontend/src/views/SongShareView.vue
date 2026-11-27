@@ -131,10 +131,8 @@
       </div>
 
       <div v-else class="flex flex-col gap-7" aria-hidden="true">
-        <div
-          class="aspect-square w-full animate-pulse rounded-[18px] bg-white/10"
-        />
-        <div class="h-7 w-2/3 animate-pulse rounded bg-white/10" />
+        <UiSkeleton glass class="aspect-square w-full !rounded-[18px]" />
+        <UiSkeleton glass class="h-7 w-2/3 !rounded" />
       </div>
     </main>
 
@@ -161,6 +159,7 @@
 // the same cover, wave seek bar and buttons - but plays on its own
 // <audio>, outside the signed-in player and its reports to the server.
 // See downtify/song_link_routes.py.
+import UiSkeleton from '/src/components/ui/UiSkeleton.vue'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import AppIcon from '/src/components/ui/AppIcon.vue'

@@ -198,11 +198,9 @@
         class="flex flex-col gap-1 px-2.5 pt-2"
         :aria-label="t('autoplay.finding')"
       >
-        <li
-          v-for="n in 4"
-          :key="n"
-          class="h-12 animate-pulse rounded-[10px] bg-white/6"
-        />
+        <li v-for="n in 4" :key="n">
+          <UiSkeleton glass class="h-12 !rounded-[10px]" />
+        </li>
       </ul>
 
       <p
@@ -223,6 +221,7 @@
 import { computed, ref } from 'vue'
 import AppIcon from '../ui/AppIcon.vue'
 import CoverArt from '../ui/CoverArt.vue'
+import UiSkeleton from '../ui/UiSkeleton.vue'
 import EqBars from '../ui/EqBars.vue'
 import ExplicitBadge from '../ui/ExplicitBadge.vue'
 import { usePlayer } from '/src/model/player'

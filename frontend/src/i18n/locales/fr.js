@@ -192,8 +192,21 @@ export default {
   mix: {
     kicker: 'Mix',
     notFound: 'Ce mix n’est plus disponible.',
+    forYouHint:
+      'Des titres que vous n’avez pas encore, autour des artistes que vous écoutez le plus. Lus en streaming tant que vous ne les téléchargez pas.',
+    discoverHint:
+      'Des artistes que vous n’avez jamais écoutés, trouvés à partir de ce que vous écoutez chaque jour. Lus en streaming tant que vous ne les téléchargez pas.',
+    downloadAll: 'Tout télécharger ({count})',
     completing: 'Ajout de titres qui vont avec…',
     with: 'Avec {artists} et plus',
+  },
+  reco: {
+    because: 'Parce que vous écoutez {artist}',
+    again: 'Vous l’écoutez souvent',
+    dismiss: 'Pas pour moi : {title}',
+    dismissShort: 'Pas pour moi',
+    dismissed: 'Compris, il ne vous sera plus proposé',
+    refresh: 'Nouvelle sélection',
   },
   autoplay: {
     repeatOn:
@@ -369,14 +382,22 @@ export default {
       one: '{count} téléchargement en cours',
       other: '{count} téléchargements en cours',
     },
-    yourArtists: 'Tes artistes',
-    madeForYou: 'Conçu pour toi',
+    yourArtists: 'Vos artistes',
+    madeForYou: 'Conçu pour vous',
     madeForYouHint:
-      'Des mix de ta bibliothèque, faits à partir de ce que tu écoutes sur cet appareil. Nouveaux chaque jour.',
+      'Des mix de votre bibliothèque, faits à partir de ce que vous écoutez sur cet appareil. Nouveaux chaque jour.',
     dailyMix: 'Mix du jour {n}',
     mixWith: '{artists} et plus',
     onRepeat: 'En boucle',
-    onRepeatHint: 'Les titres que tu écoutes le plus en ce moment',
+    onRepeatHint: 'Les titres que vous écoutez le plus en ce moment',
+    forYouMix: 'Pour vous',
+    forYouMixHint:
+      'Des titres que vous n’avez pas, autour de ce que vous aimez',
+    suggestedTitle: 'Recommandé pour vous',
+    suggestedHint:
+      'Choisis d’après ce que vous écoutez. Lus en streaming tant que vous ne les téléchargez pas.',
+    discoverMix: 'Mix découverte',
+    discoverMixHint: 'Des artistes que vous n’avez jamais écoutés',
     greetingMorning: 'Bonjour',
     greetingAfternoon: 'Bon après-midi',
     greetingEvening: 'Bonsoir',
@@ -426,7 +447,7 @@ export default {
     browseAll: 'Parcourir tout',
     browseLibrary: 'Votre bibliothèque',
     topResult: 'Meilleur résultat',
-    inYourLibrary: 'Dans ta bibliothèque',
+    inYourLibrary: 'Dans votre bibliothèque',
     typeSong: 'Titre',
     title: 'Recherche',
     subtitle: 'Trouvez titres, albums et artistes sur YouTube Music.',
@@ -435,6 +456,9 @@ export default {
     open: 'Ouvrir',
     resultsFor: 'Résultats pour « {query} »',
     searching: 'Recherche…',
+    searchingOnline: 'Recherche sur YouTube Music…',
+    onlineResults:
+      'Depuis YouTube Music : lus en direct tant que vous ne les téléchargez pas',
     failed: 'La recherche a échoué',
     noResults: 'Aucun résultat',
     noResultsHint:
@@ -733,6 +757,22 @@ export default {
     retry: 'Réessayer',
     remove: 'Retirer de la file',
     failedGeneric: 'Le téléchargement a échoué.',
+    reason: {
+      blocked:
+        'YouTube refuse ce serveur pour le moment. Réessayez plus tard, ou ajoutez des cookies dans les Réglages.',
+      unavailable: 'Cette vidéo n’est plus disponible. Essayez un autre lien.',
+      ageRestricted:
+        'Cette vidéo est soumise à une limite d’âge. Ajoutez des cookies YouTube dans les Réglages pour l’obtenir.',
+      region: 'Cette vidéo ne peut pas être lue depuis le pays du serveur.',
+      conversion:
+        'L’audio n’a pas pu être converti (ffmpeg). Réessayez ou choisissez un autre format.',
+      notFound:
+        'Aucun audio correspondant n’a été trouvé. Essayez un autre lien.',
+      network: 'Le réseau a coupé pendant le téléchargement. Réessayez.',
+      diskFull: 'Le disque du serveur est plein.',
+      permission:
+        'Le serveur ne peut pas écrire dans le dossier de musique (droits).',
+    },
     overridePlaceholder:
       'Collez un lien YouTube ou SoundCloud à utiliser comme audio',
     useLink: 'Utiliser ce lien',
@@ -1479,7 +1519,7 @@ export default {
         'Plus ce qui manque dans {count} sorties pas encore vérifiées. Vérifie d’abord tous les artistes pour obtenir un nombre exact.',
     },
     wantedConfirmBody:
-      'Les titres manquants sont téléchargés un artiste à la fois. Tu peux les suivre dans la File.',
+      'Les titres manquants sont téléchargés un artiste à la fois. Vous pouvez les suivre dans la File.',
     wantedStop: 'Arrêter',
     wantedChecking: 'Vérification {done} sur {total} : {name}',
     wantedDownloading: 'Téléchargement {done} sur {total} : {name}',
@@ -1498,7 +1538,7 @@ export default {
     wantedMore: { one: 'et {count} autre', other: 'et {count} autres' },
     wantedUncheckedBadge: 'Pas encore vérifiée',
     wantedEmpty:
-      'Rien ne manque : tous les artistes que tu suis sont complets.',
+      'Rien ne manque : tous les artistes que vous suivez sont complets.',
     wantedSearch: 'Rechercher des artistes ou des sorties',
     wantedAllTypes: 'Tous les types',
     filterPaused: 'En pause',
@@ -2063,8 +2103,8 @@ export default {
       'Non utilisé lorsque le format audio original est conservé.',
     avoidFormats: 'Formats à éviter',
     avoidFormatsHint:
-      'Les téléchargements n’ajoutent jamais un fichier dans ces formats à ta bibliothèque. slskd les ignore et cherche un autre fichier ; une source qui en fournit un quand même compte comme n’ayant rien trouvé, et la source suivante est essayée. Ton format de téléchargement ne peut pas en faire partie.',
-    avoidFormatsLocked: 'Ton format de téléchargement ne peut pas être évité',
+      'Les téléchargements n’ajoutent jamais un fichier dans ces formats à votre bibliothèque. slskd les ignore et cherche un autre fichier ; une source qui en fournit un quand même compte comme n’ayant rien trouvé, et la source suivante est essayée. Votre format de téléchargement ne peut pas en faire partie.',
+    avoidFormatsLocked: 'Votre format de téléchargement ne peut pas être évité',
     filesGroup: 'Fichiers',
     template: 'Nom de fichier',
     templateHint: 'Utilisez / pour créer des dossiers.',
@@ -2182,7 +2222,7 @@ export default {
       'Ignore les paroles sans horodatage et interroge le fournisseur suivant. Améliorer la bibliothèque compte alors les titres n’ayant que des paroles simples comme sans paroles. Les paroles synchronisées les remplacent, y compris dans les tags du fichier.',
     ratingsGroup: 'Notes depuis Deezer',
     ratingsHint:
-      'Attribue à tes morceaux dans Navidrome de 0 à 5 étoiles selon leur popularité sur Deezer, comme dztnr. Les étoiles appartiennent au compte Navidrome ci-dessus.',
+      'Attribue à vos morceaux dans Navidrome de 0 à 5 étoiles selon leur popularité sur Deezer, comme dztnr. Les étoiles appartiennent au compte Navidrome ci-dessus.',
     ratingsRepeat: 'Répéter',
     ratingsRepeatOff: 'Désactivé',
     ratingsRepeatDaily: 'Tous les jours',
@@ -2190,7 +2230,7 @@ export default {
     ratingsRepeatMonthly: 'Tous les mois',
     ratingsSkipRated: 'Ignorer les morceaux qui ont déjà des étoiles',
     ratingsSkipRatedHint:
-      'Les étoiles que tu as mises toi-même sont conservées. Les exécutions suivantes ignorent tout morceau qui a déjà des étoiles.',
+      'Les étoiles que vous avez mises vous-même sont conservées. Les exécutions suivantes ignorent tout morceau qui a déjà des étoiles.',
     ratingsSkipStarred: 'Ignorer les favoris',
     ratingsGrading: 'Notation',
     ratingsGradingAbsolute: 'Popularité mondiale',
@@ -2201,7 +2241,7 @@ export default {
     ratingsRun: 'Lancer maintenant',
     ratingsPreview: 'Aperçu',
     ratingsStop: 'Arrêter',
-    ratingsReading: 'Lecture de ta bibliothèque Navidrome…',
+    ratingsReading: 'Lecture de votre bibliothèque Navidrome…',
     ratingsProgress: '{done} sur {total} morceaux',
     ratingsLast:
       'Dernière exécution {when} : {rated} notés, {skipped} ignorés, {notFound} introuvables sur Deezer',
@@ -3186,7 +3226,7 @@ export default {
   doctor: {
     formatsTitle: 'Formats à convertir',
     formatsHint:
-      'Des fichiers de la bibliothèque dans des formats dont tu ne veux pas, comme des FLAC d’avant tes règles de format. Chacun devient un MP3 à ta qualité de téléchargement qui reprend ses playlists, j’aime et suivis, comme une fusion de doublons.',
+      'Des fichiers de la bibliothèque dans des formats dont vous ne voulez pas, comme des FLAC d’avant vos règles de format. Chacun devient un MP3 à votre qualité de téléchargement qui reprend ses playlists, j’aime et suivis, comme une fusion de doublons.',
     formatsPick: 'Formats',
     formatsPickHint:
       'Choisis les formats à chercher. Un format sans perte (FLAC, WAV, AIFF, APE, WavPack) converti en MP3 320 sonne pareil ; un format avec perte (M4A, OGG, Opus) reconverti perd un peu.',
@@ -3202,7 +3242,7 @@ export default {
     formatsConvert: 'Convertir en MP3 {bitrate}k ({count})',
     formatsConvertTitle: 'Convertir ces fichiers ?',
     formatsConvertBody:
-      'Fichiers à convertir : {count}. Chacun devient un MP3 à {bitrate}k avec les mêmes tags, pochette et paroles, reprend ses playlists, j’aime et suivis, et l’original part {where}. Cela peut prendre du temps ; tu peux arrêter entre deux fichiers.',
+      'Fichiers à convertir : {count}. Chacun devient un MP3 à {bitrate}k avec les mêmes tags, pochette et paroles, reprend ses playlists, j’aime et suivis, et l’original part {where}. Cela peut prendre du temps ; vous pouvez arrêter entre deux fichiers.',
     formatsConvertConfirm: 'Convertir',
     formatsConverted: 'Convertis : {count}. Gagné : {saved}.',
     formatsStopped: 'Arrêté. Laissés tels quels : {count}.',

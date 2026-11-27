@@ -188,8 +188,21 @@ export default {
   mix: {
     kicker: 'Mix',
     notFound: 'Este mix ya no está disponible.',
+    forYouHint:
+      'Canciones que aún no tienes, en torno a los artistas que más escuchas. Se reproducen en streaming hasta que las descargues.',
+    discoverHint:
+      'Artistas que aún no has escuchado, encontrados a partir de lo que escuchas cada día. Se reproducen en streaming hasta que las descargues.',
+    downloadAll: 'Descargar todo ({count})',
     completing: 'Añadiendo canciones que encajan…',
     with: 'Con {artists} y más',
+  },
+  reco: {
+    because: 'Porque escuchas a {artist}',
+    again: 'La escuchas a menudo',
+    dismiss: 'No es para mí: {title}',
+    dismissShort: 'No es para mí',
+    dismissed: 'Entendido, no volverá a aparecer',
+    refresh: 'Nueva selección',
   },
   autoplay: {
     repeatOn: 'La repetición está activada: sonarán cuando la desactives.',
@@ -372,6 +385,13 @@ export default {
     mixWith: '{artists} y más',
     onRepeat: 'En bucle',
     onRepeatHint: 'Las canciones que más escuchas últimamente',
+    forYouMix: 'Para ti',
+    forYouMixHint: 'Canciones que no tienes, en torno a lo que te gusta',
+    suggestedTitle: 'Recomendado para ti',
+    suggestedHint:
+      'Elegidas según lo que escuchas. Se reproducen en streaming hasta que las descargues.',
+    discoverMix: 'Mix descubrimiento',
+    discoverMixHint: 'Artistas que aún no has escuchado',
     greetingMorning: 'Buenos días',
     greetingAfternoon: 'Buenas tardes',
     greetingEvening: 'Buenas noches',
@@ -427,6 +447,9 @@ export default {
     open: 'Abrir',
     resultsFor: 'Resultados para «{query}»',
     searching: 'Buscando…',
+    searchingOnline: 'Buscando en YouTube Music…',
+    onlineResults:
+      'De YouTube Music: se reproducen en directo hasta que las descargues',
     failed: 'La búsqueda no funcionó',
     noResults: 'No se encontró nada',
     noResultsHint:
@@ -720,6 +743,21 @@ export default {
     retry: 'Reintentar',
     remove: 'Quitar de la cola',
     failedGeneric: 'La descarga falló.',
+    reason: {
+      blocked:
+        'YouTube rechaza este servidor por ahora. Inténtalo más tarde o añade cookies en Ajustes.',
+      unavailable: 'Este vídeo ya no está disponible. Prueba otro enlace.',
+      ageRestricted:
+        'Este vídeo tiene restricción de edad. Añade cookies de YouTube en Ajustes.',
+      region: 'Este vídeo no se puede reproducir desde el país del servidor.',
+      conversion:
+        'No se pudo convertir el audio (ffmpeg). Inténtalo de nuevo o elige otro formato.',
+      notFound: 'No se encontró audio que coincida. Prueba otro enlace.',
+      network: 'La red falló durante la descarga. Inténtalo de nuevo.',
+      diskFull: 'El disco del servidor está lleno.',
+      permission:
+        'El servidor no puede escribir en la carpeta de música (permisos).',
+    },
     overridePlaceholder:
       'Pega un enlace de YouTube o SoundCloud para usarlo como audio',
     useLink: 'Usar este enlace',

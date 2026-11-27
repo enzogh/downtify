@@ -40,11 +40,11 @@ The suggestions are kept in the browser for a day, so opening the playlist again
 
 ## Search
 
-When you search, the results open with a **Top result**: the artist, album or song your search names (the first song otherwise). Its first songs sit beside it, as on Spotify. **In your library** lists the matching songs you already have, including those from [extra folders](external-library.md), which play straight from disk. A song you already have is marked with a small green check rather than a download button; a line under the filters says what the marks mean (on your server, the others play live from YouTube, the arrow saves one to the server). The button on a song's cover plays it — live when it isn't on the server — and the song playing right now is highlighted in its list.
+When you search, the songs you already have come first, at once, under **In your library** (including those from [extra folders](external-library.md), which play straight from disk) — they don't wait for the online search. A line under the filters says **Looking on YouTube Music…** with a progress bar while the online results load, and where they come from once they are there; the filters show their counts only once the search has answered. The online results open with a **Top result**: the artist, album or song your search names (the first song otherwise). Its first songs sit beside it, as on Spotify. A song you already have is marked with a small green check rather than a download button; a line under the filters says what the marks mean (on your server, the others play live from YouTube, the arrow saves one to the server). The button on a song's cover plays it — live when it isn't on the server — and the song playing right now is highlighted in its list.
 
 ## Made for you
 
-Home shows up to four **Daily Mix** playlists, plus **On repeat** once you have played some songs often enough. Each opens its own page (`/mix/1` … `/mix/4`, `/mix/repeat`) with the list and **Play** / **Shuffle**.
+Home shows up to four **Daily Mix** playlists, plus **On repeat** once you have played some songs often enough, and a **Discover mix**. Each opens its own page (`/mix/1` … `/mix/4`, `/mix/repeat`, `/mix/discover`, `/mix/foryou`) with the list and **Play** / **Shuffle**.
 
 A daily mix is led by one artist you play (or like, or simply have the most songs from) and held together by YouTube Music's radio mix for one of their songs:
 
@@ -54,4 +54,6 @@ A daily mix is led by one artist you play (or like, or simply have the most song
 
 An artist that isn't in that radio mix never ends up in the mix. A mix keeps the same order for the day and is made again the next day; the radio mixes are kept in the browser for the day. In [library-only mode](library-only.md) a mix is the lead artist's songs alone. **On repeat** lists the songs you played at least three times in the last 30 days.
 
-The mixes use a listening log kept on this device: a song counts once it has played for 30 seconds. The log is stored only in the browser (`localStorage`) and keeps 30 days. Nothing about it is sent to the server, so each device has its own mixes.
+The **Discover mix** and **For you** come first: songs you don't have yet, picked from your listening history - see [Recommendations](recommendations.md).
+
+The Daily Mixes count the library songs played for 30 seconds in the last 30 days, on every device of your account: they read the [listening history](recommendations.md#listening-history) the server keeps, plus a log of this device's plays in the browser.

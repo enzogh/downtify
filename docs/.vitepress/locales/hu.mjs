@@ -82,6 +82,7 @@ export default {
       'features/collaborative-playlists.md': 'Közösen szerkesztett listák',
       'features/playlist-order.md': 'Sorrend és ismétlődő számok',
       'features/building-playlists.md': 'Lejátszási listák összeállítása',
+      'features/recommendations.md': 'Ajánlások',
       'features/song-links.md': 'Dal megosztása',
       'features/users.md': 'Felhasználók és bejelentkezés',
       'features/mobile-apps.md': 'Mobilalkalmazások',

@@ -1,6 +1,6 @@
 """Search and discovery routes: ``/api/discover*``, ``/api/finder/*``,
 ``/api/songs/search``, ``/api/albums/search``, ``/api/similar/tracks``,
-``/api/buy``, ``/api/url*`` and ``/api/song/url``.
+``/api/buy``, ``/api/url*``, ``/api/song/url`` and ``/api/history*``.
 
 Registers on the shared ``api_core.router`` (under its library-only
 guard) when :mod:`downtify.api` imports it; the endpoint list lives
@@ -776,3 +776,51 @@ async def unblock_artist_endpoint(
     scope = None if request_is_admin(request) else request_user_id(request)
     removed = await asyncio.to_thread(store.unblock, name, scope)
     return {'name': name, 'removed': removed}
+
+
+@router.get('/api/history')
+async def listening_history_endpoint(
+    request: Request,
+    days: int = Query(90, ge=1, le=365),
+    limit: int = Query(5000, ge=1, le=20000),
+) -> dict[str, Any]:
+    """One's own plays of the last *days*, newest first: ``{plays}``,
+    each ``{play_id, played_at, artist, title, album, file, video_id,
+    source, played_s, duration_s, skipped, context}``. What the web app's
+    recommendations learn from, on every device of the account."""
+
+    store = _require_discover()
+    plays = await asyncio.to_thread(
+        store.history.plays, request_user_id(request), days, limit
+    )
+    return {'plays': plays}
+
+
+@router.post('/api/history/plays')
+async def record_plays_endpoint(request: Request) -> dict[str, Any]:
+    """Keep ``{plays: [...]}`` (up to 500) in one's history - the
+    fields of ``GET /api/history``, ``played_at`` as ISO 8601 or epoch
+    milliseconds. A ``play_id`` already kept is ignored, so an upload can
+    be retried. Returns ``{recorded}``, the plays that were new."""
+
+    store = _require_discover()
+    payload = await _json_object(request)
+    plays = payload.get('plays')
+    if not isinstance(plays, list):
+        raise HTTPException(status_code=400, detail='plays must be a list')
+    recorded = await asyncio.to_thread(
+        store.history.record, plays, request_user_id(request)
+    )
+    return {'recorded': recorded}
+
+
+@router.delete('/api/history')
+async def clear_history_endpoint(request: Request) -> dict[str, Any]:
+    """Forget one's own plays. Listen counts, likes and the library are
+    untouched."""
+
+    store = _require_discover()
+    cleared = await asyncio.to_thread(
+        store.history.clear, request_user_id(request)
+    )
+    return {'cleared': cleared}

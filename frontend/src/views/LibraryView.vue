@@ -11,7 +11,8 @@
         :title="t('playlists.create')"
         @click="playlistActions.openCreate()"
       >
-        <span class="max-sm:sr-only">{{ t('playlists.create') }}</span>
+        <!-- Said in words on a phone too: a bare "+" leaves one guessing. -->
+        <span>{{ t('playlists.create') }}</span>
       </UiButton>
       <!-- Songs kept on this device, for listening without a network:
            a button of its own, not buried in the menu. -->
@@ -20,6 +21,8 @@
         variant="secondary"
         icon="arrow-down-to-line"
         :to="{ name: 'Offline' }"
+        :title="t('offline.title')"
+        :aria-label="t('offline.title')"
       >
         <span class="max-sm:sr-only">{{ t('offline.title') }}</span>
       </UiButton>

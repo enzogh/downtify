@@ -1,4 +1,5 @@
-// Dragging a list's rows into a new order by a handle - mouse, pen or
+// Dragging a list's rows into a new order by a handle - or, with a mouse,
+// by any part of the row, and with a finger by its cover - mouse, pen or
 // finger alike (pointer events, like the player's sliders): the row
 // follows the pointer, the others slide aside to show where it lands,
 // and the page scrolls near the top and bottom edges. Arrow keys on the
@@ -11,6 +12,9 @@ import { dragTarget, edgeScroll, rowShift } from '/src/lib/playlistOrder'
 function coveredBottom() {
   return window.matchMedia?.('(min-width: 768px)').matches ? 110 : 170
 }
+
+// How far (px) a press on a row moves before it becomes a drag.
+const DRAG_THRESHOLD = 6
 
 export function useRowReorder({ rowHeight, count, onMove }) {
   const from = ref(-1)
@@ -54,17 +58,79 @@ export function useRowReorder({ rowHeight, count, onMove }) {
     event.preventDefault()
     event.stopPropagation()
     const handle = event.currentTarget
-    const pointer = event.pointerId
     try {
-      handle.setPointerCapture?.(pointer)
+      handle.setPointerCapture?.(event.pointerId)
     } catch {
       // Followed on the window below either way.
     }
+    begin(event.pointerId, index, event.clientY, event.clientY)
+  }
+
+  // Pressing anywhere else on a row (its cover, its title, an empty
+  // column): the drag starts once the pointer has moved a few pixels, so
+  // a click still plays or selects. A finger only drags from a
+  // `[data-reorder-handle]` (the cover), the rest of the row scrolls the
+  // page and keeps its long press for the menu.
+  function press(event, index) {
+    if (from.value >= 0) return
+    if (event.button !== undefined && event.button !== 0) return
+    const target = event.target
+    const handle = target?.closest?.('[data-reorder-handle]')
+    if (!handle && target?.closest?.('button, a, input, label, select')) return
+    if (event.pointerType === 'touch' && !handle) return
+    const pointer = event.pointerId
+    const downY = event.clientY
+    const downX = event.clientX
+    const waitMove = (e) => {
+      if (e.pointerId !== pointer) return
+      const dy = e.clientY - downY
+      const dx = e.clientX - downX
+      if (Math.abs(dy) < DRAG_THRESHOLD || Math.abs(dy) < Math.abs(dx)) {
+        if (Math.hypot(dx, dy) > DRAG_THRESHOLD * 3) cancelWait()
+        return
+      }
+      cancelWait()
+      // The click that ends this press must not play or select the row.
+      swallowNextClick()
+      begin(pointer, index, downY, e.clientY)
+    }
+    const cancelWait = () => {
+      window.removeEventListener('pointermove', waitMove)
+      window.removeEventListener('pointerup', cancelWait)
+      window.removeEventListener('pointercancel', cancelWait)
+    }
+    window.addEventListener('pointermove', waitMove)
+    window.addEventListener('pointerup', cancelWait)
+    window.addEventListener('pointercancel', cancelWait)
+  }
+
+  function swallowNextClick() {
+    const swallow = (e) => {
+      e.preventDefault()
+      e.stopPropagation()
+    }
+    window.addEventListener('click', swallow, { capture: true, once: true })
+    // No click comes after a drag released outside the row.
+    setTimeout(
+      () => window.removeEventListener('click', swallow, { capture: true }),
+      400
+    )
+  }
+
+  // While a finger drags, the page mustn't pan under it.
+  function holdScroll(e) {
+    if (from.value >= 0 && e.cancelable) e.preventDefault()
+  }
+
+  function begin(pointer, index, downY, nowY) {
     from.value = index
     offset.value = 0
-    startY = lastY = event.clientY
+    startY = downY
+    lastY = nowY
     startScroll = window.scrollY
+    follow()
     frame = requestAnimationFrame(autoScroll)
+    window.addEventListener('touchmove', holdScroll, { passive: false })
 
     const move = (e) => {
       if (e.pointerId !== pointer) return
@@ -79,6 +145,7 @@ export function useRowReorder({ rowHeight, count, onMove }) {
       if (moved) onMove(...pair)
     }
     stop = () => {
+      window.removeEventListener('touchmove', holdScroll)
       window.removeEventListener('pointermove', move)
       window.removeEventListener('pointerup', end)
       window.removeEventListener('pointercancel', end)
@@ -119,6 +186,7 @@ export function useRowReorder({ rowHeight, count, onMove }) {
     settling,
     shift,
     start,
+    press,
     key,
   }
 }

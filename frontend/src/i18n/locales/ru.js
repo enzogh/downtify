@@ -209,8 +209,21 @@ export default {
   mix: {
     kicker: 'Mix',
     notFound: 'This mix isn’t available any more.',
+    forYouHint:
+      'Песни, которых у вас ещё нет, вокруг исполнителей, которых вы слушаете чаще всего. Играют потоком, пока вы их не скачаете.',
+    discoverHint:
+      'Исполнители, которых вы ещё не слушали, найденные по тому, что вы слушаете каждый день. Играют потоком, пока вы их не скачаете.',
+    downloadAll: 'Скачать все ({count})',
     completing: 'Adding songs that fit…',
     with: 'With {artists} and more',
+  },
+  reco: {
+    because: 'Потому что вы слушаете {artist}',
+    again: 'Вы часто это слушаете',
+    dismiss: 'Не для меня: {title}',
+    dismissShort: 'Не для меня',
+    dismissed: 'Понятно, больше не предложим',
+    refresh: 'Новая подборка',
   },
   autoplay: {
     repeatOn: 'Repeat is on: these play once you turn it off.',
@@ -408,6 +421,13 @@ export default {
     mixWith: '{artists} and more',
     onRepeat: 'On repeat',
     onRepeatHint: 'The songs you play most lately',
+    forYouMix: 'Для вас',
+    forYouMixHint: 'Песни, которых у вас нет, вокруг того, что вы любите',
+    suggestedTitle: 'Рекомендуем вам',
+    suggestedHint:
+      'Подобрано по тому, что вы слушаете. Играют потоком, пока вы их не скачаете.',
+    discoverMix: 'Микс открытий',
+    discoverMixHint: 'Исполнители, которых вы ещё не слушали',
     greetingMorning: 'Доброе утро',
     greetingAfternoon: 'Добрый день',
     greetingEvening: 'Добрый вечер',
@@ -470,6 +490,8 @@ export default {
     open: 'Открыть',
     resultsFor: 'Результаты по запросу «{query}»',
     searching: 'Ищем…',
+    searchingOnline: 'Ищем в YouTube Music…',
+    onlineResults: 'Из YouTube Music: играют потоком, пока вы их не скачаете',
     failed: 'Поиск не сработал',
     noResults: 'Ничего не найдено',
     noResultsHint:
@@ -788,6 +810,20 @@ export default {
     retry: 'Повторить',
     remove: 'Убрать из очереди',
     failedGeneric: 'Загрузка не удалась.',
+    reason: {
+      blocked:
+        'YouTube пока отказывает этому серверу. Попробуйте позже или добавьте cookies в настройках.',
+      unavailable: 'Это видео больше недоступно. Попробуйте другую ссылку.',
+      ageRestricted:
+        'У этого видео возрастное ограничение. Добавьте cookies YouTube в настройках.',
+      region: 'Это видео нельзя воспроизвести из страны сервера.',
+      conversion:
+        'Не удалось преобразовать аудио (ffmpeg). Повторите или выберите другой формат.',
+      notFound: 'Подходящее аудио не найдено. Попробуйте другую ссылку.',
+      network: 'Сеть оборвалась во время загрузки. Повторите.',
+      diskFull: 'Диск сервера заполнен.',
+      permission: 'Сервер не может записывать в папку с музыкой (права).',
+    },
     overridePlaceholder:
       'Вставьте ссылку YouTube или SoundCloud, чтобы использовать её аудио',
     useLink: 'Использовать эту ссылку',

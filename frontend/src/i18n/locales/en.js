@@ -178,8 +178,21 @@ export default {
   mix: {
     kicker: 'Mix',
     notFound: 'This mix isn’t available any more.',
+    forYouHint:
+      'Songs you don’t have yet, around the artists you play most. They stream until you download them.',
+    discoverHint:
+      'Artists you haven’t heard yet, found from what you play every day. They stream until you download them.',
+    downloadAll: 'Download all ({count})',
     completing: 'Adding songs that fit…',
     with: 'With {artists} and more',
+  },
+  reco: {
+    because: 'Because you play {artist}',
+    again: 'You keep playing it',
+    dismiss: 'Not for me: {title}',
+    dismissShort: 'Not for me',
+    dismissed: 'Got it, you won’t see it again',
+    refresh: 'New picks',
   },
   autoplay: {
     repeatOn: 'Repeat is on: these play once you turn it off.',
@@ -360,6 +373,13 @@ export default {
     mixWith: '{artists} and more',
     onRepeat: 'On repeat',
     onRepeatHint: 'The songs you play most lately',
+    forYouMix: 'For you',
+    forYouMixHint: 'Songs you don’t have, around what you love',
+    suggestedTitle: 'Recommended for you',
+    suggestedHint:
+      'Picked from what you play. They stream until you download them.',
+    discoverMix: 'Discover mix',
+    discoverMixHint: 'Artists you haven’t heard yet',
     greetingMorning: 'Good morning',
     greetingAfternoon: 'Good afternoon',
     greetingEvening: 'Good evening',
@@ -415,6 +435,8 @@ export default {
     open: 'Open',
     resultsFor: 'Results for “{query}”',
     searching: 'Searching…',
+    searchingOnline: 'Looking on YouTube Music…',
+    onlineResults: 'From YouTube Music: they play live until you download them',
     failed: "Search didn't work",
     noResults: 'Nothing found',
     noResultsHint:
@@ -701,6 +723,20 @@ export default {
     retry: 'Retry',
     remove: 'Remove from queue',
     failedGeneric: 'The download failed.',
+    reason: {
+      blocked:
+        'YouTube is refusing this server for now. Try again later, or add cookies in Settings.',
+      unavailable: 'This video isn’t available any more. Try another link.',
+      ageRestricted:
+        'This video is age-restricted. Add YouTube cookies in Settings to get it.',
+      region: 'This video can’t be played from the server’s country.',
+      conversion:
+        'The audio couldn’t be converted (ffmpeg). Try again or pick another format.',
+      notFound: 'No matching audio was found. Try another link.',
+      network: 'The network failed during the download. Try again.',
+      diskFull: 'The server’s disk is full.',
+      permission: 'The server can’t write to the music folder (permissions).',
+    },
     overridePlaceholder:
       'Paste a YouTube or SoundCloud link to use as the audio',
     useLink: 'Use this link',

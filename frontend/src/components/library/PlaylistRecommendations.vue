@@ -17,13 +17,12 @@
         {{ t('playlists.recommendedRefresh') }}
       </UiButton>
     </div>
-    <ul v-if="loading && !shown.length" class="flex flex-col gap-2">
-      <li
-        v-for="n in 5"
-        :key="n"
-        class="h-14 animate-pulse rounded-[10px] bg-surface-2"
-      />
-    </ul>
+    <UiSkeletonRows
+      v-if="loading && !shown.length"
+      :count="5"
+      action
+      :label="t('playlists.recommendedTitle')"
+    />
     <ul v-else-if="shown.length" class="-mx-3 flex flex-col">
       <li
         v-for="song in shown"
@@ -64,6 +63,7 @@
 import { computed, ref, watch } from 'vue'
 import { watchDebounced } from '@vueuse/core'
 import UiButton from '../ui/UiButton.vue'
+import UiSkeletonRows from '../ui/UiSkeletonRows.vue'
 import SongRow from '../search/SongRow.vue'
 import API from '/src/model/api'
 import { libraryOnly } from '/src/model/musicPolicy'
