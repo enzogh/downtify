@@ -92,6 +92,13 @@ describe('streaming in the player queue', () => {
     expect(player.playError.value).toBe('')
   })
 
+  it('keeps the video it found, so the stream can be saved', async () => {
+    player.playList([pending('B')])
+    await vi.waitFor(() => {
+      expect(player.currentTrack.value.video_id).toBe('vid-B')
+    })
+  })
+
   it('keeps the current local file and local order when the policy changes', async () => {
     const { libraryOnly } = await import('../model/musicPolicy')
     const { nextTick } = await import('vue')
@@ -121,6 +128,7 @@ describe('streaming in the player queue', () => {
     await vi.waitFor(() => {
       expect(player.playlist.value[1].url).toBe('https://stream.example/B')
     })
+    expect(player.playlist.value[1].video_id).toBe('vid-B')
     // Only one ahead: the third waits its turn.
     expect(player.playlist.value[2].url).toBe('')
     expect(audios.list[0].src).toBe('/downloads/A.mp3')

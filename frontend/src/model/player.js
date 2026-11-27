@@ -600,6 +600,11 @@ function fullyBuffered() {
   return false
 }
 
+/** A stream track once resolved: its URL, and the video it plays. */
+function withVideo(track, url, videoId) {
+  return { ...track, url, video_id: videoId || track.video_id || '' }
+}
+
 /** Resolve an unstored stream track, then play it - or skip past it. */
 async function playUnresolved(index) {
   const track = playlist.value[index]
@@ -610,8 +615,9 @@ async function playUnresolved(index) {
   currentTime.value = 0
   duration.value = 0
   let url = ''
+  let videoId = ''
   try {
-    ;({ url } = await resolveTrackUrl(track))
+    ;({ url, videoId } = await resolveTrackUrl(track))
   } catch {
     url = ''
   } finally {
@@ -632,7 +638,9 @@ async function playUnresolved(index) {
     return
   }
   resolveFailures = 0
-  playlist.value[index] = { ...track, url }
+  // The video found keeps the track: it is what "Save to server"
+  // downloads, and a later replay needs no new search.
+  playlist.value[index] = withVideo(track, url, videoId)
   startAudio(ensureAudio(), index)
 }
 
@@ -677,7 +685,7 @@ function prefetchNext() {
     ({ url, videoId }) => {
       // Another queue took its place meanwhile: leave it alone.
       if (playlist.value === list && playlist.value[upcoming] === track) {
-        playlist.value[upcoming] = { ...track, url }
+        playlist.value[upcoming] = withVideo(track, url, videoId)
       }
       // Warm the server download too, so the file (not just its URL)
       // already waits when the turn comes.
