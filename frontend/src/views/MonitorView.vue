@@ -3,6 +3,16 @@
     class="mx-auto flex max-w-[1680px] flex-col gap-6 px-4 pt-6 sm:px-6 md:pt-8 lg:px-10"
   >
     <PageHeader :title="t('monitor.title')" :subtitle="t('monitor.subtitle')">
+      <!-- With watches listed, adding one is a button: the list, not the
+           form, is what this page opens on. -->
+      <UiButton
+        v-if="tab !== 'wanted' && inTab.length && !formOpen"
+        variant="primary"
+        icon="plus"
+        @click="openForm"
+      >
+        {{ copy.add }}
+      </UiButton>
       <UiButton
         v-if="tab !== 'wanted' && enabledInTab.length"
         variant="ghost"
@@ -19,43 +29,58 @@
 
     <UiTabs :items="tabs" :model-value="tab" />
 
-    <form
-      v-if="tab !== 'wanted'"
-      ref="watchForm"
-      class="flex flex-col gap-2 rounded-panel border border-line-2 bg-surface p-2 sm:flex-row sm:items-center"
-      @submit.prevent="add"
-    >
-      <label
-        class="flex h-11 min-w-0 flex-none items-center gap-3 px-3 sm:flex-1"
-      >
-        <AppIcon name="link" :size="18" class="text-faint" />
-        <span class="sr-only">{{ copy.urlLabel }}</span>
-        <input
-          v-model="newUrl[tab]"
-          :type="tab === 'artist' ? 'text' : 'url'"
-          :placeholder="copy.urlPlaceholder"
-          class="h-full min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-faint"
-        />
-      </label>
-      <div class="flex flex-col gap-2 px-1 pb-1 min-[440px]:flex-row sm:p-0">
-        <UiSelect
-          v-model="newInterval"
-          :options="intervalOptions(t)"
-          :label="t('monitor.interval')"
-          icon="clock"
-          class="min-w-0 flex-1 sm:flex-none"
-        />
-        <UiButton
-          type="submit"
-          variant="primary"
-          :icon="artistQuery ? 'search' : tab === 'artist' ? 'user' : 'radar'"
-          :loading="adding"
-          :disabled="!newUrl[tab].trim()"
+    <Transition name="collapse">
+      <div v-if="tab !== 'wanted' && showForm" class="flex flex-col gap-3">
+        <form
+          ref="watchForm"
+          class="flex flex-col gap-2 rounded-panel border border-line-2 bg-surface p-2 sm:flex-row sm:items-center"
+          @submit.prevent="add"
         >
-          {{ artistQuery ? t('monitor.searchArtists') : copy.add }}
-        </UiButton>
+          <label
+            class="flex h-11 min-w-0 flex-none items-center gap-3 px-3 sm:flex-1"
+          >
+            <AppIcon name="link" :size="18" class="text-faint" />
+            <span class="sr-only">{{ copy.urlLabel }}</span>
+            <input
+              v-model="newUrl[tab]"
+              :type="tab === 'artist' ? 'text' : 'url'"
+              :placeholder="copy.urlPlaceholder"
+              class="h-full min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-faint"
+            />
+          </label>
+          <div
+            class="flex flex-col gap-2 px-1 pb-1 min-[440px]:flex-row sm:p-0"
+          >
+            <UiSelect
+              v-model="newInterval"
+              :options="intervalOptions(t)"
+              :label="t('monitor.interval')"
+              icon="clock"
+              class="min-w-0 flex-1 sm:flex-none"
+            />
+            <UiButton
+              type="submit"
+              variant="primary"
+              :icon="
+                artistQuery ? 'search' : tab === 'artist' ? 'user' : 'radar'
+              "
+              :loading="adding"
+              :disabled="!newUrl[tab].trim()"
+            >
+              {{ artistQuery ? t('monitor.searchArtists') : copy.add }}
+            </UiButton>
+            <UiButton
+              v-if="inTab.length"
+              type="button"
+              variant="ghost"
+              @click="closeForm"
+            >
+              {{ t('common.cancel') }}
+            </UiButton>
+          </div>
+        </form>
       </div>
-    </form>
+    </Transition>
     <ArtistNameSearch
       v-if="tab === 'artist'"
       ref="nameSearch"
@@ -70,7 +95,7 @@
       @search="searchUserLinkName"
     />
     <div
-      v-if="tab === 'artist'"
+      v-if="tab === 'artist' && showForm"
       class="-mt-3 rounded-panel border border-line-2 bg-surface px-4 py-3"
     >
       <ReleaseFilters
@@ -98,10 +123,9 @@
         }}
       </UiButton>
     </p>
-
     <p
-      v-if="tab !== 'wanted'"
-      class="flex items-start gap-2 text-[13px] text-pretty text-muted"
+      v-if="tab !== 'wanted' && showForm"
+      class="-mt-3 flex items-start gap-2 text-[13px] text-pretty text-muted"
     >
       <AppIcon name="info" :size="16" class="mt-0.5 shrink-0" />{{
         copy.explainer
@@ -126,8 +150,9 @@
     />
 
     <template v-else-if="tab !== 'wanted'">
+      <!-- Two columns of figures on a phone, one line on a wider screen. -->
       <div
-        class="flex flex-wrap items-center gap-x-6 gap-y-3 rounded-panel border border-line-2 bg-surface px-4 py-3"
+        class="grid grid-cols-2 items-center gap-x-6 gap-y-3 rounded-panel border border-line-2 bg-surface px-4 py-3 sm:flex sm:flex-wrap"
       >
         <template v-if="totals">
           <div v-for="total in totalItems" :key="total.key" class="min-w-0">
@@ -142,12 +167,12 @@
         <p v-else-if="statsError" class="text-[13px] text-danger" role="alert">
           {{ t('watchStats.statsFailed') }}
         </p>
-        <UiSkeleton v-else class="h-11 w-64" />
+        <UiSkeleton v-else class="col-span-2 h-11 w-64" />
         <UiSegmented
           v-model="days"
           :options="periodOptions"
           show-labels
-          class="ml-auto"
+          class="col-span-2 justify-self-start sm:ml-auto"
           :aria-label="t('watchStats.period')"
         />
       </div>
@@ -165,8 +190,15 @@
             class="h-full min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-faint"
           />
         </label>
-        <UiChips v-model="show" :items="showFilters" />
-        <div class="ml-auto flex items-center gap-2">
+        <!-- A single "All" chip filters nothing: shown once there is a
+             choice (some watches paused). -->
+        <UiChips
+          v-if="showFilters.length > 1"
+          v-model="show"
+          :items="showFilters"
+        />
+        <!-- Wraps on a phone: the sort controls never run off screen. -->
+        <div class="ml-auto flex min-w-0 flex-wrap items-center gap-2">
           <UiButton
             size="sm"
             :variant="selecting ? 'secondary' : 'ghost'"
@@ -391,12 +423,14 @@
                     >
                       {{ item.name }}
                     </RouterLink>
+                    <!-- The link itself is a desktop detail; on a phone
+                         the source badge below says where it is from. -->
                     <a
                       :href="item.url"
                       target="_blank"
                       rel="noopener"
                       :title="item.url"
-                      class="block truncate font-mono text-[11.5px] text-muted hover:text-fg hover:underline"
+                      class="block truncate font-mono text-[11.5px] text-muted hover:text-fg hover:underline max-lg:hidden"
                       >{{ displayUrl(item.url) }}</a
                     >
                     <span
@@ -584,19 +618,30 @@
                   </template>
                   <span v-else class="text-faint">—</span>
                 </span>
-                <UiSwitch
-                  :model-value="item.enabled"
-                  class="ml-auto lg:ml-0"
+                <!-- Said in words on a phone, where there is no column
+                     header above the switch. -->
+                <label
+                  class="ml-auto flex items-center gap-2 text-[13px] text-muted lg:ml-0"
                   :class="
                     layout.hidden.includes('active')
                       ? 'monitor-column-hidden'
                       : ''
                   "
-                  :aria-label="`${t('monitor.colActive')}: ${item.name}`"
-                  @update:model-value="
-                    (value) => update(item, { enabled: value })
-                  "
-                />
+                  @click.stop
+                >
+                  <span class="lg:sr-only">{{
+                    item.enabled
+                      ? t('monitor.colActive')
+                      : t('monitor.filterPaused')
+                  }}</span>
+                  <UiSwitch
+                    :model-value="item.enabled"
+                    :aria-label="`${t('monitor.colActive')}: ${item.name}`"
+                    @update:model-value="
+                      (value) => update(item, { enabled: value })
+                    "
+                  />
+                </label>
               </div>
             </li>
           </TransitionGroup>
@@ -1034,6 +1079,28 @@ const copy = computed(() =>
 )
 
 const inTab = computed(() => filterWatches(items.value, { kind: tab.value }))
+
+// The add form: open while nothing is watched in this tab (it is what the
+// page is for then), else behind the header's button.
+const formOpen = ref(false)
+const showForm = computed(
+  () =>
+    formOpen.value ||
+    (!loading.value && !inTab.value.length) ||
+    !!newUrl[tab.value]?.trim() ||
+    !!addError[tab.value]
+)
+async function openForm() {
+  formOpen.value = true
+  await nextTick()
+  watchForm.value?.querySelector('input')?.focus()
+}
+function closeForm() {
+  formOpen.value = false
+  newUrl[tab.value] = ''
+  addError[tab.value] = ''
+}
+watch(tab, () => (formOpen.value = false))
 const enabledInTab = computed(() => inTab.value.filter((i) => i.enabled))
 
 const showFilters = computed(() => {
@@ -1300,6 +1367,7 @@ async function add() {
     )
     items.value = [res.data, ...items.value]
     newUrl[kind] = ''
+    formOpen.value = false
     ui.toast(t('toast.watching', { name: res.data.name }), { kind: 'success' })
     // A link the page couldn't classify turned out to be the other kind.
     if (watchKind(res.data) !== kind) router.push(tabRoute(watchKind(res.data)))
@@ -1321,6 +1389,7 @@ async function chooseSuggestedArtist(artist) {
     await add()
     if (!addError.artist || artist.fromDialog) return
   }
+  formOpen.value = true
   await nextTick()
   watchForm.value?.scrollIntoView({ behavior: 'smooth', block: 'center' })
   watchForm.value?.querySelector('input')?.focus({ preventScroll: true })

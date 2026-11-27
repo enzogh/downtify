@@ -234,6 +234,26 @@ class ListeningHistory:
             out.append(item)
         return out
 
+    def everyone(
+        self,
+        days: int = 30,
+        limit: int = 50000,
+        now: Optional[datetime] = None,
+    ) -> list[dict[str, Any]]:
+        """Every user's plays of the last *days*, newest first, each with
+        its ``user_id`` (the admin panel's view - :func:`summarize`)."""
+
+        now = now or _now()
+        since = (now - timedelta(days=max(1, int(days)))).isoformat()
+        with self.db.connect() as conn:
+            rows = conn.execute(
+                f'SELECT user_id, {", ".join(_COLUMNS)} '
+                'FROM listening_history WHERE played_at >= ? '
+                'ORDER BY played_at DESC LIMIT ?',
+                (since, max(1, int(limit))),
+            ).fetchall()
+        return [dict(row) for row in rows]
+
     def clear(self, user_id: Optional[int] = None) -> int:
         """Forget *user_id*'s plays (everyone's when ``None``)."""
 
@@ -244,3 +264,151 @@ class ListeningHistory:
                 'DELETE FROM listening_history WHERE user_id = ?',
                 (int(user_id),),
             ).rowcount
+
+
+def _key(text: Any) -> str:
+    return ' '.join(str(text or '').casefold().split())
+
+
+def _ranked(table: dict[Any, dict[str, Any]], top: int) -> list[dict]:
+    """The *top* entries of *table* by plays, ``people`` as a count."""
+
+    best = sorted(
+        table.values(), key=lambda item: (-item['plays'], item['artist'])
+    )[:top]
+    return [
+        {
+            **{k: v for k, v in item.items() if k != 'people'},
+            'listeners': len(item['people']),
+        }
+        for item in best
+    ]
+
+
+class _Tally:
+    """The figures :func:`summarize` adds up, one play at a time."""
+
+    def __init__(self, days: int, today: Any, names: dict[int, str]):
+        self.names = names
+        self.per_day = {
+            (today - timedelta(days=back)).isoformat(): [0, 0.0]
+            for back in range(days - 1, -1, -1)
+        }
+        self.artists: dict[str, dict[str, Any]] = {}
+        self.songs: dict[tuple[str, str], dict[str, Any]] = {}
+        self.users: dict[int, dict[str, Any]] = {}
+        self.latest: list[dict[str, Any]] = []
+        self.plays = self.skips = self.streamed = 0
+        self.seconds = 0.0
+
+    def user(self, uid: int, played_at: Any) -> dict[str, Any]:
+        return self.users.setdefault(
+            uid,
+            {
+                'user_id': uid,
+                'username': self.names.get(uid, ''),
+                'plays': 0,
+                'seconds': 0.0,
+                'skips': 0,
+                'last_played': played_at,
+            },
+        )
+
+    def add(self, row: dict[str, Any], recent: int) -> None:
+        uid = int(row.get('user_id') or 0)
+        played = float(row.get('played_s') or 0)
+        skipped = bool(row.get('skipped'))
+        self.plays += 1
+        self.seconds += played
+        self.skips += skipped
+        self.streamed += row.get('source') == 'stream'
+        day = self.per_day.get(str(row.get('played_at') or '')[:10])
+        if day is not None:
+            day[0] += 1
+            day[1] += played
+        user = self.user(uid, row.get('played_at'))
+        user['plays'] += 1
+        user['seconds'] += played
+        user['skips'] += skipped
+        if len(self.latest) < recent:
+            self.latest.append({
+                'user_id': uid,
+                'username': self.names.get(uid, ''),
+                'artist': row.get('artist', ''),
+                'title': row.get('title', ''),
+                'played_at': row.get('played_at'),
+                'source': row.get('source', 'library'),
+                'skipped': skipped,
+            })
+        if not skipped:
+            self.count(row, uid)
+
+    def count(self, row: dict[str, Any], uid: int) -> None:
+        """A song played (not skipped): towards the top artists and songs."""
+
+        artist_key = _key(row.get('artist'))
+        artist = self.artists.setdefault(
+            artist_key,
+            {'artist': row.get('artist', ''), 'plays': 0, 'people': set()},
+        )
+        song = self.songs.setdefault(
+            (artist_key, _key(row.get('title'))),
+            {
+                'artist': row.get('artist', ''),
+                'title': row.get('title', ''),
+                'plays': 0,
+                'people': set(),
+            },
+        )
+        for item in (artist, song):
+            item['plays'] += 1
+            item['people'].add(uid)
+
+
+def summarize(
+    rows: Iterable[dict[str, Any]],
+    days: int,
+    names: Optional[dict[int, str]] = None,
+    now: Optional[datetime] = None,
+    top: int = 10,
+    recent: int = 20,
+) -> dict[str, Any]:
+    """What the listening history says across accounts, for the admin
+    panel: totals, plays per day (oldest first, every day of the period),
+    the most played artists and songs (with how many people played them,
+    skips left out), each account's listening and the latest plays.
+
+    *rows* are :meth:`ListeningHistory.everyone` rows (newest first);
+    *names* maps a user id to its name.
+    """
+
+    now = now or _now()
+    days = max(1, int(days))
+    tally = _Tally(days, now.astimezone(timezone.utc).date(), names or {})
+    for row in rows:
+        tally.add(row, recent)
+    plays = tally.plays
+    return {
+        'days': days,
+        'totals': {
+            'plays': plays,
+            'listeners': len(tally.users),
+            'seconds': round(tally.seconds),
+            'skip_rate': round(tally.skips / plays, 3) if plays else 0,
+            'stream_share': round(tally.streamed / plays, 3) if plays else 0,
+        },
+        'per_day': [
+            {'day': day, 'plays': count, 'seconds': round(secs)}
+            for day, (count, secs) in tally.per_day.items()
+        ],
+        'top_artists': _ranked(tally.artists, top),
+        'top_songs': _ranked(tally.songs, top),
+        'users': sorted(
+            (
+                {**user, 'seconds': round(user['seconds'])}
+                for user in tally.users.values()
+            ),
+            key=lambda user: -user['plays'],
+        ),
+        'recent': tally.latest,
+    }

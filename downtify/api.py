@@ -368,6 +368,9 @@ downloads are shared, and files are never stored twice.
    own listening history, one row per play with ``played_s`` and
    ``skipped`` - ``?days=&limit=``; ``POST`` body ``{plays: [...]}``, a
    ``play_id`` counted once; see ``downtify.listening_history``)
+ * ``GET  /api/admin/listening`` (everyone's listening over ``?days=``
+   for the admin panel: totals, plays per day, top artists and songs,
+   per account, latest plays - admins only)
  * ``GET  /api/preview`` (a song's 30 s preview clip from Deezer, for a
    song with no ``preview_url`` of its own - ``?artist=&title=&duration=``,
    response ``{preview_url}``, ``""`` when Deezer has no matching song)

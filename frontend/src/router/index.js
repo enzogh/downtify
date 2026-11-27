@@ -1,6 +1,7 @@
 import { createWebHistory, createRouter } from 'vue-router'
 import config from '/src/config'
 import { useJamSheet } from '/src/model/jamSheet'
+import { ADMIN_SECTIONS } from '/src/lib/auth'
 
 const LIBRARY_TABS = 'tracks|albums|artists|playlists'
 const CHARTS_TABS = 'tracks|albums|artists|playlists'
@@ -137,6 +138,21 @@ const routes = [
     path: '/settings/:section?',
     name: 'Settings',
     component: () => import('/src/views/SettingsView.vue'),
+    props: { scope: 'personal' },
+    // The server's settings moved to the admin panel: older links to
+    // them (bookmarks, notes, the docs) land there.
+    beforeEnter: (to) =>
+      ADMIN_SECTIONS.includes(String(to.params.section || ''))
+        ? { name: 'Admin', params: { section: to.params.section } }
+        : true,
+  },
+  {
+    // The admin panel: an overview of the server and its listening, then
+    // every setting that is the server's rather than one person's.
+    path: '/admin/:section?',
+    name: 'Admin',
+    component: () => import('/src/views/SettingsView.vue'),
+    props: { scope: 'admin' },
   },
   // 2.x paths, kept so bookmarks and the PWA start URL still work.
   {

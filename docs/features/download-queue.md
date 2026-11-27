@@ -30,7 +30,7 @@ Finished songs stay listed when you reload the page, and when Castify restarts o
 
 Everyone sees whether the queue is paused; only an admin can pause or resume it, since it holds everyone's downloads.
 
-The same global control is available at the top of Settings → Downloads & files (`/settings/files`) and in Playlist Monitor (`/monitor`), next to Check all. Both read the confirmed server state. They require an administrator's web session; a paired phone token does not grant server administration. On a lost confirmation, use Check status before sending another change.
+The same global control is available at the top of Admin → Downloads & files (`/admin/files`) and in Playlist Monitor (`/monitor`), next to Check all. Both read the confirmed server state. They require an administrator's web session; a paired phone token does not grant server administration. On a lost confirmation, use Check status before sending another change.
 
 ## Why slskd wasn't used
 
@@ -41,7 +41,7 @@ With [slskd](slskd-navidrome.md) first in the source order, a song it can't serv
 | **Nobody shared it**                                                      | No user had the song with a free upload slot                                         |
 | **No file matched the song**                                              | Files came back, but none matched the title, artist and length                       |
 | **Match below the minimum score**                                         | A close file scored below the threshold that keeps remixes and live versions out     |
-| **Blocked by quality rules**                                              | Matching files failed the format or bitrate rules (Settings → Audio sources → slskd) |
+| **Blocked by quality rules**                                              | Matching files failed the format or bitrate rules (Admin → Audio sources → slskd) |
 | **Search / Download ran out of time**                                     | The search or the transfer took longer than the slskd timeouts                       |
 | **Transfers failed**                                                      | Every file picked was refused or never arrived complete                              |
 | **Wrong song in the file**                                                | The downloaded file's tags named another song; it was kept in slskd's folder         |

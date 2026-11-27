@@ -83,6 +83,7 @@ export default {
       'features/playlist-order.md': 'Reihenfolge und wiederholte Titel',
       'features/building-playlists.md': 'Playlists zusammenstellen',
       'features/recommendations.md': 'Empfehlungen',
+      'features/admin-panel.md': 'Verwaltung',
       'features/song-links.md': 'Einen Song teilen',
       'features/users.md': 'Benutzer und Anmeldung',
       'features/mobile-apps.md': 'Mobile Apps',

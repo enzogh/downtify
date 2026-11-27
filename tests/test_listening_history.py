@@ -173,3 +173,56 @@ def test_record_route_wants_a_list(
             discover_routes.record_plays_endpoint(_request(1, {'plays': 'x'}))
         )
     assert err.value.status_code == 400
+
+
+# Admin panel
+
+
+def test_summarize_adds_up_everyone() -> None:
+    rows = [
+        {**_play('a1', artist='PLK', title='A'), 'user_id': 1},
+        {**_play('a2', artist='PLK', title='A'), 'user_id': 2},
+        {
+            **_play('a3', artist='Ninho', title='B', source='stream'),
+            'user_id': 1,
+        },
+        {**_play('a4', artist='Ninho', title='C', skipped=1), 'user_id': 2},
+    ]
+    for row in rows:
+        row['played_at'] = (NOW - timedelta(days=1)).isoformat()
+    out = listening_history.summarize(rows, 7, {1: 'enzo', 2: 'sam'}, now=NOW)
+    assert out['totals']['plays'] == 4
+    assert out['totals']['listeners'] == 2
+    assert out['totals']['skip_rate'] == 0.25
+    assert out['totals']['stream_share'] == 0.25
+    assert len(out['per_day']) == 7
+    assert out['per_day'][-1]['plays'] == 0
+    assert out['per_day'][-2]['plays'] == 4
+    assert out['top_artists'][0] == {
+        'artist': 'PLK',
+        'plays': 2,
+        'listeners': 2,
+    }
+    # A skip doesn't count towards the top songs.
+    assert [s['title'] for s in out['top_songs']] == ['A', 'B']
+    assert {u['username'] for u in out['users']} == {'enzo', 'sam'}
+    assert out['recent'][0]['username'] == 'enzo'
+
+
+def test_everyone_reads_all_users(store: DiscoverStore) -> None:
+    store.history.record([_play('x')], 1, NOW)
+    store.history.record([_play('y')], 2, NOW)
+    rows = store.history.everyone(30, now=NOW)
+    assert sorted(row['user_id'] for row in rows) == [1, 2]
+
+
+def test_admin_listening_route(
+    store: DiscoverStore, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(api.state, 'discover', store)
+    monkeypatch.setattr(api.state, 'auth', None)
+    recent = datetime.now(timezone.utc) - timedelta(minutes=5)
+    store.history.record([_play('r', played_at=recent.isoformat())], 3)
+    out = asyncio.run(discover_routes.admin_listening_endpoint(7))
+    assert out['totals']['plays'] == 1
+    assert out['users'][0]['user_id'] == 3

@@ -1,6 +1,7 @@
 """Search and discovery routes: ``/api/discover*``, ``/api/finder/*``,
 ``/api/songs/search``, ``/api/albums/search``, ``/api/similar/tracks``,
-``/api/buy``, ``/api/url*``, ``/api/song/url`` and ``/api/history*``.
+``/api/buy``, ``/api/url*``, ``/api/song/url``, ``/api/history*`` and
+``/api/admin/listening``.
 
 Registers on the shared ``api_core.router`` (under its library-only
 guard) when :mod:`downtify.api` imports it; the endpoint list lives
@@ -32,6 +33,7 @@ from . import (
     artist_profile,
     deezer,
     library_only,
+    listening_history,
     providers,
     spotify,
 )
@@ -824,3 +826,20 @@ async def clear_history_endpoint(request: Request) -> dict[str, Any]:
         store.history.clear, request_user_id(request)
     )
     return {'cleared': cleared}
+
+
+@router.get('/api/admin/listening')
+async def admin_listening_endpoint(
+    days: int = Query(30, ge=1, le=365),
+) -> dict[str, Any]:
+    """Everyone's listening over the last *days*, for the admin panel:
+    ``{days, totals, per_day, top_artists, top_songs, users, recent}`` -
+    see :func:`downtify.listening_history.summarize`. Admins only."""
+
+    store = _require_discover()
+    names: dict[int, str] = {}
+    if state.auth is not None:
+        users = await asyncio.to_thread(state.auth.users.list)
+        names = {int(user['id']): str(user['username']) for user in users}
+    rows = await asyncio.to_thread(store.history.everyone, days)
+    return listening_history.summarize(rows, days, names)

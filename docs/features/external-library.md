@@ -9,7 +9,7 @@ Castify's Library is built from the files it downloaded — plus any **extra fol
 ## Add folders
 
 1. Mount the host folder into the container (Docker). The path you type in Settings is **inside the container**, the same rule as [slskd's download folder](slskd-navidrome.md).
-2. Open **Settings → Library**.
+2. Open **Admin → Library**.
 3. Under **Existing music folders**, add one or more paths (for example `/music/collection`). The field suggests directories as you type.
 4. **Save** if you want them kept without syncing yet, or press **Sync folders** — that saves the list and scans immediately.
 
@@ -38,7 +38,7 @@ Mount the collection `:ro` if you do not want Castify to rewrite the MP3s. Sync 
 2. Reads embedded tags. A file with no title/artist falls back to `Artist - Title` in the filename, same as other library rows.
 3. **Skips** a file when the library already has that song (same artist + title, and length within a few seconds when both are known) — whether it was downloaded by Castify or came from another extra folder.
 4. **Matches artists** to names already in the library (`The Beatles` and `Beatles` become one artist). Names that don't match a known artist show up as a new artist. New artists are queued for the same profile seeding (photo/bio when those settings are on) as a finished download.
-5. **Tags like a download** when the folder is writable. For each imported track it uses the same lyrics providers, cover lookup (only when the file has no artwork) and iTunes genre lookup a download would. Lyrics go into the file; a `.lrc` sidecar is written next to the audio or in the [lyrics folder](lyrics.md#sidecar-lrc-file) you chose in Settings. Cover and genre follow [Download settings](download-settings.md) (`download_cover_art`, `download_lyrics`). On a **read-only** mount the MP3 is not rewritten: a missing cover is stored under `/data/cover_cache`, genre is stored in the library catalog, and `.lrc` files go to the lyrics folder if you chose one. Lookups run in batches of **Parallel downloads**; a **Pause between sync lookups** in Settings → Downloads & files waits between those batches so large folders don't hit provider rate limits.
+5. **Tags like a download** when the folder is writable. For each imported track it uses the same lyrics providers, cover lookup (only when the file has no artwork) and iTunes genre lookup a download would. Lyrics go into the file; a `.lrc` sidecar is written next to the audio or in the [lyrics folder](lyrics.md#sidecar-lrc-file) you chose in Settings. Cover and genre follow [Download settings](download-settings.md) (`download_cover_art`, `download_lyrics`). On a **read-only** mount the MP3 is not rewritten: a missing cover is stored under `/data/cover_cache`, genre is stored in the library catalog, and `.lrc` files go to the lyrics folder if you chose one. Lookups run in batches of **Parallel downloads**; a **Pause between sync lookups** in Admin → Downloads & files waits between those batches so large folders don't hit provider rate limits.
 6. Invalidates the library path cache so the Library page and player see the result without waiting for the usual short scan TTL.
 
 Sync runs **in the background**. You can leave Settings; coming back while it is still working shows that it is still syncing. When it has finished, Settings shows the **last sync log** (imported / duplicate / error, plus lyrics/cover notes).
@@ -69,7 +69,7 @@ See the [API reference](../api-reference.md#post-apilibraryexternalsync) for the
 
 ## Primary library folder
 
-Choose **Settings → Library → Primary library folder** to prefer one of the
+Choose **Admin → Library → Primary library folder** to prefer one of the
 registered external folders. The default preserves existing behavior.
 Matching artist, full title (including version) and album are required;
 unknown metadata does not hide another file. A selected source can represent

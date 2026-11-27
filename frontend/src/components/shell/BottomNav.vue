@@ -185,7 +185,7 @@ const items = [
   },
   { name: 'Queue', icon: 'download', label: 'nav.queue' },
 ]
-const moreLinks = [
+const baseLinks = [
   {
     name: 'Discover',
     icon: 'sparkle',
@@ -202,6 +202,12 @@ const moreLinks = [
   { name: 'Jam', icon: 'users', label: 'nav.jam' },
   { name: 'Settings', icon: 'settings', label: 'nav.settings' },
 ]
+// Admins also get their panel, right after Settings.
+const moreLinks = computed(() =>
+  auth.isAdmin.value
+    ? [...baseLinks, { name: 'Admin', icon: 'shield', label: 'nav.admin' }]
+    : baseLinks
+)
 
 function isActive(item) {
   // The Jam is a sheet, not a page: lit while it is open.
@@ -209,7 +215,7 @@ function isActive(item) {
   return route.name === item.name || (item.match || []).includes(route.name)
 }
 
-const moreActive = computed(() => moreLinks.some(isActive))
+const moreActive = computed(() => moreLinks.value.some(isActive))
 
 watch(
   () => route.fullPath,

@@ -9,7 +9,7 @@ SoundCloud works in Castify two ways: you can paste a **SoundCloud track link** 
 
 ## Turning it on
 
-SoundCloud is off by default. In **Settings → Audio sources**, tap **SoundCloud** to add it to the source order, then move it where you want it with the arrows. Each song tries the enabled sources in that order and stops at the first one that has it — see [slskd & Navidrome](slskd-navidrome.md#audio-sources-and-fallback-order) for how the order works.
+SoundCloud is off by default. In **Admin → Audio sources**, tap **SoundCloud** to add it to the source order, then move it where you want it with the arrows. Each song tries the enabled sources in that order and stops at the first one that has it — see [slskd & Navidrome](slskd-navidrome.md#audio-sources-and-fallback-order) for how the order works.
 
 Most people put it last: SoundCloud is good for remixes, DJ edits and uploads that never made it to the big catalogues, while YouTube Music usually has the cleaner copy of everything else.
 

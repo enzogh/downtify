@@ -11,7 +11,7 @@ It is off until you turn it on, and it needs your own AcoustID API key (free).
 ## Turning it on
 
 1. Register an application on [acoustid.org/new-application](https://acoustid.org/new-application) (sign in with a free account; any name and version will do). AcoustID shows the application's **API key**.
-2. In **Settings → Tags & lyrics**, in the **Song IDs** group, turn on **Identify songs by sound (AcoustID)** and save the settings.
+2. In **Admin → Tags & lyrics**, in the **Song IDs** group, turn on **Identify songs by sound (AcoustID)** and save the settings.
 3. Paste the key into **AcoustID API key**, press **Save key**, then **Test key**. "AcoustID accepted the key." means it works.
 
 Only admins see this. The key is kept in its own file in the data folder (`.acoustid_key`), not in `settings.json`, and is never sent back to the browser: the settings show only its last four characters. **Remove key** deletes it. It isn't part of a [backup](backups.md), so enter it again after a restore on a new server.

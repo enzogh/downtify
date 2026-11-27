@@ -83,6 +83,7 @@ export default {
       'features/playlist-order.md': 'Sorrend és ismétlődő számok',
       'features/building-playlists.md': 'Lejátszási listák összeállítása',
       'features/recommendations.md': 'Ajánlások',
+      'features/admin-panel.md': 'Adminisztráció',
       'features/song-links.md': 'Dal megosztása',
       'features/users.md': 'Felhasználók és bejelentkezés',
       'features/mobile-apps.md': 'Mobilalkalmazások',

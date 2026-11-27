@@ -59,6 +59,14 @@
         :items="formatChips"
         class="max-w-full"
       />
+      <!-- Your playlists by where they come from, once there are kinds
+           to choose between. -->
+      <UiChips
+        v-if="tab === 'playlists' && playlistKindChips.length > 2"
+        v-model="playlistKind"
+        :items="playlistKindChips"
+        class="max-w-full"
+      />
       <div class="ml-auto flex items-center gap-2">
         <UiSelect
           v-if="tab !== 'tracks'"
@@ -588,6 +596,29 @@ const sortOptions = computed(() => {
   return base
 })
 
+// Created here, imported from a link (Spotify, YouTube Music, a watch...)
+// or pinned: what tells a long list of playlists apart.
+const PLAYLIST_KINDS = {
+  created: (playlist) => playlist.manual && !playlist.liked,
+  imported: (playlist) => !playlist.manual && !playlist.liked,
+  pinned: (playlist) => playlist.favorite,
+}
+const playlistKind = ref('all')
+const playlistKindChips = computed(() => {
+  const own = library.ownPlaylists.value
+  const chips = Object.entries(PLAYLIST_KINDS)
+    .map(([id, test]) => ({
+      id,
+      label: t(`library.playlistKind.${id}`),
+      count: own.filter(test).length,
+    }))
+    .filter((chip) => chip.count || chip.id === playlistKind.value)
+  return [
+    { id: 'all', label: t('library.playlistKind.all'), count: own.length },
+    ...chips,
+  ]
+})
+
 const formatChips = computed(() => {
   const counts = new Map()
   for (const track of library.tracks.value) {
@@ -626,8 +657,12 @@ const items = computed(() => {
       sortKey.value
     )
   }
+  const test = PLAYLIST_KINDS[playlistKind.value]
+  const own = test
+    ? library.ownPlaylists.value.filter(test)
+    : library.ownPlaylists.value
   return sortItems(
-    filterItems(library.ownPlaylists.value, filter.value, ['title', 'name']),
+    filterItems(own, filter.value, ['title', 'name']),
     sortKey.value
   )
 })

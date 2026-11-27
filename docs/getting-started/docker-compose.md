@@ -73,11 +73,11 @@ services:
       - downtify_data:/data
 ```
 
-Then, in **Settings → Audio sources → slskd**, enable slskd, enter its URL (e.g. `http://slskd:5030` when both containers share a Docker network) and API key, and set the download folder to `/slskd`.
+Then, in **Admin → Audio sources → slskd**, enable slskd, enter its URL (e.g. `http://slskd:5030` when both containers share a Docker network) and API key, and set the download folder to `/slskd`.
 
 ## Existing music folders
 
-To have the Library pick up a collection you already keep on the host, [mount it](../features/external-library.md) the same way and type the **container** path in **Settings → Library**:
+To have the Library pick up a collection you already keep on the host, [mount it](../features/external-library.md) the same way and type the **container** path in **Admin → Library**:
 
 ```yaml
     volumes:
@@ -123,7 +123,7 @@ services:
     restart: unless-stopped
 ```
 
-You can also choose the port in **Settings → Server → Port** instead of setting `DOWNTIFY_PORT` (which, when set, wins over Settings). In the default bridge network, change the `ports:` mapping to the same port and recreate the container — see [Changing the port](../features/server.md#changing-the-port).
+You can also choose the port in **Admin → Server → Port** instead of setting `DOWNTIFY_PORT` (which, when set, wins over Settings). In the default bridge network, change the `ports:` mapping to the same port and recreate the container — see [Changing the port](../features/server.md#changing-the-port).
 
 ## With custom DNS (recommended)
 

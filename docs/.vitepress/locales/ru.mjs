@@ -88,6 +88,7 @@ export default {
       'features/charts.md': 'Чарты',
       'features/similar.md': 'Похожее',
       'features/recommendations.md': 'Рекомендации',
+      'features/admin-panel.md': 'Администрирование',
       'features/finder.md': 'Каталог Deezer',
       'features/download-settings.md': 'Настройки загрузок',
       'features/download-queue.md': 'Очередь загрузок',

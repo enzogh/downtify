@@ -4,7 +4,7 @@ icon: lucide/users
 
 # Users & Sign-in
 
-Everyone who uses Castify signs in with a **username and password**, and each person can have an account of their own. An admin manages the accounts in **Settings → Users** and sees what everyone does in **Settings → Activity**.
+Everyone who uses Castify signs in with a **username and password**, and each person can have an account of their own. An admin manages the accounts in **Admin → Users** and sees what everyone does in **Admin → Activity**.
 
 ## Signing in for the first time
 
@@ -124,7 +124,7 @@ The rest of **General** — theme, language, showing lyrics in the player, album
 
 ## Managing users
 
-In **Settings → Users** an admin can:
+In **Admin → Users** an admin can:
 
 - **Add a user** — username (3 to 32 letters, digits, `.`, `-` or `_`), password (at least 8 characters) and role.
 - **Edit** a user — rename them, make them an admin or a user, or give them a new password (which signs them out of their browsers; their apps stay paired).
@@ -154,7 +154,7 @@ Set these variables on the server and register the callback URL shown below as a
 
 For example, the provider's client needs the callback `https://music.example.com/api/auth/oidc/callback` and the scopes `openid profile email`. For a reverse proxy, also configure [`DOWNTIFY_TRUSTED_PROXIES`](../getting-started/environment-variables.md#mobile-apps-and-sign-in) or set the redirect URI explicitly.
 
-The first successful sign-in creates a Castify account. Identity is keyed by the exact `issuer` and OIDC `sub`, not by a mutable username or email. An existing local account is **never** linked automatically by matching username or email; if a claimed username is already taken, Castify adds a stable suffix. Admins can still manage local roles in **Settings → Users**, while a configured admin-group mapping is synchronized on every OIDC sign-in. If the mapped group change would remove the server's last admin, Castify rejects that sign-in until another admin exists.
+The first successful sign-in creates a Castify account. Identity is keyed by the exact `issuer` and OIDC `sub`, not by a mutable username or email. An existing local account is **never** linked automatically by matching username or email; if a claimed username is already taken, Castify adds a stable suffix. Admins can still manage local roles in **Admin → Users**, while a configured admin-group mapping is synchronized on every OIDC sign-in. If the mapped group change would remove the server's last admin, Castify rejects that sign-in until another admin exists.
 
 The provider's profile picture (the standard `picture` claim of the `profile` scope, a plain `https` URL) becomes the account's avatar in the top bar, refreshed on every OIDC sign-in; without one, the avatar shows the username's initial. Authentik sends it from the user's avatar setting (an `avatar_url` attribute or Gravatar).
 
@@ -185,7 +185,7 @@ To turn off username/password login for both the web page and the app's password
 
 ## Activity
 
-**Settings → Activity** (admins) shows, like Jellyfin's dashboard:
+**Admin → Activity** (admins) shows, like Jellyfin's dashboard:
 
 - **Playing now** — what each browser and app is playing, by whom, where it is in the song, and whether it's paused. It refreshes every few seconds.
 - **History** — sign-ins (and failed ones, with the address they came from), sign-outs, songs played, downloads, likes, deleted files, songs hidden from or shown to users, apps paired and unpaired, accounts added, changed or deleted, passwords and settings changed. Filter by user or by kind. Saved settings are listed by name only, never their values. Entries are kept for 90 days.
@@ -204,8 +204,8 @@ environment:
 Then:
 
 - There's no sign-in page: whoever opens Castify uses it as the first admin (`admin` on a new server).
-- The sign-out buttons, **Settings → Users**, the **Account** part of **Settings → General** and **Sign out everywhere** in **Settings → Apps** are gone.
-- Phones can still be paired (to that admin), and **Settings → Activity** still shows what plays where.
+- The sign-out buttons, **Admin → Users**, the **Account** part of **Settings → General** and **Sign out everywhere** in **Settings → Apps** are gone.
+- Phones can still be paired (to that admin), and **Admin → Activity** still shows what plays where.
 - Theme, language and the other **General** preferences are kept as that admin's.
 
 ::: warning Anyone who can reach the server can do everything

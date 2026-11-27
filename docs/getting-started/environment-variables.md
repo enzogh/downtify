@@ -10,7 +10,7 @@ All environment variables are optional. Castify works out of the box without any
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `DOWNTIFY_PORT` | _(unset)_ | Port the server listens on (inside the container). Unset: the port chosen in **Settings → Server → Port**, else `8000`. Set, it wins and the Settings field is locked. Change the left side of the port mapping to expose a different host port. See [Changing the port](../features/server.md#changing-the-port). |
+| `DOWNTIFY_PORT` | _(unset)_ | Port the server listens on (inside the container). Unset: the port chosen in **Admin → Server → Port**, else `8000`. Set, it wins and the Settings field is locked. Change the left side of the port mapping to expose a different host port. See [Changing the port](../features/server.md#changing-the-port). |
 | `DOWNLOAD_DIR` | `/downloads` | Directory where audio files are saved. Override if you mount your library at a custom path. |
 | `HOST` | `0.0.0.0` | Bind address for the web server. |
 | `DOWNTIFY_LOG_LEVEL` | `info` | Application log level (`debug`, `info`, `warning`, …). |
@@ -53,7 +53,7 @@ See [Mobile Apps](../features/mobile-apps.md) and [Users & Sign-in](../features/
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `DOWNTIFY_DISABLE_AUTH` | `false` | `true` turns accounts off: nobody signs in, and whoever reaches the server uses it as the admin. The sign-in page, the sign-out buttons, **Settings → Users** and the account part of **Settings → General** disappear. Paired apps keep working. Set it back to `false` (or remove it) and sign-in is required again, with the accounts as they were. See [Users & Sign-in](../features/users.md#turning-accounts-off). |
+| `DOWNTIFY_DISABLE_AUTH` | `false` | `true` turns accounts off: nobody signs in, and whoever reaches the server uses it as the admin. The sign-in page, the sign-out buttons, **Admin → Users** and the account part of **Settings → General** disappear. Paired apps keep working. Set it back to `false` (or remove it) and sign-in is required again, with the accounts as they were. See [Users & Sign-in](../features/users.md#turning-accounts-off). |
 | `DOWNTIFY_DISABLE_LOCAL_LOGIN` | `false` | `true` disables username/password login in the web UI and `POST /api/auth/token`. OIDC and app pairing remain available; current sessions and device tokens are not revoked. Requires all three OIDC credentials below. |
 | `DOWNTIFY_OIDC_ISSUER` | _(unset)_ | The exact OIDC issuer URL. Enables OIDC when used with client ID and secret. |
 | `DOWNTIFY_OIDC_CLIENT_ID` | _(unset)_ | OIDC confidential client ID. |

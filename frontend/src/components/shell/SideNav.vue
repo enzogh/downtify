@@ -160,6 +160,25 @@
           t('nav.updateAvailable', { version: update.latest_version })
         }}</span>
       </a>
+      <!-- The admin panel: the server, its users and what they play. -->
+      <RouterLink
+        v-if="auth.isAdmin.value"
+        :to="{ name: 'Admin' }"
+        class="flex h-10 items-center gap-3 rounded-control px-3 text-sm transition-colors"
+        :class="
+          route.name === 'Admin'
+            ? 'bg-surface-2 font-semibold text-fg'
+            : 'font-medium text-muted hover:bg-surface-2/60 hover:text-fg'
+        "
+        :title="t('nav.admin')"
+      >
+        <AppIcon
+          name="shield"
+          :size="18"
+          :class="route.name === 'Admin' ? 'text-accent' : ''"
+        />
+        <span :class="labelClass">{{ t('nav.admin') }}</span>
+      </RouterLink>
       <RouterLink
         :to="{ name: 'Settings' }"
         class="flex h-10 items-center gap-3 rounded-control px-3 text-sm transition-colors"

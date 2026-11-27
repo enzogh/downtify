@@ -96,7 +96,7 @@ slskd files keep their original format — they aren't transcoded to the format 
 ### Setup
 
 1. Make sure Navidrome's music folder includes Castify's downloads folder (and the slskd folder, if you leave slskd files in place). Navidrome can only add tracks to a playlist once it has scanned them.
-2. In **Settings → Navidrome**, enable Navidrome and enter its URL, username and password.
+2. In **Admin → Navidrome**, enable Navidrome and enter its URL, username and password.
 3. Optionally, add an **admin** username and password. Castify then asks Navidrome to scan the library before matching new tracks, instead of waiting for Navidrome's own scheduled scan.
 
 ### Testing the connection
@@ -123,7 +123,7 @@ The answer carries only what was found — a version, a path, a status — never
 
 ### Playlist sync
 
-Mirroring is configured by admins (Settings → Navidrome); regular accounts cannot create mirrors, though their downloads are mirrored like anyone else’s once the integration is on.
+Mirroring is configured by admins (Admin → Navidrome); regular accounts cannot create mirrors, though their downloads are mirrored like anyone else’s once the integration is on.
 
 With **Create playlists in Navidrome** on, Castify creates (or updates) a Navidrome playlist with the same name after:
 

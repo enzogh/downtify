@@ -3,8 +3,10 @@
     class="mx-auto flex max-w-[1280px] flex-col gap-6 px-4 pt-6 sm:px-6 md:pt-8 lg:px-10"
   >
     <PageHeader
-      :title="t('settings.title')"
-      :subtitle="t('settings.subtitle')"
+      :title="scope === 'admin' ? t('admin.title') : t('settings.title')"
+      :subtitle="
+        scope === 'admin' ? t('admin.subtitle') : t('settings.personalSubtitle')
+      "
     />
 
     <div class="grid items-start gap-8 lg:grid-cols-[220px_minmax(0,1fr)]">
@@ -16,7 +18,7 @@
         <RouterLink
           v-for="item in sections"
           :key="item.id"
-          :to="{ name: 'Settings', params: { section: item.id } }"
+          :to="{ name: routeName, params: { section: item.id } }"
           replace
           class="flex h-10 shrink-0 items-center gap-2.5 rounded-control px-3 text-sm whitespace-nowrap transition-colors"
           :class="
@@ -39,24 +41,33 @@
 
       <Transition v-else name="page" mode="out-in">
         <div :key="section" class="flex min-w-0 flex-col gap-8">
+          <!-- Admin panel: what the server holds and how it is used. -->
+          <AdminOverview v-if="section === 'overview'" />
+
           <!-- General -->
-          <template v-if="section === 'general'">
-            <AccountSettings v-if="!auth.authDisabled.value" />
-            <SettingGroup
+          <template v-else-if="section === 'general'">
+            <!-- Admins: the server's settings live in their own panel. -->
+            <RouterLink
               v-if="auth.isAdmin.value"
-              :title="t('libraryOnly.title')"
-              :description="t('libraryOnly.hint')"
+              :to="{ name: 'Admin' }"
+              class="flex items-center gap-4 rounded-panel border border-line-2 bg-surface px-5 py-4 transition-colors hover:bg-surface-2"
             >
-              <SettingRow
-                :label="t('libraryOnly.enable')"
-                :description="t('libraryOnly.serverHint')"
+              <span
+                class="flex size-10 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent"
               >
-                <UiSwitch
-                  v-model="s.library_only"
-                  :aria-label="t('libraryOnly.enable')"
-                />
-              </SettingRow>
-            </SettingGroup>
+                <AppIcon name="shield" :size="18" />
+              </span>
+              <span class="flex min-w-0 flex-1 flex-col">
+                <span class="text-sm font-semibold">{{
+                  t('admin.title')
+                }}</span>
+                <span class="text-[13px] text-pretty text-muted">{{
+                  t('admin.cardHint')
+                }}</span>
+              </span>
+              <AppIcon name="chevron-right" :size="18" class="text-faint" />
+            </RouterLink>
+            <AccountSettings v-if="!auth.authDisabled.value" />
             <SettingGroup
               :title="t('settings.appearance')"
               :description="t('settings.personalHint')"
@@ -1142,6 +1153,20 @@
 
           <!-- Library -->
           <template v-else-if="section === 'library'">
+            <SettingGroup
+              :title="t('libraryOnly.title')"
+              :description="t('libraryOnly.hint')"
+            >
+              <SettingRow
+                :label="t('libraryOnly.enable')"
+                :description="t('libraryOnly.serverHint')"
+              >
+                <UiSwitch
+                  v-model="s.library_only"
+                  :aria-label="t('libraryOnly.enable')"
+                />
+              </SettingRow>
+            </SettingGroup>
             <SettingGroup :title="t('settings.libraryGroup')">
               <SettingRow
                 :label="t('settings.coverCache')"
@@ -1336,8 +1361,8 @@
 
 <script setup>
 import GlobalQueueControl from '/src/components/queue/GlobalQueueControl.vue'
-import { computed, ref } from 'vue'
-import { onBeforeRouteLeave, useRoute } from 'vue-router'
+import { computed, ref, watch } from 'vue'
+import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 import AppIcon from '/src/components/ui/AppIcon.vue'
 import AppLogo from '/src/components/ui/AppLogo.vue'
 import UiBadge from '/src/components/ui/UiBadge.vue'
@@ -1384,7 +1409,7 @@ import {
 import { usePlayer } from '/src/model/player'
 import { useAccount } from '/src/model/account'
 import { useAuth } from '/src/model/auth'
-import { settingsSectionsFor } from '/src/lib/auth'
+import { ADMIN_SECTIONS, settingsSectionsFor } from '/src/lib/auth'
 import { usePlayerPrefs } from '/src/model/playerPrefs'
 import { useTheme } from '/src/model/theme'
 import { useUi } from '/src/model/ui'
@@ -1394,6 +1419,9 @@ import { useI18n } from '/src/i18n'
 // Sections only some visits open: loaded when shown, a skeleton meanwhile.
 const ExternalLibrarySettings = lazyComponent(
   () => import('/src/components/settings/ExternalLibrarySettings.vue')
+)
+const AdminOverview = lazyComponent(
+  () => import('/src/components/settings/AdminOverview.vue')
 )
 const ActivitySettings = lazyComponent(
   () => import('/src/components/settings/ActivitySettings.vue')
@@ -1417,8 +1445,19 @@ const UsersSettings = lazyComponent(
   () => import('/src/components/settings/UsersSettings.vue')
 )
 
+const props = defineProps({
+  // 'personal' (/settings: one person's preferences) or 'admin' (/admin:
+  // the server's settings, behind an overview).
+  scope: { type: String, default: 'personal' },
+})
+const scope = computed(() => props.scope)
+const routeName = computed(() =>
+  props.scope === 'admin' ? 'Admin' : 'Settings'
+)
+
 const { t, locale, setLocale, locales } = useI18n()
 const route = useRoute()
+const router = useRouter()
 const sm = useSettingsManager()
 const auth = useAuth()
 const account = useAccount()
@@ -1530,10 +1569,16 @@ const version = localStorage.getItem('version')
 
 // Normal users see General, Apps and About; the rest is the server's,
 // an admin's to change.
-const sections = computed(() =>
+const allSections = computed(() =>
   settingsSectionsFor(
     auth.viewRole.value,
     [
+      {
+        id: 'overview',
+        icon: 'gauge',
+        label: t('admin.overview'),
+        admin: true,
+      },
       { id: 'general', icon: 'sliders', label: t('settings.general') },
       {
         id: 'sources',
@@ -1594,11 +1639,33 @@ const sections = computed(() =>
   )
 )
 
+// The admin panel holds the server's sections (in the order an admin
+// reaches for them), Settings the rest.
+const sections = computed(() => {
+  const all = allSections.value
+  if (props.scope !== 'admin') {
+    return all.filter((item) => !ADMIN_SECTIONS.includes(item.id))
+  }
+  return ADMIN_SECTIONS.map((id) => all.find((item) => item.id === id)).filter(
+    Boolean
+  )
+})
+
+// Not an admin (or looking as a user): the panel is not theirs.
+watch(
+  () => [props.scope, auth.isAdmin.value, sections.value.length],
+  () => {
+    if (props.scope === 'admin' && !sections.value.length) {
+      router.replace({ name: 'Settings' })
+    }
+  },
+  { immediate: true }
+)
+
 const section = computed(() => {
   const requested = String(route.params.section || '')
-  return sections.value.some((item) => item.id === requested)
-    ? requested
-    : 'general'
+  if (sections.value.some((item) => item.id === requested)) return requested
+  return sections.value[0]?.id || 'general'
 })
 
 function needsValue(value) {
@@ -1698,7 +1765,8 @@ async function reconcile() {
 }
 
 onBeforeRouteLeave(async (to) => {
-  if (!sm.dirty.value || to.name === 'Settings') return true
+  if (!sm.dirty.value || to.name === 'Settings' || to.name === 'Admin')
+    return true
   const leave = await ui.confirm({
     title: t('settings.leaveTitle'),
     body: t('settings.leaveBody'),

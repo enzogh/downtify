@@ -96,6 +96,7 @@ export default {
       'features/playlist-order.md': 'Ordre et titres répétés',
       'features/building-playlists.md': 'Créer ses playlists',
       'features/recommendations.md': 'Recommandations',
+      'features/admin-panel.md': 'Administration',
       'features/song-links.md': 'Partager un titre',
       'features/users.md': 'Utilisateurs et connexion',
       'features/mobile-apps.md': 'Applications mobiles',

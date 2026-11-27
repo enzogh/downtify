@@ -8,7 +8,7 @@ Castify looks lyrics up while a track downloads and embeds them in the file, plu
 
 ## Enabling lyrics
 
-Lyrics are **enabled by default**. Turn them off in **Settings → Tags & lyrics → Download lyrics**.
+Lyrics are **enabled by default**. Turn them off in **Admin → Tags & lyrics → Download lyrics**.
 
 ## Providers and fallback order
 
@@ -19,7 +19,7 @@ Catalogues differ: a song one provider has never heard of is often on another. C
 | **[LRCLIB](https://lrclib.net)** | Plain and time-synced | Free community database, no key. Matched on title, primary artist, album and duration. |
 | **NetEase Cloud Music** | Usually time-synced | Large catalogue, strong on Asian releases and often on Western ones too. Matched on title, artist and duration; a hit whose artist is spelled differently (traditional vs simplified Chinese, for example) is accepted only when the title and the length both line up. |
 
-In **Settings → Tags & lyrics → Providers** you can drag the providers into the order you prefer, or use the arrows, and switch any of them off. At least one stays on; to stop looking lyrics up entirely, use the **Download lyrics** switch.
+In **Admin → Tags & lyrics → Providers** you can drag the providers into the order you prefer, or use the arrows, and switch any of them off. At least one stays on; to stop looking lyrics up entirely, use the **Download lyrics** switch.
 
 ::: info What about Genius, Musixmatch and AZLyrics?
 They aren't available, and Castify no longer offers them:
@@ -48,7 +48,7 @@ A provider that had nothing for a song isn't asked about it again for **30 days*
 
 ## Sidecar .lrc file
 
-When synced lyrics are available, Castify also saves a `.lrc` file. By default it sits **next to the audio** with the same base name. In **Settings → Tags & lyrics** you can turn that off and pick a **lyrics folder** instead (default `/data/lyrics`). That folder must be **outside** `/downloads`, the slskd tree, and any extra music folders — the audio's relative path is recreated under it (`Artist/Album/track.lrc`). Media players that read external lyrics (and the [built-in player](player.md#now-playing)) still pick the sidecar up. Changing this setting and running **Sync** on an extra folder copies existing `.lrc` files to the new location; the source file is removed when that tree is writable, and left in place on a read-only mount. A sidecar is written even if lyrics are already embedded in the tags.
+When synced lyrics are available, Castify also saves a `.lrc` file. By default it sits **next to the audio** with the same base name. In **Admin → Tags & lyrics** you can turn that off and pick a **lyrics folder** instead (default `/data/lyrics`). That folder must be **outside** `/downloads`, the slskd tree, and any extra music folders — the audio's relative path is recreated under it (`Artist/Album/track.lrc`). Media players that read external lyrics (and the [built-in player](player.md#now-playing)) still pick the sidecar up. Changing this setting and running **Sync** on an extra folder copies existing `.lrc` files to the new location; the source file is removed when that tree is writable, and left in place on a read-only mount. A sidecar is written even if lyrics are already embedded in the tags.
 
 Deleting the track from the Library page removes the `.lrc` (beside the file and in the dedicated folder) along with the audio, so lyrics never linger as an orphaned file.
 

@@ -609,6 +609,7 @@ def test_the_signing_key_is_private_and_kept(tmp_path):
         ('DELETE', '/api/history', USER),
         ('GET', '/api/history', CLIENT),
         ('POST', '/api/history/plays', CLIENT),
+        ('GET', '/api/admin/listening', ADMIN),
         ('GET', '/openapi.json', ADMIN),
         ('GET', '/tracks', CLIENT),
         ('GET', '/downloads/Artist - Song.mp3', CLIENT),

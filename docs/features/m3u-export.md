@@ -23,7 +23,7 @@ Track paths inside the M3U are written **relative to the M3U file itself**, not 
 
 ## Enabling / disabling
 
-M3U generation is controlled by **Settings → Downloads & files → Write M3U playlists** (on by default). Turning it off skips M3U creation entirely; the rest of the download flow is unchanged.
+M3U generation is controlled by **Admin → Downloads & files → Write M3U playlists** (on by default). Turning it off skips M3U creation entirely; the rest of the download flow is unchanged.
 
 ## Cover art
 

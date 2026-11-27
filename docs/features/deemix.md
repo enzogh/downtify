@@ -6,7 +6,7 @@ icon: lucide/music
 # Deemix audio source
 
 Deemix is an optional audio source, disabled by default. Configure it in
-**Settings → Audio sources**, below slskd, and enable it in the source order.
+**Admin → Audio sources**, below slskd, and enable it in the source order.
 It requires your own compatible Deemix server and a Deezer account entitled
 to the requested quality. It does not provide a subscription or bypass one.
 

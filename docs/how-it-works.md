@@ -42,7 +42,7 @@ If neither site has an acceptable match, the track fails with `Could not find a 
 
 For YouTube URLs entered directly, this step is skipped — Castify downloads that specific video.
 
-**SoundCloud** is an optional audio source too (Settings → Audio sources, off by default): at its place in the source order it searches SoundCloud with its own title, artist and length checks, and for a pasted SoundCloud track link — whose title, artist and cover come from SoundCloud itself — it downloads that exact track. The SoundCloud page under Features has the details.
+**SoundCloud** is an optional audio source too (Admin → Audio sources, off by default): at its place in the source order it searches SoundCloud with its own title, artist and length checks, and for a pasted SoundCloud track link — whose title, artist and cover come from SoundCloud itself — it downloads that exact track. The SoundCloud page under Features has the details.
 
 ::: info Deezer links
 A pasted Deezer track/album/playlist/artist link (`deezer.com/track/…`) works the same way a Spotify one does: Deezer's public REST API supplies the title, artist(s), album and cover, every track streams in full from YouTube before you download it, and this same step then matches it on YouTube Music/YouTube. Castify has no Deezer discography resolver of its own beyond what Deezer's API already returns, so a Deezer link downloads and (for a playlist) gets its own M3U and cover art, but can't be watched by the [Playlist Monitor](features/playlist-monitor.md).

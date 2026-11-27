@@ -104,6 +104,7 @@ export default {
       'features/playlist-order.md': 'Playlist order & repeated songs',
       'features/building-playlists.md': 'Building playlists',
       'features/recommendations.md': 'Recommendations',
+      'features/admin-panel.md': 'Admin panel',
       'features/song-links.md': 'Sharing a song',
       'features/users.md': 'Users & Sign-in',
       'features/mobile-apps.md': 'Mobile Apps',

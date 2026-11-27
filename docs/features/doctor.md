@@ -4,7 +4,7 @@ icon: lucide/stethoscope
 
 # Doctor
 
-New Downtify versions fix problems **from then on**: slskd transfers are now removed after they are imported, a playlist's cover sits next to its M3U, Navidrome playlists are synced. Files and playlists an older version wrote keep the old shape, though — the second copy of every Soulseek download, the M3U left at its old location, the Navidrome playlist that shows up twice. **Settings → Doctor** finds that leftover state and repairs what it can *prove* is safe, so a library started on an old version catches up with the new one.
+New Downtify versions fix problems **from then on**: slskd transfers are now removed after they are imported, a playlist's cover sits next to its M3U, Navidrome playlists are synced. Files and playlists an older version wrote keep the old shape, though — the second copy of every Soulseek download, the M3U left at its old location, the Navidrome playlist that shows up twice. **Admin → Doctor** finds that leftover state and repairs what it can *prove* is safe, so a library started on an old version catches up with the new one.
 
 Only admins see it.
 
@@ -96,7 +96,7 @@ Navidrome turns every M3U file in its music folder into a playlist of its own, w
 - **Missing songs** — imported playlists with fewer songs than their M3U. Navidrome skips lines that point outside its music folder — songs left in slskd's folder when that folder isn't part of Navidrome's library, for instance — and says how many are outside;
 - **Duplicate songs in Navidrome** — songs listed more than once (same artist and title, lengths within 2 seconds), and how many of the copies are in an `slskd` folder.
 
-**Fix** deletes the playlists marked *will be removed*: Downtify's copy of a playlist Navidrome imports (unless the copy has songs the import is missing), extra copies Downtify created, and imports whose M3U is gone. It then turns on **Let Navidrome import the M3U playlists** (Settings → Navidrome) so Downtify stops creating the copy again, has Navidrome rescan, and lists the playlists again to report what is left. Only playlists the last health check flagged can be deleted.
+**Fix** deletes the playlists marked *will be removed*: Downtify's copy of a playlist Navidrome imports (unless the copy has songs the import is missing), extra copies Downtify created, and imports whose M3U is gone. It then turns on **Let Navidrome import the M3U playlists** (Admin → Navidrome) so Downtify stops creating the copy again, has Navidrome rescan, and lists the playlists again to report what is left. Only playlists the last health check flagged can be deleted.
 
 ## Duplicate songs
 

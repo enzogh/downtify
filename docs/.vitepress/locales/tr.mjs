@@ -83,6 +83,7 @@ export default {
       'features/playlist-order.md': 'Sıralama ve tekrarlanan şarkılar',
       'features/building-playlists.md': 'Çalma listesi oluşturma',
       'features/recommendations.md': 'Öneriler',
+      'features/admin-panel.md': 'Yönetim',
       'features/song-links.md': 'Bir şarkıyı paylaşma',
       'features/users.md': 'Kullanıcılar ve oturum açma',
       'features/mobile-apps.md': 'Mobil uygulamalar',

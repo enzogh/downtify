@@ -4,7 +4,7 @@ icon: lucide/bell
 
 # Notifications
 
-**Settings → Notifications** (`/settings/notifications`) sends messages about Downtify's long tasks and downloads to Discord, [ntfy](https://ntfy.sh), [Gotify](https://gotify.net) or any webhook. On Discord a bot can also answer commands such as `/status` and `/queue`, so you can check on a long scan from your phone. Only admins see it.
+**Admin → Notifications** (`/admin/notifications`) sends messages about Downtify's long tasks and downloads to Discord, [ntfy](https://ntfy.sh), [Gotify](https://gotify.net) or any webhook. On Discord a bot can also answer commands such as `/status` and `/queue`, so you can check on a long scan from your phone. Only admins see it.
 
 It is **off** until you turn it on: with the main switch off, Downtify makes no connection and sends nothing. The messages are in English, whatever language the app is in.
 

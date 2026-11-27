@@ -2448,6 +2448,28 @@ Forget your own listening history. Listen counts, likes and the library are unto
 
 ---
 
+### `GET /api/admin/listening`
+
+Admin. Everyone's listening over the last `?days=` (1–365, default 30), for the [admin panel](features/admin-panel.md)'s overview — read from every account's [listening history](#get-apihistory).
+
+**Response:**
+
+```json
+{
+  "days": 30,
+  "totals": { "plays": 66, "listeners": 2, "seconds": 9819, "skip_rate": 0.136, "stream_share": 0.42 },
+  "per_day": [ { "day": "2026-10-29", "plays": 0, "seconds": 0 } ],
+  "top_artists": [ { "artist": "Kygo", "plays": 19, "listeners": 2 } ],
+  "top_songs": [ { "artist": "Kygo", "title": "Firestone", "plays": 7, "listeners": 1 } ],
+  "users": [ { "user_id": 1, "username": "admin", "plays": 66, "seconds": 9819, "skips": 9, "last_played": "2026-11-27T13:00:55+00:00" } ],
+  "recent": [ { "user_id": 1, "username": "admin", "artist": "Ninho", "title": "Jefe", "played_at": "2026-11-27T13:00:55+00:00", "source": "stream", "skipped": false } ]
+}
+```
+
+`per_day` has every day of the period, oldest first. `top_artists` and `top_songs` (ten each) leave skipped plays out; `listeners` is how many accounts played them. `recent` holds the last 20 plays.
+
+---
+
 ### `GET /api/discover/blocked`
 
 Hidden artists, most recently hidden first.
@@ -3038,7 +3060,7 @@ Admin. The port the server listens on and the one it starts on next:
 { "port": 8000, "saved": 9000, "next": 9000, "locked_by": "", "in_docker": true, "can_restart": true, "min": 1024, "max": 65535 }
 ```
 
-`saved` is the port chosen in Settings → Server (`null` when none). `locked_by` is `DOWNTIFY_PORT`, `PORT` or `--port` when one of those sets the port instead of Settings, `""` otherwise.
+`saved` is the port chosen in Admin → Server (`null` when none). `locked_by` is `DOWNTIFY_PORT`, `PORT` or `--port` when one of those sets the port instead of Settings, `""` otherwise.
 
 ---
 
@@ -3257,7 +3279,7 @@ Admin. Delete an account: its apps are unpaired and its sessions ended. `400` fo
 
 ### `GET /api/users/stats`
 
-Admin. Per-account usage for Settings → Users: tracks and bytes owned,
+Admin. Per-account usage for Admin → Users: tracks and bytes owned,
 likes, playlists, downloads ordered and traffic both ways (fetched from
 upstream vs. served to clients), plus the totals across everyone.
 

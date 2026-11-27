@@ -95,6 +95,7 @@ export default {
       'features/playlist-order.md': '播放列表顺序与重复歌曲',
       'features/building-playlists.md': '创建歌单',
       'features/recommendations.md': '推荐',
+      'features/admin-panel.md': '管理',
       'features/song-links.md': '分享歌曲',
       'features/users.md': '用户与登录',
       'features/mobile-apps.md': '移动应用',

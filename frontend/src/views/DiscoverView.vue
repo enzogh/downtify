@@ -12,6 +12,32 @@
     <!-- The Finder's search box, right under the title (DiscoverHubView). -->
     <slot name="search" />
 
+    <!-- The songs side of discovering (model/recommendations.js): the
+         same mixes as Home's, so the two pages tell one story. -->
+    <section v-if="recoMixes.length" class="flex flex-col gap-4">
+      <div>
+        <h2 class="text-display text-xl font-semibold">
+          {{ t('discover.mixesTitle') }}
+        </h2>
+        <p class="mt-1 text-[13px] text-muted">
+          {{ t('discover.mixesHint') }}
+        </p>
+      </div>
+      <div :class="GRID">
+        <MediaTile
+          v-for="mix in recoMixes"
+          :key="mix.id"
+          :to="{ name: 'Mix', params: { id: mix.id } }"
+          :title="mix.title"
+          :subtitle="mix.subtitle"
+          :covers="mix.covers"
+          :name="mix.title"
+          icon="sparkle"
+          :playable="false"
+        />
+      </div>
+    </section>
+
     <div
       v-if="!library.loaded.value || (discover.loading.value && !items.length)"
       class="grid grid-cols-2 gap-x-5 gap-y-7 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-6"
@@ -270,6 +296,7 @@ import UiSkeleton from '/src/components/ui/UiSkeleton.vue'
 import PageHeader from '/src/components/library/PageHeader.vue'
 import MediaTile from '/src/components/library/MediaTile.vue'
 import { useDiscover } from '/src/model/discover'
+import { listCovers, useRecommendations } from '/src/model/recommendations'
 import { useLibrary } from '/src/model/library'
 import { useLikes } from '/src/model/likes'
 import { useUi } from '/src/model/ui'
@@ -297,10 +324,41 @@ const library = useLibrary()
 const likes = useLikes()
 const discover = useDiscover()
 
-const GRID =
-  'grid grid-cols-2 gap-x-5 gap-y-7 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-6'
+// A row that scrolls sideways on a phone (as on Home: every shelf in
+// reach without scrolling past dozens of big tiles), a grid from sm up.
+const GRID = [
+  '-mx-4 flex snap-x scroll-px-4 gap-4 overflow-x-auto px-4 pt-3 -mt-3 pb-2',
+  '[scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
+  '[&>*]:w-36 [&>*]:shrink-0 [&>*]:snap-start',
+  'sm:mx-0 sm:mt-0 sm:grid sm:grid-cols-3 sm:gap-x-5 sm:gap-y-7 sm:overflow-visible sm:px-0 sm:pt-0 sm:pb-0',
+  'sm:[&>*]:w-auto md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-6',
+].join(' ')
 // Artists shown before "Show all": two rows on a wide screen.
 const ARTISTS_SHOWN = 12
+
+const reco = useRecommendations()
+onMounted(() => {
+  if (!libraryOnly.value) reco.ensure()
+})
+const recoMixes = computed(() => {
+  if (libraryOnly.value) return []
+  const mixes = []
+  if (reco.discover.value.length >= 5)
+    mixes.push({
+      id: 'discover',
+      title: t('home.discoverMix'),
+      subtitle: t('home.discoverMixHint'),
+      covers: listCovers(reco.discover.value),
+    })
+  if (reco.forYou.value.length >= 5)
+    mixes.push({
+      id: 'foryou',
+      title: t('home.forYouMix'),
+      subtitle: t('home.forYouMixHint'),
+      covers: listCovers(reco.forYou.value.slice(4)),
+    })
+  return mixes
+})
 
 const items = computed(() => discover.items.value)
 const canSuggest = computed(() => library.artists.value.length > 0)

@@ -4,7 +4,7 @@ icon: lucide/archive
 
 # Backups
 
-**Settings → Server → Backups** saves what a Downtify install knows, so it can be brought back after a lost disk, a broken container or a move to a new server. Only admins see it.
+**Admin → Server → Backups** saves what a Downtify install knows, so it can be brought back after a lost disk, a broken container or a move to a new server. Only admins see it.
 
 ## What a backup holds
 

@@ -1,5 +1,5 @@
 // Pages only an admin has: User view leaves them for Home.
-export const ADMIN_ROUTES = ['Storage', 'Trash', 'Upgrade']
+export const ADMIN_ROUTES = ['Storage', 'Trash', 'Upgrade', 'Admin']
 
 /** The first letter to draw in an account's avatar. */
 export function avatarLetter(name) {

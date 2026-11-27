@@ -4,11 +4,11 @@ icon: lucide/hard-drive
 
 # Server Settings
 
-**Settings → Server** holds how the server itself runs. Only admins see it (see [Users & Sign-in](users.md#admins-and-users)).
+**Admin → Server** holds how the server itself runs. Only admins see it (see [Users & Sign-in](users.md#admins-and-users)).
 
 ## Changing the port
 
-Castify listens on port **8000**. An admin can choose another one in **Settings → Server → Port** (1024–65535):
+Castify listens on port **8000**. An admin can choose another one in **Admin → Server → Port** (1024–65535):
 
 - **Save** keeps it for the next time the server starts.
 - **Save and restart** restarts the server on it right away. Downloads in progress stop, and pages and apps reconnect. A page opened on the server's own address (e.g. `http://nas:8000`) waits for the server and opens the new address by itself; you stay signed in.

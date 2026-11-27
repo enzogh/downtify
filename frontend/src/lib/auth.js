@@ -17,6 +17,24 @@ export const ROLE_ADMIN = 'admin'
  * the ones about accounts when accounts are turned off
  * (`DOWNTIFY_DISABLE_AUTH`).
  */
+/**
+ * The settings that are the server's, not one person's: shown in the
+ * admin panel (/admin/<section>), and /settings/<section> sends there.
+ */
+export const ADMIN_SECTIONS = [
+  'overview',
+  'users',
+  'activity',
+  'sources',
+  'files',
+  'tags',
+  'library',
+  'navidrome',
+  'doctor',
+  'notifications',
+  'server',
+]
+
 export function settingsSectionsFor(role, sections, { authDisabled } = {}) {
   const shown = authDisabled
     ? sections.filter((section) => !section.accounts)

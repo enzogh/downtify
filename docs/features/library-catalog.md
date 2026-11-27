@@ -24,7 +24,7 @@ The locations below apply to the default SQLite backend. With PostgreSQL ([Datab
 
 Files are matched across moves by a **content key** — a hash of the file's name and size. Moving a file to another folder keeps its key; replacing it with a different file gives it a new one.
 
-## Settings → Library
+## Admin → Library
 
 ### Cache cover art on disk
 
@@ -34,7 +34,7 @@ When enabled, Castify keeps extracted cover images under `/data/cover_cache`, so
 
 Use this after you **move or rename files on disk** outside Castify, or delete them by hand.
 
-1. Open **Settings → Library → Fix library paths**.
+1. Open **Admin → Library → Fix library paths**.
 2. Castify scans the library folders and:
     - **updates paths** in the track index and playlist catalog when a file is no longer where it was but the same file (same content key) is found elsewhere;
     - **removes stale entries** for files that no longer exist;
@@ -46,7 +46,7 @@ It only runs when you press the button (or call `POST /api/library/reconcile`) �
 
 ### Existing music folders
 
-To play a collection that Castify did not download, add the folders in **Settings → Library** and press **Sync folders**. Files stay on disk; tags are read and artists are matched. See [Existing music folders](external-library.md).
+To play a collection that Castify did not download, add the folders in **Admin → Library** and press **Sync folders**. Files stay on disk; tags are read and artists are matched. See [Existing music folders](external-library.md).
 
 ::: warning
 Rewriting a playlist deletes library files whose tags clearly don't match the Spotify track they're registered for — see [slskd & Navidrome](slskd-navidrome.md#playlist-sync).

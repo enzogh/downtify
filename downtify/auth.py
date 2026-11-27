@@ -702,6 +702,7 @@ class AuthStore:
         return Principal(
             'signed', CLIENT, '', user['id'], user['username'], user['role']
         )
+
     def peek_session(self, token: str) -> Any:
         """What :meth:`session_user` would answer from the sign-in cache,
         without the database: the user, ``None`` for a token that can't
@@ -1213,6 +1214,7 @@ RULES: list[tuple[frozenset[str], re.Pattern[str], str]] = [
         (_m('POST'), r'^/api/likes/clear$', ADMIN),
         (_m('DELETE'), r'^/api/discover/listens$', ADMIN),
         (_m('DELETE'), r'^/api/history$', ADMIN),
+        (_READ, r'^/api/admin/listening$', ADMIN),
         (_m('POST', 'PATCH', 'DELETE'), r'^/api/monitor/', ADMIN),
         (_ALL, r'^/api/(users|activity)(/|$)', ADMIN),
     ]

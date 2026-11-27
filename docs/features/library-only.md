@@ -5,7 +5,7 @@ icon: lucide/library
 
 # Library-only mode
 
-An administrator can enable **Settings → General → Use only the library**.
+An administrator can enable **Admin → Library → Use only the library**.
 The default is off. This is a server-wide music policy for every account,
 browser and paired Android app.
 

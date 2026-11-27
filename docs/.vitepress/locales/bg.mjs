@@ -83,6 +83,7 @@ export default {
       'features/playlist-order.md': 'Ред и повтаряне на песни',
       'features/building-playlists.md': 'Създаване на плейлисти',
       'features/recommendations.md': 'Препоръки',
+      'features/admin-panel.md': 'Администрация',
       'features/song-links.md': 'Споделяне на песен',
       'features/users.md': 'Потребители и вход',
       'features/mobile-apps.md': 'Мобилни приложения',

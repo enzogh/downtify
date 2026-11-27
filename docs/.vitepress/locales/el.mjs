@@ -84,6 +84,7 @@ export default {
       'features/playlist-order.md': 'Σειρά και επαναλαμβανόμενα κομμάτια',
       'features/building-playlists.md': 'Δημιουργία λιστών',
       'features/recommendations.md': 'Προτάσεις',
+      'features/admin-panel.md': 'Διαχείριση',
       'features/song-links.md': 'Κοινοποίηση τραγουδιού',
       'features/users.md': 'Χρήστες και σύνδεση',
       'features/mobile-apps.md': 'Εφαρμογές κινητού',

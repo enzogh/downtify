@@ -1047,6 +1047,11 @@ function clearHistory() {
   return API.delete('/api/history')
 }
 
+// Everyone's listening over `days`, for the admin panel's overview.
+function getAdminListening(days = 30) {
+  return API.get('/api/admin/listening', { params: { days } })
+}
+
 function getBlockedArtists() {
   return API.get('/api/discover/blocked')
 }
@@ -1521,6 +1526,7 @@ export default {
   getHistory,
   recordPlays,
   clearHistory,
+  getAdminListening,
   clearListens,
   getBlockedArtists,
   blockArtist,

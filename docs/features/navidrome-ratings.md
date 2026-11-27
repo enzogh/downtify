@@ -8,7 +8,7 @@ Give the songs in your [Navidrome](https://www.navidrome.org/) library 0–5 sta
 
 It is a port of [dztnr](https://github.com/scatolo/dztnr) (MIT licence), itself a fork of [sptnr](https://github.com/krestaino/sptnr) by Kevin Restaino. The search, the star scale and the options work the way they do there.
 
-It lives in **Settings → Navidrome**, in the **Ratings from Deezer** group below the login. Only admins see it, and only while **Use Navidrome** is on (see [slskd & Navidrome](slskd-navidrome.md)). It uses the Navidrome login saved there.
+It lives in **Admin → Navidrome**, in the **Ratings from Deezer** group below the login. Only admins see it, and only while **Use Navidrome** is on (see [slskd & Navidrome](slskd-navidrome.md)). It uses the Navidrome login saved there.
 
 ::: info Where the stars live
 The stars belong to that Navidrome account and are kept in Navidrome's database, not in your music files. Other Navidrome accounts don't see them.
