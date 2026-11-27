@@ -193,6 +193,8 @@ export default {
     dismissShort: 'Not for me',
     dismissed: 'Got it, you won’t see it again',
     refresh: 'New picks',
+    refreshed: 'New picks are in',
+    refreshFailed: 'Couldn’t get new picks. Try again in a moment.',
   },
   autoplay: {
     repeatOn: 'Repeat is on: these play once you turn it off.',
@@ -322,6 +324,8 @@ export default {
     lengthHours: '{hours} h {minutes} min',
   },
   nav: {
+    toLight: 'Switch to light theme',
+    toDark: 'Switch to dark theme',
     jam: 'Jam',
     main: 'Main',
     home: 'Home',
@@ -367,8 +371,7 @@ export default {
     },
     yourArtists: 'Your artists',
     madeForYou: 'Made for you',
-    madeForYouHint:
-      'Mixes from your library, built from what you play on this device. New every day.',
+    madeForYouHint: 'Mixes from your library and what you play. New every day.',
     dailyMix: 'Daily Mix {n}',
     mixWith: '{artists} and more',
     onRepeat: 'On repeat',

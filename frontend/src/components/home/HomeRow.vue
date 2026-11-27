@@ -3,7 +3,7 @@
     <div class="flex items-end justify-between gap-4">
       <div class="min-w-0">
         <h2 class="text-display truncate text-xl font-bold">{{ title }}</h2>
-        <p v-if="subtitle" class="truncate text-[13px] text-muted">
+        <p v-if="subtitle" class="line-clamp-2 text-[13px] text-muted">
           {{ subtitle }}
         </p>
       </div>

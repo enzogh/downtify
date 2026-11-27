@@ -196,6 +196,8 @@ export default {
     dismissShort: 'Bana göre değil',
     dismissed: 'Anlaşıldı, bir daha önerilmeyecek',
     refresh: 'Yeni seçim',
+    refreshed: 'Yeni seçim hazır',
+    refreshFailed: 'Yeni seçim alınamadı. Birazdan tekrar deneyin.',
   },
   autoplay: {
     repeatOn: 'Tekrar açık: kapattığında bunlar çalar.',
@@ -325,6 +327,8 @@ export default {
     lengthHours: '{hours} sa {minutes} dk',
   },
   nav: {
+    toLight: 'Açık temaya geç',
+    toDark: 'Koyu temaya geç',
     jam: 'Jam',
     main: 'Ana',
     home: 'Ana sayfa',
@@ -371,7 +375,7 @@ export default {
     yourArtists: 'Sanatçıların',
     madeForYou: 'Senin için',
     madeForYouHint:
-      'Bu cihazda dinlediklerine göre kitaplığından hazırlanan mixler. Her gün yeni.',
+      'Dinlediklerine göre kitaplığından hazırlanan mixler. Her gün yeni.',
     dailyMix: 'Günlük Mix {n}',
     mixWith: '{artists} ve diğerleri',
     onRepeat: 'Tekrarda',
@@ -571,8 +575,8 @@ export default {
     filterNew: 'Yeni',
     filterLibrary: 'Kitaplıkta',
     filterQueue: 'Kuyrukta',
-    topSongs: 'Top Songs',
-    topSongsOf: 'Top Songs of {artist}',
+    topSongs: 'Popüler şarkılar',
+    topSongsOf: '{artist} popüler şarkıları',
     topSongsEmpty: 'Bu sanatçı için popüler şarkı bulunamadı',
     createPlaylist: 'Çalma listesi oluştur',
     createPlaylistHint:

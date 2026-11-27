@@ -206,6 +206,8 @@ export default {
     dismissShort: 'Όχι για μένα',
     dismissed: 'Εντάξει, δεν θα ξαναεμφανιστεί',
     refresh: 'Νέα επιλογή',
+    refreshed: 'Η νέα επιλογή είναι έτοιμη',
+    refreshFailed: 'Δεν ήταν δυνατή νέα επιλογή. Δοκίμασε σε λίγο.',
   },
   autoplay: {
     repeatOn: 'Η επανάληψη είναι ενεργή: θα παίξουν όταν την απενεργοποιήσετε.',
@@ -337,6 +339,8 @@ export default {
     lengthHours: '{hours} ώρ. {minutes} λεπ.',
   },
   nav: {
+    toLight: 'Φωτεινό θέμα',
+    toDark: 'Σκοτεινό θέμα',
     jam: 'Jam',
     main: 'Κύριο',
     home: 'Αρχική',
@@ -383,7 +387,7 @@ export default {
     yourArtists: 'Οι καλλιτέχνες σας',
     madeForYou: 'Φτιαγμένο για εσάς',
     madeForYouHint:
-      'Μίξεις από τη βιβλιοθήκη σας, με βάση ό,τι ακούτε σε αυτή τη συσκευή. Νέες κάθε μέρα.',
+      'Μίξεις από τη βιβλιοθήκη σας, με βάση ό,τι ακούτε. Νέες κάθε μέρα.',
     dailyMix: 'Ημερήσιο μιξ {n}',
     mixWith: '{artists} και άλλοι',
     onRepeat: 'Σε επανάληψη',
@@ -585,8 +589,8 @@ export default {
     filterNew: 'Νέα',
     filterLibrary: 'Στη βιβλιοθήκη',
     filterQueue: 'Στην ουρά',
-    topSongs: 'Top Songs',
-    topSongsOf: 'Top Songs of {artist}',
+    topSongs: 'Δημοφιλή τραγούδια',
+    topSongsOf: 'Δημοφιλή τραγούδια: {artist}',
     topSongsEmpty: 'Δεν βρέθηκαν δημοφιλή τραγούδια για αυτόν τον καλλιτέχνη',
     createPlaylist: 'Δημιουργία λίστας',
     createPlaylistHint:

@@ -22,7 +22,7 @@
       <div class="absolute inset-x-0 -top-2 hidden md:block">
         <SliderBar
           :model-value="scrub ?? player.currentTime.value"
-          :max="player.duration.value || 1"
+          :max="player.knownDuration.value || 1"
           :label="t('player.seek')"
           :value-text="formatDuration(player.currentTime.value)"
           :hit-height="16"
@@ -199,7 +199,7 @@
           }}</span>
           <span class="col-start-1 row-start-1 text-right"
             >{{ formatDuration(player.currentTime.value) }} /
-            {{ formatDuration(player.duration.value) }}</span
+            {{ formatDuration(player.knownDuration.value) }}</span
           >
         </span>
         <UiIconButton
@@ -358,15 +358,15 @@ const isPhone = useMediaQuery('(max-width: 767px)')
 const smoothTime = useSmoothTime(
   () => player.currentTime.value,
   () => isPhone.value && player.isAdvancing.value,
-  () => player.duration.value || 0
+  () => player.knownDuration.value || 0
 )
 const smoothPercent = computed(() =>
-  isPhone.value && player.duration.value
-    ? Math.min(100, (smoothTime.value / player.duration.value) * 100)
+  isPhone.value && player.knownDuration.value
+    ? Math.min(100, (smoothTime.value / player.knownDuration.value) * 100)
     : player.progressPct.value
 )
 
-const clockSizer = computed(() => widestClock(player.duration.value))
+const clockSizer = computed(() => widestClock(player.knownDuration.value))
 
 const repeatLabel = computed(
   () =>

@@ -5,9 +5,12 @@
     :class="[round ? 'rounded-full' : rounded, shadow ? 'shadow-cover' : '']"
     :style="{ background: placeholder }"
   >
+    <!-- Keyed by its pictures: a new set (a mix's new picks) fades in
+         like a single cover does, instead of switching at once. -->
     <div
       v-if="mosaic.length >= 2 && mayLoad"
-      class="grid size-full"
+      :key="mosaic.slice(0, 4).join('\n')"
+      class="animate-reveal grid size-full"
       :class="mosaic.length === 2 ? 'grid-cols-2' : 'grid-cols-2 grid-rows-2'"
     >
       <img

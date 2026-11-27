@@ -1206,8 +1206,17 @@ const currentTrack = computed(() =>
     : null
 )
 
+// The length to draw: the audio's once it has told, else the track's own
+// (tags, a search row) - after a reload, or while a stream resolves, the
+// bar and clock mustn't read "0:00" with the knob at the end.
+const knownDuration = computed(
+  () => duration.value || Number(currentTrack.value?.duration) || 0
+)
+
 const progressPct = computed(() =>
-  duration.value > 0 ? (currentTime.value / duration.value) * 100 : 0
+  knownDuration.value > 0
+    ? Math.min(100, (currentTime.value / knownDuration.value) * 100)
+    : 0
 )
 
 /** Upcoming tracks, in the order they'll play: `[{ track, index }]`. */
@@ -1439,6 +1448,7 @@ export function usePlayer() {
     playBlocked,
     currentTime,
     duration,
+    knownDuration,
     progressPct,
     volume,
     isMuted,

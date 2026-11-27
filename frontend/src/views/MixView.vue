@@ -30,15 +30,17 @@
             :disabled="!queue.length"
             @click="play({ shuffled: true })"
           />
-          <UiIconButton
+          <!-- Said in words: a bare circular arrow reads as "reload". -->
+          <UiButton
             v-if="isReco"
+            variant="ghost"
             icon="refresh"
-            :label="t('reco.refresh')"
-            size="lg"
-            round
+            :loading="reco.refreshing.value"
             :disabled="reco.loading.value"
-            @click="reco.refresh()"
-          />
+            @click="refreshPicks"
+          >
+            {{ t('reco.refresh') }}
+          </UiButton>
           <!-- A recommended mix is all songs the server hasn't got. -->
           <UiButton
             v-if="isReco && missing.length"
@@ -63,32 +65,45 @@
           <AppIcon name="refresh" :size="14" class="animate-spin" />
           {{ t('mix.completing') }}
         </p>
-        <TransitionGroup tag="div" name="list" class="-mx-3 flex flex-col">
-          <div
-            v-for="(song, i) in songs"
-            :key="`${song.file || song.song_id || song.url}`"
-            class="flex items-center"
+        <!-- New picks: the whole list is replaced at once and rises into
+             place (one movement, not thirty rows shuffling); a song
+             removed with "Not for me" fades while the rows below slide
+             up. -->
+        <Transition name="reveal" mode="out-in">
+          <TransitionGroup
+            :key="isReco ? reco.version.value : 0"
+            tag="div"
+            name="list"
+            class="relative -mx-3 flex flex-col transition-opacity duration-(--dur-base) ease-out-soft"
+            :class="reco.refreshing.value ? 'opacity-50' : ''"
+            :aria-busy="reco.refreshing.value || undefined"
           >
-            <SongRow
-              :song="song"
-              :index="i"
-              :songs="songs"
-              :note="notes[i] || ''"
-              :hide-add-on-phone="isReco"
-              class="min-w-0 flex-1"
-            />
-            <!-- "Not for me": gone from every recommendation. -->
-            <UiIconButton
-              v-if="isReco"
-              icon="x"
-              size="sm"
-              :label="t('reco.dismiss', { title: song.name })"
-              :title="t('reco.dismissShort')"
-              class="mr-2 shrink-0 text-faint"
-              @click="dismiss(song)"
-            />
-          </div>
-        </TransitionGroup>
+            <div
+              v-for="(song, i) in songs"
+              :key="`${song.file || song.song_id || song.url}`"
+              class="list-out flex items-center"
+            >
+              <SongRow
+                :song="song"
+                :index="i"
+                :songs="songs"
+                :note="notes[i] || ''"
+                :hide-add-on-phone="isReco"
+                class="min-w-0 flex-1"
+              />
+              <!-- "Not for me": gone from every recommendation. -->
+              <UiIconButton
+                v-if="isReco"
+                icon="x"
+                size="sm"
+                :label="t('reco.dismiss', { title: song.name })"
+                :title="t('reco.dismissShort')"
+                class="mr-2 shrink-0 text-faint"
+                @click="dismiss(song)"
+              />
+            </div>
+          </TransitionGroup>
+        </Transition>
       </div>
     </DetailState>
   </div>
@@ -158,6 +173,15 @@ const notes = computed(() =>
       )
     : []
 )
+
+async function refreshPicks() {
+  const before = recoList.value.map((item) => item.key).join()
+  await reco.refresh()
+  const after = recoList.value.map((item) => item.key).join()
+  ui.toast(t(after !== before ? 'reco.refreshed' : 'reco.refreshFailed'), {
+    kind: after !== before ? 'success' : 'error',
+  })
+}
 
 function dismiss(song) {
   reco.dismiss(song)

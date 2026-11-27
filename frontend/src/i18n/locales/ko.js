@@ -194,6 +194,8 @@ export default {
     dismissShort: '관심 없음',
     dismissed: '알겠어요, 다시 추천하지 않을게요',
     refresh: '새로 추천',
+    refreshed: '새 추천이 준비됐어요',
+    refreshFailed: '새 추천을 가져오지 못했어요. 잠시 후 다시 시도하세요.',
   },
   autoplay: {
     repeatOn: '반복이 켜져 있습니다. 반복을 끄면 이 곡들이 재생됩니다.',
@@ -322,6 +324,8 @@ export default {
     lengthHours: '{hours}시간 {minutes}분',
   },
   nav: {
+    toLight: '밝은 테마로 전환',
+    toDark: '어두운 테마로 전환',
     jam: 'Jam',
     main: '메인',
     home: '홈',
@@ -368,7 +372,7 @@ export default {
     yourArtists: '내 아티스트',
     madeForYou: '회원님을 위한 추천',
     madeForYouHint:
-      '이 기기에서 듣는 음악을 바탕으로 보관함에서 만든 믹스입니다. 매일 새로워집니다.',
+      '듣는 음악을 바탕으로 보관함에서 만든 믹스입니다. 매일 새로워집니다.',
     dailyMix: '데일리 믹스 {n}',
     mixWith: '{artists} 외',
     onRepeat: '반복 재생 중',

@@ -74,12 +74,14 @@ const shownState = readJson(SHOWN_KEY, { day: 0, keys: [], counts: {} })
 // moved on once a day (see noteShown), so a list doesn't reshuffle itself.
 const shown = { ...(shownState.counts || {}) }
 const loading = ref(false)
+const refreshing = ref(false)
 const ready = ref(false)
 const blockedNames = shallowRef(null)
 let pending = null
 
-async function fetchRadios(seeds) {
-  const found = { ...radios.value }
+// The radio mixes of `seeds`, added to `base` (the ones already fetched).
+async function fetchRadios(seeds, base = radios.value) {
+  const found = { ...base }
   const queue = [...seeds]
   async function worker() {
     while (queue.length) {
@@ -97,8 +99,7 @@ async function fetchRadios(seeds) {
     }
   }
   await Promise.all(Array.from({ length: CONCURRENCY }, worker))
-  radios.value = found
-  save()
+  return found
 }
 
 function save() {
@@ -185,7 +186,8 @@ export function useRecommendations() {
       const missing = seeds.value.filter((seed) => !radios.value[seed.key])
       if (missing.length) {
         loading.value = true
-        await fetchRadios(missing)
+        radios.value = await fetchRadios(missing)
+        save()
       }
       noteShown()
       ready.value = true
@@ -227,12 +229,24 @@ export function useRecommendations() {
   }
 
   /** New radio mixes now, instead of tomorrow (Refresh). */
+  // The lists on screen stay until the new ones are ready: seeds and
+  // radio mixes are swapped in one go, and kept as they were when none of
+  // the new radio mixes could be fetched.
   async function refresh() {
-    radios.value = {}
-    frozenSeeds.value = []
-    round.value += 1
-    save()
-    return ensure()
+    if (refreshing.value || libraryOnly.value) return
+    refreshing.value = true
+    try {
+      const salt = round.value + 1
+      const next = pickSeeds(profile.value, { count: SEEDS, salt })
+      const found = await fetchRadios(next, {})
+      if (!next.some((seed) => found[seed.key]?.length)) return
+      round.value = salt
+      frozenSeeds.value = next
+      radios.value = found
+      save()
+    } finally {
+      refreshing.value = false
+    }
   }
 
   return {
@@ -241,6 +255,9 @@ export function useRecommendations() {
     seeds,
     profile,
     loading,
+    refreshing,
+    // Which selection is on screen (New picks moves it on).
+    version: round,
     ready,
     ensure,
     refresh,

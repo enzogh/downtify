@@ -68,7 +68,7 @@
           <h2 class="text-display truncate text-xl font-bold">
             {{ t('home.suggestedTitle') }}
           </h2>
-          <p class="truncate text-[13px] text-muted">
+          <p class="line-clamp-2 text-[13px] text-muted">
             {{ t('home.suggestedHint') }}
           </p>
         </div>

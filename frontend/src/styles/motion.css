@@ -339,6 +339,13 @@
 .list-move {
   transition: transform var(--dur-slow) var(--ease-out-soft);
 }
+/* A row that leaves a full-width list (`list-out` on each row, the list
+   `relative`): out of the flow while it fades, so the rows below slide
+   up into its place (list-move) instead of jumping once it is gone. */
+.list-leave-active.list-out {
+  position: absolute;
+  inset-inline: 0;
+}
 
 /* ------------------------------------------------- icon and text swaps */
 

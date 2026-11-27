@@ -117,8 +117,8 @@
               </span>
               {{
                 theme.resolved.value === 'dark'
-                  ? t('settings.themeLight')
-                  : t('settings.themeDark')
+                  ? t('nav.toLight')
+                  : t('nav.toDark')
               }}
             </button>
             <button

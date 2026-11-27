@@ -253,8 +253,11 @@
               }}</span>
               <div class="relative min-w-0 flex-1">
                 <WaveSeekBar
-                  :model-value="scrub ?? player.currentTime.value"
-                  :max="player.duration.value || 1"
+                  :model-value="
+                    scrub ??
+                    (player.knownDuration.value ? player.currentTime.value : 0)
+                  "
+                  :max="player.knownDuration.value || 1"
                   :label="t('player.seek')"
                   :value-text="formatDuration(player.currentTime.value)"
                   :playing="player.isAdvancing.value"
@@ -285,7 +288,7 @@
                 </Transition>
               </div>
               <span class="tabular w-12 text-right text-xs text-white/65">{{
-                formatDuration(player.duration.value)
+                formatDuration(player.knownDuration.value)
               }}</span>
             </div>
 
@@ -374,10 +377,19 @@
                     :size="22"
                   />
                 </button>
-                <!-- Right of repeat: a stream saves to the server (a ring
-                     fills while it downloads), a song already there shows
-                     a static check. -->
-                <StreamSaveButton v-if="!track.isPodcast" size="lg" on-dark />
+                <!-- Right of repeat: a song on the server shows a static
+                     check. A stream is saved from the labelled button
+                     under the title (StreamNotice) - one way to do it on
+                     screen, not two - unless that notice is hidden by a
+                     playback error. -->
+                <StreamSaveButton
+                  v-if="
+                    !track.isPodcast &&
+                    !(track.stream && !player.playError.value)
+                  "
+                  size="lg"
+                  on-dark
+                />
               </div>
 
               <div class="hidden flex-1 items-center justify-end gap-2 lg:flex">

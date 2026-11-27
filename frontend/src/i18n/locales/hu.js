@@ -201,6 +201,9 @@ export default {
     dismissShort: 'Nem nekem való',
     dismissed: 'Értem, többé nem ajánljuk',
     refresh: 'Új válogatás',
+    refreshed: 'Kész az új válogatás',
+    refreshFailed:
+      'Nem sikerült új válogatást kérni. Próbáld újra kicsit később.',
   },
   autoplay: {
     repeatOn: 'Az ismétlés be van kapcsolva: ezek a kikapcsolása után szólnak.',
@@ -330,6 +333,8 @@ export default {
     lengthHours: '{hours} óra {minutes} perc',
   },
   nav: {
+    toLight: 'Váltás világos témára',
+    toDark: 'Váltás sötét témára',
     jam: 'Jam',
     main: 'Fő',
     home: 'Kezdőlap',
@@ -376,7 +381,7 @@ export default {
     yourArtists: 'Előadóid',
     madeForYou: 'Neked készült',
     madeForYouHint:
-      'Mixek a könyvtáradból, aszerint, amit ezen az eszközön hallgatsz. Minden nap újak.',
+      'Mixek a könyvtáradból, aszerint, amit hallgatsz. Minden nap újak.',
     dailyMix: 'Napi mix {n}',
     mixWith: '{artists} és mások',
     onRepeat: 'Ismétlésen',
@@ -574,8 +579,8 @@ export default {
     filterNew: 'Új',
     filterLibrary: 'A könyvtárban',
     filterQueue: 'A sorban',
-    topSongs: 'Top Songs',
-    topSongsOf: 'Top Songs of {artist}',
+    topSongs: 'Népszerű dalok',
+    topSongsOf: '{artist} népszerű dalai',
     topSongsEmpty: 'Nem található népszerű dal ehhez az előadóhoz',
     createPlaylist: 'Lejátszási lista létrehozása',
     createPlaylistHint:

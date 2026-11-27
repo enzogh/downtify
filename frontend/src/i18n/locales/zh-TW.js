@@ -192,6 +192,8 @@ export default {
     dismissShort: '不感興趣',
     dismissed: '好的，不會再推薦',
     refresh: '換一批',
+    refreshed: '新推薦已就緒',
+    refreshFailed: '無法取得新推薦。請稍後再試。',
   },
   autoplay: {
     repeatOn: 'Repeat is on: these play once you turn it off.',
@@ -329,6 +331,8 @@ export default {
     lengthHours: '{hours} 小時 {minutes} 分鐘',
   },
   nav: {
+    toLight: '切換到淺色主題',
+    toDark: '切換到深色主題',
     jam: 'Jam',
     main: '主選單',
     home: '首頁',
@@ -374,8 +378,7 @@ export default {
     },
     yourArtists: 'Your artists',
     madeForYou: 'Made for you',
-    madeForYouHint:
-      'Mixes from your library, built from what you play on this device. New every day.',
+    madeForYouHint: '根據你聽的音樂，從音樂庫產生的混音歌單。每天更新。',
     dailyMix: 'Daily Mix {n}',
     mixWith: '{artists} and more',
     onRepeat: 'On repeat',

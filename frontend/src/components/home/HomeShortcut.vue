@@ -23,7 +23,7 @@
         rounded="rounded-none"
         :letter-size="16"
         :icon-size="20"
-        class="size-14 shrink-0"
+        class="size-16 shrink-0"
       />
       <span
         class="flex min-w-0 flex-1 flex-col"

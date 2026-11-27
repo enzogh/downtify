@@ -224,6 +224,8 @@ export default {
     dismissShort: 'Не для меня',
     dismissed: 'Понятно, больше не предложим',
     refresh: 'Новая подборка',
+    refreshed: 'Новая подборка готова',
+    refreshFailed: 'Не удалось получить новую подборку. Попробуйте чуть позже.',
   },
   autoplay: {
     repeatOn: 'Repeat is on: these play once you turn it off.',
@@ -370,6 +372,8 @@ export default {
     lengthHours: '{hours} ч {minutes} мин',
   },
   nav: {
+    toLight: 'Светлая тема',
+    toDark: 'Тёмная тема',
     jam: 'Jam',
     main: 'Основное',
     home: 'Главная',
@@ -416,7 +420,7 @@ export default {
     yourArtists: 'Your artists',
     madeForYou: 'Made for you',
     madeForYouHint:
-      'Mixes from your library, built from what you play on this device. New every day.',
+      'Миксы из вашей библиотеки по тому, что вы слушаете. Новые каждый день.',
     dailyMix: 'Daily Mix {n}',
     mixWith: '{artists} and more',
     onRepeat: 'On repeat',

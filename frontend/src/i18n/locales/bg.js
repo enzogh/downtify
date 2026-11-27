@@ -196,6 +196,8 @@ export default {
     dismissShort: 'Не е за мен',
     dismissed: 'Разбрано, няма да се показва повече',
     refresh: 'Нов избор',
+    refreshed: 'Новият избор е готов',
+    refreshFailed: 'Не успяхме да вземем нов избор. Опитай след малко.',
   },
   autoplay: {
     repeatOn: 'Повторението е включено: ще се пуснат, когато го изключите.',
@@ -325,6 +327,8 @@ export default {
     lengthHours: '{hours} ч {minutes} мин',
   },
   nav: {
+    toLight: 'Към светла тема',
+    toDark: 'Към тъмна тема',
     jam: 'Jam',
     main: 'Основно',
     home: 'Начало',
@@ -371,7 +375,7 @@ export default {
     yourArtists: 'Вашите изпълнители',
     madeForYou: 'Създадено за вас',
     madeForYouHint:
-      'Миксове от библиотеката ви според това, което слушате на това устройство. Нови всеки ден.',
+      'Миксове от библиотеката ви според това, което слушате. Нови всеки ден.',
     dailyMix: 'Дневен микс {n}',
     mixWith: '{artists} и още',
     onRepeat: 'На повторение',
@@ -566,8 +570,8 @@ export default {
     filterNew: 'Нови',
     filterLibrary: 'В библиотеката',
     filterQueue: 'В опашката',
-    topSongs: 'Top Songs',
-    topSongsOf: 'Top Songs of {artist}',
+    topSongs: 'Популярни песни',
+    topSongsOf: 'Популярни песни на {artist}',
     topSongsEmpty: 'Не са намерени популярни песни за този изпълнител',
     createPlaylist: 'Създай плейлиста',
     createPlaylistHint:

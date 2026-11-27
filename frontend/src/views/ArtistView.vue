@@ -40,9 +40,11 @@
           <UiButton
             :variant="artBannerUrl ? 'photo' : 'ghost'"
             icon="queue"
+            :title="t('actions.addToQueue')"
             @click="actions.enqueue(allTracks)"
           >
-            {{ t('actions.addToQueue') }}
+            <!-- Icon only on a phone: the actions then fit on two lines. -->
+            <span class="max-sm:sr-only">{{ t('actions.addToQueue') }}</span>
           </UiButton>
           <UiButton
             :variant="artBannerUrl ? 'photo' : 'ghost'"

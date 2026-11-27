@@ -205,6 +205,8 @@ export default {
     dismissShort: 'Nicht meins',
     dismissed: 'Verstanden, wird nicht mehr vorgeschlagen',
     refresh: 'Neue Auswahl',
+    refreshed: 'Neue Auswahl ist da',
+    refreshFailed: 'Keine neue Auswahl möglich. Gleich noch einmal versuchen.',
   },
   autoplay: {
     repeatOn:
@@ -338,6 +340,8 @@ export default {
     lengthHours: '{hours} Std. {minutes} Min.',
   },
   nav: {
+    toLight: 'Zum hellen Design',
+    toDark: 'Zum dunklen Design',
     jam: 'Jam',
     main: 'Hauptmenü',
     home: 'Startseite',
@@ -384,7 +388,7 @@ export default {
     yourArtists: 'Deine Künstler',
     madeForYou: 'Für dich gemacht',
     madeForYouHint:
-      'Mixe aus deiner Bibliothek, nach dem, was du auf diesem Gerät hörst. Jeden Tag neu.',
+      'Mixe aus deiner Bibliothek, nach dem, was du hörst. Jeden Tag neu.',
     dailyMix: 'Daily Mix {n}',
     mixWith: '{artists} und mehr',
     onRepeat: 'Dauerschleife',

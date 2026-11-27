@@ -176,6 +176,8 @@ export default {
     dismissShort: '不感兴趣',
     dismissed: '好的，不会再推荐',
     refresh: '换一批',
+    refreshed: '新推荐已就绪',
+    refreshFailed: '无法获取新推荐。请稍后再试。',
   },
   autoplay: {
     repeatOn: '已开启重复播放：关闭后将播放这些歌曲。',
@@ -298,6 +300,8 @@ export default {
     lengthHours: '{hours} 小时 {minutes} 分钟',
   },
   nav: {
+    toLight: '切换到浅色主题',
+    toDark: '切换到深色主题',
     jam: 'Jam',
     main: '主菜单',
     home: '首页',
@@ -343,8 +347,7 @@ export default {
     },
     yourArtists: '你的艺人',
     madeForYou: '为你打造',
-    madeForYouHint:
-      '根据你在此设备上的收听，从音乐库生成的混合歌单。每天更新。',
+    madeForYouHint: '根据你的收听，从音乐库生成的混合歌单。每天更新。',
     dailyMix: '每日推荐 {n}',
     mixWith: '{artists} 等',
     onRepeat: '循环播放',

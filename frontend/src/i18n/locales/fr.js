@@ -207,6 +207,9 @@ export default {
     dismissShort: 'Pas pour moi',
     dismissed: 'Compris, il ne vous sera plus proposé',
     refresh: 'Nouvelle sélection',
+    refreshed: 'Nouvelle sélection prête',
+    refreshFailed:
+      'Impossible d’obtenir une nouvelle sélection. Réessayez dans un instant.',
   },
   autoplay: {
     repeatOn:
@@ -339,6 +342,8 @@ export default {
     lengthHours: '{hours} h {minutes} min',
   },
   nav: {
+    toLight: 'Passer au thème clair',
+    toDark: 'Passer au thème sombre',
     jam: 'Jam',
     main: 'Principal',
     home: 'Accueil',
@@ -385,7 +390,7 @@ export default {
     yourArtists: 'Vos artistes',
     madeForYou: 'Conçu pour vous',
     madeForYouHint:
-      'Des mix de votre bibliothèque, faits à partir de ce que vous écoutez sur cet appareil. Nouveaux chaque jour.',
+      'Des mix de votre bibliothèque, faits à partir de ce que vous écoutez. Nouveaux chaque jour.',
     dailyMix: 'Mix du jour {n}',
     mixWith: '{artists} et plus',
     onRepeat: 'En boucle',
@@ -592,8 +597,8 @@ export default {
     filterNew: 'Nouveaux',
     filterLibrary: 'Dans la bibliothèque',
     filterQueue: 'Dans la file',
-    topSongs: 'Top Songs',
-    topSongsOf: 'Top Songs of {artist}',
+    topSongs: 'Titres populaires',
+    topSongsOf: 'Titres populaires de {artist}',
     topSongsEmpty: 'Aucun titre populaire trouvé pour cet artiste',
     createPlaylist: 'Créer la playlist',
     createPlaylistHint:
